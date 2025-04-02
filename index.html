@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,interactive-widget=resizes-content">
+	<meta name="description" content="total prism is a website">
+	<title>Total Prism</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="shortcut icon" type="image" href="termicon.png">
+	<script>
+		var pastCommands;
+		var pastCommandsIncrement;
+		var pastCommandsPointer;
+		var helpValues;
+		var launchOptions;
+		var selectPast;
+		var clickedConsoleFirst;
+
+		function initialize()
+		{
+			pastCommands = new Array();
+			pastCommandsIncrement = 0;
+			pastCommandsPointer = 0;
+			helpValues = [
+						  "about",
+  					  	  "clear",
+  					      "dinfo",
+  						  "help",
+  						  "launch",
+  						  "reload"
+						 ];
+			launchOptions = [
+				    		 "cyberclicker",
+							 "flesh",
+							 "jumpgame",
+							 "ytp"
+							];
+			selectPast = false;
+			clickedConsoleFirst = false;
+
+			document.getElementById("consolewindow").value = "help";
+			commandEnter(document.getElementById("consolewindow").value);
+			document.getElementById("consolewindow").value = "";
+			
+			document.getElementById("consolewindow").focus();
+
+			document.getElementById("consolewindow").addEventListener("keydown", function(event) 
+			{
+    			if(event.key === "Enter") 
+    			{
+       				event.preventDefault();
+       				commandEnter(document.getElementById("consolewindow").value);
+       				document.getElementById("consolewindow").value = "";
+       				pastCommandsPointer = 0;
+       				adjustConsoleWindow();
+    			}
+			});
+
+			document.getElementById("consolehistory").addEventListener("mouseover", function(event)
+			{
+				selectPast = true;
+			});
+
+			document.getElementById("consolehistory").addEventListener("mousedown", function(event)
+			{
+				selectPast = true;
+			});
+
+			document.getElementById("consolehistory").addEventListener("mouseup", function(event)
+			{
+				selectPast = false;
+			});
+
+			document.getElementById("consolehistory").addEventListener("mouseleave", function(event)
+			{
+				selectPast = false;
+			});
+
+			document.getElementById("right").addEventListener("mousedown", function(event) 
+			{
+				if(selectPast == false)
+				{
+					clickedConsoleFirst = true;
+				}
+			});
+
+			document.getElementById("right").addEventListener("click", function(event) 
+			{
+				if((selectPast == false) && (clickedConsoleFirst == true))
+				{
+					document.getElementById("consolewindow").focus();
+					clickedConsoleFirst = false;
+				}
+			});
+
+			document.getElementById("consolewindow").addEventListener("keydown", function(event) 
+			{
+    			if(event.key === "ArrowUp") 
+    			{
+    				event.preventDefault();
+       				displayPastValues(true);
+       				adjustConsoleWindow();
+    			}
+			});
+
+			document.getElementById("consolewindow").addEventListener("keydown", function(event) 
+			{
+    			if(event.key === "ArrowDown") 
+    			{
+    				event.preventDefault();
+       				displayPastValues(false);
+       				adjustConsoleWindow();
+    			}
+			});
+
+			document.getElementById("consolewindow").addEventListener("input", function(event) 
+			{
+				adjustConsoleWindow();
+			});
+
+			document.getElementById("pagefull").addEventListener("scroll", function(event) 
+			{
+				synchro();
+			});	
+		}
+
+		function adjustConsoleWindow()
+		{
+			document.getElementById("consolewindow").style.height = "auto"; 
+ 		 	document.getElementById("consolewindow").style.height = document.getElementById("consolewindow").scrollHeight + "px";
+ 		 	document.getElementById("right").scrollTo(0, document.getElementById("right").scrollHeight);
+		}
+
+		function displayPastValues(trueMeansUp)
+		{
+			if(pastCommands.length > 0)
+			{
+				if(trueMeansUp == true)
+				{
+					pastCommandsPointer += 1;
+
+					if(pastCommandsPointer >= pastCommands.length)
+					{
+						pastCommandsPointer = pastCommands.length - 1;
+					}
+					
+					document.getElementById("consolewindow").value = pastCommands[pastCommands.length - 1 - pastCommandsPointer];
+				}
+				else
+				{
+					pastCommandsPointer -= 1;
+
+					if(pastCommandsPointer <= 0)
+					{
+						pastCommandsPointer = 0;
+					}
+
+					document.getElementById("consolewindow").value = pastCommands[pastCommands.length - 1 - pastCommandsPointer];
+				}
+			}
+		}
+
+		function parseCommandSpaces(commandEntered)
+		{
+			let parsed = commandEntered.replace(/\s/g, "");
+			return parsed;
+		}
+
+		function parseExtraSpaces(commandEntered)
+		{
+			let parsed = commandEntered.replace(/\s+/g, " ").trim();
+			return parsed;
+		}
+
+		function checkIfNothing(commandEntered)
+		{
+			if(commandEntered !== "")
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		function commandEnter(commandEntered) 
+		{
+			if(checkIfNothing(parseCommandSpaces(commandEntered)) == false)
+			{
+				saveCommand(commandEntered);
+				evaluateCommand(commandEntered);
+			}
+			else
+			{
+				let consoleHistory = document.getElementById("consolehistory");
+				let decorString = document.createElement("pre");
+				decorString.textContent = "--";
+				decorString.style.color = "lime";
+				consoleHistory.appendChild(decorString);
+			}
+		}
+
+		function saveCommand(commandEntered)
+		{
+			let consoleHistory = document.getElementById("consolehistory");
+			let userString = document.createElement("pre");
+			userString.style.whiteSpace = "pre-wrap";
+			userString.style.wordBreak = "break-word";
+			userString.appendChild(userDecorStringElement());
+			userString.innerHTML += parseExtraSpaces(commandEntered);
+			consoleHistory.appendChild(userString);
+
+			if((pastCommands[pastCommandsIncrement - 1] !== commandEntered) && (commandEntered.replace(/\s/g, "") !== ""))
+			{
+				pastCommands[pastCommandsIncrement] = commandEntered;
+				pastCommandsIncrement += 1;
+				pastCommands[pastCommands.length] = "";
+			}
+		}
+
+		function userDecorStringElement()
+		{
+			let decorString = document.createElement("pre");
+			decorString.textContent = "--\u00A0";
+			decorString.style.color = "lime";
+			decorString.style.display = "inline";
+			return decorString;
+		}
+
+		function formattedUserStringElement(commandEntered)
+		{
+			let userString = document.createElement("pre");
+			userString.textContent = commandEntered;
+			userString.style.whiteSpace = "pre-wrap";
+			userString.style.wordBreak = "break-word";
+			return userString;
+		}
+
+		function consoleDecorStringElement()
+		{
+			let decorString = document.createElement("pre");
+			decorString.textContent = "::::\u00A0";
+			decorString.style.color = "red";
+			decorString.style.display = "inline";
+			return decorString;
+		}
+
+		function consoleDecorSeperatorElement(length, trueMeansNoSpace)
+		{
+			let decorString = document.createElement("span");
+			let stringHolder;
+
+			if(trueMeansNoSpace)
+			{
+				stringHolder = "";
+			}
+			else
+			{
+				stringHolder = "     ";
+			}
+
+			for(let i = 0; i < length; i++)
+			{
+				stringHolder += "-";
+			}
+
+			decorString.textContent = stringHolder;
+			decorString.style.color = "white";
+			decorString.style.userSelect = "none";
+			decorString.style.display = "inline";
+
+			return decorString;
+		}
+
+		function evaluateCommand(commandEntered) 
+		{
+			let consoleHistory = document.getElementById("consolehistory");
+
+			let consoleFormatBoxBox = document.createElement("div");
+			consoleFormatBoxBox.style.display = "flex";
+
+			let consoleFormatBox = document.createElement("div");
+			consoleFormatBox.style.paddingRight = "var(--sizer)";
+
+			let consoleString;
+			consoleString = document.createElement("pre");
+
+			switch(parseCommandSpaces(commandEntered).toLowerCase())
+			{
+				case "about":
+					consoleString.style.whiteSpace = "pre-wrap";
+					consoleString.style.wordBreak = "break-word";
+					consoleString.appendChild(consoleDecorStringElement());
+					consoleString.innerHTML += "total prism is a website";
+					consoleHistory.appendChild(consoleString);
+					break;
+
+				case "help":
+					consoleString.appendChild(consoleDecorStringElement());
+					consoleString.innerHTML += "input options:" + "\n";
+					consoleString.appendChild(consoleDecorSeperatorElement(14, false));
+
+					for(let i = 0; i < helpValues.length; i++)
+					{
+						consoleString.innerHTML += "\n     " + helpValues[i];
+					}
+
+					consoleFormatBox.appendChild(consoleString);
+					consoleFormatBoxBox.appendChild(consoleFormatBox);
+					consoleHistory.appendChild(consoleFormatBoxBox);
+					break;
+
+				case "clear":
+					let textContent = document.getElementById("consolehistory").querySelectorAll("div");
+					textContent.forEach(div =>
+					{
+						div.remove();
+					});
+
+					textContent = document.getElementById("consolehistory").querySelectorAll("pre");
+					textContent.forEach(pre =>
+					{
+						pre.remove();
+					});
+
+					break;
+
+				case "launch":
+					consoleString.appendChild(consoleDecorStringElement());
+					consoleString.innerHTML += "can launch:" + "\n";
+					consoleString.appendChild(consoleDecorSeperatorElement(11, false));
+
+					for(let i = 0; i < launchOptions.length; i++)
+					{
+						consoleString.innerHTML += "\n     " + launchOptions[i];
+					}
+
+					consoleString.innerHTML += "\n";
+					consoleString.appendChild(consoleDecorSeperatorElement(11, false))
+					consoleString.innerHTML += "\n";
+					consoleString.innerHTML += "     ex: launch " + launchOptions[(Math.floor(Math.random() * launchOptions.length))];
+
+					consoleFormatBox.appendChild(consoleString);
+					consoleFormatBoxBox.appendChild(consoleFormatBox);
+					consoleHistory.appendChild(consoleFormatBoxBox);
+					break;
+
+				case "launchytp":
+					window.location.href = "https://ragusta.com/index.html";
+					break;
+
+				case "launchflesh":
+					window.location.href = "https://flesh.enterprises/index.html";
+					break;
+
+				case "launchcyberclicker":
+					window.location.href = "./cyberclicker/index.html";
+					break;
+
+				case "launchjumpgame":
+					window.location.href = "./jumpgame/index.html";
+					break;
+
+				case "reload":
+					window.location.href = "./index.html";
+					break;
+
+				case "":
+					break;
+
+				case "dinfo":
+					consoleString.innerHTML = "_______________   " + "user agent: " + navigator.userAgent + "\n"; 
+					consoleString.innerHTML += "___  __/__  __ " + "\\" + "  ";
+					consoleString.appendChild(consoleDecorSeperatorElement(11, true));
+					consoleString.innerHTML += "\n";
+					consoleString.innerHTML += "__  /  __  /_/ /  " + "platform: " + navigator.platform + "\n";
+					consoleString.innerHTML += "_  /   _  ____/   ";
+					consoleString.appendChild(consoleDecorSeperatorElement(9, true));
+					consoleString.innerHTML += "\n";
+					consoleString.innerHTML += "/_/    /_/        " + "language: " + navigator.language + "\n";
+					consoleFormatBox.appendChild(consoleString);
+					consoleFormatBoxBox.appendChild(consoleFormatBox);
+					consoleHistory.appendChild(consoleFormatBoxBox);
+					break;
+
+				default:
+					consoleString.style.whiteSpace = "pre-wrap";
+					consoleString.style.wordBreak = "break-word";
+					consoleString.appendChild(consoleDecorStringElement());
+					consoleString.innerHTML += parseExtraSpaces(commandEntered) + " is not a valid input";
+					consoleHistory.appendChild(consoleString);
+					break;
+			}
+		}
+
+		function synchro()
+		{
+			let selected = document.getElementById("pagefull");
+			let manipulate = document.getElementById("toplogo");
+			percent = selected.scrollLeft / (selected.scrollWidth - selected.clientWidth);
+			manipulate.scrollLeft = percent * (manipulate.scrollWidth - manipulate.clientWidth);
+		}
+	</script>
+</head>
+<body onload="initialize()">
+	<header id="toplogo"> 
+<pre id="tplogo" role="presentation">
+________     _____       _____________       _____                   
+___  __/_______  /______ ___  /__  __ \_________(_)_____________ ___ 
+__  /  _  __ \  __/  __ `/_  /__  /_/ /_  ___/_  /__  ___/_  __ `__ \
+_  /   / /_/ / /_ / /_/ /_  / _  ____/_  /   _  / _(__  )_  / / / / /
+/_/    \____/\__/ \__,_/ /_/  /_/     /_/    /_/  /____/ /_/ /_/ /_/ 
+</pre>
+	</header>
+	<main>
+		<div class="page" id="pagefull">
+			<div class="section" id="left">
+				<p>Total Prism</p>
+				<p>Ver. 1.0.0</p>
+				<a href="index.html" id="buttonforother"><p>click - reload</p></a>
+			</div>
+			<div class="section" id="right">
+				<div id="consolehistory"></div>
+				<div id="textareaholder">
+					<textarea value="" id="consolewindow"></textarea>
+				</div>
+			</div>
+		</div>
+	</main>
+</body>
+</html>
