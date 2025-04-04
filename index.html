@@ -54,6 +54,18 @@
        				pastCommandsPointer = 0;
        				adjustConsoleWindow();
     			}
+    			else if(event.key === "ArrowUp") 
+    			{
+    				event.preventDefault();
+       				displayPastValues(true);
+       				adjustConsoleWindow();
+    			}
+    			else if(event.key === "ArrowDown") 
+    			{
+    				event.preventDefault();
+       				displayPastValues(false);
+       				adjustConsoleWindow();
+    			}
 			});
 
 			document.getElementById("consolehistory").addEventListener("mouseover", function(event)
@@ -91,26 +103,6 @@
 					document.getElementById("consolewindow").focus();
 					clickedConsoleFirst = false;
 				}
-			});
-
-			document.getElementById("consolewindow").addEventListener("keydown", function(event) 
-			{
-    			if(event.key === "ArrowUp") 
-    			{
-    				event.preventDefault();
-       				displayPastValues(true);
-       				adjustConsoleWindow();
-    			}
-			});
-
-			document.getElementById("consolewindow").addEventListener("keydown", function(event) 
-			{
-    			if(event.key === "ArrowDown") 
-    			{
-    				event.preventDefault();
-       				displayPastValues(false);
-       				adjustConsoleWindow();
-    			}
 			});
 
 			document.getElementById("consolewindow").addEventListener("input", function(event) 
@@ -423,7 +415,7 @@ _  /   / /_/ / /_ / /_/ /_  / _  ____/_  /   _  / _(__  )_  / / / / /
 			<div class="section" id="right">
 				<div id="consolehistory"></div>
 				<div id="textareaholder">
-					<textarea value="" id="consolewindow"></textarea>
+					<textarea value="" id="consolewindow" aria-label="Enter your input"></textarea>
 				</div>
 			</div>
 		</div>
