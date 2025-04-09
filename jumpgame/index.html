@@ -22,8 +22,6 @@
 		var delay;
 		var initalDelay;
 		var obstacleAmount;
-		var minDelay;
-		var minObstacleOdds;
 		var obstacleOdds;
 		var cloudDelay;
 
@@ -42,11 +40,9 @@
 			score = 0; 
 			MOVESPEED = 2; //default speed of objects and other erlements moving
 			delay = 0; //delay between object spawning is reset within function spawnobstacles
-			obstacleAmount = 3; //amount of obstacle types that can initaly spawn is set to more in increasedicciculty
-			initalDelay = 128; //inital delay between obstacles is set to smaller numbers in increasedicciculty
-			obstacleOdds = 128; //oddds of spawning an obstacle is decreased in increasedicciculty
-			minDelay = 64; //the minimum delay obstacles spawning can be is further decreased in increasedifficulty
-			minObstacleOdds = 64; //the minimum odds obstacles spawning can be is further decreased in increasedifficulty
+			obstacleAmount = 3; //amount of obstacle types that can initaly spawn is set to more in increase difficulty
+			initalDelay = 128; //inital delay between obstacles is set to smaller numbers in increase difficulty
+			obstacleOdds = 128; //oddds of spawning an obstacle is decreased in increase difficulty
 			cloudDelay = 0; //minimum delay that clouds can spawn at
 
 			if(checkStorage() == true)
@@ -131,50 +127,44 @@
 
 		function increaseDifficuty() 
 		{
-			if((score >= 1000))
+			if(MOVESPEED < 7)
 			{
-				MOVESPEED = 2 * parseFloat(score / 999);
-
-				if(MOVESPEED >= 5)
+				if(score >= 1000)
 				{
-					obstacleAmount = 4;
+					MOVESPEED = 2 * parseFloat(score / 999);
 				}
 
-				if(MOVESPEED >= 7)
+				if(MOVESPEED > 7)
 				{
 					MOVESPEED = 7;
 				}
 
-				initalDelay = initalDelay - 1;
-
-				if(initalDelay <= minDelay)
+				if(MOVESPEED > 4)
 				{
-					initalDelay = minDelay;
-				}
-
-				obstacleOdds = obstacleOdds - 1;
-
-				if(obstacleOdds <= minObstacleOdds)
-				{
-					obstacleOdds = minObstacleOdds;
+					obstacleAmount = 4;
 				}
 			}
 			
-			if(score >= 5555)
+			if(initalDelay > 37)
 			{
-				minDelay = minDelay - 1;
+				initalDelay = 256 / MOVESPEED;
 
-				if(minDelay <= 48)
+				if(initalDelay < 37) 
 				{
-					minDelay = 48;
+					initalDelay = 37;
+				}
+			}
+
+			if(obstacleOdds > 37)
+			{
+				obstacleOdds = 256 / MOVESPEED;
+
+				if(obstacleOdds < 37)
+				{
+					obstacleOdds = 37;
 				}
 
-				minObstacleOdds = minObstacleOdds - 1;
-
-				if(minObstacleOdds <= 48)
-				{
-					minObstacleOdds = 48;
-				}
+				console.log(obstacleOdds);
 			}
 		}
 
@@ -236,7 +226,6 @@
 				newObstacle.style.backgroundImage = "url(./brick.png)";
 				newObstacle.style.backgroundRepeat = "repeat";
 				parentElement.appendChild(newObstacle);
-				delay += 64;
 			}
 			else if(andomize == 4)
 			{
