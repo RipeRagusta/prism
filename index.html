@@ -88,6 +88,11 @@
 				selectPast = false;
 			});
 
+			document.getElementById("right").addEventListener("scroll", function(event) 
+			{
+				clickedConsoleFirst = false;
+			});
+
 			document.getElementById("right").addEventListener("mousedown", function(event) 
 			{
 				if(selectPast == false)
