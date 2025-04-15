@@ -113,7 +113,7 @@
 			document.getElementById("pagefull").addEventListener("scroll", function(event) 
 			{
 				synchro();
-			});	
+			});
 		}
 
 		function adjustConsoleWindow()
@@ -273,7 +273,7 @@
 			consoleFormatBoxBox.style.display = "flex";
 
 			let consoleFormatBox = document.createElement("div");
-			consoleFormatBox.style.paddingRight = "var(--sizer)";
+			consoleFormatBox.style.paddingRight = "calc(var(--sizer) + 1px)";
 
 			let consoleString;
 			consoleString = document.createElement("pre");
