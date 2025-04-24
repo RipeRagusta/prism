@@ -50,6 +50,10 @@ pre{
 	margin: 0px;
 }
 
+span{
+	font-size: 1rem;
+}
+
 #tplogo{
 	padding-bottom: 2ex;
 }
@@ -144,11 +148,16 @@ p{
 	margin: 0px;
 	padding: 0px;
 	display: flex;
-	padding: 0px calc(var(--sizer) + 1px) calc(var(--sizer) + 1px) calc(var(--sizer) + 1px);
+	flex-direction: column;
+	flex: 1;
+	flex-basis: 0;
+	min-width: 0px;
+	min-height: 0px;
 }
 
 #consolewindow{
-	height: auto;
+	display: block;
+	height: 100%;
 	width: 100%;
 	margin: 0px;
 	padding: 0px;
@@ -160,6 +169,8 @@ p{
 	font-size: 1rem;
 	resize: none;
 	word-wrap: break-all;
+	padding: 0px calc(var(--sizer) + 1px) calc(var(--sizer) + 1px) calc(var(--sizer) + 1px);
+	box-sizing: border-box;
 }
 
 @media only screen and (max-width: 715px)
