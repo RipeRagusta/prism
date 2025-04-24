@@ -86,10 +86,11 @@
        				displayPastValues(false);
        				adjustConsoleWindow();
     			}
-    			else
-    			{
-    				adjustConsoleWindow();
-    			}
+			});
+
+			document.getElementById("consolewindow").addEventListener("input", function(event)
+			{
+				adjustConsoleWindow();
 			});
 
 			document.getElementById("consolehistory").addEventListener("mouseover", function(event)
@@ -145,7 +146,7 @@
 			document.getElementById("consolewindow").style.height = "100%"; 
  		 	document.getElementById("consolewindow").style.height = document.getElementById("consolewindow").scrollHeight + "px";
 
- 		 	if(document.getElementById("textareaholder").getBoundingClientRect().height > 35)
+ 		 	if((document.getElementById("textareaholder").getBoundingClientRect().height > 35) && (document.getElementById("textareaholder").getBoundingClientRect().height > document.getElementById("consolewindow").scrollHeight))
  		 	{
  		 		document.getElementById("consolewindow").style.height = document.getElementById("textareaholder").getBoundingClientRect().height + "px";
  		 	}
