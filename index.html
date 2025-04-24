@@ -15,6 +15,7 @@
 		var launchOptions;
 		var selectPast;
 		var clickedConsoleFirst;
+		var bannerToggle;
 
 		function initialize()
 		{
@@ -27,7 +28,8 @@
   					      "dinfo",
   						  "help",
   						  "launch",
-  						  "reload"
+  						  "reload",
+  						  "tban"
 						 ];
 			launchOptions = [
 				    		 "cyberclicker",
@@ -37,6 +39,25 @@
 							];
 			selectPast = false;
 			clickedConsoleFirst = false;
+
+			if(checkStorage() == true)
+			{
+				console.log("we can use the storage");
+				if((localStorage.getItem("userBannerPreference")) === null)
+				{
+					bannerToggle = true;
+				}
+				else
+				{
+					bannerToggle = JSON.parse(localStorage.getItem("userBannerPreference"));
+				}
+			}
+			else
+			{
+				bannerToggle = true;
+			}
+
+			displayBanner();
 
 			document.getElementById("consolewindow").value = "help";
 			commandEnter(document.getElementById("consolewindow").value);
@@ -377,6 +398,25 @@
 					consoleHistory.appendChild(consoleFormatBoxBox);
 					break;
 
+				case "tban":
+					if(bannerToggle == true)
+					{
+						bannerToggle = false;
+					}
+					else
+					{
+						bannerToggle = true;
+					}
+
+					displayBanner();
+
+					if(checkStorage() == true)
+					{
+						localStorage.setItem("userBannerPreference", bannerToggle);
+					}
+					
+					break;
+
 				default:
 					consoleString.style.whiteSpace = "pre-wrap";
 					consoleString.style.wordBreak = "break-word";
@@ -387,12 +427,40 @@
 			}
 		}
 
+		function displayBanner()
+		{
+			if(bannerToggle == true)
+			{
+				document.getElementById("toplogo").style.display = "block";
+			}
+			else
+			{
+				document.getElementById("toplogo").style.display = "none";
+			}
+		}
+
 		function synchro()
 		{
 			let selected = document.getElementById("pagefull");
 			let manipulate = document.getElementById("toplogo");
 			percent = selected.scrollLeft / (selected.scrollWidth - selected.clientWidth);
 			manipulate.scrollLeft = percent * (manipulate.scrollWidth - manipulate.clientWidth);
+		}
+
+		function checkStorage()
+		{
+    		var test = "test";
+    
+    		try 
+    		{
+       		 	localStorage.setItem(test, test);
+        		localStorage.removeItem(test);
+        		return true;
+   		 	} 
+    		catch(e)
+   		 	{
+       	 		return false;
+    		}
 		}
 	</script>
 </head>
