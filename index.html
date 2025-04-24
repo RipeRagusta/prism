@@ -88,12 +88,12 @@
 				selectPast = false;
 			});
 
-			document.getElementById("right").addEventListener("scroll", function(event) 
+			document.getElementById("textareaholder").addEventListener("scroll", function(event) 
 			{
 				clickedConsoleFirst = false;
 			});
 
-			document.getElementById("right").addEventListener("mousedown", function(event) 
+			document.getElementById("textareaholder").addEventListener("mousedown", function(event) 
 			{
 				if(selectPast == false)
 				{
@@ -101,7 +101,7 @@
 				}
 			});
 
-			document.getElementById("right").addEventListener("mouseup", function(event) 
+			document.getElementById("textareaholder").addEventListener("mouseup", function(event) 
 			{
 				if((selectPast == false) && (clickedConsoleFirst == true))
 				{
