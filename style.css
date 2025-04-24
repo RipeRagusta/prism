@@ -87,25 +87,21 @@ ul{
 }
 
 .section{
-	outline: 1px solid cyan;
-	outline-offset: -1px;
+	border: 1px solid cyan;
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
 }
 
 #left{
 	display: flex;
 	flex-direction: column;
 	gap: calc(var(--sizer) / 3);
-	box-sizing: border-box;
-	width: 100%;
-	height: 100%;
-	padding: calc(var(--sizer) + 1px);
+	padding: var(--sizer);
 }
 
 #right{
 	overflow: auto;
-	box-sizing: border-box;
-	height: 100%;
-	width: 100%;
 	cursor: text;
 	display: flex;
 	flex-direction: column;
@@ -137,14 +133,16 @@ p{
 
 #consolehistory{
 	margin: 0px;
-	padding: calc(var(--sizer) + 1px) calc(var(--sizer) + 1px) 0px calc(var(--sizer) + 1px);
+	padding: var(--sizer) var(--sizer) 0px var(--sizer);
 }
 
 #textareaholder{
 	margin: 0px;
 	padding: 0px;
 	display: flex;
-	padding: 0px calc(var(--sizer) + 1px) calc(var(--sizer) + 1px) calc(var(--sizer) + 1px);
+	flex: 1;
+	min-width: 0px;
+	min-height: 0px;
 }
 
 #consolewindow{
@@ -160,6 +158,8 @@ p{
 	font-size: 1rem;
 	resize: none;
 	word-wrap: break-all;
+	padding: 0px var(--sizer) var(--sizer) var(--sizer);
+	box-sizing: border-box;
 }
 
 @media only screen and (max-width: 715px)

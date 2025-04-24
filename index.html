@@ -124,7 +124,7 @@
 		function adjustConsoleWindow()
 		{
 			document.getElementById("consolewindow").style.height = "auto"; 
- 		 	document.getElementById("consolewindow").style.height = document.getElementById("consolewindow").scrollHeight + "px";
+ 		 	document.getElementById("consolewindow").style.height = Math.ceil(document.getElementById("consolewindow").scrollHeight - 1) + "px";
  		 	document.getElementById("right").scrollTo(0, document.getElementById("right").scrollHeight);
 		}
 
@@ -269,7 +269,7 @@
 			consoleFormatBoxBox.style.display = "flex";
 
 			let consoleFormatBox = document.createElement("div");
-			consoleFormatBox.style.paddingRight = "calc(var(--sizer) + 1px)";
+			consoleFormatBox.style.paddingRight = "var(--sizer)";
 
 			let consoleString;
 			consoleString = document.createElement("pre");
