@@ -66,6 +66,10 @@
        				displayPastValues(false);
        				adjustConsoleWindow();
     			}
+    			else
+    			{
+    				adjustConsoleWindow();
+    			}
 			});
 
 			document.getElementById("consolehistory").addEventListener("mouseover", function(event)
@@ -110,11 +114,6 @@
 				}
 			});
 
-			document.getElementById("consolewindow").addEventListener("input", function(event) 
-			{
-				adjustConsoleWindow();
-			});
-
 			document.getElementById("pagefull").addEventListener("scroll", function(event) 
 			{
 				synchro();
@@ -123,7 +122,7 @@
 
 		function adjustConsoleWindow()
 		{
-			document.getElementById("consolewindow").style.height = "100%"; 
+			document.getElementById("consolewindow").style.height = "auto"; 
  		 	document.getElementById("consolewindow").style.height = document.getElementById("consolewindow").scrollHeight + "px";
  		 	document.getElementById("right").scrollTo(0, document.getElementById("right").scrollHeight);
 		}
