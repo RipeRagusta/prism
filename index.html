@@ -122,8 +122,14 @@
 
 		function adjustConsoleWindow()
 		{
-			document.getElementById("consolewindow").style.height = "auto"; 
+			document.getElementById("consolewindow").style.height = "100%"; 
  		 	document.getElementById("consolewindow").style.height = document.getElementById("consolewindow").scrollHeight + "px";
+
+ 		 	if(document.getElementById("textareaholder").getBoundingClientRect().height > 0)
+ 		 	{
+ 		 		document.getElementById("consolewindow").style.height = document.getElementById("textareaholder").getBoundingClientRect().height + "px";
+ 		 	}
+ 		 	
  		 	document.getElementById("right").scrollTo(0, document.getElementById("right").scrollHeight);
 		}
 
@@ -410,7 +416,9 @@ _  /   / /_/ / /_ / /_/ /_  / _  ____/_  /   _  / _(__  )_  / / / / /
 			<div class="section" id="right">
 				<div id="consolehistory"></div>
 				<div id="textareaholder">
-					<textarea value="" id="consolewindow" aria-label="Enter your input"></textarea>
+					<div id="textareainner">
+						<textarea value="" id="consolewindow" aria-label="Enter your input"></textarea>
+					</div>
 				</div>
 			</div>
 		</div>
