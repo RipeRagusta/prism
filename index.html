@@ -42,7 +42,6 @@
 
 			if(checkStorage() == true)
 			{
-				console.log("we can use the storage");
 				if((localStorage.getItem("userBannerPreference")) === null)
 				{
 					bannerToggle = true;
@@ -414,7 +413,7 @@
 					{
 						localStorage.setItem("userBannerPreference", bannerToggle);
 					}
-					
+
 					break;
 
 				default:
