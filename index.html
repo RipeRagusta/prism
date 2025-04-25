@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,interactive-widget=resizes-content">
-	<meta name="description" content="total prism is a website">
 	<title>Total Prism</title>
+	<meta name="description" content="total prism is a website">
 	<link rel="stylesheet" href="style.css">
 	<link rel="shortcut icon" type="image" href="termicon.png">
 	<script>
@@ -213,7 +213,7 @@
 				let consoleHistory = document.getElementById("consolehistory");
 				let decorString = document.createElement("pre");
 				decorString.textContent = "--";
-				decorString.style.color = "lime";
+				decorString.style.color = "#00ff00";
 				consoleHistory.appendChild(decorString);
 			}
 		}
@@ -240,7 +240,7 @@
 		{
 			let decorString = document.createElement("pre");
 			decorString.textContent = "--\u00A0";
-			decorString.style.color = "lime";
+			decorString.style.color = "#00ff00";
 			decorString.style.display = "inline";
 			return decorString;
 		}
@@ -249,7 +249,7 @@
 		{
 			let decorString = document.createElement("pre");
 			decorString.textContent = "::::\u00A0";
-			decorString.style.color = "red";
+			decorString.style.color = "#ff0000";
 			decorString.style.display = "inline";
 			return decorString;
 		}
@@ -403,6 +403,7 @@
 					}
 
 					displayBanner();
+					synchro();
 
 					if(checkStorage() == true)
 					{

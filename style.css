@@ -16,13 +16,13 @@ body{
 	font-family: monospace, arial, sans-serif, serif;
 	display: flex;
 	flex-direction: column;
-	border: 1px solid cyan;
+	border: 1px solid #00ffff;
 	height: 100vh;
 	height: 100dvh;
 	padding: 0px;
   	margin: 0px;
   	width: 100%;
-  	color: cyan;
+  	color: #00ffff;
   	box-sizing: border-box;
 }
 
@@ -38,11 +38,11 @@ main{
 a{
 	text-decoration: none;
 	display: inline-block;
-	color: cyan;
+	color: #00ffff;
 }
 
 a:visited, a:hover, a:active{
-	color: cyan;
+	color: #00ffff;
 }
 
 pre{
@@ -64,13 +64,13 @@ span{
 header{
 	margin: 0px;
 	overflow-x: auto;
-	border-bottom: 1px solid cyan;
+	border-bottom: 1px solid #00ffff;
 	width: 100%;
 	box-sizing: border-box;
 }
 
 nav{
-	color: cyan;
+	color: #00ffff;
 	margin: 0px;
 }
 
@@ -94,7 +94,7 @@ ul{
 }
 
 .section{
-	outline: 1px solid cyan;
+	outline: 1px solid #00ffff;
 	outline-offset: -1px;
 }
 
@@ -129,18 +129,18 @@ p{
 #buttonforother{
 	margin-top: auto;
 	box-sizing: border-box;
-	border: 1px solid cyan;
+	border: 1px solid #00ffff;
 	padding: calc(var(--sizer) / 3);
 }
 
 #buttonforother:hover{
-	color: lime;
-	border: 1px solid lime;
+	color: #00ff00;
+	border: 1px solid #00ff00;
 }
 
 #buttonforother:active{
-	color: red;
-	border: 1px solid red;
+	color: #ff0000;
+	border: 1px solid #ff0000;
 }
 
 #consolehistory{
@@ -162,7 +162,7 @@ p{
 	margin: 0px;
 	padding: 0px;
 	background-color: #000d1a;
-	color: cyan;
+	color: #00ffff;
 	outline: none;
 	border: none;
 	overflow: hidden;
