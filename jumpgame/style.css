@@ -1,0 +1,113 @@
+body, html{
+	height: 100dvh;
+	width: 100%;
+	background-color: black;
+	margin: 0px;
+	padding: 0px;
+	overflow: auto;
+	font-family: monospace, arial, sans-serif, serif;
+}
+
+main{
+	margin: 0px auto;
+	margin-top: calc(50dvh - 300px);
+	height: 600px;
+	width: 800px;
+	background-color: #00bfff;
+	position: relative;
+	overflow: hidden;
+}
+
+#player{
+	position: absolute;
+	display: block;
+	top: 0px;
+	left: 0px;
+	background-image: url(./chickensprite.png);
+	background-repeat: repeat-x;
+	background-size: 100px 100px;
+	image-rendering: pixelated;
+	background-position: 0px;
+}
+
+#ground{
+	position: absolute;
+	display: block;
+	left: 0px;
+	top: 0px;
+	background-image: url(./sand.png);
+	background-repeat: repeat-x;
+	background-size: 50px 50px;
+	width: 800px;
+	height: 50px;
+	image-rendering: pixelated;
+}
+
+.obstacleobject{
+	background-size: 50px 50px;
+	image-rendering: pixelated;
+	position: absolute;
+	display: block;
+	left: 0px;
+	top: 0px;
+}
+
+#restartbutton{
+	position: absolute;
+	display: block;
+	left: 0px;
+	top: 100px;
+	display: none;
+	user-select: none;
+	cursor: pointer;
+	z-index: 25;
+	color: white;
+}
+
+#fullscore{
+	z-index: 25;
+	position: absolute;
+	display: block;
+	left: 0px;
+	top: 0px;
+	color: white;
+}
+
+#fullbestscore{
+	z-index: 25;
+	position: absolute;
+	display: block;
+	left: 0px;
+	top: 50px;
+	color: white;
+}
+
+.backgroundmove2{
+	position: absolute;
+	display: block;
+	left: 0px;
+	top: 0px;
+	background-image: url(./cloud1.png);
+	background-size: 293.75px 115.625px;
+	width: 293.75px;
+	height: 115.625px;
+	image-rendering: pixelated;
+}
+
+#bushes1{
+	position: absolute;
+	display: block;
+	left: 0px;
+	top: 0px;
+	background-image: url(./bushes.png);
+	background-size: 100px 50px;
+	width: 900px;
+	height: 50px;
+	image-rendering: pixelated;
+}
+
+@media only screen and (max-height: 600px){
+	main{
+		margin-top: 0px;
+	}
+}
