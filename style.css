@@ -46,14 +46,12 @@ a:visited, a:hover, a:active{
 }
 
 pre{
-	display: block;
 	font-size: 1rem;
 	margin: 0px;
 	padding: 0px;
 }
 
 span{
-	display: block;
 	font-size: 1rem;
 	margin: 0px;
 	padding: 0px;
@@ -98,29 +96,34 @@ ul{
 .section{
 	outline: 1px solid cyan;
 	outline-offset: -1px;
-	width: 100%;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	box-sizing: border-box;
 }
 
 #left{
+	display: flex;
+	flex-direction: column;
 	gap: calc(var(--sizer) / 3);
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
 	padding: calc(var(--sizer) + 1px);
 }
 
 #right{
 	overflow: auto;
+	box-sizing: border-box;
+	height: 100%;
+	width: 100%;
 	cursor: text;
+	display: flex;
+	flex-direction: column;
 }
 
 p{
 	font-size: 1rem;
 	display: block;
 	margin: 0px;
-	word-wrap: break-all;
 	padding: 0px;
+	word-wrap: break-all;
 }
 
 #buttonforother{
@@ -146,43 +149,26 @@ p{
 }
 
 #textareaholder{
-	height: 100%;
-	width: 100%;
 	margin: 0px;
 	padding: 0px;
 	display: flex;
+	padding: 0px calc(var(--sizer) + 1px) calc(var(--sizer) + 2px) calc(var(--sizer) + 1px);
 	flex: 1;
-	flex-direction: column;
-	min-width: 0px;
-	min-height: 0px;
-}
-
-#textareainner{
-	height: 100%;
-	width: 100%;
-	flex: 1;
-	min-width: 0px;
-	min-height: 0px;
-	margin: 0px;
-	padding: 0px;
 }
 
 #consolewindow{
-	display: block;
-	height: 100%;
+	height: auto;
 	width: 100%;
 	margin: 0px;
 	padding: 0px;
 	background-color: #000d1a;
-	overflow: hidden;
 	color: cyan;
 	outline: none;
 	border: none;
+	overflow: hidden;
 	font-size: 1rem;
 	resize: none;
 	word-wrap: break-all;
-	padding: 0px calc(var(--sizer) + 1px) calc(var(--sizer) + 1px) calc(var(--sizer) + 1px);
-	box-sizing: border-box;
 }
 
 @media only screen and (max-width: 715px)
