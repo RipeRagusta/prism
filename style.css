@@ -141,11 +141,17 @@ p{
 }
 
 #consolehistory{
+	display: block;
 	margin: 0px;
 	padding: calc(var(--sizer) + 1px) calc(var(--sizer) + 1px) 0px calc(var(--sizer) + 1px);
+	box-sizing: border-box;
+	width: 100%;
+	height: auto;
 }
 
 #textareaholder{
+	height: 100%;
+	width: 100%;
 	margin: 0px;
 	padding: 0px;
 	display: flex;
@@ -156,8 +162,10 @@ p{
 }
 
 #textareainner{
+	display: block;
 	height: 100%;
 	width: 100%;
+	flex: 1;
 	margin: 0px;
 	padding: 0px;
 }
@@ -170,13 +178,13 @@ p{
 	padding: 0px;
 	background-color: #000d1a;
 	color: cyan;
+	overflow: hidden;
 	outline: none;
 	border: none;
-	overflow: hidden;
 	font-size: 1rem;
 	resize: none;
 	word-wrap: break-all;
-	padding: 0px calc(var(--sizer) + 1px) calc(var(--sizer) + 1px) calc(var(--sizer) + 1px);
+	padding: 0px calc(var(--sizer) + 1px) calc(var(--sizer) + 2px) calc(var(--sizer) + 1px);
 	box-sizing: border-box;
 }
 

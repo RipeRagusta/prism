@@ -144,13 +144,7 @@
 		function adjustConsoleWindow()
 		{
 			document.getElementById("consolewindow").style.height = "100%"; 
- 		 	document.getElementById("consolewindow").style.height = document.getElementById("consolewindow").scrollHeight + "px";
-
- 		 	if((document.getElementById("textareaholder").getBoundingClientRect().height > 35) && (Math.ceil(document.getElementById("textareaholder").getBoundingClientRect().height) > document.getElementById("consolewindow").scrollHeight - 1))
- 		 	{
- 		 		document.getElementById("consolewindow").style.height = document.getElementById("textareaholder").getBoundingClientRect().height + "px";
- 		 	}
- 		 	
+ 		 	document.getElementById("consolewindow").style.height = document.getElementById("consolewindow").scrollHeight - 1 + "px";
  		 	document.getElementById("right").scrollTo(0, document.getElementById("right").scrollHeight);
 		}
 
