@@ -17,8 +17,7 @@ body{
 	display: flex;
 	flex-direction: column;
 	border: 1px solid #00ffff;
-	height: 100vh;
-	height: 100dvh;
+	height: 100%;
 	padding: 0px;
   	margin: 0px;
   	width: 100%;
