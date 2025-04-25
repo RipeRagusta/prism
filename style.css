@@ -181,7 +181,7 @@ p{
 	font-size: 1rem;
 	resize: none;
 	word-wrap: break-all;
-	padding: 0px calc(var(--sizer) + 1px) calc(var(--sizer) + 2px) calc(var(--sizer) + 1px);
+	padding: 0px calc(var(--sizer) + 1px) calc(var(--sizer) + 1px) calc(var(--sizer) + 1px);
 	box-sizing: border-box;
 }
 
