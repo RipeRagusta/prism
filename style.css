@@ -162,12 +162,13 @@ p{
 }
 
 #textareainner{
-	display: block;
 	height: 100%;
 	width: 100%;
 	flex: 1;
 	margin: 0px;
 	padding: 0px;
+	min-width: 0px;
+	min-height: 0px;
 }
 
 #consolewindow{
@@ -178,7 +179,6 @@ p{
 	padding: 0px;
 	background-color: #000d1a;
 	color: cyan;
-	overflow: hidden;
 	outline: none;
 	border: none;
 	font-size: 1rem;
