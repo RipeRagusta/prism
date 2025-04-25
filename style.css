@@ -152,7 +152,7 @@ p{
 	margin: 0px;
 	padding: 0px;
 	display: flex;
-	padding: 0px calc(var(--sizer) + 1px) calc(var(--sizer) + 2px) calc(var(--sizer) + 1px);
+	padding: 0px calc(var(--sizer) + 1px) calc(var(--sizer) + 1px) calc(var(--sizer) + 1px);
 	flex: 1;
 }
 
