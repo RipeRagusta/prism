@@ -206,6 +206,7 @@ function rebirthProcess()
 			cyberCookies = 0;
 			setRibirthRate();
 			createUpgrades();
+			cookiesPerSecond();
 			initializeContracts(CONTRACTAMOUNT);
 			rebirthGoal = rebirthGoal * 1.05;
 			canRebirth = false;
@@ -229,10 +230,10 @@ function saveGame()
 	if(checkStorage() == true)
 	{
 		localStorage.setItem("savedBankTotal", cyberCookies); 
-			localStorage.setItem("savedContractList", JSON.stringify(contractHolderFinal));
-			localStorage.setItem("savedUpgradesList", JSON.stringify(upgradeHolderFinal));
-			localStorage.setItem("savedRebirthCount", rebirths);
-			localStorage.setItem("savedRebirthGoal", rebirthGoal);
+		localStorage.setItem("savedContractList", JSON.stringify(contractHolderFinal));
+		localStorage.setItem("savedUpgradesList", JSON.stringify(upgradeHolderFinal));
+		localStorage.setItem("savedRebirthCount", rebirths);
+		localStorage.setItem("savedRebirthGoal", rebirthGoal);
 	}
 }
 
