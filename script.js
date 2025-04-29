@@ -134,7 +134,7 @@ function initialize()
 function adjustConsoleWindow()
 {
 	document.getElementById("consolewindow").style.height = "auto"; 
- 	document.getElementById("consolewindow").style.height = document.getElementById("consolewindow").scrollHeight - 1 + "px";
+ 	document.getElementById("consolewindow").style.height = document.getElementById("consolewindow").scrollHeight - 0.5 + "px";
   	document.getElementById("right").scrollTo(0, document.getElementById("right").scrollHeight);
 }
 
