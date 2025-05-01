@@ -2,156 +2,37 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1.0">
-	<title>Cyber Clicker 2101</title>
-	<meta name="description" content="Clicker video game">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,interactive-widget=resizes-content">
+	<title>Total Prism</title>
+	<meta name="description" content="total prism is a website">
 	<link rel="stylesheet" href="./style.css">
-	<link rel="shortcut icon" type="image" href="./cyberclickerface.png">
+	<link rel="shortcut icon" type="image" href="./termicon.png">
 	<script src="./script.js"></script>
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
 </head>
-<body onload="initialize()" onresize="checkDisplay()" class="jersey-10-regular">
-  	<section class="container">
-  		<main>
-  			<div id="left">
-  				<div id="cookiespage">
-  					<div id="topcookiepart">
-						<h2 id="bankprefix">CyberCookies: <span id="bank">0</span></h2>
-						<img id="topcookieimage" src="./cyberclickerfacetop.png" alt="Cyber cookie" height="250px" width="250px" class="placeholder-image" onclick="clickedCookie()">
-						<img src="./cyberclickerfacebottom.png" alt="Background" height="250px" width="250px" class="placeholder-image">
-					</div>
-					<div id="bottomcookiepart">
-						<h2 id="cookiepersecondholder"><span id="cookiespersec">0</span> C/S</h2>
-					</div>
-  				</div>
-  			</div>
-  			<div id="middle">
-  				<div id="contractspage">
-  					<h2 id="contractstext">Contracts: </h2>
-  					<div class="button contract" onclick="acceptContract(0)" id="contractbutton0">
-  						<p><span class="accepttext" id="acceptedstatus0">Accept?</span></p>
-  						<p>Type: <span id="contracttype0">Hit</span></p>
-  						<p>Time: <span id="contracttime0">60</span> Seconds</p>
-  						<p>Reward: <span id="contractreward0">1000</span> CyberCookies</p>
-  					</div>
-  					<div class="button contract" onclick="acceptContract(1)" id="contractbutton1">
-  						<p><span class="accepttext" id="acceptedstatus1">Accept?</span></p>
-  						<p>Type: <span id="contracttype1">Hit</span></p>
-  						<p>Time: <span id="contracttime1">60</span> Seconds</p>
-  						<p>Reward: <span id="contractreward1">1000</span> CyberCookies</p>
-  					</div>
-  					<div class="button contract" onclick="acceptContract(2)" id="contractbutton2">
-  						<p><span class="accepttext" id="acceptedstatus2">Accept?</span></p>
-  						<p>Type: <span id="contracttype2">Hit</span></p>
-  						<p>Time: <span id="contracttime2">60</span> Seconds</p>
-  						<p>Reward: <span id="contractreward2">1000</span> CyberCookies</p>
-  					</div>
-  					<div class="button contract" onclick="acceptContract(3)" id="contractbutton3">
-  						<p><span class="accepttext" id="acceptedstatus3">Accept?</span></p>
-  						<p>Type: <span id="contracttype3">Hit</span></p>
-  						<p>Time: <span id="contracttime3">60</span> Seconds</p>
-  						<p>Reward: <span id="contractreward3">1000</span> CyberCookies</p>
-  					</div>
-  					<div class="button contract" onclick="acceptContract(4)" id="contractbutton4">
-  						<p><span class="accepttext" id="acceptedstatus4">Accept?</span></p>
-  						<p>Type: <span id="contracttype4">Hit</span></p>
-  						<p>Time: <span id="contracttime4">60</span> Seconds</p>
-  						<p>Reward: <span id="contractreward4">1000</span> CyberCookies</p>
-  					</div>
-  					<div class="button contract" onclick="acceptContract(5)" id="contractbutton5">
-  						<p><span class="accepttext" id="acceptedstatus5">Accept?</span></p>
-  						<p>Type: <span id="contracttype5">Hit</span></p>
-  						<p>Time: <span id="contracttime5">60</span> Seconds</p>
-  						<p>Reward: <span id="contractreward5">1000</span> CyberCookies</p>
-  					</div>
-  				</div>
+<body onload="initialize()" onresize="adjustConsoleWindow()">
+	<header id="toplogo"> 
+<pre id="tplogo" role="presentation">
+________     _____       _____________       _____                   
+___  __/_______  /______ ___  /__  __ \_________(_)_____________ ___ 
+__  /  _  __ \  __/  __ `/_  /__  /_/ /_  ___/_  /__  ___/_  __ `__ \
+_  /   / /_/ / /_ / /_/ /_  / _  ____/_  /   _  / _(__  )_  / / / / /
+/_/    \____/\__/ \__,_/ /_/  /_/     /_/    /_/  /____/ /_/ /_/ /_/ 
+</pre>
+	</header>
+	<main>
+		<div class="page" id="pagefull">
+			<div class="section" id="left">
+				<p>Total Prism</p>
+				<p>Ver. 1.0.0</p>
+				<a href="./index.html" id="buttonforother"><p>click - reload</p></a>
 			</div>
-			<div id="middle2">
-				<div id="rebirthspage">
-					<h2 class="rebirthcontainer">Rebirths: <span id="rebirthcount"></span></h2>
-					<p id="unlockwhen">Unlock at <span id="rebirthgoal">100000000000000</span> CyberCookies</p>
-					<h3 id="rebirtbutton" onclick="rebirthProcess()">Rebirth?</h3>
-					<p id="rebirthdescriptiontext">Reset progress for permanent rewards.</p>
+			<div class="section" id="right">
+				<div id="consolehistory"></div>
+				<div id="textareaholder">
+					<textarea value="" rows="1" id="consolewindow" aria-label="Enter your input"></textarea>
 				</div>
 			</div>
-  			<div id="right">
-  				<div id="upgradespage">
-  					<div id="buymodepage">
-  						<p class="buymodebutton" id="buymodebutton0" onclick="changeBuyMode(0)">Buy 1</p>
-  						<p class="buymodebutton" id="buymodebutton1" onclick="changeBuyMode(1)">Buy 10</p>
-  						<p class="buymodebutton" id="buymodebutton2" onclick="changeBuyMode(2)">Buy 100</p>
-  						<p class="buymodebutton" id="buymodebutton3" onclick="changeBuyMode(3)">Buy Max</p>
-  					</div>
-  					<h2 id="upgradetext">Upgrades: </h2>
-  					<div class="upgrade button" onclick="buyUpgrade(0)" id="upgrade0">
-  						<h3 class="upgradeHeader">Toothbrush Botnet</h3>
-  						<p>Price: <span id="upgradeprice0">10</span> CyberCookies</p>
-  						<p>Owned: <span id="upgradeowned0">0</span></p>
-  						<p>Adds: <span id="upgraderate0">1</span> C/S</p>
-  						<p>Can Buy: <span id="upgrademaxavailable0">0</span></p>
-  					</div>
-  					<div class="upgrade button" onclick="buyUpgrade(1)" id="upgrade1">
-  						<h3 class="upgradeHeader">VR Phishing Sites</h3>
-  						<p>Price: <span id="upgradeprice1">100</span> CyberCookies</p>
-  						<p>Owned: <span id="upgradeowned1">0</span></p>
-  						<p>Adds: <span id="upgraderate1">1</span> C/S</p>
-  						<p>Can Buy: <span id="upgrademaxavailable1">0</span></p>
-  					</div>
-  					<div class="upgrade button" onclick="buyUpgrade(2)" id="upgrade2">
-  						<h3 class="upgradeHeader">Megacorp Stock</h3>
-  						<p>Price: <span id="upgradeprice2">100</span> CyberCookies</p>
-  						<p>Owned: <span id="upgradeowned2">0</span></p>
-  						<p>Adds: <span id="upgraderate2">1</span> C/S</p>
-  						<p>Can Buy: <span id="upgrademaxavailable2">0</span></p>
-  					</div>
-  					<div class="upgrade button" onclick="buyUpgrade(3)" id="upgrade3">
-  						<h3 class="upgradeHeader">BCI Backdoors</h3>
-  						<p>Price: <span id="upgradeprice3">100</span> CyberCookies</p>
-  						<p>Owned: <span id="upgradeowned3">0</span></p>
-  						<p>Adds: <span id="upgraderate3">1</span> C/S</p>
-  						<p>Can Buy: <span id="upgrademaxavailable3">0</span></p>
-  					</div>
-  					<div class="upgrade button" onclick="buyUpgrade(4)" id="upgrade4">
-  						<h3 class="upgradeHeader">Cyberware Ransomware</h3>
-  						<p>Price: <span id="upgradeprice4">100</span> CyberCookies</p>
-  						<p>Owned: <span id="upgradeowned4">0</span></p>
-  						<p>Adds: <span id="upgraderate4">1</span> C/S</p>
-  						<p>Can Buy: <span id="upgrademaxavailable4">0</span></p>
-  					</div>
-  					<div class="upgrade button" onclick="buyUpgrade(5)" id="upgrade5">
-  						<h3 class="upgradeHeader">Personal Memory Data Breach</h3>
-  						<p>Price: <span id="upgradeprice5">100</span> CyberCookies</p>
-  						<p>Owned: <span id="upgradeowned5">0</span></p>
-  						<p>Adds: <span id="upgraderate5">1</span> C/S</p>
-  						<p>Can Buy: <span id="upgrademaxavailable5">0</span></p>
-  					</div>
-  					<div class="upgrade button" onclick="buyUpgrade(6)" id="upgrade6">
-  						<h3 class="upgradeHeader">Thought Injection</h3>
-  						<p>Price: <span id="upgradeprice6">100</span> CyberCookies</p>
-  						<p>Owned: <span id="upgradeowned6">0</span></p>
-  						<p>Adds: <span id="upgraderate6">1</span> C/S</p>
-  						<p>Can Buy: <span id="upgrademaxavailable6">0</span></p>
-  					</div>
-  					<div class="upgrade button" onclick="buyUpgrade(7)" id="upgrade7">
-  						<h3 class="upgradeHeader">Digitized Psyche</h3>
-  						<p>Price: <span id="upgradeprice7">100</span> CyberCookies</p>
-  						<p>Owned: <span id="upgradeowned7">0</span></p>
-  						<p>Adds: <span id="upgraderate7">1</span> C/S</p>
-  						<p>Can Buy: <span id="upgrademaxavailable7">0</span></p>
-  					</div>
-  				</div>
-  			</div>
-  			<nav>
-  				<ul>
-  					<li id="pagebutton0" onclick="changePage(0)"><h3>Cookie</h3></li>
-  					<li id="pagebutton1" onclick="changePage(1)"><h3>Contracts</h3></li>
-  					<li id="pagebutton2" onclick="changePage(2)"><h3>Upgrades</h3></li>
-  					<li id="pagebutton3" onclick="changePage(3)"><h3>Rebirths</h3></li>
-  				</ul>
-  			</nav>
-  		</main>
-  	</section>
+		</div>
+	</main>
 </body>
 </html>

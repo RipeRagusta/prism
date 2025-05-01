@@ -1,355 +1,186 @@
 :root{
-	--sizer: clamp(1vw, 15px, 2vw);
+	--sizer: 15px;
 }
 
-.jersey-10-regular{
-	font-family: "Jersey 10", arial, serif, sans-serif;
-	font-weight: 400;
-	font-style: normal;
-}
-
-#bankprefix, #cookiepersecondholder{
-	text-overflow: ellipsis;
-	text-align: center;
-	padding-top: var(--sizer);
-	padding-bottom: var(--sizer);
-}
-
-#cookiepersecondholder{
-	color: white;
-}
-
-#bank{
-	text-overflow: ellipsis;
-}
-
-html, body{
-	width: 100%;
+html{
 	height: 100vh;
 	height: 100dvh;
+	width: 100%;
 	margin: 0px;
 	padding: 0px;
-	font-size: clamp(1.1rem, 1.3vw, 2rem);
-	background-color: #000d1a;
 }
 
-p, h1, h2, h3, h4{
+body{
+	font-size: 1rem;
+	background-color: #000d1a;
+	font-family: monospace, arial, sans-serif, serif;
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #00ffff;
+	height: 100%;
 	padding: 0px;
-	margin: 0px;
-	display: block;
-	text-overflow: ellipsis;
+  	margin: 0px;
+  	width: 100%;
+  	color: #00ffff;
+  	box-sizing: border-box;
 }
 
 main{
-	display: grid;
-	grid-template-columns: 0.25fr 0.25fr 0.25fr 0.25fr;
-	grid-template-areas: ".left .middle .middle2 .right";
+	flex: 1;
+	padding: 0px;
+  	margin: 0px;
+  	height: 100%;
+  	width: 100%;
+  	position: relative;
+}
+
+a{
+	text-decoration: none;
+	display: inline-block;
+	color: #00ffff;
+}
+
+a:visited, a:hover, a:active{
+	color: #00ffff;
+}
+
+pre{
+	font-size: 1rem;
 	margin: 0px;
 	padding: 0px;
 }
 
-#left, #middle, #middle2, #right{
-	width: 100%;
-	overflow: hidden;
-	max-height: 100vh;
-	max-height: 100dvh;
-}
-
-#cookiespage{
-	background-color: yellow;
-	overflow-y: auto;
-	overflow-x: hidden;
-	width: 100%;
-	height: 100vh;
-	height: 100dvh;
-	max-height: 100vh;
-	max-height: 100dvh;
-}
-
-.placeholder-image{
-	display: block;
-	width: 75%;
-	height: auto;
-	margin: 0px auto;
-	user-select: none;
-	user-drag: none; 
-	cursor: pointer; 
-	padding-bottom: var(--sizer);
-	transform-origin: center;
-	touch-action: manipulation;
-	image-rendering: pixelated;
-}
-
-#topcookieimage{
-	position: absolute;
-	width: 75%;
-	left: 12.5%;
-	padding: 0px;
+span{
+	font-size: 1rem;
 	margin: 0px;
-	animation: cookierotate 90s linear infinite;
-	touch-action: manipulation;
-	image-rendering: pixelated;
+	padding: 0px;
 }
 
-#topcookieimage:active{
-	width: 80%;
-	left: 10%;
+#tplogo{
+	padding-bottom: 2ex;
 }
 
-@keyframes cookierotate {
-	0% {transform: rotate(0deg);}
-	100% {transform: rotate(360deg);}
-}
-
-#contractspage{
-	overflow-y: auto;
-	overflow-x: hidden;
+header{
+	margin: 0px;
+	overflow-x: auto;
+	border-bottom: 1px solid #00ffff;
 	width: 100%;
-	height: 100vh;
-	max-height: 100vh;
-	height: 100dvh;
-	max-height: 100dvh;
-	background-size: 150%;
-	background-color: black;
-}
-
-.accepttext{
-	font-weight: bold;
-}
-
-.contract{
-	background-color: #000d1a;
-	color: cyan;
-	padding: var(--sizer);
-	margin-bottom: var(--sizer);
-	border-top: calc(0.1 * var(--sizer)) solid cyan;
-	border-bottom: calc(0.1 * var(--sizer)) solid cyan;
-	background: repeating-linear-gradient(180deg, #001a1a, #003333 calc(0.3 * var(--sizer)), #003333 calc(0.3 * var(--sizer)));
-}
-
-.contract:hover{
-	background-color: black;
-	color: white;
-}
-
-#contractstext{
-	margin-top: var(--sizer);
-	margin-left: var(--sizer);
-	margin-bottom: var(--sizer);
-	color: white;
-}
-
-#rebirthspage{
-	overflow-y: auto;
-	overflow-x: hidden;
-	height: 100vh;
-	max-height: 100vh;
-	height: 100dvh;
-	max-height: 100dvh;
-}
-
-#upgradespage{
-	background-color: #1a1a1a;
-	overflow-y: auto;
-	overflow-x: hidden;
-	height: 100vh;
-	max-height: 100vh;
-	height: 100dvh;
-	max-height: 100dvh;
-	padding-left: var(--sizer);
-	display: flex;
-	flex-direction: column;
-	color: white;
-}
-
-#buymodepage{
-	background-color: #000000;
-	margin-right: var(--sizer);
-	padding: var(--sizer);
-	border-radius: 0 0 calc(0.25 * var(--sizer)) calc(0.25 *  var(--sizer));
-}
-
-.buymodebutton{
-	color: #ffffff;
-	cursor: pointer;
-	padding: calc(0.5 * var(--sizer));
-	clip-path: polygon(0 0, 100% 0, calc(100% - var(--sizer)) 0, 100% 100%, 0 100%);
-	user-select: none;
-}
-
-.button{
-	display: flex;
-	flex-direction: column;
-	gap: calc(0.25 * var(--sizer));
-	user-select: none;
-	cursor: pointer; 
-}
-
-#upgradetext{
-	margin-left: var(--sizer);
-	margin-top: var(--sizer);
-	margin-bottom: var(--sizer);
-}
-
-.upgrade{
-	padding: var(--sizer);
-	background-color: black;
-	border-radius: calc(0.25 * var(--sizer)) 0 0 calc(0.25 *  var(--sizer));
-	color: white;
-	margin-bottom: var(--sizer);
-}
-
-.upgrade:hover{
-	background-color: yellow;
-	color: black !important;
-}
-
-.upgradeHeader{
-	color: cyan;
-}
-
-.upgrade:hover .upgradeHeader{
-	color: black;
-}
-
-#middle2{
-	background-color: #0d0d0d;
-	color: white;
-}
-
-.rebirthcontainer{
-	display: block;
-	color: white;
-	text-align: center;
-	margin-top: var(--sizer);
-}
-
-#unlockwhen{
-	text-align: center;
-	color: white;
-	margin-top: var(--sizer);
-}
-
-#rebirtbutton{
-	margin-top: var(--sizer);
-	background-color: red;
-	text-align: center;
-	cursor: pointer;
-	user-select: none;
-}
-
-#rebirthdescriptiontext{
-	margin-top: var(--sizer);
-	text-align: center;
-	margin-bottom: var(--sizer);
+	box-sizing: border-box;
 }
 
 nav{
-	display: none;
+	color: #00ffff;
+	margin: 0px;
 }
 
-#topcookiepart, #bottomcookiepart{
+ul{
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+}
+
+.page{
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	display: grid;
+	grid-template-columns: 0.3fr 0.7fr;
+	position: absolute;
+	overflow-x: auto;
+	padding: var(--sizer);
+	box-sizing: border-box;
+	gap: var(--sizer);
+}
+
+.section{
+	outline: 1px solid #00ffff;
+	outline-offset: -1px;
+}
+
+#left{
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--sizer) / 3);
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	padding: calc(var(--sizer) + 1px);
+}
+
+#right{
+	overflow: auto;
+	box-sizing: border-box;
+	height: 100%;
+	width: 100%;
+	cursor: text;
+	display: flex;
+	flex-direction: column;
+}
+
+p{
+	font-size: 1rem;
+	display: block;
 	margin: 0px;
 	padding: 0px;
+	word-wrap: break-all;
 }
 
-#topcookiepart{
-	display: block;
-	position: relative;
-	min-height: 80vh;
-	min-height: 80dvh;
+#buttonforother{
+	margin-top: auto;
+	box-sizing: border-box;
+	border: 1px solid #00ffff;
+	padding: calc(var(--sizer) / 3);
 }
 
-#bottomcookiepart{
-	min-height: 20vh;
-	min-height: 20dvh;
-	background-color: black;
+#buttonforother:hover{
+	color: #00ff00;
+	border: 1px solid #00ff00;
+}
+
+#buttonforother:active{
+	color: #ff0000;
+	border: 1px solid #ff0000;
+}
+
+#consolehistory{
+	margin: 0px;
+	padding: calc(var(--sizer) + 1px) calc(var(--sizer) + 1px) 0px calc(var(--sizer) + 1px);
+}
+
+#textareaholder{
+	margin: 0px;
+	padding: 0px;
 	display: flex;
-	align-items: center;
-	justify-content: center;
+	padding: 0px calc(var(--sizer) + 1px) calc(var(--sizer) + 1px) calc(var(--sizer) + 1px);
+	flex: 1;
 }
 
-@media only screen and (max-width: 600px)
+#consolewindow{
+	height: auto;
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+	background-color: #000d1a;
+	color: #00ffff;
+	outline: none;
+	border: none;
+	overflow: hidden;
+	font-size: 1rem;
+	resize: none;
+	word-wrap: break-all;
+}
+
+@media only screen and (max-width: 715px)
 {
-	:root{
-		--sizer: clamp(1vmax, 15px, 3vmax);
+	.page{
+		grid-template-columns: 100% 100%;
 	}
 
-	main{
-		display: flex;
-		flex-direction: column;
-	}
-
-	#left, #middle, #middle2, #right{
-		height: calc(80vh - 2.5px);
-		max-height: calc(80vh - 2.5px);
-		height: calc(80dvh - 2.5px);
-		max-height: calc(80dvh - 2.5px);
-
-	}
-
-	#cookiespage, #upgradespage, #contractspage, #rebirthspage{
-		height: calc(80vh - 2.5px);
-		max-height: calc(80vh - 2.5px);
-		height: calc(80dvh - 2.5px);
-		max-height: calc(80dvh - 2.5px);
-	}
-	
 	#left{
-		display: none;
-	}
-
-	#middle{
-		display: none;
-	}
-
-	#middle2{
-		display: none;
+		min-width: 100%;
 	}
 
 	#right{
-		display: none;
-	}
-
-	nav{
-		display: block;
-		min-height: 20vh;
-		min-height: 20dvh;
-		background-color: #000d1a;
-		border-top: 2.5px solid cyan;
-		width: 100%;
-		overflow: hidden;
-	}
-
-	nav ul{
-		margin: 0px;
-		padding: 0px;
-		display: flex;
-		justify-content: space-between;
-		flex-flow: row wrap;
-		margin-top: var(--sizer);
-		list-style-type: none;
-		gap: var(--sizer);
-		margin-bottom: var(--sizer);
-	}
-
-	nav ul li{
-		color: cyan;
-		cursor: pointer;
-		margin-left: calc(1 * var(--sizer));
-		margin-right: calc(1 * var(--sizer));
-		user-select: none;
-	}
-
-	#topcookiepart{
-		display: block;
-		min-height: calc(64vh - 1.25px);
-		min-height: calc(64dvh - 1.25px);
-	}
-
-	#bottomcookiepart{
-		min-height: calc(16vh - 1.25px);
-		min-height: calc(16dvh - 1.25px);
-		background-color: black;
+		min-width: 100%;
 	}
 }
