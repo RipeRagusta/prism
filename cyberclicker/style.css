@@ -281,18 +281,18 @@ nav{
 	}
 
 	#left, #middle, #middle2, #right{
-		height: calc(80vh - 2.5px);
-		max-height: calc(80vh - 2.5px);
-		height: calc(80dvh - 2.5px);
-		max-height: calc(80dvh - 2.5px);
+		height: 80vh;
+		max-height: 80vh;
+		height: 80dvh;
+		max-height: 80dvh;
 
 	}
 
 	#cookiespage, #upgradespage, #contractspage, #rebirthspage{
-		height: calc(80vh - 2.5px);
-		max-height: calc(80vh - 2.5px);
-		height: calc(80dvh - 2.5px);
-		max-height: calc(80dvh - 2.5px);
+		height: 80vh;
+		max-height: 80vh;
+		height: 80dvh;
+		max-height: 80dvh;
 	}
 	
 	#left{
@@ -316,9 +316,10 @@ nav{
 		min-height: 20vh;
 		min-height: 20dvh;
 		background-color: #000d1a;
-		border-top: 2.5px solid cyan;
+		border-top: calc(0.1 * var(--sizer)) solid cyan;
 		width: 100%;
 		overflow: hidden;
+		box-sizing: border-box;
 	}
 
 	nav ul{
@@ -343,13 +344,13 @@ nav{
 
 	#topcookiepart{
 		display: block;
-		min-height: calc(64vh - 1.25px);
-		min-height: calc(64dvh - 1.25px);
+		min-height: 64vh;
+		min-height: 64dvh;
 	}
 
 	#bottomcookiepart{
-		min-height: calc(16vh - 1.25px);
-		min-height: calc(16dvh - 1.25px);
+		min-height: 16vh;
+		min-height: 16dvh;
 		background-color: black;
 	}
 }
