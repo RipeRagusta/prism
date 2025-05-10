@@ -63,7 +63,7 @@ span{
 
 header{
 	margin: 0px;
-	overflow-x: auto;
+	overflow: hidden;
 	border-bottom: 1px solid #00ffff;
 	width: 100%;
 	box-sizing: border-box;
