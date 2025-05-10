@@ -6,6 +6,7 @@ var launchOptions;
 var selectPast;
 var clickedConsoleFirst;
 var bannerToggle;
+var borderToggle;
 
 function initialize()
 {
@@ -32,7 +33,7 @@ function initialize()
 	{
 		if((localStorage.getItem("userBannerPreference")) === null)
 		{
-			bannerToggle = true;
+			bannerToggle = false;
 		}
 		else
 		{
@@ -41,10 +42,28 @@ function initialize()
 	}
 	else
 	{
-		bannerToggle = true;
+		bannerToggle = false;
 	}
 
 	displayBanner();
+
+	if(checkStorage() == true)
+	{
+		if((localStorage.getItem("userBorderPreference")) === null)
+		{
+			borderToggle = false;
+		}
+		else
+		{
+			borderToggle = JSON.parse(localStorage.getItem("userBorderPreference"));
+		}
+	}
+	else
+	{
+		borderToggle = false;
+	}
+
+	displayBorder();
 
 	document.getElementById("consolewindow").value = "help";
 	commandEnter(document.getElementById("consolewindow").value);
@@ -400,6 +419,25 @@ function evaluateCommand(commandEntered)
 
 			break;
 
+		case "tbor":
+			if(borderToggle == true)
+			{
+				borderToggle = false;
+			}
+			else
+			{
+				borderToggle = true;
+			}
+
+			displayBorder();
+
+			if(checkStorage() == true)
+			{
+				localStorage.setItem("userBorderPreference", borderToggle);
+			}
+
+			break;
+
 		default:
 			consoleString.style.whiteSpace = "pre-wrap";
 			consoleString.style.wordBreak = "break-word";
@@ -419,6 +457,18 @@ function displayBanner()
 	else
 	{
 		document.getElementById("toplogo").style.display = "none";
+	}
+}
+
+function displayBorder()
+{
+	if(borderToggle == true)
+	{
+		document.body.style.border = "1px solid #00ffff";
+	}
+	else
+	{
+		document.body.style.border = "0px";
 	}
 }
 
