@@ -20,7 +20,8 @@ function initialize()
   				  "help",
   				  "launch",
   				  "reload",
-  				  "tban"
+  				  "tban",
+  				  "tbor"
 				 ];
 	launchOptions = [
 					 "cyberclicker",
