@@ -106,7 +106,7 @@ function initialize()
 	{
 		if(localStorage.getItem("savedBankTotal") === null)
 		{
-			cyberCookies = 100000000000000; 
+			cyberCookies = 0; 
 		}
 		else
 		{
@@ -237,11 +237,18 @@ function saveGame()
 {
 	if(checkStorage() == true && rebirthing == false)
 	{
-		localStorage.setItem("savedBankTotal", cyberCookies); 
-		localStorage.setItem("savedContractList", JSON.stringify(contractHolderFinal));
-		localStorage.setItem("savedUpgradesList", JSON.stringify(upgradeHolderFinal));
-		localStorage.setItem("savedRebirthCount", rebirths);
-		localStorage.setItem("savedRebirthGoal", rebirthGoal);
+		try
+		{
+			localStorage.setItem("savedBankTotal", cyberCookies); 
+			localStorage.setItem("savedContractList", JSON.stringify(contractHolderFinal));
+			localStorage.setItem("savedUpgradesList", JSON.stringify(upgradeHolderFinal));
+			localStorage.setItem("savedRebirthCount", rebirths);
+			localStorage.setItem("savedRebirthGoal", rebirthGoal);
+		}
+		catch(e)
+		{
+			console.log("save game error");
+		}
 	}
 }
 
@@ -412,19 +419,13 @@ function formatMyNumber(number)
 
 function ticking()
 {
-	try{
-		contractCountdown();
-		addUpgradeCookies();
-		saveGame();
-		cookiesPerSecond();
-		checkRebirthGoal();
-		updateScreen();
-	}
-	catch(e)
-	{
-		console.log("save game error");
-	}
 	
+	contractCountdown();
+	addUpgradeCookies();
+	saveGame();
+	cookiesPerSecond();
+	checkRebirthGoal();
+	updateScreen();
 }
 
 function Running()
