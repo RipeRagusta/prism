@@ -419,7 +419,6 @@ function formatMyNumber(number)
 
 function ticking()
 {
-	
 	contractCountdown();
 	addUpgradeCookies();
 	saveGame();
