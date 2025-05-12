@@ -1,3 +1,5 @@
+var GAME;
+
 var cyberCookies;
 var cookiesPerSecondValue;
 
@@ -8,6 +10,7 @@ var rebirths;
 var rebirthRate;
 var canRebirth;
 var rebirthGoal;
+var rebirthing;
 
 var amountOfContractsAcceptable;
 var CONTRACTAMOUNT;
@@ -29,6 +32,7 @@ var currentMobilePage;
 function initialize() 
 {
 	buying = false;
+	rebirthing = false;
 
 	if(checkStorage() == true)
 	{
@@ -102,7 +106,7 @@ function initialize()
 	{
 		if(localStorage.getItem("savedBankTotal") === null)
 		{
-			cyberCookies = 0; 
+			cyberCookies = 100000000000000; 
 		}
 		else
 		{
@@ -160,7 +164,7 @@ function initialize()
 		else
 		{
 			upgradeHolderFinal = JSON.parse(localStorage.getItem("savedUpgradesList"));
-			upgradeHolderFinal = upgradeHolderFinal.map(obj => new upgrade(obj.id, obj.cost, obj.owned, obj.addAmount, obj.costMultiplier, obj.addMultiplier, obj.baseCost, obj.baseAddAmount));
+			upgradeHolderFinal = upgradeHolderFinal.map(obj => new upgrade(obj.cost, obj.owned, obj.addAmount, obj.costMultiplier, obj.addMultiplier));
 		}
 	}
 	else
@@ -198,8 +202,10 @@ function rebirthProcess()
 
 	document.getElementById("rebirtbutton").addEventListener("click", () => 
 	{
-		if(canRebirth == true && clickedOnce == true)
+		if(canRebirth == true && clickedOnce == true && rebirthing == false)
 		{
+			rebirthing = true;
+			clearInterval(GAME);
 			rebirths += 1;
 			amountOfContractsAcceptable += 1;
 			document.getElementById("rebirtbutton").innerHTML = "Rebirth?";
@@ -212,6 +218,8 @@ function rebirthProcess()
 			canRebirth = false;
 			saveGame();
 			updateScreen();
+			rebirthing = false;
+			GAME = setInterval(ticking, TICKRATE);
 		}
 	});
 
@@ -227,7 +235,7 @@ function rebirthProcess()
 
 function saveGame()
 {
-	if(checkStorage() == true)
+	if(checkStorage() == true && rebirthing == false)
 	{
 		localStorage.setItem("savedBankTotal", cyberCookies); 
 		localStorage.setItem("savedContractList", JSON.stringify(contractHolderFinal));
@@ -404,19 +412,26 @@ function formatMyNumber(number)
 
 function ticking()
 {
-	contractCountdown();
-	addUpgradeCookies();
-	saveGame();
-	cookiesPerSecond();
-	checkRebirthGoal();
-	updateScreen();
+	try{
+		contractCountdown();
+		addUpgradeCookies();
+		saveGame();
+		cookiesPerSecond();
+		checkRebirthGoal();
+		updateScreen();
+	}
+	catch(e)
+	{
+		console.log("save game error");
+	}
+	
 }
 
 function Running()
 {
 	if(RUNNING == true)
 	{
-		setInterval(ticking, TICKRATE);
+		GAME = setInterval(ticking, TICKRATE);
 		//console.log("Running");
 	}
 	else{
@@ -555,35 +570,35 @@ function createUpgrades()
 		switch(i)
 		{
 			case 0:
-				upgradeHolderFinal[i] = new upgrade(i, 10, 0, (1 * (rebirthRate)), 1.1, (1 * (rebirthRate)), 10, (1 * (rebirthRate)));
+				upgradeHolderFinal[i] = new upgrade(10, 0, (1 * (rebirthRate)), 1.1, (1 * (rebirthRate)));
 				break;
 
 			case 1:
-				upgradeHolderFinal[i] = new upgrade(i, 100, 0, (10 * (rebirthRate)), 1.2, (10 * (rebirthRate)), 100, (10 * (rebirthRate)));
+				upgradeHolderFinal[i] = new upgrade(100, 0, (10 * (rebirthRate)), 1.2, (10 * (rebirthRate)));
 				break;
 
 			case 2:
-				upgradeHolderFinal[i] = new upgrade(i, 1000, 0, (100 * (rebirthRate)), 1.3, (100 * (rebirthRate)), 1000, (100 * (rebirthRate)));
+				upgradeHolderFinal[i] = new upgrade(1000, 0, (100 * (rebirthRate)), 1.3, (100 * (rebirthRate)));
 				break;
 
 			case 3:
-				upgradeHolderFinal[i] = new upgrade(i, 10000, 0, (1000 * (rebirthRate)), 1.2, (1000 * (rebirthRate)), 10000, (1000 * (rebirthRate)));
+				upgradeHolderFinal[i] = new upgrade(10000, 0, (1000 * (rebirthRate)), 1.2, (1000 * (rebirthRate)));
 				break;
 
 			case 4:
-				upgradeHolderFinal[i] = new upgrade(i, 100000, 0, (10000 * (rebirthRate)), 1.1, (10000 * (rebirthRate)), 100000, (10000 * (rebirthRate)));
+				upgradeHolderFinal[i] = new upgrade(100000, 0, (10000 * (rebirthRate)), 1.1, (10000 * (rebirthRate)));
 				break;
 
 			case 5:
-				upgradeHolderFinal[i] = new upgrade(i, 1000000, 0, (100000 * (rebirthRate)), 1.2, (100000 * (rebirthRate)), 1000000, (100000 * (rebirthRate)));
+				upgradeHolderFinal[i] = new upgrade(1000000, 0, (100000 * (rebirthRate)), 1.2, (100000 * (rebirthRate)));
 				break;
 
 			case 6:
-				upgradeHolderFinal[i] = new upgrade(i, 10000000, 0, (1000000 * (rebirthRate)), 1.3, (1000000 * (rebirthRate)), 10000000, (1000000 * (rebirthRate)));
+				upgradeHolderFinal[i] = new upgrade(10000000, 0, (1000000 * (rebirthRate)), 1.3, (1000000 * (rebirthRate)));
 				break;
 
 			case 7:
-				upgradeHolderFinal[i] = new upgrade(i, 100000000, 0, (10000000 * (rebirthRate)), 1.4, (10000000 * (rebirthRate)), 100000000, (10000000 * (rebirthRate)));
+				upgradeHolderFinal[i] = new upgrade(100000000, 0, (10000000 * (rebirthRate)), 1.4, (10000000 * (rebirthRate)));
 				break;
 
 			default:
@@ -689,8 +704,8 @@ function buyUpgrade(ident)
 {
 	if(buying == false)
 	{
-		var selectedPrice;
 		buying = true;
+		var selectedPrice;
 
 		switch(buyMode)
 		{
@@ -735,28 +750,20 @@ function buyUpgrade(ident)
 			 	break;
 		}
 
-		buying = false;
 		updateScreen();
+		buying = false;
 	}
 }
 
 class upgrade
 {
-	constructor(ident, price, obtained, addition, priceMultiplier, additionMultiplier, floorCost, floorAddition)
+	constructor(price, obtained, addition, priceMultiplier, additionMultiplier)
 	{
-		this.id = ident;
-		this.cost = price;
-		this.owned = obtained;
-		this.addAmount = addition;
-		this.costMultiplier = priceMultiplier;
-		this.addMultiplier = additionMultiplier;
-		this.baseCost = floorCost;
-		this.baseAddAmount = floorAddition;
-	}
-
-	getId()
-	{
-		return this.id;
+		this.cost = price; 
+		this.owned = obtained; 
+		this.addAmount = addition; 
+		this.costMultiplier = priceMultiplier; 
+		this.addMultiplier = additionMultiplier; 
 	}
 
 	getCost()
@@ -784,20 +791,6 @@ class upgrade
 		return this.addMultiplier;
 	}
 
-	getBaseCost(){
-		return this.baseCost;
-	}
-
-	getBaseAddAmount()
-	{
-		return this.baseAddAmount;
-	}
-
-	setId(ident)
-	{
-		this.id = ident;
-	}
-
 	setCost(price)
 	{
 		this.cost = price;
@@ -821,15 +814,6 @@ class upgrade
 	setAddMultiplier(additionMultiplier)
 	{
 		this.addMultiplier = additionMultiplier;
-	}
-
-	setBaseCost(floorCost){
-		this.baseCost = floorCost;
-	}
-
-	setBaseAddAmount(floorAddition)
-	{
-		this.baseAddAmount = floorAddition;
 	}
 }
 
@@ -855,23 +839,30 @@ function changePage(page)
 			document.getElementById("middle2").style.display = "none";
 			document.getElementById("right").style.display = "none";
 			break;
+
 		case 1:
 			document.getElementById("left").style.display = "none";
 			document.getElementById("middle").style.display = "block";
 			document.getElementById("middle2").style.display = "none";
 			document.getElementById("right").style.display = "none";
 			break;
+
 		case 2:
 			document.getElementById("left").style.display = "none";
 			document.getElementById("middle").style.display = "none";
 			document.getElementById("middle2").style.display = "none";
 			document.getElementById("right").style.display = "block";
 			break;
+
 		case 3:
 			document.getElementById("left").style.display = "none";
 			document.getElementById("middle").style.display = "none";
 			document.getElementById("middle2").style.display = "block";
 			document.getElementById("right").style.display = "none";
+			break;
+
+		default:
+			console.log("Invalid page type");
 			break;
 	}
 
@@ -939,12 +930,12 @@ function checkStorage()
 
 	try 
 	{
-		 	localStorage.setItem(test, test);
+		localStorage.setItem(test, test);
 		localStorage.removeItem(test);
 		return true;
-	 	} 
+	} 
 	catch(e)
-	 	{
-	 		return false;
+	{
+	 	return false;
 	}
 }
