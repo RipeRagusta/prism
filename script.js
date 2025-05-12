@@ -394,7 +394,7 @@ function evaluateCommand(commandEntered)
 			consoleString.innerHTML += "_  /   _  ____/   ";
 			consoleString.appendChild(consoleDecorSeperatorElement(9, true));
 			consoleString.innerHTML += "\n";
-			consoleString.innerHTML += "/_/    /_/        " + "language: " + navigator.language + "\n";
+			consoleString.innerHTML += "/_/    /_/        " + "language: " + navigator.language;
 			consoleFormatBox.appendChild(consoleString);
 			consoleFormatBoxBox.appendChild(consoleFormatBox);
 			consoleHistory.appendChild(consoleFormatBoxBox);
