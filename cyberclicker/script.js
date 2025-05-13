@@ -208,7 +208,7 @@ function rebirthProcess()
 			clearInterval(GAME);
 			rebirths += 1;
 			amountOfContractsAcceptable += 1;
-			document.getElementById("rebirtbutton").innerHTML = "Rebirth?";
+			document.getElementById("rebirtbutton").innerHTML = "Clone?";
 			cyberCookies = 0;
 			setRibirthRate();
 			createUpgrades();
@@ -227,7 +227,7 @@ function rebirthProcess()
 
 	document.getElementById("rebirtbutton").addEventListener("mouseout", () => 
 	{
-		document.getElementById("rebirtbutton").innerHTML = "Rebirth?";
+		document.getElementById("rebirtbutton").innerHTML = "Clone?";
 		clickedOnce = false;
 		updateScreen();
 	});
