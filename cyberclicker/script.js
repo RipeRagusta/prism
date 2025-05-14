@@ -193,7 +193,7 @@ function checkRebirthGoal()
 
 function rebirthProcess()
 {
-	var clickedOnce;
+	var clickedOnce = false;
 
 	if(canRebirth == true)
 	{
@@ -296,6 +296,7 @@ function updateScreen()
 				document.getElementById("upgradeowned" + i).innerHTML = formatMyNumber(upgradeHolderFinal[i].getOwned());
 				document.getElementById("upgraderate" + i).innerHTML = formatMyNumber(upgradeHolderFinal[i].getAddAmount());
 				document.getElementById("upgrademaxavailable" + i).innerHTML = formatMyNumber(getMaxAfford(i));
+
 				if(getMaxAfford(i) == 0)
 				{
 					document.getElementById("upgrade" + i).style.borderLeft = "calc(0.1 * var(--sizer)) solid red";
@@ -306,6 +307,7 @@ function updateScreen()
 					document.getElementById("upgrade" + i).style.borderLeft = "calc(0.1 * var(--sizer)) solid lime";
 					document.getElementById("upgrade" + i).style.borderTop = "calc(0.1 * var(--sizer)) solid lime";
 				}
+
 				break;
 
 			case 1:
@@ -313,6 +315,7 @@ function updateScreen()
 				document.getElementById("upgradeowned" + i).innerHTML = formatMyNumber(upgradeHolderFinal[i].getOwned());
 				document.getElementById("upgraderate" + i).innerHTML = formatMyNumber(upgradeHolderFinal[i].getAddAmount());
 				document.getElementById("upgrademaxavailable" + i).innerHTML = formatMyNumber(getMaxAfford(i));
+
 				if(getMaxAfford(i) < 10)
 				{
 					document.getElementById("upgrade" + i).style.borderLeft = "calc(0.1 * var(--sizer)) solid red";
@@ -323,6 +326,7 @@ function updateScreen()
 					document.getElementById("upgrade" + i).style.borderLeft = "calc(0.1 * var(--sizer)) solid lime";
 					document.getElementById("upgrade" + i).style.borderTop = "calc(0.1 * var(--sizer)) solid lime";
 				}
+
 				break;
 
 			case 2:
@@ -330,6 +334,7 @@ function updateScreen()
 				document.getElementById("upgradeowned" + i).innerHTML = formatMyNumber(upgradeHolderFinal[i].getOwned());
 				document.getElementById("upgraderate" + i).innerHTML = formatMyNumber(upgradeHolderFinal[i].getAddAmount());
 				document.getElementById("upgrademaxavailable" + i).innerHTML = formatMyNumber(getMaxAfford(i));
+
 				if(getMaxAfford(i) < 100)
 				{
 					document.getElementById("upgrade" + i).style.borderLeft = "calc(0.1 * var(--sizer)) solid red";
@@ -340,6 +345,7 @@ function updateScreen()
 					document.getElementById("upgrade" + i).style.borderLeft = "calc(0.1 * var(--sizer)) solid lime";
 					document.getElementById("upgrade" + i).style.borderTop = "calc(0.1 * var(--sizer)) solid lime";
 				}
+
 				break;
 
 			case 3:
@@ -347,6 +353,7 @@ function updateScreen()
 				document.getElementById("upgradeowned" + i).innerHTML = formatMyNumber(upgradeHolderFinal[i].getOwned());
 				document.getElementById("upgraderate" + i).innerHTML = formatMyNumber(upgradeHolderFinal[i].getAddAmount());
 				document.getElementById("upgrademaxavailable" + i).innerHTML = formatMyNumber(getMaxAfford(i));
+
 				if(getMaxAfford(i) == 0)
 				{
 					document.getElementById("upgrade" + i).style.borderLeft = "calc(0.1 * var(--sizer)) solid red";
@@ -357,6 +364,7 @@ function updateScreen()
 					document.getElementById("upgrade" + i).style.borderLeft = "calc(0.1 * var(--sizer)) solid lime";
 					document.getElementById("upgrade" + i).style.borderTop = "calc(0.1 * var(--sizer)) solid lime";
 				}
+
 				break;
 
 			default:
@@ -371,7 +379,8 @@ function updateScreen()
 		{
 			document.getElementById("upgrade" + i).style.display = "none";
 		}
-		else if(upgradeHolderFinal[i - 1].getOwned() > 0){
+		else if(upgradeHolderFinal[i - 1].getOwned() > 0)
+		{
 			document.getElementById("upgrade" + i).style.display = "block";
 		}
 	}
@@ -392,6 +401,7 @@ function updateScreen()
 	{
 		document.getElementById("pagebutton" + i).style.color = "cyan";
 	}
+
 	document.getElementById("pagebutton" + currentMobilePage).style.color = "white";
 
 	if(canRebirth == true)
@@ -435,7 +445,8 @@ function running()
 		GAME = setInterval(ticking, TICKRATE);
 		//console.log("Running");
 	}
-	else{
+	else
+	{
 		console.log("Failed running");
 	}
 }
@@ -443,6 +454,7 @@ function running()
 function cookiesPerSecond()
 {
 	cookiesPerSecondValue = 0;
+
 	for (let i = 0; i < UPGRADEAMOUNT; i++) 
 	{
 		if(upgradeHolderFinal[i].getOwned() > 0)
@@ -486,8 +498,10 @@ function generateContract(number)
 	contractHolderFinal[number] = contractPropertiesHolder;
 }
 
-function initializeContracts(amount){
-	for (let i = 0; i < amount; i++){
+function initializeContracts(amount)
+{
+	for (let i = 0; i < amount; i++)
+	{
 		generateContract(i);
 	}
 }
@@ -520,6 +534,7 @@ function acceptContract(idNumber)
 	{
 		contractHolderFinal[idNumber][3] = true;
 	}
+
 	updateScreen();
 }
 
