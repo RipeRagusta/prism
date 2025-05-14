@@ -175,7 +175,7 @@ function initialize()
 	tick = 0;
 	TICKRATE = 1000;
 	RUNNING = true;
-	Running();
+	running();
 	updateScreen();
 }
 
@@ -219,6 +219,7 @@ function rebirthProcess()
 			saveGame();
 			updateScreen();
 			rebirthing = false;
+			clickedOnce = false;
 			GAME = setInterval(ticking, TICKRATE);
 		}
 	});
@@ -427,7 +428,7 @@ function ticking()
 	updateScreen();
 }
 
-function Running()
+function running()
 {
 	if(RUNNING == true)
 	{
@@ -746,7 +747,7 @@ function buyUpgrade(ident)
 				break;
 
 			default:
-			 	console.log("Invalid page type");
+			 	console.log("Invalid buy mode type");
 			 	break;
 		}
 
