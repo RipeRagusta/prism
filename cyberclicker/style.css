@@ -281,11 +281,12 @@ nav{
 	display: flex;
 	flex-direction: column;
 	gap: var(--sizer);
-	background-color: #1a1a1a;
+	background-color: rgb(19, 19, 19);
 	margin: var(--sizer);
 	text-align: center;
 	align-items: center;
 	justify-content: center;
+	border-radius: 0px calc(0.5 * var(--sizer)) 0px calc(0.5 * var(--sizer));
 }
 
 .clonecookiebutton{

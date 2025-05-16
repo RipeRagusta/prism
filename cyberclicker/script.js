@@ -618,20 +618,17 @@ function updateScreen()
 
 	if(autoContractsOwned == false && cloneCookies >= 1)
 	{
-		//document.getElementById("autocontractsbutton").style.border = "calc(0.1 * var(--sizer)) solid red";
 		document.getElementById("autocontractsheader").style.color = "lime";
 		document.getElementById("autocontractspricetoggle").innerHTML = "Price: 1 CloneCookie";
 	}
 	else
 	{
-		//document.getElementById("autocontractsbutton").style.border = "calc(0.1 * var(--sizer)) solid lime";
 		document.getElementById("autocontractsheader").style.color = "red";
 		document.getElementById("autocontractspricetoggle").innerHTML = "Price: 1 CloneCookie";
 	}
 
 	if(autoContractsOwned == true && autoContractsToggle == true)
 	{
-		//document.getElementById("autocontractsbutton").style.border = "calc(0.1 * var(--sizer)) solid lime";
 		document.getElementById("autocontractsheader").style.color = "black";
 		document.getElementById("autocontractsbutton").style.color = "black";
 		document.getElementById("autocontractscontainer").style.background = "repeating-linear-gradient(180deg, #00e6e6, cyan calc(0.3 * var(--sizer)), white calc(0.3 * var(--sizer)))";
@@ -639,7 +636,6 @@ function updateScreen()
 	}
 	else if(autoContractsOwned == true && autoContractsToggle == false)
 	{
-		//document.getElementById("autocontractsbutton").style.border = "calc(0.1 * var(--sizer)) solid red";
 		document.getElementById("autocontractsheader").style.color = "lime";
 		document.getElementById("autocontractsbutton").style.color = "";
 		document.getElementById("autocontractscontainer").style.background = "";
