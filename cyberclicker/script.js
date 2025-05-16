@@ -12,11 +12,20 @@ var canRebirth;
 var rebirthGoal;
 var rebirthing;
 
+var cloneCookies;
+
+var bodyLevel;
+var reflexesLevel;
+var powerLevel;
+
 var amountOfContractsAcceptable;
 var CONTRACTAMOUNT;
 var contractHolderFinal; 
 var contractType;
 var contractsAllowed;
+
+var autoContractsToggle;
+var autoContractsOwned;
 
 var upgradeHolderFinal;
 var UPGRADEAMOUNT;
@@ -33,6 +42,42 @@ function initialize()
 {
 	buying = false;
 	rebirthing = false;
+
+	if(checkStorage() == true)
+	{
+		if(localStorage.getItem("savedBodyLevel") === null)
+		{
+			bodyLevel = 0;
+		}
+		else
+		{
+			bodyLevel = parseInt(localStorage.getItem("savedBodyLevel")); 
+		}
+	}
+
+	if(checkStorage() == true)
+	{
+		if(localStorage.getItem("savedReflexesLevel") === null)
+		{
+			reflexesLevel = 0;
+		}
+		else
+		{
+			reflexesLevel = parseInt(localStorage.getItem("savedReflexesLevel")); 
+		}
+	}
+
+	if(checkStorage() == true)
+	{
+		if(localStorage.getItem("savedPowerLevel") === null)
+		{
+			powerLevel = 0;
+		}
+		else
+		{
+			powerLevel = parseInt(localStorage.getItem("savedPowerLevel")); 
+		}
+	}
 
 	if(checkStorage() == true)
 	{
@@ -172,6 +217,152 @@ function initialize()
 		createUpgrades();
 	}
 
+	if(checkStorage() == true)
+	{
+		if(localStorage.getItem("savedAutoContractsToggle") === null)
+		{
+			autoContractsToggle = false;
+		}
+		else
+		{
+			autoContractsToggle = JSON.parse(localStorage.getItem("savedAutoContractsToggle"));
+		}
+	}
+	else
+	{
+		autoContractsToggle = false;
+	}
+
+	if(checkStorage() == true)
+	{
+		if(localStorage.getItem("savedAutoContractsOwned") === null)
+		{
+			autoContractsOwned = false;
+		}
+		else
+		{
+			autoContractsOwned = JSON.parse(localStorage.getItem("savedAutoContractsOwned"));
+		}
+	}
+	else
+	{
+		autoContractsOwned = false;
+	}
+	
+	if(checkStorage() == true)
+	{
+		if(localStorage.getItem("savedCloneCookies") === null)
+		{
+			cloneCookies = 0;
+		}
+		else
+		{
+			cloneCookies = parseInt(localStorage.getItem("savedCloneCookies")); 
+		}
+	}
+
+	document.getElementById("importfile").addEventListener("change", function() 
+  	{
+  		let file = this.files[0];
+
+		if (file) 
+  		{
+   			let reader = new FileReader();
+   			
+   			reader.onload = function(event)
+   			{
+   				clearInterval(GAME);
+   				let saveData = JSON.parse(event.target.result);
+
+   				if(saveData.cyberCookies)
+   				{
+   					cyberCookies = saveData.cyberCookies;
+   				}
+
+   				if(saveData.cloneCookies)
+   				{
+   					cloneCookies = saveData.cloneCookies;
+   				}
+
+   				if(saveData.contractHolderFinal)
+   				{
+   					contractHolderFinal = saveData.contractHolderFinal;
+   				}
+
+   				if(saveData.rebirths)
+   				{
+   					rebirths = saveData.rebirths;
+   				}
+
+   				if(saveData.rebirths)
+   				{
+   					rebirths = saveData.rebirths;
+   				}
+
+   				if(saveData.rebirthGoal)
+   				{
+   					rebirthGoal = saveData.rebirthGoal;
+   				}
+
+   				if(saveData.upgradeHolderFinal)
+   				{
+   					upgradeHolderFinal = saveData.upgradeHolderFinal;
+   					upgradeHolderFinal = upgradeHolderFinal.map(obj => new upgrade(obj.cost, obj.owned, obj.addAmount, obj.costMultiplier, obj.addMultiplier));
+   				}
+
+   				if(saveData.autoContractsToggle)
+   				{
+   					autoContractsToggle = saveData.autoContractsToggle;
+   				}
+
+   				if(saveData.autoContractsOwned)
+   				{
+   					autoContractsOwned = saveData.autoContractsOwned;
+   				}
+
+   				if(saveData.bodyLevel)
+   				{
+   					bodyLevel = saveData.bodyLevel;
+   				}
+
+   				if(saveData.reflexesLevel)
+   				{
+   					reflexesLevel = saveData.reflexesLevel;
+   				}
+
+   				if(saveData.powerLevel)
+   				{
+   					powerLevel = saveData.powerLevel;
+   				}
+   				
+   				if(checkStorage() == true)
+   				{
+					localStorage.setItem("savedBankTotal", cyberCookies); 
+					localStorage.setItem("savedContractList", JSON.stringify(contractHolderFinal));
+					localStorage.setItem("savedUpgradesList", JSON.stringify(upgradeHolderFinal));
+					localStorage.setItem("savedRebirthCount", rebirths);
+					localStorage.setItem("savedRebirthGoal", rebirthGoal);
+					localStorage.setItem("savedAutoContractsToggle", autoContractsToggle);
+					localStorage.setItem("savedAutoContractsOwned", autoContractsOwned);
+					localStorage.setItem("savedCloneCookies", cloneCookies);
+					localStorage.setItem("savedBodyLevel", bodyLevel);
+					localStorage.setItem("savedReflexesLevel", reflexesLevel);
+					localStorage.setItem("savedPowerLevel", powerLevel);
+   				}
+
+   				GAME = setInterval(ticking, TICKRATE);
+   				updateScreen();
+   			}
+
+   			reader.onerror = function(event) 
+   			{
+                console.error("Error reading save data");
+            }
+
+            reader.readAsText(file);
+   		}
+  	});
+
 	tick = 0;
 	TICKRATE = 1000;
 	RUNNING = true;
@@ -216,7 +407,18 @@ function rebirthProcess()
 			initializeContracts(CONTRACTAMOUNT);
 			rebirthGoal = rebirthGoal * 1.05;
 			canRebirth = false;
-			saveGame();
+			cloneCookies += 3;
+
+			if(checkStorage() == true)
+			{
+				localStorage.setItem("savedBankTotal", cyberCookies); 
+				localStorage.setItem("savedContractList", JSON.stringify(contractHolderFinal));
+				localStorage.setItem("savedUpgradesList", JSON.stringify(upgradeHolderFinal));
+				localStorage.setItem("savedRebirthCount", rebirths);
+				localStorage.setItem("savedRebirthGoal", rebirthGoal);
+				localStorage.setItem("savedCloneCookies", cloneCookies);
+			}
+
 			updateScreen();
 			rebirthing = false;
 			clickedOnce = false;
@@ -243,12 +445,10 @@ function saveGame()
 			localStorage.setItem("savedBankTotal", cyberCookies); 
 			localStorage.setItem("savedContractList", JSON.stringify(contractHolderFinal));
 			localStorage.setItem("savedUpgradesList", JSON.stringify(upgradeHolderFinal));
-			localStorage.setItem("savedRebirthCount", rebirths);
-			localStorage.setItem("savedRebirthGoal", rebirthGoal);
 		}
 		catch(e)
 		{
-			console.log("save game error");
+			console.log("Save game error");
 		}
 	}
 }
@@ -414,6 +614,41 @@ function updateScreen()
 	}
 
 	document.getElementById("rebirthgoal").innerHTML = formatMyNumber(rebirthGoal);
+
+	if(autoContractsOwned == false && cloneCookies >= 1)
+	{
+		//document.getElementById("autocontractsbutton").style.border = "calc(0.1 * var(--sizer)) solid red";
+		document.getElementById("autocontractsheader").style.color = "lime";
+		document.getElementById("autocontractspricetoggle").innerHTML = "Price: 1 CloneCookie";
+	}
+	else
+	{
+		//document.getElementById("autocontractsbutton").style.border = "calc(0.1 * var(--sizer)) solid lime";
+		document.getElementById("autocontractsheader").style.color = "red";
+		document.getElementById("autocontractspricetoggle").innerHTML = "Price: 1 CloneCookie";
+	}
+
+	if(autoContractsOwned == true && autoContractsToggle == true)
+	{
+		//document.getElementById("autocontractsbutton").style.border = "calc(0.1 * var(--sizer)) solid lime";
+		document.getElementById("autocontractsheader").style.color = "black";
+		document.getElementById("autocontractsbutton").style.color = "black";
+		document.getElementById("autocontractscontainer").style.background = "repeating-linear-gradient(180deg, #00e6e6, cyan calc(0.3 * var(--sizer)), white calc(0.3 * var(--sizer)))";
+		document.getElementById("autocontractspricetoggle").innerHTML = "On";
+	}
+	else if(autoContractsOwned == true && autoContractsToggle == false)
+	{
+		//document.getElementById("autocontractsbutton").style.border = "calc(0.1 * var(--sizer)) solid red";
+		document.getElementById("autocontractsheader").style.color = "lime";
+		document.getElementById("autocontractsbutton").style.color = "";
+		document.getElementById("autocontractscontainer").style.background = "";
+		document.getElementById("autocontractspricetoggle").innerHTML = "Off";
+	}
+
+	document.getElementById("clonecookies").innerHTML = cloneCookies;
+	document.getElementById("bodylevel").innerHTML = bodyLevel;
+	document.getElementById("reflexeslevel").innerHTML = reflexesLevel;
+	document.getElementById("powerlevel").innerHTML = powerLevel;
 }
 
 function formatMyNumber(number)
@@ -435,6 +670,7 @@ function ticking()
 	saveGame();
 	cookiesPerSecond();
 	checkRebirthGoal();
+	autoContractsSelect();
 	updateScreen();
 }
 
@@ -474,12 +710,12 @@ function generateContract(number)
 	switch(randomTypeHolder)
 	{
 		case "Hit":
-			var contractTimeHolder = Math.floor(Math.random() * (360 - 300 + 1) + 300);
+			var contractTimeHolder = Math.floor((Math.random() * (360 - 300 + 1) + 300) - powerLevel);
 			var contractAmountHolder = Math.floor(Math.random() * (80000 - 5000 + 1) + 5000);
 			break;
 
 		case "Race":
-			var contractTimeHolder = Math.floor(Math.random() * (180 - 120 + 1) + 120);
+			var contractTimeHolder = Math.floor((Math.random() * (180 - 120 + 1) + 120) - reflexesLevel);
 			var contractAmountHolder = Math.floor(Math.random() * (1000 - 500 + 1) + 500);
 			break;
 
@@ -559,7 +795,7 @@ function contractCountdown()
 
 function clickedCookie() 
 {
-	cyberCookies = cyberCookies + 1; 
+	cyberCookies = cyberCookies + 1 + (bodyLevel * 100); 
 	updateScreen();
 }
 
@@ -953,5 +1189,160 @@ function checkStorage()
 	catch(e)
 	{
 	 	return false;
+	}
+}
+
+function buyAutoContracts()
+{
+	if(buying == false)
+	{
+		buying = true;
+
+		if(autoContractsOwned == true)
+		{
+			if(autoContractsToggle == true)
+			{
+				autoContractsToggle = false;
+			}
+			else
+			{
+				autoContractsToggle = true;
+			}
+
+			if(checkStorage() == true)
+			{
+				localStorage.setItem("savedAutoContractsToggle", autoContractsToggle);
+			}
+
+			autoContractsSelect();
+			updateScreen();
+		}
+		else if(cloneCookies >= 1 && autoContractsOwned == false)
+		{
+			cloneCookies -= 1;
+			autoContractsOwned = true;
+
+			if(checkStorage() == true)
+			{
+				localStorage.setItem("savedCloneCookies", cloneCookies);
+				localStorage.setItem("savedAutoContractsOwned", autoContractsOwned);
+			}
+
+			updateScreen();
+		}
+
+		buying = false;
+	}
+}
+
+function autoContractsSelect()
+{
+	for(let i = 0; i < CONTRACTAMOUNT; i++)
+	{
+		if(canAcceptContract() == true && autoContractsToggle == true)
+		{
+			contractHolderFinal[i][3] = true;
+		}
+	}
+}
+
+function exportSave()
+{
+	let data = 
+	{
+		cloneCookies: localStorage.getItem("savedCloneCookies") ? JSON.parse(localStorage.getItem("savedCloneCookies")) : null,
+		cyberCookies: localStorage.getItem("savedBankTotal") ? JSON.parse(localStorage.getItem("savedBankTotal")) : null, 
+    	contractHolderFinal: localStorage.getItem("savedContractList") ? JSON.parse(localStorage.getItem("savedContractList")) : null,
+    	rebirths: localStorage.getItem("savedRebirthCount") ? JSON.parse(localStorage.getItem("savedRebirthCount")) : null,
+    	rebirthGoal: localStorage.getItem("savedRebirthGoal") ? JSON.parse(localStorage.getItem("savedRebirthGoal")) : null,
+    	upgradeHolderFinal: localStorage.getItem("savedUpgradesList") ? JSON.parse(localStorage.getItem("savedUpgradesList")) : null,
+    	autoContractsToggle: localStorage.getItem("savedAutoContractsToggle") ? JSON.parse(localStorage.getItem("savedAutoContractsToggle")) : null,
+    	autoContractsOwned: localStorage.getItem("savedAutoContractsOwned") ? JSON.parse(localStorage.getItem("savedAutoContractsOwned")) : null,
+    	bodyLevel: localStorage.getItem("savedBodyLevel") ? JSON.parse(localStorage.getItem("savedBodyLevel")) : null,
+    	reflexesLevel: localStorage.getItem("savedReflexesLevel") ? JSON.parse(localStorage.getItem("savedReflexesLevel")) : null,
+    	powerLevel: localStorage.getItem("savedPowerLevel") ? JSON.parse(localStorage.getItem("savedPowerLevel")) : null
+	}
+
+	let jsonData = JSON.stringify(data);
+	let filename = "cyberclicker.json";
+  	let blob = new Blob([jsonData], { type: 'application/json' });
+ 	let url = URL.createObjectURL(blob);
+  	let a = document.createElement('a');
+ 	a.href = url;
+  	a.download = filename;
+ 	document.body.appendChild(a);
+ 	a.click();
+ 	document.body.removeChild(a);
+  	URL.revokeObjectURL(url);
+}
+
+function importSave(argument) 
+{
+	let fileInput = document.getElementById("importfile");
+	fileInput.click();
+}
+
+function levelUp(type)
+{
+	if(buying == false)
+	{
+		buying = true;
+
+		if(cloneCookies >= 1)
+		{
+			switch (type)
+			{
+				case 0:
+					cloneCookies -= 1;
+					bodyLevel += 1;
+
+					if(checkStorage() == true)
+					{
+						localStorage.setItem("savedBodyLevel", bodyLevel);
+					}
+
+					break;
+
+				case 1:
+					if(reflexesLevel < 100)
+					{
+						cloneCookies -= 1;
+						reflexesLevel += 1;
+					}
+					
+					if(checkStorage() == true)
+					{
+						localStorage.setItem("savedReflexesLevel", reflexesLevel);
+					}
+
+					break;
+
+				case 2:
+					if(powerLevel < 200)
+					{
+						cloneCookies -= 1;
+						powerLevel += 1;
+					}
+
+					if(checkStorage() == true)
+					{
+						localStorage.setItem("savedPowerLevel", powerLevel);
+					}
+
+					break;
+
+				default:
+					console.log("Invalid level type");
+					break;
+			}
+
+			if(checkStorage() == true)
+			{
+				localStorage.setItem("savedCloneCookies", cloneCookies);
+			}
+		}
+
+		updateScreen();
+		buying = false;
 	}
 }

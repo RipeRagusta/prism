@@ -66,6 +66,12 @@
   						<p>Time: <span id="contracttime5">60</span> Seconds</p>
   						<p>Reward: <span id="contractreward5">1000</span> CyberCookies</p>
   					</div>
+  					<div class="button contract" id="autocontractscontainer" onclick="buyAutoContracts()">
+  						<div id="autocontractsbutton">
+  							<p id="autocontractsheader">Auto Contracts</p>
+  							<p id="autocontractspricetoggle">Price: 1 CloneCookie</p>
+  						</div>
+  					</div>
   				</div>
 			</div>
 			<div id="middle2">
@@ -73,7 +79,41 @@
 					<h2 class="rebirthcontainer">Clones: <span id="rebirthcount"></span></h2>
 					<p id="unlockwhen">Unlock at <span id="rebirthgoal">100000000000000</span> CyberCookies</p>
 					<h3 id="rebirtbutton" onclick="rebirthProcess()">Clone?</h3>
-					<p id="rebirthdescriptiontext">Reset progress for rewards</p>
+					<!--<p id="rebirthdescriptiontext">Reset progress for rewards</p>-->
+					<div id="savegamepage">
+						<input type="file" id="importfile" accept=".json" style="display: none;">
+						<p class="savebutton" id="importsave" onclick="importSave()">Import Save</p>
+						<p class="savebutton" onclick="exportSave()">Export Save</p>
+					</div>
+					<h2 id="clonecookiestext">CloneCookies: <span id="clonecookies">0</span></h2>
+					<div id="clonecookiespage">
+						<div class="clonecookiebutton" id="bodybutton" onclick="levelUp(0)">
+							<h3 id="clonecookieheader">Body</h3>
+							<p>Level: <span id="bodylevel">0</span></p>
+							<div id="bodyinfo">
+								<p>Cost: 1 CloneCookie</p>
+								<p>Gives +100 Click Strength Per Level</p>
+							</div>
+						</div>
+						<div class="clonecookiebutton" id="reflexesbutton" onclick="levelUp(1)">
+							<h3 id="clonecookieheader">Reflexes</h3>
+							<p>Level: <span id="reflexeslevel">0</span></p>
+							<div id="reflexesinfo">
+								<p>Cost: 1 CloneCookie</p>
+								<p>Gives: -1s Generated Race Contract Per Level</p>
+								<p>Max: 100</p>
+							</div>
+						</div>
+						<div class="clonecookiebutton" id="powerbutton" onclick="levelUp(2)">
+							<h3 id="clonecookieheader">Power</h3>
+							<p>Level: <span id="powerlevel">0</span></p>
+							<div id="powerinfo">
+								<p>Cost: 1 CloneCookie</p>
+								<p>Gives: -1s Generated Hit Contract Per Level</p>
+								<p>Max: 200</p>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
   			<div id="right">

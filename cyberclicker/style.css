@@ -33,7 +33,7 @@ html, body{
 	background-color: #000d1a;
 }
 
-p, h1, h2, h3, h4{
+p, h1, h2, h3, h4, small{
 	padding: 0px;
 	margin: 0px;
 	display: block;
@@ -110,7 +110,7 @@ main{
 	height: 100dvh;
 	max-height: 100dvh;
 	background-size: 150%;
-	background-color: black;
+	background-color: rgb(6, 6, 6);
 }
 
 .accepttext{
@@ -121,7 +121,7 @@ main{
 	background-color: #000d1a;
 	color: cyan;
 	padding: var(--sizer);
-	margin-bottom: var(--sizer);
+	margin-top: var(--sizer);
 	border-top: calc(0.1 * var(--sizer)) solid cyan;
 	border-bottom: calc(0.1 * var(--sizer)) solid cyan;
 	background: repeating-linear-gradient(180deg, #001a1a, #003333 calc(0.3 * var(--sizer)), #003333 calc(0.3 * var(--sizer)));
@@ -135,7 +135,6 @@ main{
 #contractstext{
 	margin-top: var(--sizer);
 	margin-left: var(--sizer);
-	margin-bottom: var(--sizer);
 	color: white;
 }
 
@@ -146,6 +145,8 @@ main{
 	max-height: 100vh;
 	height: 100dvh;
 	max-height: 100dvh;
+	display: flex;
+	flex-direction: column;
 }
 
 #upgradespage{
@@ -267,6 +268,82 @@ nav{
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+#autocontractsheader{
+	font-weight: bold;
+}
+
+#clonecookiespage{
+	flex: 1;
+	color: white;
+	padding: var(--sizer);
+	display: flex;
+	flex-direction: column;
+	gap: var(--sizer);
+	background-color: #1a1a1a;
+	margin: var(--sizer);
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+}
+
+.clonecookiebutton{
+	color: white;
+	padding: var(--sizer);
+	user-select: none;
+	width: 100%;
+}
+
+.clonecookiebutton:hover{
+	color: yellow;
+	cursor: pointer;
+}
+
+#bodyinfo, #reflexesinfo, #powerinfo{
+	display: none;
+}
+
+#bodybutton:hover #bodyinfo{
+	display: block;
+}
+
+#reflexesbutton:hover #reflexesinfo{
+	display: block;
+}
+
+#powerbutton:hover #powerinfo{
+	display: block;
+}
+
+#clonecookiestext{
+	text-align: center;
+	
+}
+
+#autocontractscontainer{
+	margin-bottom: var(--sizer);
+}
+
+#savegamepage{
+	display: flex;
+	gap: var(--sizer);
+	align-items: center;
+	justify-content: center;
+	padding: var(--sizer);
+	padding-top: calc(var(--sizer) * 2);
+	padding-bottom: calc(var(--sizer) * 2);
+	flex-flow: row wrap;
+}
+
+.savebutton{
+	background-color: yellow;
+	color: black;
+	cursor: pointer;
+	padding: calc(var(--sizer) / 2);
+	border-radius: calc(0.25 * var(--sizer)) 0px calc(0.25 * var(--sizer)) 0px;
+	border: calc(0.1 * var(--sizer)) solid black;
+	outline: calc(0.1 * var(--sizer)) solid yellow;
 }
 
 @media only screen and (max-width: 600px)
