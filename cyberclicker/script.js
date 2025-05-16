@@ -355,6 +355,7 @@ function initialize()
    				setRibirthRate();
    				checkRebirthGoal();
    				amountOfContractsAcceptable = 1 + rebirths;
+   				document.getElementById("importfile").value = "";
    				updateScreen();
    				GAME = setInterval(ticking, TICKRATE);
    				loadingStuff = false;
