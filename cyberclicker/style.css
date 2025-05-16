@@ -280,7 +280,7 @@ nav{
 	padding: var(--sizer);
 	display: flex;
 	flex-direction: column;
-	gap: var(--sizer);
+	gap: calc(var(--sizer) * 2);
 	background-color: rgb(19, 19, 19);
 	margin: var(--sizer);
 	text-align: center;
@@ -291,7 +291,6 @@ nav{
 
 .clonecookiebutton{
 	color: white;
-	padding: var(--sizer);
 	user-select: none;
 	width: 100%;
 }
