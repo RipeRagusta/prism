@@ -350,6 +350,7 @@ function initialize()
 					localStorage.setItem("savedPowerLevel", powerLevel);
    				}
 
+   				amountOfContractsAcceptable = 1 + rebirths;
    				GAME = setInterval(ticking, TICKRATE);
    				updateScreen();
    			}
@@ -405,7 +406,7 @@ function rebirthProcess()
 			createUpgrades();
 			cookiesPerSecond();
 			initializeContracts(CONTRACTAMOUNT);
-			rebirthGoal = rebirthGoal * 1.05;
+			rebirthGoal = parseInt(rebirthGoal * 1.05);
 			canRebirth = false;
 			cloneCookies += 3;
 
