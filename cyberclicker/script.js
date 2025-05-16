@@ -38,8 +38,11 @@ var howManyContractsAccepted;
 
 var currentMobilePage;
 
+var loadingStuff;
+
 function initialize() 
 {
+	loadingStuff = false;
 	buying = false;
 	rebirthing = false;
 
@@ -261,6 +264,9 @@ function initialize()
 		}
 	}
 
+	tick = 0;
+	TICKRATE = 1000;
+
 	document.getElementById("importfile").addEventListener("change", function() 
   	{
   		let file = this.files[0];
@@ -271,66 +277,62 @@ function initialize()
    			
    			reader.onload = function(event)
    			{
+   				loadingStuff = true;
    				clearInterval(GAME);
    				let saveData = JSON.parse(event.target.result);
 
-   				if(saveData.cyberCookies)
+   				if(saveData.cyberCookies !== undefined)
    				{
    					cyberCookies = saveData.cyberCookies;
    				}
 
-   				if(saveData.cloneCookies)
+   				if(saveData.cloneCookies !== undefined)
    				{
    					cloneCookies = saveData.cloneCookies;
    				}
 
-   				if(saveData.contractHolderFinal)
+   				if(saveData.contractHolderFinal !== undefined)
    				{
    					contractHolderFinal = saveData.contractHolderFinal;
    				}
 
-   				if(saveData.rebirths)
+   				if(saveData.rebirths !== undefined)
    				{
    					rebirths = saveData.rebirths;
    				}
 
-   				if(saveData.rebirths)
-   				{
-   					rebirths = saveData.rebirths;
-   				}
-
-   				if(saveData.rebirthGoal)
+   				if(saveData.rebirthGoal !== undefined)
    				{
    					rebirthGoal = saveData.rebirthGoal;
    				}
 
-   				if(saveData.upgradeHolderFinal)
+   				if(saveData.upgradeHolderFinal !== undefined)
    				{
    					upgradeHolderFinal = saveData.upgradeHolderFinal;
    					upgradeHolderFinal = upgradeHolderFinal.map(obj => new upgrade(obj.cost, obj.owned, obj.addAmount, obj.costMultiplier, obj.addMultiplier));
    				}
 
-   				if(saveData.autoContractsToggle)
+   				if(saveData.autoContractsToggle !== undefined)
    				{
    					autoContractsToggle = saveData.autoContractsToggle;
    				}
 
-   				if(saveData.autoContractsOwned)
+   				if(saveData.autoContractsOwned !== undefined)
    				{
    					autoContractsOwned = saveData.autoContractsOwned;
    				}
 
-   				if(saveData.bodyLevel)
+   				if(saveData.bodyLevel !== undefined)
    				{
    					bodyLevel = saveData.bodyLevel;
    				}
 
-   				if(saveData.reflexesLevel)
+   				if(saveData.reflexesLevel !== undefined)
    				{
    					reflexesLevel = saveData.reflexesLevel;
    				}
 
-   				if(saveData.powerLevel)
+   				if(saveData.powerLevel !== undefined)
    				{
    					powerLevel = saveData.powerLevel;
    				}
@@ -350,9 +352,12 @@ function initialize()
 					localStorage.setItem("savedPowerLevel", powerLevel);
    				}
 
+   				setRibirthRate();
+   				checkRebirthGoal();
    				amountOfContractsAcceptable = 1 + rebirths;
-   				GAME = setInterval(ticking, TICKRATE);
    				updateScreen();
+   				GAME = setInterval(ticking, TICKRATE);
+   				loadingStuff = false;
    			}
 
    			reader.onerror = function(event) 
@@ -364,8 +369,6 @@ function initialize()
    		}
   	});
 
-	tick = 0;
-	TICKRATE = 1000;
 	RUNNING = true;
 	running();
 	updateScreen();
@@ -439,7 +442,7 @@ function rebirthProcess()
 
 function saveGame()
 {
-	if(checkStorage() == true && rebirthing == false)
+	if(checkStorage() == true && rebirthing == false && loadingStuff == false)
 	{
 		try
 		{
@@ -619,11 +622,15 @@ function updateScreen()
 	if(autoContractsOwned == false && cloneCookies >= 1)
 	{
 		document.getElementById("autocontractsheader").style.color = "lime";
+		document.getElementById("autocontractsbutton").style.color = "";
+		document.getElementById("autocontractscontainer").style.background = "";
 		document.getElementById("autocontractspricetoggle").innerHTML = "Price: 1 CloneCookie";
 	}
-	else
+	else if(autoContractsOwned == false && cloneCookies < 1)
 	{
 		document.getElementById("autocontractsheader").style.color = "red";
+		document.getElementById("autocontractsbutton").style.color = "";
+		document.getElementById("autocontractscontainer").style.background = "";
 		document.getElementById("autocontractspricetoggle").innerHTML = "Price: 1 CloneCookie";
 	}
 
@@ -1247,17 +1254,17 @@ function exportSave()
 {
 	let data = 
 	{
-		cloneCookies: localStorage.getItem("savedCloneCookies") ? JSON.parse(localStorage.getItem("savedCloneCookies")) : null,
-		cyberCookies: localStorage.getItem("savedBankTotal") ? JSON.parse(localStorage.getItem("savedBankTotal")) : null, 
+		cloneCookies: localStorage.getItem("savedCloneCookies") ? JSON.parse(localStorage.getItem("savedCloneCookies")) : 0,
+		cyberCookies: localStorage.getItem("savedBankTotal") ? JSON.parse(localStorage.getItem("savedBankTotal")) : 0, 
     	contractHolderFinal: localStorage.getItem("savedContractList") ? JSON.parse(localStorage.getItem("savedContractList")) : null,
-    	rebirths: localStorage.getItem("savedRebirthCount") ? JSON.parse(localStorage.getItem("savedRebirthCount")) : null,
-    	rebirthGoal: localStorage.getItem("savedRebirthGoal") ? JSON.parse(localStorage.getItem("savedRebirthGoal")) : null,
+    	rebirths: localStorage.getItem("savedRebirthCount") ? JSON.parse(localStorage.getItem("savedRebirthCount")) : 0,
+    	rebirthGoal: localStorage.getItem("savedRebirthGoal") ? JSON.parse(localStorage.getItem("savedRebirthGoal")) : 100000000000000,
     	upgradeHolderFinal: localStorage.getItem("savedUpgradesList") ? JSON.parse(localStorage.getItem("savedUpgradesList")) : null,
-    	autoContractsToggle: localStorage.getItem("savedAutoContractsToggle") ? JSON.parse(localStorage.getItem("savedAutoContractsToggle")) : null,
-    	autoContractsOwned: localStorage.getItem("savedAutoContractsOwned") ? JSON.parse(localStorage.getItem("savedAutoContractsOwned")) : null,
-    	bodyLevel: localStorage.getItem("savedBodyLevel") ? JSON.parse(localStorage.getItem("savedBodyLevel")) : null,
-    	reflexesLevel: localStorage.getItem("savedReflexesLevel") ? JSON.parse(localStorage.getItem("savedReflexesLevel")) : null,
-    	powerLevel: localStorage.getItem("savedPowerLevel") ? JSON.parse(localStorage.getItem("savedPowerLevel")) : null
+    	autoContractsToggle: localStorage.getItem("savedAutoContractsToggle") ? JSON.parse(localStorage.getItem("savedAutoContractsToggle")) : false,
+    	autoContractsOwned: localStorage.getItem("savedAutoContractsOwned") ? JSON.parse(localStorage.getItem("savedAutoContractsOwned")) : false,
+    	bodyLevel: localStorage.getItem("savedBodyLevel") ? JSON.parse(localStorage.getItem("savedBodyLevel")) : 0,
+    	reflexesLevel: localStorage.getItem("savedReflexesLevel") ? JSON.parse(localStorage.getItem("savedReflexesLevel")) : 0,
+    	powerLevel: localStorage.getItem("savedPowerLevel") ? JSON.parse(localStorage.getItem("savedPowerLevel")) : 0
 	}
 
 	let jsonData = JSON.stringify(data);
