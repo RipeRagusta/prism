@@ -300,11 +300,11 @@ nav{
 	cursor: pointer;
 }
 
-#bodyinfo, #reflexesinfo, #powerinfo{
+#intelligenceinfo, #reflexesinfo, #powerinfo{
 	display: none;
 }
 
-#bodybutton:hover #bodyinfo{
+#intelligencebutton:hover #intelligenceinfo{
 	display: block;
 }
 

@@ -14,7 +14,7 @@ var rebirthing;
 
 var cloneCookies;
 
-var bodyLevel;
+var intelligenceLevel;
 var reflexesLevel;
 var powerLevel;
 
@@ -48,14 +48,18 @@ function initialize()
 
 	if(checkStorage() == true)
 	{
-		if(localStorage.getItem("savedBodyLevel") === null)
+		if(localStorage.getItem("savedIntelligenceLevel") === null)
 		{
-			bodyLevel = 0;
+			intelligenceLevel = 0;
 		}
 		else
 		{
-			bodyLevel = parseInt(localStorage.getItem("savedBodyLevel")); 
+			intelligenceLevel = parseInt(localStorage.getItem("savedIntelligenceLevel")); 
 		}
+	}
+	else
+	{
+		intelligenceLevel = 0;
 	}
 
 	if(checkStorage() == true)
@@ -69,6 +73,10 @@ function initialize()
 			reflexesLevel = parseInt(localStorage.getItem("savedReflexesLevel")); 
 		}
 	}
+	else
+	{
+		reflexesLevel = 0;
+	}
 
 	if(checkStorage() == true)
 	{
@@ -80,6 +88,10 @@ function initialize()
 		{
 			powerLevel = parseInt(localStorage.getItem("savedPowerLevel")); 
 		}
+	}
+	else
+	{
+		powerLevel = 0;
 	}
 
 	if(checkStorage() == true)
@@ -322,9 +334,9 @@ function initialize()
    					autoContractsOwned = saveData.autoContractsOwned;
    				}
 
-   				if(saveData.bodyLevel !== undefined)
+   				if(saveData.intelligenceLevel !== undefined)
    				{
-   					bodyLevel = saveData.bodyLevel;
+   					intelligenceLevel = saveData.intelligenceLevel;
    				}
 
    				if(saveData.reflexesLevel !== undefined)
@@ -347,7 +359,7 @@ function initialize()
 					localStorage.setItem("savedAutoContractsToggle", autoContractsToggle);
 					localStorage.setItem("savedAutoContractsOwned", autoContractsOwned);
 					localStorage.setItem("savedCloneCookies", cloneCookies);
-					localStorage.setItem("savedBodyLevel", bodyLevel);
+					localStorage.setItem("savedIntelligenceLevel", intelligenceLevel);
 					localStorage.setItem("savedReflexesLevel", reflexesLevel);
 					localStorage.setItem("savedPowerLevel", powerLevel);
    				}
@@ -651,7 +663,7 @@ function updateScreen()
 	}
 
 	document.getElementById("clonecookies").innerHTML = cloneCookies;
-	document.getElementById("bodylevel").innerHTML = bodyLevel;
+	document.getElementById("intelligencelevel").innerHTML = intelligenceLevel;
 	document.getElementById("reflexeslevel").innerHTML = reflexesLevel;
 	document.getElementById("powerlevel").innerHTML = powerLevel;
 }
@@ -715,17 +727,17 @@ function generateContract(number)
 	switch(randomTypeHolder)
 	{
 		case "Hit":
-			var contractTimeHolder = Math.floor((Math.random() * (360 - 300 + 1) + 300) - powerLevel);
+			var contractTimeHolder = Math.max(1, Math.floor((Math.random() * (361 - 300 + 1) + 300)) - powerLevel);
 			var contractAmountHolder = Math.floor(Math.random() * (80000 - 5000 + 1) + 5000);
 			break;
 
 		case "Race":
-			var contractTimeHolder = Math.floor((Math.random() * (180 - 120 + 1) + 120) - reflexesLevel);
+			var contractTimeHolder = Math.max(1, Math.floor((Math.random() * (181 - 120 + 1) + 120)) - reflexesLevel);
 			var contractAmountHolder = Math.floor(Math.random() * (1000 - 500 + 1) + 500);
 			break;
 
 		case "Hack":
-			var contractTimeHolder = Math.floor(Math.random() * (45 - 20 + 1) + 20);
+			var contractTimeHolder = Math.max(1, Math.floor(Math.random() * (46 - 20 + 1) + 20) - intelligenceLevel);
 			var contractAmountHolder = Math.floor(Math.random() * (30000 - 250000 + 1) + 250000);
 			break;
 
@@ -783,11 +795,11 @@ function contractCountdown()
 {
 	for (let i = 0; i < contractHolderFinal.length; i++) 
 	{ 
-		if((contractHolderFinal[i][3] == true) && (contractHolderFinal[i][1] > 0)) 
+		if((contractHolderFinal[i][3] == true) && (contractHolderFinal[i][1] > 1)) 
 		{
 			contractHolderFinal[i][1] = contractHolderFinal[i][1] - 1; 
 		}
-		else if ((contractHolderFinal[i][3] == true) && (contractHolderFinal[i][1] <= 0)) 
+		else if ((contractHolderFinal[i][3] == true) && (contractHolderFinal[i][1] <= 1)) 
 		{
 			contractAccepted = false; 
 			contractsCompleted = contractsCompleted + 1;
@@ -800,7 +812,7 @@ function contractCountdown()
 
 function clickedCookie() 
 {
-	cyberCookies = cyberCookies + 1 + (bodyLevel * 100); 
+	cyberCookies = cyberCookies + 1; 
 	updateScreen();
 }
 
@@ -1253,21 +1265,43 @@ function autoContractsSelect()
 
 function exportSave()
 {
-	let data = 
-	{
-		cloneCookies: localStorage.getItem("savedCloneCookies") ? JSON.parse(localStorage.getItem("savedCloneCookies")) : 0,
-		cyberCookies: localStorage.getItem("savedBankTotal") ? JSON.parse(localStorage.getItem("savedBankTotal")) : 0, 
-    	contractHolderFinal: localStorage.getItem("savedContractList") ? JSON.parse(localStorage.getItem("savedContractList")) : null,
-    	rebirths: localStorage.getItem("savedRebirthCount") ? JSON.parse(localStorage.getItem("savedRebirthCount")) : 0,
-    	rebirthGoal: localStorage.getItem("savedRebirthGoal") ? JSON.parse(localStorage.getItem("savedRebirthGoal")) : 100000000000000,
-    	upgradeHolderFinal: localStorage.getItem("savedUpgradesList") ? JSON.parse(localStorage.getItem("savedUpgradesList")) : null,
-    	autoContractsToggle: localStorage.getItem("savedAutoContractsToggle") ? JSON.parse(localStorage.getItem("savedAutoContractsToggle")) : false,
-    	autoContractsOwned: localStorage.getItem("savedAutoContractsOwned") ? JSON.parse(localStorage.getItem("savedAutoContractsOwned")) : false,
-    	bodyLevel: localStorage.getItem("savedBodyLevel") ? JSON.parse(localStorage.getItem("savedBodyLevel")) : 0,
-    	reflexesLevel: localStorage.getItem("savedReflexesLevel") ? JSON.parse(localStorage.getItem("savedReflexesLevel")) : 0,
-    	powerLevel: localStorage.getItem("savedPowerLevel") ? JSON.parse(localStorage.getItem("savedPowerLevel")) : 0
-	}
+	let data;
 
+	if(checkStorage() == true)
+	{
+ 		data = 
+		{
+			cloneCookies: localStorage.getItem("savedCloneCookies") ? JSON.parse(localStorage.getItem("savedCloneCookies")) : 0,
+			cyberCookies: localStorage.getItem("savedBankTotal") ? JSON.parse(localStorage.getItem("savedBankTotal")) : 0, 
+	    	contractHolderFinal: localStorage.getItem("savedContractList") ? JSON.parse(localStorage.getItem("savedContractList")) : null,
+	    	rebirths: localStorage.getItem("savedRebirthCount") ? JSON.parse(localStorage.getItem("savedRebirthCount")) : 0,
+	    	rebirthGoal: localStorage.getItem("savedRebirthGoal") ? JSON.parse(localStorage.getItem("savedRebirthGoal")) : 100000000000000,
+	    	upgradeHolderFinal: localStorage.getItem("savedUpgradesList") ? JSON.parse(localStorage.getItem("savedUpgradesList")) : null,
+	    	autoContractsToggle: localStorage.getItem("savedAutoContractsToggle") ? JSON.parse(localStorage.getItem("savedAutoContractsToggle")) : false,
+	    	autoContractsOwned: localStorage.getItem("savedAutoContractsOwned") ? JSON.parse(localStorage.getItem("savedAutoContractsOwned")) : false,
+	    	intelligenceLevel: localStorage.getItem("savedIntelligenceLevel") ? JSON.parse(localStorage.getItem("savedIntelligenceLevel")) : 0,
+	    	reflexesLevel: localStorage.getItem("savedReflexesLevel") ? JSON.parse(localStorage.getItem("savedReflexesLevel")) : 0,
+	    	powerLevel: localStorage.getItem("savedPowerLevel") ? JSON.parse(localStorage.getItem("savedPowerLevel")) : 0
+		}
+	}
+	else
+	{
+		data = 
+		{
+			cloneCookies: cloneCookies ? JSON.parse(cloneCookies) : 0,
+			cyberCookies: cyberCookies ? JSON.parse(cyberCookies) : 0, 
+	    	contractHolderFinal: JSON.stringify(contractHolderFinal) ? JSON.parse(JSON.stringify(contractHolderFinal)) : null,
+	    	rebirths: rebirths ? JSON.parse(rebirths) : 0,
+	    	rebirthGoal: rebirthGoal ? JSON.parse(rebirthGoal) : 100000000000000,
+	    	upgradeHolderFinal: JSON.stringify(upgradeHolderFinal) ? JSON.parse(JSON.stringify(upgradeHolderFinal)) : null,
+	    	autoContractsToggle: autoContractsToggle ? JSON.parse(autoContractsToggle) : false,
+	    	autoContractsOwned: autoContractsOwned ? JSON.parse(autoContractsOwned) : false,
+	    	intelligenceLevel: intelligenceLevel ? JSON.parse(intelligenceLevel) : 0,
+	    	reflexesLevel: reflexesLevel ? JSON.parse(reflexesLevel) : 0,
+	    	powerLevel: powerLevel ? JSON.parse(powerLevel) : 0
+		}
+	}
+	
 	let jsonData = JSON.stringify(data);
 	let filename = "cyberclicker.json";
   	let blob = new Blob([jsonData], { type: 'application/json' });
@@ -1298,18 +1332,21 @@ function levelUp(type)
 			switch (type)
 			{
 				case 0:
-					cloneCookies -= 1;
-					bodyLevel += 1;
+					if(intelligenceLevel < 45)
+					{
+						cloneCookies -= 1;
+						intelligenceLevel += 1;
+					}
 
 					if(checkStorage() == true)
 					{
-						localStorage.setItem("savedBodyLevel", bodyLevel);
+						localStorage.setItem("savedIntelligenceLevel", intelligenceLevel);
 					}
 
 					break;
 
 				case 1:
-					if(reflexesLevel < 100)
+					if(reflexesLevel < 180)
 					{
 						cloneCookies -= 1;
 						reflexesLevel += 1;
@@ -1323,7 +1360,7 @@ function levelUp(type)
 					break;
 
 				case 2:
-					if(powerLevel < 200)
+					if(powerLevel < 360)
 					{
 						cloneCookies -= 1;
 						powerLevel += 1;
