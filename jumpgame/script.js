@@ -394,17 +394,17 @@ function keyPressed()
 {
 	var input1 = event.which || event.keyCode; 
 
-	if ((input1 == "65") && (SETLOOPLEFT == false) && (GAMEOVER == false))
+	if(((input1 == "65") || (input1 == "37")) && (SETLOOPLEFT == false) && (GAMEOVER == false))
 	{
 			SETLOOPLEFT = true;
 			SETLOOPRIGHT = false;
  		}
- 		else if ((input1 == "68") && (SETLOOPRIGHT == false) && (GAMEOVER == false))
+ 		else if(((input1 == "68") || (input1 == "39")) && (SETLOOPRIGHT == false) && (GAMEOVER == false))
 	{
 			SETLOOPRIGHT = true;
 			SETLOOPLEFT = false;
  		}
- 		else if((input1 == "32") && (GAMEOVER == false) && (JUMPING == false))
+ 		else if(((input1 == "32") || (input1 == "38")) && (GAMEOVER == false) && (JUMPING == false))
  		{
  			JUMPING = true;
  		}
@@ -429,15 +429,15 @@ function keyReleased()
 {
 	var input1 = event.which || event.keyCode;
 
-	if (input1 == "65") 
+	if((input1 == "65") || (input1 == "37")) 
 	{
 		SETLOOPLEFT = false;
 	}
-	else if (input1 == "68") 
+	else if((input1 == "68") || (input1 == "39"))
 	{
 		SETLOOPRIGHT = false;
 	}
-	else if (input1 == "32")
+	else if((input1 == "32") || (input1 == "38"))
 	{
 		JUMPING = false;
 	}
