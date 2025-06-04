@@ -25,8 +25,10 @@ function initialize()
 				 ];
 	launchOptions = [
 					 "cyberclicker",
+					 "flesh",
 					 "jumpgame",
-					 "lpdemo"
+					 "lpdemo",
+					 "ytp"
 					];
 	selectPast = false;
 	clickedConsoleFirst = false;
