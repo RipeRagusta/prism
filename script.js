@@ -25,7 +25,8 @@ function initialize()
 				 ];
 	launchOptions = [
 					 "cyberclicker",
-					 "jumpgame"
+					 "jumpgame",
+					 "lpdemo"
 					];
 	selectPast = false;
 	clickedConsoleFirst = false;
@@ -34,7 +35,7 @@ function initialize()
 	{
 		if((localStorage.getItem("userBannerPreference")) === null)
 		{
-			bannerToggle = false;
+			bannerToggle = true;
 		}
 		else
 		{
@@ -43,7 +44,7 @@ function initialize()
 	}
 	else
 	{
-		bannerToggle = false;
+		bannerToggle = true;
 	}
 
 	displayBanner();
@@ -376,6 +377,10 @@ function evaluateCommand(commandEntered)
 
 		case "launchjumpgame":
 			window.location.href = "./jumpgame/index.html";
+			break;
+
+		case "launchlpdemo":
+			window.location.href = "./lawnpurge/index.html";
 			break;
 
 		case "reload":
