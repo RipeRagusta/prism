@@ -30,6 +30,7 @@
   var barn;
   var fence;
   var stars;
+  var cross;
 
   class playerBullet extends Phaser.Physics.Arcade.Sprite
   {
@@ -109,6 +110,7 @@
       this.load.image('barn', 'assets/barn.png');
       this.load.image('fence', 'assets/fence.png');
       this.load.image('stars', 'assets/stars.png');
+      this.load.image('cross', 'assets/cross.png');
     }
 
     create ()
@@ -141,6 +143,14 @@
       this.barn.setOrigin(0, 1);
       this.barn.setScrollFactor(0.25);
 
+      this.cross = this.add.image(
+              Math.max(32 + this.barn.width + 24, this.sys.game.config.width + 24),
+              this.sys.game.config.height - this.ground.height,
+              'cross');
+      this.cross.setOrigin(0.5, 1);
+      this.cross.setScrollFactor(0.25);
+      this.cross.setTint(0x999999);
+
       this.fence = this.add.tileSprite(
               this.sys.game.config.width / 2,
               this.sys.game.config.height - this.ground.height,
@@ -171,16 +181,17 @@
       this.physics.add.collider(this.player, this.ground);
 
       let logo = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Lawn Purge', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+      logo.setWordWrapWidth(this.sys.game.config.width);
       this.physics.add.existing(logo, true);
       this.physics.add.collider(logo, this.playerBulletsHolder, () => {
         this.playerBulletsHolder.setActive(false);
         this.playerBulletsHolder.setVisible(false);
-        this.input.enabled = false;
         this.cameras.main.pan(this.sys.game.config.width * 2, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
         //this.scene.start('Level1Game');
       });
 
       let levelSelect = this.add.text((this.sys.game.config.width * 2), this.sys.game.config.height / 2, 'Level Select Goes Here', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+      levelSelect.setWordWrapWidth(this.sys.game.config.width);
     }
     update(time)
     {
