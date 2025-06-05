@@ -107,7 +107,7 @@
 
     create ()
     {
-      this.physics.world.setBounds(0, 0, 256, 192);
+      this.physics.world.setBounds(0, 0, this.sys.game.config.width, 192);
 
       cursors = this.input.keyboard.createCursorKeys();
 
@@ -146,7 +146,7 @@
 
       this.physics.add.existing(this.ground, true);
 
-      this.player = this.physics.add.sprite(25, 100, 'dude');
+      this.player = this.physics.add.sprite(this.sys.game.config.width / 2, this.sys.game.config.height + 16, 'dude');
       this.player.setBounce(0);
       this.player.setCollideWorldBounds(true);
       this.player.flip = false;
