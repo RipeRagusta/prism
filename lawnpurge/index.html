@@ -111,16 +111,16 @@
 
       cursors = this.input.keyboard.createCursorKeys();
 
-      this.sky = this.add.tileSprite(0, 0, this.sys.game.config.width, this.sys.game.config.height, 'sky').setOrigin(0, 0);
+      this.sky = this.add.tileSprite(0, 0, Math.ceil(this.sys.game.config.width), this.sys.game.config.height, 'sky').setOrigin(0, 0);
       this.sky.setScrollFactor(0.1);
 
-      this.stars = this.add.tileSprite(0, 0, this.sys.game.config.width, this.sys.game.config.height, 'stars').setOrigin(0, 0);
+      this.stars = this.add.tileSprite(0, 0, Math.ceil(this.sys.game.config.width), this.sys.game.config.height, 'stars').setOrigin(0, 0);
       this.stars.setScrollFactor(0.1);
 
       this.ground = this.add.tileSprite(
               this.sys.game.config.width / 2,
               this.sys.game.config.height,
-              this.sys.game.config.width,
+              Math.ceil(this.sys.game.config.width),
               16,
               'ground'
       );
@@ -137,7 +137,7 @@
       this.fence = this.add.tileSprite(
               this.sys.game.config.width / 2,
               this.sys.game.config.height - this.ground.height,
-              this.sys.game.config.width,
+              Math.ceil(this.sys.game.config.width),
               16,
               'fence'
       );
