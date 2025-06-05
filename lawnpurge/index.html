@@ -29,6 +29,7 @@
   var cursors;
   var barn;
   var fence;
+  var stars;
 
   class playerBullet extends Phaser.Physics.Arcade.Sprite
   {
@@ -69,7 +70,7 @@
       aimAngle = Phaser.Math.Angle.Between
       (
         player.x + (player.width / 2),
-        player.y + (player.height / 16),
+        player.y + (player.height / 16) - (player.height / 32),
         pointer.worldX,
         pointer.worldY
       );
@@ -79,12 +80,13 @@
       aimAngle = Phaser.Math.Angle.Between
       (
         player.x - (player.width / 2),
-        player.y + (player.height / 16),
+        player.y + (player.height / 16) - (player.height / 32),
         pointer.worldX,
         pointer.worldY
       );
     }
   }
+
 
   class MainMenu extends Phaser.Scene
   {
@@ -100,6 +102,7 @@
       this.load.image('bullet', 'assets/bullet.png');
       this.load.image('barn', 'assets/barn.png');
       this.load.image('fence', 'assets/fence.png');
+      this.load.image('stars', 'assets/stars.png');
     }
 
     create ()
@@ -108,30 +111,38 @@
 
       cursors = this.input.keyboard.createCursorKeys();
 
-      this.sky = this.add.tileSprite(0, 0, 256, this.sys.game.config.height, 'sky').setOrigin(0, 0);
+      this.sky = this.add.tileSprite(0, 0, this.sys.game.config.width, this.sys.game.config.height, 'sky').setOrigin(0, 0);
       this.sky.setScrollFactor(0.1);
+
+      this.stars = this.add.tileSprite(0, 0, this.sys.game.config.width, this.sys.game.config.height, 'stars').setOrigin(0, 0);
+      this.stars.setScrollFactor(0.1);
 
       this.ground = this.add.tileSprite(
               this.sys.game.config.width / 2,
               this.sys.game.config.height,
-              256,
-              25,
+              this.sys.game.config.width,
+              16,
               'ground'
       );
 
+      this.ground.setOrigin(0.5, 1);
+
       this.barn = this.add.image(
-              66,
-              this.sys.game.config.height - 28,
+              32,
+              this.sys.game.config.height - this.ground.height,
               'barn');
       this.barn.setTint(0x999999);
+      this.barn.setOrigin(0, 1);
 
       this.fence = this.add.tileSprite(
               this.sys.game.config.width / 2,
-              this.sys.game.config.height - 20,
-              256,
+              this.sys.game.config.height - this.ground.height,
+              this.sys.game.config.width,
               16,
               'fence'
       );
+
+      this.fence.setOrigin(0.5, 1);
 
       this.physics.add.existing(this.ground, true);
 
@@ -195,11 +206,11 @@
         {
           if(this.player.flip === false)
           {
-            playerBulletsGroup.fire(this.player.x + (this.player.width / 2), this.player.y + (this.player.width / 16), aimAngle);
+            playerBulletsGroup.fire(this.player.x + (this.player.width / 2), this.player.y + (this.player.height / 16) - (this.player.height / 32), aimAngle);
           }
           else
           {
-            playerBulletsGroup.fire(this.player.x - (this.player.width / 2), this.player.y + (this.player.width / 16), aimAngle);
+            playerBulletsGroup.fire(this.player.x - (this.player.width / 2), this.player.y + (this.player.height / 16) - (this.player.height / 32), aimAngle);
           }
           lastPlayerShot = time;
         }
@@ -233,7 +244,7 @@
   {
     type: Phaser.AUTO,
     pixelArt: true,
-    width: 256,
+    width: (window.innerWidth / window.innerHeight) * 192,
     height: 192,
 
     scale:
