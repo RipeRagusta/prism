@@ -31,6 +31,7 @@
   var fence;
   var stars;
   var cross;
+  var pointOnXWhereBulletsDisappear;
 
   class playerBullet extends Phaser.Physics.Arcade.Sprite
   {
@@ -56,7 +57,7 @@
     {
       super.preUpdate(time, delta);
 
-      if (this.y < 0 || this.y > this.scene.sys.game.config.height || this.x < 0 || this.x > this.scene.sys.game.config.width)
+      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x < 0 || this.x > pointOnXWhereBulletsDisappear)
       {
         this.setActive(false);
         this.setVisible(false);
@@ -82,7 +83,7 @@
       aimAngle = Phaser.Math.Angle.Between
       (
         player.x + (player.width / 2),
-        player.y + (player.height / 16) - (player.height / 32),
+        player.y + (player.height / 32),
         pointer.worldX,
         pointer.worldY
       );
@@ -92,13 +93,12 @@
       aimAngle = Phaser.Math.Angle.Between
       (
         player.x - (player.width / 2),
-        player.y + (player.height / 16) - (player.height / 32),
+        player.y + (player.height / 32),
         pointer.worldX,
         pointer.worldY
       );
     }
   }
-
 
   class MainMenu extends Phaser.Scene
   {
@@ -121,6 +121,7 @@
     create ()
     {
       this.physics.world.setBounds(0, 0, this.sys.game.config.width, 192);
+      pointOnXWhereBulletsDisappear = this.sys.game.config.width;
 
       cursors = this.input.keyboard.createCursorKeys();
 
@@ -141,7 +142,6 @@
 
       this.ground.setOrigin(0.25, 1);
       this.physics.add.existing(this.ground, true);
-
 
       this.barn = this.add.image(
               32,
@@ -169,22 +169,18 @@
       this.fence.setScrollFactor(0.75);
       this.fence.setOrigin(0.25, 1);
 
-
+      this.playerBulletsHolder = this.physics.add.group({
+        classType: playerBullet,
+        maxSize: 30,
+        runChildUpdate: true
+      });
 
       this.player = this.physics.add.sprite(this.sys.game.config.width / 2, this.sys.game.config.height + 16, 'dude');
       this.player.setBounce(0);
       this.player.setCollideWorldBounds(true);
       this.player.flip = false;
 
-      /*this.cameras.main.setBounds(0, 0, Math.ceil(this.sys.game.config.width) * 2, 192);
-      this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
-      this.cameras.main.setZoom(1);*/
-
-      this.playerBulletsHolder = this.physics.add.group({
-        classType: playerBullet,
-        maxSize: 30,
-        runChildUpdate: true
-      });
+      this.cameras.main.setBounds(0, 0, Math.ceil(this.sys.game.config.width) * 3, 192);
 
       this.physics.add.collider(this.player, this.ground);
 
@@ -201,11 +197,10 @@
       levelSelect.setWordWrapWidth(this.sys.game.config.width);
       levelSelect.setInteractive();
 
-      levelSelect.on('pointerdown', () => {
+      levelSelect.on('pointerdown', () =>
+      {
         this.scene.start('Level1Game');
       });
-
-
     }
     update(time)
     {
@@ -238,6 +233,8 @@
         this.player.flip = false;
       }
 
+      this.input.activePointer.updateWorldPoint(this.cameras.main);
+
       updateAimAngle(this.player, this.input.activePointer);
 
       if(this.input.activePointer.isDown && time > lastPlayerShot + fireRate)
@@ -248,17 +245,18 @@
         {
           if(this.player.flip === false)
           {
-            playerBulletsGroup.fire(this.player.x + (this.player.width / 2), this.player.y + (this.player.height / 16) - (this.player.height / 32), aimAngle);
+            playerBulletsGroup.fire(this.player.x + (this.player.width / 2), this.player.y + (this.player.height / 32), aimAngle);
           }
           else
           {
-            playerBulletsGroup.fire(this.player.x - (this.player.width / 2), this.player.y + (this.player.height / 16) - (this.player.height / 32), aimAngle);
+            playerBulletsGroup.fire(this.player.x - (this.player.width / 2), this.player.y + (this.player.height / 32), aimAngle);
           }
           lastPlayerShot = time;
         }
       }
     }
   }
+
   class Level1Game extends Phaser.Scene
   {
     constructor()
@@ -273,25 +271,32 @@
 
     create()
     {
-      this.physics.world.setBounds(0, 0, 5500, 192);
+      this.physics.world.setBounds(0, 0, 1000, 192);
+      pointOnXWhereBulletsDisappear = 1000;
 
       cursors = this.input.keyboard.createCursorKeys();
 
-      this.sky = this.add.tileSprite(0, 0, 5500, this.sys.game.config.height, 'sky').setOrigin(0, 0);
+      this.sky = this.add.tileSprite(0, 0, 1000, this.sys.game.config.height, 'sky').setOrigin(0, 0);
       this.sky.setScrollFactor(0.1);
 
-      this.stars = this.add.tileSprite(0, 0, 5500, this.sys.game.config.height, 'stars').setOrigin(0, 0);
+      this.stars = this.add.tileSprite(0, 0, 1000, this.sys.game.config.height, 'stars').setOrigin(0, 0);
       this.stars.setScrollFactor(0.1);
 
       this.ground = this.add.tileSprite(
-              this.sys.game.config.width / 2,
+              0,
               this.sys.game.config.height,
-              5500,
+              1000,
               16,
               'ground'
       );
-      this.ground.setOrigin(0.5, 1);
+      this.ground.setOrigin(0, 1);
       this.physics.add.existing(this.ground, true);
+
+      this.playerBulletsHolder = this.physics.add.group({
+        classType: playerBullet,
+        maxSize: 30,
+        runChildUpdate: true
+      });
 
       this.player = this.physics.add.sprite(0, this.sys.game.config.height + 16, 'dude');
       this.player.setBounce(0);
@@ -302,19 +307,12 @@
       cultTest.setBounce(0);
       cultTest.setCollideWorldBounds(true);
 
-      this.playerBulletsHolder = this.physics.add.group({
-        classType: playerBullet,
-        maxSize: 30,
-        runChildUpdate: true
-      });
-
       this.physics.add.collider(cultTest, this.ground);
       this.physics.add.collider(this.player, this.ground);
 
-      this.cameras.main.setBounds(0, 0, Math.ceil(this.sys.game.config.width) * 2, 192);
+      this.cameras.main.setBounds(0, 0, 1000, 192);
       this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
       this.cameras.main.setZoom(1);
-
     }
 
     update(time, delta)
@@ -348,6 +346,8 @@
         this.player.flip = false;
       }
 
+      this.input.activePointer.updateWorldPoint(this.cameras.main);
+
       updateAimAngle(this.player, this.input.activePointer);
 
       if(this.input.activePointer.isDown && time > lastPlayerShot + fireRate)
@@ -358,11 +358,11 @@
         {
           if(this.player.flip === false)
           {
-            playerBulletsGroup.fire(this.player.x + (this.player.width / 2), this.player.y + (this.player.height / 16) - (this.player.height / 32), aimAngle);
+            playerBulletsGroup.fire(this.player.x + (this.player.width / 2), this.player.y + (this.player.height / 32), aimAngle);
           }
           else
           {
-            playerBulletsGroup.fire(this.player.x - (this.player.width / 2), this.player.y + (this.player.height / 16) - (this.player.height / 32), aimAngle);
+            playerBulletsGroup.fire(this.player.x - (this.player.width / 2), this.player.y + (this.player.height / 32), aimAngle);
           }
           lastPlayerShot = time;
         }
