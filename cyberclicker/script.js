@@ -1010,10 +1010,11 @@ function buyUpgrade(ident)
 				break;
 
 			case 3:
-				selectedPrice = getProjectedPrice(ident, getMaxAfford(ident));
+				let maxAfford = getMaxAfford(ident);
+				selectedPrice = getProjectedPrice(ident, maxAfford);
 				if(selectedPrice <= cyberCookies)
 				{
-					upgradeCookieExchange(ident, getMaxAfford(ident));
+					upgradeCookieExchange(ident, maxAfford);
 					cyberCookies = cyberCookies - selectedPrice;
 				}
 				break;
