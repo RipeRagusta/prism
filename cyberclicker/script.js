@@ -275,6 +275,10 @@ function initialize()
 			cloneCookies = parseInt(localStorage.getItem("savedCloneCookies")); 
 		}
 	}
+	else
+	{
+		cloneCookies = 0;
+	}
 
 	tick = 0;
 	TICKRATE = 1000;
