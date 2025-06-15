@@ -183,7 +183,7 @@ footer{
   height: 100vh;
   width: 100vw;
   box-shadow: 0 0 200vh 200vh rgba(0, 0, 0, 0.5);
-  z-index: 3;
   background-color: rgba(0, 0, 0, 0.5);
   object-fit: contain;
+  z-index: 4;
 }
