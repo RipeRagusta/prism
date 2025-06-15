@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<title>Flesh Photography</title>
+	<link rel="stylesheet" href="./style.css">
+	<link rel="shortcut icon" type="image" href="./assets/Logo.png">
+	<script src="./script.js"></script>
+</head>
+<body onload="initialize()">
+	<nav>
+		<ul>
+			<li><a href="./index.html"><p>Home</p></a></li>
+			<li><a href="./photos1.html"><p>Photos</p></a></li>
+		</ul>
+	</nav>
+	<header>
+		<img src="./assets/g66017.png" height="173" width="256" alt="Flesh photography" class="hero" id="heroimage">
+	</header>
+	<main>
+  		<div class="page">
+  			<img src="./1-small.jpg" height="337.2" width="438" alt="" class="img" id="img-1" onmouseup="expandPhoto(1)" tabindex="0">
+  			<img src="./2-small.jpg" height="337.2" width="438" alt="" class="img" id="img-2" onmouseup="expandPhoto(2)" tabindex="0">
+  			<img src="./3-small.jpg" height="337.2" width="438" alt="" class="img" id="img-3" onmouseup="expandPhoto(3)" tabindex="0">
+  			<img src="./4-small.jpg" height="337.2" width="438" alt="" class="img" id="img-4" onmouseup="expandPhoto(4)" tabindex="0">
+  			<img src="./5-small.jpg" height="337.2" width="438" alt="" class="img" id="img-5" onmouseup="expandPhoto(5)" tabindex="0">
+  			<div id="galleryListNavigation">
+  				<a href="./photos1.html"><div class="circle"></div></a>
+  				<!--<div id="pagenumber">1</div>-->
+  				<a href="./photos2.html"><div class="circle clickable"></div></a>
+			</div>
+  		</div>
+	</main>
+	<footer>
+		<small>&copy; Flesh Photography, All rights reserved.</small>
+	</footer>
+</body>
+</html>
