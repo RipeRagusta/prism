@@ -364,6 +364,7 @@ function evaluateCommand(commandEntered)
 			break;
 
 		case "launchytp":
+		case "launchvp1":
 			window.location.href = "https://ragusta.com/index.html";
 			break;
 
@@ -381,6 +382,10 @@ function evaluateCommand(commandEntered)
 
 		case "launchlpdemo":
 			window.location.href = "./lawnpurge/index.html";
+			break;
+
+		case "launchfprb":
+			window.location.href = "./fp/index.html";
 			break;
 
 		case "reload":
