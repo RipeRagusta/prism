@@ -384,7 +384,7 @@ function evaluateCommand(commandEntered)
 			window.location.href = "./lawnpurge/index.html";
 			break;
 
-		case "launchfprb":
+		case "launchfp2rbpr":
 			window.location.href = "./fp/index.html";
 			break;
 
