@@ -97,27 +97,140 @@
     }
   }
 
-  function updateAimAngle(player, pointer)
+  class player extends Phaser.Physics.Arcade.Sprite
   {
-    if(player.flip === false)
+    constructor(scene, x, y, playerBulletsHolder)
     {
-      aimAngle = Phaser.Math.Angle.Between
-      (
-        player.x + (player.width / 2),
-        player.y + (player.height / 32),
-        pointer.worldX,
-        pointer.worldY
-      );
+      super(scene, x, y, 'dude');
+
+      scene.add.existing(this);
+      scene.physics.add.existing(this);
+      this.setActive(true);
+      this.setVisible(true);
+      this.flip = false;
+      this.aimAngle = 0;
+      this.fireRate = 200;
+      this.lastPlayerShot = 0;
+      this.setBounce(0);
+      this.setCollideWorldBounds(true);
+
+      this.wasd = {
+        up: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
+        down: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
+        left: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
+        right: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
+      };
+
+      this.mouseRef = scene.input;
+
+      this.bullets = playerBulletsHolder;
     }
-    else
+
+    preUpdate(time, delta)
     {
-      aimAngle = Phaser.Math.Angle.Between
-      (
-        player.x - (player.width / 2),
-        player.y + (player.height / 32),
-        pointer.worldX,
-        pointer.worldY
-      );
+      super.preUpdate(time, delta);
+
+      if(this.health < 1)
+      {
+        this.setActive(false);
+        this.setVisible(false);
+        this.destroy();
+      }
+
+      if(this.wasd.left.isDown || cursors.left.isDown)
+      {
+        this.setVelocityX(-120);
+      }
+      else if(this.wasd.right.isDown || cursors.right.isDown)
+      {
+        this.setVelocityX(120);
+      }
+      else
+      {
+        this.setVelocityX(0);
+      }
+
+      if((this.wasd.up.isDown || cursors.up.isDown) && this.body.touching.down)
+      {
+        this.setVelocityY(-150);
+      }
+
+      this.flipPlayer(this.scene.input.activePointer);
+      this.scene.input.activePointer.updateWorldPoint(this.scene.cameras.main);
+      this.updateAimAngle(this.scene.input.activePointer);
+
+      if(this.mouseRef.activePointer.isDown && time > this.lastPlayerShot + this.fireRate)
+      {
+        this.mouseRef.mouse.disableContextMenu();
+
+        const bullet = this.bullets.get(this.x, this.y, 'bullet');
+
+        if(bullet)
+        {
+          if(this.mouseRef.activePointer.rightButtonDown())
+          {
+            if(this.flip === false)
+            {
+              bullet.fire(this.x + (this.width / 2), this.y + (this.height / 32), 0);
+            }
+            else
+            {
+              bullet.fire(this.x - (this.width / 2), this.y + (this.height / 32), Phaser.Math.DegToRad(180));
+            }
+          }
+          else
+          {
+            if(this.flip === false)
+            {
+              bullet.fire(this.x + (this.width / 2), this.y + (this.height / 32), this.aimAngle);
+            }
+            else
+            {
+              bullet.fire(this.x - (this.width / 2), this.y + (this.height / 32), this.aimAngle);
+            }
+          }
+        }
+
+        this.lastPlayerShot = time;
+      }
+    }
+
+    flipPlayer(pointer)
+    {
+      if(pointer.worldX < this.getCenter().x)
+      {
+        this.setFlipX(true);
+        this.flip = true;
+      }
+      else
+      {
+        this.setFlipX(false);
+        this.flip = false;
+      }
+    }
+
+    updateAimAngle(pointer)
+    {
+      if(this.flip === false)
+      {
+        this.aimAngle = Phaser.Math.Angle.Between
+        (
+          this.x + (this.width / 2),
+          this.y + (this.height / 32),
+          pointer.worldX,
+          pointer.worldY
+        );
+      }
+      else
+      {
+        this.aimAngle = Phaser.Math.Angle.Between
+        (
+          this.x - (this.width / 2),
+          this.y + (this.height / 32),
+          pointer.worldX,
+          pointer.worldY
+        );
+      }
     }
   }
 
@@ -196,10 +309,7 @@
         runChildUpdate: true
       });
 
-      this.player = this.physics.add.sprite(this.sys.game.config.width / 2, this.sys.game.config.height + 16, 'dude');
-      this.player.setBounce(0);
-      this.player.setCollideWorldBounds(true);
-      this.player.flip = false;
+      this.player = new player(this, this.sys.game.config.width / 2, this.sys.game.config.height - 24, this.playerBulletsHolder);
 
       this.cameras.main.setBounds(0, 0, Math.ceil(this.sys.game.config.width) * 3, 192);
 
@@ -207,10 +317,17 @@
 
       let logo = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Lawn Purge', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
       logo.setWordWrapWidth(this.sys.game.config.width);
+      logo.setInteractive();
       this.physics.add.existing(logo, true);
       this.physics.add.collider(logo, this.playerBulletsHolder, (logo, bullet) =>
       {
         bullet.destroy();
+        logo.destroy();
+        this.cameras.main.pan(this.sys.game.config.width * 2, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
+      });
+
+      logo.on('pointerdown', () =>
+      {
         logo.destroy();
         this.cameras.main.pan(this.sys.game.config.width * 2, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
       });
@@ -226,56 +343,7 @@
     }
     update(time)
     {
-      if(this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A).isDown || cursors.left.isDown)
-      {
-        this.player.setVelocityX(-120);
-      }
-      else if(this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D).isDown || cursors.right.isDown)
-      {
-        this.player.setVelocityX(120);
-      }
-      else
-      {
-        this.player.setVelocityX(0);
-      }
 
-      if((this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE).isDown || cursors.up.isDown) && this.player.body.touching.down)
-      {
-        this.player.setVelocityY(-200);
-      }
-
-      if(this.input.activePointer.worldX < this.player.getCenter().x)
-      {
-        this.player.setFlipX(true);
-        this.player.flip = true;
-      }
-      else
-      {
-        this.player.setFlipX(false);
-        this.player.flip = false;
-      }
-
-      this.input.activePointer.updateWorldPoint(this.cameras.main);
-
-      updateAimAngle(this.player, this.input.activePointer);
-
-      if(this.input.activePointer.isDown && time > lastPlayerShot + fireRate)
-      {
-        let playerBulletsGroup = this.playerBulletsHolder.get();
-
-        if(playerBulletsGroup)
-        {
-          if(this.player.flip === false)
-          {
-            playerBulletsGroup.fire(this.player.x + (this.player.width / 2), this.player.y + (this.player.height / 32), aimAngle);
-          }
-          else
-          {
-            playerBulletsGroup.fire(this.player.x - (this.player.width / 2), this.player.y + (this.player.height / 32), aimAngle);
-          }
-          lastPlayerShot = time;
-        }
-      }
     }
   }
 
@@ -323,10 +391,7 @@
         runChildUpdate: true
       });
 
-      this.player = this.physics.add.sprite(0, this.sys.game.config.height + 16, 'dude');
-      this.player.setBounce(0);
-      this.player.setCollideWorldBounds(true);
-      this.player.flip = false;
+      this.player = new player(this, 100, 100, this.playerBulletsHolder);
 
       let cultTest = new cult(this, 300, 100);
       cultTest.setBounce(0);
@@ -348,56 +413,7 @@
 
     update(time, delta)
     {
-      if(this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A).isDown || cursors.left.isDown)
-      {
-        this.player.setVelocityX(-120);
-      }
-      else if(this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D).isDown || cursors.right.isDown)
-      {
-        this.player.setVelocityX(120);
-      }
-      else
-      {
-        this.player.setVelocityX(0);
-      }
 
-      if((this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE).isDown || cursors.up.isDown) && this.player.body.touching.down)
-      {
-        this.player.setVelocityY(-200);
-      }
-
-      if(this.input.activePointer.worldX < this.player.getCenter().x)
-      {
-        this.player.setFlipX(true);
-        this.player.flip = true;
-      }
-      else
-      {
-        this.player.setFlipX(false);
-        this.player.flip = false;
-      }
-
-      this.input.activePointer.updateWorldPoint(this.cameras.main);
-
-      updateAimAngle(this.player, this.input.activePointer);
-
-      if(this.input.activePointer.isDown && time > lastPlayerShot + fireRate)
-      {
-        let playerBulletsGroup = this.playerBulletsHolder.get();
-
-        if(playerBulletsGroup)
-        {
-          if(this.player.flip === false)
-          {
-            playerBulletsGroup.fire(this.player.x + (this.player.width / 2), this.player.y + (this.player.height / 32), aimAngle);
-          }
-          else
-          {
-            playerBulletsGroup.fire(this.player.x - (this.player.width / 2), this.player.y + (this.player.height / 32), aimAngle);
-          }
-          lastPlayerShot = time;
-        }
-      }
     }
   }
 
