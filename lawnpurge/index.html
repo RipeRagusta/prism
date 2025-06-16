@@ -20,17 +20,10 @@
 
 <script type="text/javascript">
 
-  var player;
-  var ground;
-  var playerBulletsHolder;
   var fireRate = 200;
   var lastPlayerShot = 0;
   var aimAngle;
   var cursors;
-  var barn;
-  var fence;
-  var stars;
-  var cross;
   var pointOnXWhereBulletsDisappear;
 
   class playerBullet extends Phaser.Physics.Arcade.Sprite
@@ -73,7 +66,27 @@
 
   class cult extends Phaser.Physics.Arcade.Sprite
   {
+    constructor(scene, x, y)
+    {
+      super(scene, x, y, 'cult');
 
+      scene.add.existing(this);
+      scene.physics.add.existing(this);
+      this.setActive(true);
+      this.setVisible(true);
+      this.health = 10;
+    }
+
+    preUpdate(time, delta)
+    {
+      super.preUpdate(time, delta);
+
+      if(this.health < 1)
+      {
+        this.setActive(false);
+        this.setVisible(false);
+      }
+    }
   }
 
   function updateAimAngle(player, pointer)
@@ -187,7 +200,8 @@
       let logo = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Lawn Purge', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
       logo.setWordWrapWidth(this.sys.game.config.width);
       this.physics.add.existing(logo, true);
-      this.physics.add.collider(logo, this.playerBulletsHolder, () => {
+      this.physics.add.collider(logo, this.playerBulletsHolder, () =>
+      {
         this.playerBulletsHolder.setActive(false);
         this.playerBulletsHolder.setVisible(false);
         this.cameras.main.pan(this.sys.game.config.width * 2, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
@@ -282,17 +296,20 @@
       this.stars = this.add.tileSprite(0, 0, 1000, this.sys.game.config.height, 'stars').setOrigin(0, 0);
       this.stars.setScrollFactor(0.1);
 
-      this.ground = this.add.tileSprite(
+      this.ground = this.add.tileSprite
+      (
               0,
               this.sys.game.config.height,
               1000,
               16,
               'ground'
       );
+
       this.ground.setOrigin(0, 1);
       this.physics.add.existing(this.ground, true);
 
-      this.playerBulletsHolder = this.physics.add.group({
+      this.playerBulletsHolder = this.physics.add.group
+      ({
         classType: playerBullet,
         maxSize: 30,
         runChildUpdate: true
@@ -303,11 +320,18 @@
       this.player.setCollideWorldBounds(true);
       this.player.flip = false;
 
-      let cultTest = this.physics.add.sprite(this.sys.game.config.width / 2 + 16, this.sys.game.config.height + 16, 'cult');
+      let cultTest = new cult(this, 100, 100);
       cultTest.setBounce(0);
       cultTest.setCollideWorldBounds(true);
 
       this.physics.add.collider(cultTest, this.ground);
+      this.physics.add.collider(cultTest, this.playerBulletsHolder, () =>
+      {
+        this.playerBulletsHolder.setActive(false);
+        this.playerBulletsHolder.setVisible(false);
+        cultTest.health -= 1;
+      });
+
       this.physics.add.collider(this.player, this.ground);
 
       this.cameras.main.setBounds(0, 0, 1000, 192);
@@ -393,7 +417,8 @@
       }
     },
 
-    scene: [
+    scene:
+    [
       MainMenu,
       Level1Game
     ]
