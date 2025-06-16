@@ -160,17 +160,6 @@ footer{
   align-items: center;
 }
 
-/*#pagenumber{
-  display: block;
-  margin: 0px;
-  padding: 0px;
-  font-size: 1.5rem;
-  font-weight: bold;
-  background-color: yellow;
-  padding: calc(var(--sizer) / 2);
-  border-radius: calc(var(--sizer) / 2);
-}*/
-
 .bigphoto{
   position: fixed;
   margin: 0px;

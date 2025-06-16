@@ -1,40 +1,75 @@
-var displaying;
 var bigPhoto;
+var displaying;
+
+var entering;
+
+var bigPhotoId;
 var clicking;
+
+var timeOut;
 
 function initialize() 
 {
 	displaying = false;
 	clicking = false;
-	logoPositionBoolean = false;
+	notLeftClicking = false;
+	entering = false;
 
 	bigPhoto = document.createElement("img");
 	bigPhoto.classList.add("bigphoto");
 	bigPhoto.id = "bigdisplayphoto";
 
-	document.body.addEventListener('mousedown', function(event) 
-	{
-  		if(displaying == true && event.button === 0 && clicking == false)
-  		{
-  			clicking = true;
-  		}
-	});
 
-	document.body.addEventListener('mouseup', function(event) 
+	document.body.addEventListener('click', function(event) 
 	{
-		if(displaying == true && clicking == true && event.button === 0)
-  		{
+		if(displaying == true && timeOut == false)
+		{
+			console.log("removing");
 			document.getElementById("bigdisplayphoto").remove();
 			document.body.style.cursor = "auto";
-  			displaying = false;
-  			clicking = false;
+	  		displaying = false;
+		}
+	});
+	
+	document.body.addEventListener('keydown', function(event) 
+	{
+		if(event.key === "Enter" && entering == false)
+  		{
+  			entering = true;
+		}
+	});
+
+	document.body.addEventListener('keyup', function(event) 
+	{
+		if(event.key === "Enter" && entering == true)
+  		{
+  			entering = false;
 		}
 	});
 }
 
 function expandPhoto(number)
 {
-	if(displaying == false && clicking == false)
+	if(displaying == false)
+	{
+		console.log("adding");
+		displaying = true;
+		timeOut = true;
+		bigPhoto.src = number + "-small.jpg";
+		bigPhoto.src = number + ".jpg";
+		document.body.prepend(bigPhoto);
+		document.body.style.cursor = "pointer";
+
+		setTimeout(() => 
+		{
+			timeOut = false
+		}, 1);
+	}
+}
+
+function keyboardInputExpandPhoto(number)
+{
+	if(displaying == false && entering == true)
 	{
 		displaying = true;
 		bigPhoto.src = number + "-small.jpg";
@@ -42,6 +77,15 @@ function expandPhoto(number)
 		document.body.prepend(bigPhoto);
 		document.body.style.cursor = "pointer";
 	}
+	else if(displaying == true && entering == true)
+	{
+		document.getElementById("bigdisplayphoto").remove();
+		document.body.style.cursor = "auto";
+  		displaying = false;
+	}
+
+	entering = false;
+
 }
 
 function indexInitialize()
