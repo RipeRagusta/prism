@@ -87,6 +87,7 @@
       {
         this.setActive(false);
         this.setVisible(false);
+        this.destroy();
       }
     }
 
@@ -327,7 +328,7 @@
       this.player.setCollideWorldBounds(true);
       this.player.flip = false;
 
-      let cultTest = new cult(this, 100, 100);
+      let cultTest = new cult(this, 300, 100);
       cultTest.setBounce(0);
       cultTest.setCollideWorldBounds(true);
 
