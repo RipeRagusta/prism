@@ -74,18 +74,25 @@
       scene.physics.add.existing(this);
       this.setActive(true);
       this.setVisible(true);
-      this.health = 10;
+      this.health = 5;
     }
 
     preUpdate(time, delta)
     {
       super.preUpdate(time, delta);
 
+      this.moveLeft()
+
       if(this.health < 1)
       {
         this.setActive(false);
         this.setVisible(false);
       }
+    }
+
+    moveLeft()
+    {
+      this.setVelocityX(-50);
     }
   }
 
@@ -200,10 +207,10 @@
       let logo = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Lawn Purge', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
       logo.setWordWrapWidth(this.sys.game.config.width);
       this.physics.add.existing(logo, true);
-      this.physics.add.collider(logo, this.playerBulletsHolder, () =>
+      this.physics.add.collider(logo, this.playerBulletsHolder, (logo, bullet) =>
       {
-        this.playerBulletsHolder.setActive(false);
-        this.playerBulletsHolder.setVisible(false);
+        bullet.destroy();
+        logo.destroy();
         this.cameras.main.pan(this.sys.game.config.width * 2, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
       });
 
@@ -325,11 +332,10 @@
       cultTest.setCollideWorldBounds(true);
 
       this.physics.add.collider(cultTest, this.ground);
-      this.physics.add.collider(cultTest, this.playerBulletsHolder, () =>
+      this.physics.add.collider(cultTest, this.playerBulletsHolder, (cult, bullet) =>
       {
-        this.playerBulletsHolder.setActive(false);
-        this.playerBulletsHolder.setVisible(false);
-        cultTest.health -= 1;
+        cult.health -= 1;
+        bullet.destroy();
       });
 
       this.physics.add.collider(this.player, this.ground);
