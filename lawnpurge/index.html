@@ -73,7 +73,9 @@
       scene.physics.add.existing(this);
       this.setActive(true);
       this.setVisible(true);
-      this.health = 5;
+      this.health = 10;
+      this.setBounce(0);
+      this.setCollideWorldBounds(true);
     }
 
     preUpdate(time, delta)
@@ -96,6 +98,39 @@
     }
   }
 
+  class cultKnife extends Phaser.Physics.Arcade.Sprite
+  {
+    constructor(scene, x, y)
+    {
+      super(scene, x, y, 'cultknife');
+
+      scene.add.existing(this);
+      scene.physics.add.existing(this);
+      this.setActive(true);
+      this.setVisible(true);
+      this.health = 10;
+    }
+
+    preUpdate(time, delta)
+    {
+      super.preUpdate(time, delta);
+
+      this.moveLeft()
+
+      if(this.health < 1)
+      {
+        this.setActive(false);
+        this.setVisible(false);
+        this.destroy();
+      }
+    }
+
+    moveLeft()
+    {
+      this.setVelocityX(-75);
+    }
+  }
+
   class player extends Phaser.Physics.Arcade.Sprite
   {
     constructor(scene, x, y, playerBulletsHolder)
@@ -110,6 +145,7 @@
       this.aimAngle = 0;
       this.fireRate = 750;
       this.lastPlayerShot = 0;
+      this.health = 10;
       this.setBounce(0);
       this.setCollideWorldBounds(true);
 
@@ -161,8 +197,7 @@
       {
         this.mouseRef.mouse.disableContextMenu();
 
-
-        var offset = -25;
+        var offset = -12.5;
 
         for (let i = 0; i < 10; i++)
         {
@@ -193,7 +228,7 @@
               }
             }
 
-            offset += 5;
+            offset += 2.5;
           }
         }
 
@@ -231,7 +266,7 @@
       {
         this.aimAngle = Phaser.Math.Angle.Between
         (
-          this.x + (this.width / 2) + (this.width / 16),
+          this.x - (this.width / 2) - (this.width / 16),
           this.y - (this.height / 32) - (this.height / 16),
           pointer.worldX,
           pointer.worldY
@@ -261,6 +296,7 @@
       this.load.image('tractor', './assets/tractor.png');
       this.load.image('grasstop', './assets/grasstop.png');
       this.load.image('grill', './assets/grill.png');
+      this.load.image('cultknife', './assets/cultknife.png');
     }
 
     create ()
@@ -320,7 +356,7 @@
         runChildUpdate: true
       });
 
-      this.player = new player(this, this.sys.game.config.width / 2, this.sys.game.config.height - 24, this.playerBulletsHolder);
+      this.player = new player(this, Math.min(32, this.sys.game.config.width / 2), this.sys.game.config.height - 24, this.playerBulletsHolder);
 
       this.grasstop = this.add.tileSprite(
               this.sys.game.config.width / 2,
@@ -329,14 +365,13 @@
               16,
               'grasstop'
       );
-      //this.grasstop.setScrollFactor(0.75);
       this.grasstop.setOrigin(0.25, 1);
 
       this.cameras.main.setBounds(0, 0, Math.ceil(this.sys.game.config.width) * 3, 192);
 
       this.physics.add.collider(this.player, this.ground);
 
-      let logo = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Milk', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+      let logo = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Lawn Purge', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
       logo.setWordWrapWidth(this.sys.game.config.width);
       logo.setInteractive();
       this.physics.add.existing(logo, true);
@@ -429,8 +464,8 @@
       this.player = new player(this, 32, this.sys.game.config.height - 24, this.playerBulletsHolder);
 
       this.cult1 = new cult(this, 850, 100);
-      this.cult1.setBounce(0);
-      this.cult1.setCollideWorldBounds(true);
+
+      this.cult2 = new cultKnife(this, 850, 100);
 
       this.grasstop = this.add.tileSprite(
               0,
@@ -456,6 +491,18 @@
         bullet.destroy();
       });
 
+      this.physics.add.collider(this.cult2, this.ground);
+      this.physics.add.collider(this.cult2, this.playerBulletsHolder, (cult, bullet) =>
+      {
+        cult.health -= 1;
+        bullet.destroy();
+      });
+
+      this.physics.add.collider(this.player, this.cult2, (player, cult) =>
+      {
+        player.health -= 10;
+      });
+
       this.physics.add.collider(this.player, this.ground);
 
       this.cameras.main.setBounds(0, 0, 1000, 192);
@@ -465,7 +512,10 @@
 
     update(time, delta)
     {
-
+      if(this.player.health < 1)
+      {
+        this.scene.start('Level1Game');
+      }
     }
   }
 
@@ -473,8 +523,8 @@
   {
     type: Phaser.AUTO,
     pixelArt: true,
-    width: (window.innerWidth / window.innerHeight) * 192,
-    height: 192,
+    width: (window.innerWidth / window.innerHeight) * 176,
+    height: 176,
 
     scale:
     {
