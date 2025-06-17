@@ -108,7 +108,7 @@
       this.setVisible(true);
       this.flip = false;
       this.aimAngle = 0;
-      this.fireRate = 200;
+      this.fireRate = 750;
       this.lastPlayerShot = 0;
       this.setBounce(0);
       this.setCollideWorldBounds(true);
@@ -135,11 +135,11 @@
         this.destroy();
       }
 
-      if((this.wasd.left.isDown || cursors.left.isDown) && this.mouseRef.activePointer.leftButtonDown() === false)
+      if((this.wasd.left.isDown || cursors.left.isDown))
       {
         this.setVelocityX(-120);
       }
-      else if((this.wasd.right.isDown || cursors.right.isDown) && this.mouseRef.activePointer.leftButtonDown() === false)
+      else if((this.wasd.right.isDown || cursors.right.isDown))
       {
         this.setVelocityX(120);
       }
@@ -161,31 +161,39 @@
       {
         this.mouseRef.mouse.disableContextMenu();
 
-        const bullet = this.bullets.get(this.x, this.y, 'bullet');
 
-        if(bullet)
+        var offset = -25;
+
+        for (let i = 0; i < 10; i++)
         {
-          if(this.mouseRef.activePointer.rightButtonDown())
+          const bullet = this.bullets.get(this.x, this.y, 'bullet');
+
+          if(bullet)
           {
-            if(this.flip === false)
+            if(this.mouseRef.activePointer.rightButtonDown())
             {
-              bullet.fire(this.x + (this.width / 2), this.y + (this.height / 32), 0);
+              if(this.flip === false)
+              {
+                bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), 0 + Phaser.Math.DegToRad(offset));
+              }
+              else
+              {
+                bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(180) + Phaser.Math.DegToRad(offset));
+              }
             }
             else
             {
-              bullet.fire(this.x - (this.width / 2), this.y + (this.height / 32), Phaser.Math.DegToRad(180));
+              if(this.flip === false)
+              {
+                bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
+              }
+              else
+              {
+                bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
+              }
             }
-          }
-          else
-          {
-            if(this.flip === false)
-            {
-              bullet.fire(this.x + (this.width / 2), this.y + (this.height / 32), this.aimAngle);
-            }
-            else
-            {
-              bullet.fire(this.x - (this.width / 2), this.y + (this.height / 32), this.aimAngle);
-            }
+
+            offset += 5;
           }
         }
 
@@ -213,8 +221,8 @@
       {
         this.aimAngle = Phaser.Math.Angle.Between
         (
-          this.x + (this.width / 2),
-          this.y + (this.height / 32),
+          this.x + (this.width / 2) + (this.width / 16),
+          this.y - (this.height / 32) - (this.height / 16),
           pointer.worldX,
           pointer.worldY
         );
@@ -223,8 +231,8 @@
       {
         this.aimAngle = Phaser.Math.Angle.Between
         (
-          this.x - (this.width / 2),
-          this.y + (this.height / 32),
+          this.x + (this.width / 2) + (this.width / 16),
+          this.y - (this.height / 32) - (this.height / 16),
           pointer.worldX,
           pointer.worldY
         );
@@ -241,7 +249,7 @@
     preload ()
     {
       this.load.image('sky', 'assets/sky.png');
-      this.load.spritesheet('dude', 'assets/guy.png', { frameWidth: 16, frameHeight: 16 });
+      this.load.spritesheet('dude', 'assets/player.png', { frameWidth: 16, frameHeight: 16 });
       this.load.image('ground', 'assets/grass.png');
       this.load.image('bullet', 'assets/bullet.png');
       this.load.image('barn', 'assets/barn.png');
@@ -314,11 +322,21 @@
 
       this.player = new player(this, this.sys.game.config.width / 2, this.sys.game.config.height - 24, this.playerBulletsHolder);
 
+      this.grasstop = this.add.tileSprite(
+              this.sys.game.config.width / 2,
+              this.sys.game.config.height - this.ground.height,
+              this.sys.game.config.width * 3,
+              16,
+              'grasstop'
+      );
+      //this.grasstop.setScrollFactor(0.75);
+      this.grasstop.setOrigin(0.25, 1);
+
       this.cameras.main.setBounds(0, 0, Math.ceil(this.sys.game.config.width) * 3, 192);
 
       this.physics.add.collider(this.player, this.ground);
 
-      let logo = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Lawn Purge', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+      let logo = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Milk', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
       logo.setWordWrapWidth(this.sys.game.config.width);
       logo.setInteractive();
       this.physics.add.existing(logo, true);
@@ -415,7 +433,7 @@
       this.cult1.setCollideWorldBounds(true);
 
       this.grasstop = this.add.tileSprite(
-              205,
+              0,
               this.sys.game.config.height - this.ground.height,
               1000,
               16,
