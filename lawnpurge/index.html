@@ -44,16 +44,18 @@
       this.setRotation(angle);
       this.scene.physics.velocityFromRotation(angle, this.speed, this.body.velocity);
       this.body.allowGravity = false;
+      this.originX = x;
     }
 
     preUpdate(time, delta)
     {
       super.preUpdate(time, delta);
 
-      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x < 0 || this.x > pointOnXWhereBulletsDisappear)
+      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x < 0 || this.x > pointOnXWhereBulletsDisappear || this.x > this.originX + 300 || this.x < this.originX - 300)
       {
         this.setActive(false);
         this.setVisible(false);
+        this.destroy();
       }
     }
 
@@ -61,6 +63,7 @@
     {
       this.setActive(false);
       this.setVisible(false);
+      this.destroy();
     }
   }
 
@@ -137,11 +140,11 @@
         this.destroy();
       }
 
-      if(this.wasd.left.isDown || cursors.left.isDown)
+      if((this.wasd.left.isDown || cursors.left.isDown) && this.mouseRef.activePointer.leftButtonDown() === false)
       {
         this.setVelocityX(-120);
       }
-      else if(this.wasd.right.isDown || cursors.right.isDown)
+      else if((this.wasd.right.isDown || cursors.right.isDown) && this.mouseRef.activePointer.leftButtonDown() === false)
       {
         this.setVelocityX(120);
       }
@@ -152,7 +155,7 @@
 
       if((this.wasd.up.isDown || cursors.up.isDown) && this.body.touching.down)
       {
-        this.setVelocityY(-150);
+        this.setVelocityY(-120);
       }
 
       this.flipPlayer(this.scene.input.activePointer);
@@ -250,6 +253,9 @@
       this.load.image('fence', 'assets/fence.png');
       this.load.image('stars', 'assets/stars.png');
       this.load.image('cross', 'assets/cross.png');
+      this.load.image('cult', './assets/cult.png');
+      this.load.image('couch', './assets/couch.png');
+      this.load.image('tractor', './assets/tractor.png');
     }
 
     create ()
@@ -326,12 +332,6 @@
         this.cameras.main.pan(this.sys.game.config.width * 2, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
       });
 
-      /*logo.on('pointerdown', () =>
-      {
-        logo.destroy();
-        this.cameras.main.pan(this.sys.game.config.width * 2, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
-      });*/
-
       let levelSelect = this.add.text((this.sys.game.config.width * 2), this.sys.game.config.height / 2, 'Level 1', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
       levelSelect.setWordWrapWidth(this.sys.game.config.width);
       levelSelect.setInteractive();
@@ -356,7 +356,7 @@
 
     preload()
     {
-      this.load.image('cult', './assets/cult.png');
+
     }
 
     create()
@@ -382,7 +382,23 @@
       );
 
       this.ground.setOrigin(0, 1);
-      this.physics.add.existing(this.ground, true);
+      this.physics.add.existing(this.ground);
+      this.ground.body.setImmovable(true);
+      this.ground.body.allowGravity = false;
+
+      this.fence = this.add.tileSprite(
+              0,
+              this.sys.game.config.height - this.ground.height,
+              100,
+              16,
+              'fence'
+      );
+      this.fence.setScrollFactor(0.75);
+      this.fence.setOrigin(0, 1);
+
+      this.couch = this.add.image(45, this.sys.game.config.height - this.ground.height, 'couch');
+      this.couch.setScrollFactor(0.8);
+      this.couch.setOrigin(0, 1);
 
       this.playerBulletsHolder = this.physics.add.group
       ({
@@ -391,14 +407,22 @@
         runChildUpdate: true
       });
 
-      this.player = new player(this, 100, 100, this.playerBulletsHolder);
+      this.player = new player(this, 16, this.sys.game.config.height - 24, this.playerBulletsHolder);
 
-      let cultTest = new cult(this, 300, 100);
-      cultTest.setBounce(0);
-      cultTest.setCollideWorldBounds(true);
+      this.tractor = this.physics.add.sprite(200, this.sys.game.config.height - this.ground.height, 'tractor');
+      this.tractor.setOrigin(0, 1);
+      this.tractor.body.allowGravity = false;
+      this.tractor.body.setImmovable(true);
 
-      this.physics.add.collider(cultTest, this.ground);
-      this.physics.add.collider(cultTest, this.playerBulletsHolder, (cult, bullet) =>
+      this.physics.add.collider(this.tractor, this.ground);
+      this.physics.add.collider(this.tractor, this.player);
+
+      this.cult1 = new cult(this, 850, 100);
+      this.cult1.setBounce(0);
+      this.cult1.setCollideWorldBounds(true);
+
+      this.physics.add.collider(this.cult1, this.ground);
+      this.physics.add.collider(this.cult1, this.playerBulletsHolder, (cult, bullet) =>
       {
         cult.health -= 1;
         bullet.destroy();
