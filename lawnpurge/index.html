@@ -19,10 +19,6 @@
 <body>
 
 <script type="text/javascript">
-
-  var fireRate = 200;
-  var lastPlayerShot = 0;
-  var aimAngle;
   var cursors;
   var pointOnXWhereBulletsDisappear;
 
@@ -125,7 +121,6 @@
       };
 
       this.mouseRef = scene.input;
-
       this.bullets = playerBulletsHolder;
     }
 
@@ -256,6 +251,8 @@
       this.load.image('cult', './assets/cult.png');
       this.load.image('couch', './assets/couch.png');
       this.load.image('tractor', './assets/tractor.png');
+      this.load.image('grasstop', './assets/grasstop.png');
+      this.load.image('grill', './assets/grill.png');
     }
 
     create ()
@@ -400,6 +397,10 @@
       this.couch.setScrollFactor(0.8);
       this.couch.setOrigin(0, 1);
 
+      this.grill = this.add.image(15, this.sys.game.config.height - this.ground.height, 'grill');
+      this.grill.setScrollFactor(0.8);
+      this.grill.setOrigin(0, 1);
+
       this.playerBulletsHolder = this.physics.add.group
       ({
         classType: playerBullet,
@@ -407,7 +408,20 @@
         runChildUpdate: true
       });
 
-      this.player = new player(this, 16, this.sys.game.config.height - 24, this.playerBulletsHolder);
+      this.player = new player(this, 32, this.sys.game.config.height - 24, this.playerBulletsHolder);
+
+      this.cult1 = new cult(this, 850, 100);
+      this.cult1.setBounce(0);
+      this.cult1.setCollideWorldBounds(true);
+
+      this.grasstop = this.add.tileSprite(
+              205,
+              this.sys.game.config.height - this.ground.height,
+              1000,
+              16,
+              'grasstop'
+      );
+      this.grasstop.setOrigin(0, 1);
 
       this.tractor = this.physics.add.sprite(200, this.sys.game.config.height - this.ground.height, 'tractor');
       this.tractor.setOrigin(0, 1);
@@ -416,10 +430,6 @@
 
       this.physics.add.collider(this.tractor, this.ground);
       this.physics.add.collider(this.tractor, this.player);
-
-      this.cult1 = new cult(this, 850, 100);
-      this.cult1.setBounce(0);
-      this.cult1.setCollideWorldBounds(true);
 
       this.physics.add.collider(this.cult1, this.ground);
       this.physics.add.collider(this.cult1, this.playerBulletsHolder, (cult, bullet) =>
