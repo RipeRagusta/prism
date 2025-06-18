@@ -169,7 +169,7 @@
             const orb = this.orbs.get(this.x, this.y, 'cultorb');
             if(orb)
             {
-              orb.fire(this.x, this.y, Phaser.Math.DegToRad(180));
+              orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(180));
             }
             this.lastShot = time;
           }
