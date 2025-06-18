@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Lawn Purge</title>
+  <title>House Call</title>
   <script src="//cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.js"></script>
   <style type="text/css">
     body {
@@ -47,7 +47,7 @@
     {
       super.preUpdate(time, delta);
 
-      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x < 0 || this.x > pointOnXWhereBulletsDisappear || this.x > this.originX + 300 || this.x < this.originX - 300)
+      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x < 0 || this.x > pointOnXWhereBulletsDisappear || this.x > this.originX + 200 || this.x < this.originX - 200)
       {
         this.setActive(false);
         this.setVisible(false);
@@ -88,7 +88,7 @@
     {
       super.preUpdate(time, delta);
 
-      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x < 0 || this.x > pointOnXWhereBulletsDisappear || this.x > this.originX + 300 || this.x < this.originX - 300)
+      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x < 0 || this.x > pointOnXWhereBulletsDisappear || this.x > this.originX + 200 || this.x < this.originX - 200)
       {
         this.setActive(false);
         this.setVisible(false);
@@ -323,26 +323,29 @@
 
           if(bullet)
           {
+            const bulletX = this.x;
+            const bulletY = this.y;
+
             if(this.mouseRef.activePointer.rightButtonDown())
             {
               if(this.flip === false)
               {
-                bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), 0 + Phaser.Math.DegToRad(offset));
+                bullet.fire(bulletX + (this.width / 2) + (this.width / 16), bulletY - (this.height / 32) - (this.height / 16), 0 + Phaser.Math.DegToRad(offset));
               }
               else
               {
-                bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(180) + Phaser.Math.DegToRad(offset));
+                bullet.fire(bulletX - (this.width / 2) - (this.width / 16), bulletY - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(180) + Phaser.Math.DegToRad(offset));
               }
             }
             else
             {
               if(this.flip === false)
               {
-                bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
+                bullet.fire(bulletX + (this.width / 2) + (this.width / 16), bulletY - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
               }
               else
               {
-                bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
+                bullet.fire(bulletX - (this.width / 2) - (this.width / 16), bulletY - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
               }
             }
 
@@ -422,7 +425,7 @@
 
     create ()
     {
-      this.physics.world.setBounds(0, 0, this.sys.game.config.width, 192);
+      this.physics.world.setBounds(0, 0, this.sys.game.config.width, 176);
       pointOnXWhereBulletsDisappear = this.sys.game.config.width;
 
       cursors = this.input.keyboard.createCursorKeys();
@@ -482,11 +485,11 @@
       this.player = new player(this, Math.min(94, this.sys.game.config.width / 2), this.sys.game.config.height - 24, this.playerBulletsHolder);
 
       this.copcar = this.add.image(
-              8,
+              ((this.sys.game.config.width * 2) + (this.sys.game.config.width / 2)) / 2,
               this.sys.game.config.height - this.ground.height,
               'copcar'
       );
-      this.copcar.setOrigin(0, 1);
+      this.copcar.setOrigin(0.5, 1);
 
       this.grasstop = this.add.tileSprite(
               this.sys.game.config.width / 2,
@@ -541,22 +544,22 @@
 
     create()
     {
-      this.physics.world.setBounds(0, 0, 1000, 192);
-      pointOnXWhereBulletsDisappear = 1000;
+      this.physics.world.setBounds(0, 0, 4000, 192);
+      pointOnXWhereBulletsDisappear = 4000;
 
       cursors = this.input.keyboard.createCursorKeys();
 
-      this.sky = this.add.tileSprite(0, 0, 1000, this.sys.game.config.height, 'sky').setOrigin(0, 0);
+      this.sky = this.add.tileSprite(0, 0, 4000, this.sys.game.config.height, 'sky').setOrigin(0, 0);
       this.sky.setScrollFactor(0.1);
 
-      this.stars = this.add.tileSprite(0, 0, 1000, this.sys.game.config.height, 'stars').setOrigin(0, 0);
+      this.stars = this.add.tileSprite(0, 0, 4000, this.sys.game.config.height, 'stars').setOrigin(0, 0);
       this.stars.setScrollFactor(0.1);
 
       this.ground = this.add.tileSprite
       (
               0,
               this.sys.game.config.height,
-              1000,
+              4000,
               16,
               'ground'
       );
@@ -584,10 +587,6 @@
       this.grill.setScrollFactor(0.8);
       this.grill.setOrigin(0, 1);
 
-      /*this.unalivedbody = this.add.image(118, this.sys.game.config.height - this.ground.height, 'unalivedbody');
-      this.unalivedbody.setScrollFactor(0.8);
-      this.unalivedbody.setOrigin(0, 1);*/
-
       this.playerBulletsHolder = this.physics.add.group
       ({
         classType: playerBullet,
@@ -602,21 +601,44 @@
         maxSize: 30,
         runChildUpdate: true
       });
-
-      this.cult1 = new cult(this, 850, 100, this.player, this.cultOrbHolder);
-
-      this.cult2 = new cultKnife(this, 500, 100, this.player);
-
       this.physics.add.collider(this.player, this.cultOrbHolder, (player, orb) =>
       {
         player.health -= 10;
         orb.destroy();
       });
 
+      this.cults = this.physics.add.group();
+      this.cult1 = new cult(this, 750, 100, this.player, this.cultOrbHolder);
+      this.cults.add(this.cult1);
+      this.physics.add.collider(this.cults, this.ground);
+      this.physics.add.collider(this.cults, this.playerBulletsHolder, (cult, bullet) =>
+      {
+        cult.health -= 1;
+        bullet.destroy();
+      });
+
+      this.cultKnifes = this.physics.add.group();
+      this.cult2 = new cultKnife(this, 500, 100, this.player);
+      this.cultKnifes.add(this.cult2);
+      this.cult3 = new cultKnife(this, 625, 100, this.player);
+      this.cultKnifes.add(this.cult3);
+      this.cult4 = new cultKnife(this, 650, 100, this.player);
+      this.cultKnifes.add(this.cult4);
+      this.physics.add.collider(this.cultKnifes, this.ground);
+      this.physics.add.collider(this.cultKnifes, this.playerBulletsHolder, (cult, bullet) =>
+      {
+        cult.health -= 1;
+        bullet.destroy();
+      });
+      this.physics.add.collider(this.player, this.cultKnifes, (player, cult) =>
+      {
+        player.health -= 10;
+      });
+
       this.grasstop = this.add.tileSprite(
               0,
               this.sys.game.config.height - this.ground.height,
-              1000,
+              4000,
               16,
               'grasstop'
       );
@@ -629,29 +651,10 @@
 
       this.physics.add.collider(this.tractor, this.ground);
       this.physics.add.collider(this.tractor, this.player);
-
-      this.physics.add.collider(this.cult1, this.ground);
-      this.physics.add.collider(this.cult1, this.playerBulletsHolder, (cult, bullet) =>
-      {
-        cult.health -= 1;
-        bullet.destroy();
-      });
-
-      this.physics.add.collider(this.cult2, this.ground);
-      this.physics.add.collider(this.cult2, this.playerBulletsHolder, (cult, bullet) =>
-      {
-        cult.health -= 1;
-        bullet.destroy();
-      });
-
-      this.physics.add.collider(this.player, this.cult2, (player, cult) =>
-      {
-        player.health -= 10;
-      });
-
+      
       this.physics.add.collider(this.player, this.ground);
 
-      this.cameras.main.setBounds(0, 0, 1000, 192);
+      this.cameras.main.setBounds(0, 0, 4000, 176);
       this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
       this.cameras.main.setZoom(1);
     }
