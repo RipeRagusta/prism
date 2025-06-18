@@ -34,13 +34,13 @@
 
     fire(x, y, angle)
     {
+      this.originX = x;
       this.body.reset(x, y);
       this.setActive(true);
       this.setVisible(true);
       this.setRotation(angle);
       this.scene.physics.velocityFromRotation(angle, this.speed, this.body.velocity);
       this.body.allowGravity = false;
-      this.originX = x;
     }
 
     preUpdate(time, delta)
@@ -323,29 +323,26 @@
 
           if(bullet)
           {
-            const bulletX = this.x;
-            const bulletY = this.y;
-
             if(this.mouseRef.activePointer.rightButtonDown())
             {
               if(this.flip === false)
               {
-                bullet.fire(bulletX + (this.width / 2) + (this.width / 16), bulletY - (this.height / 32) - (this.height / 16), 0 + Phaser.Math.DegToRad(offset));
+                bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), 0 + Phaser.Math.DegToRad(offset));
               }
               else
               {
-                bullet.fire(bulletX - (this.width / 2) - (this.width / 16), bulletY - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(180) + Phaser.Math.DegToRad(offset));
+                bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(180) + Phaser.Math.DegToRad(offset));
               }
             }
             else
             {
               if(this.flip === false)
               {
-                bullet.fire(bulletX + (this.width / 2) + (this.width / 16), bulletY - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
+                bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
               }
               else
               {
-                bullet.fire(bulletX - (this.width / 2) - (this.width / 16), bulletY - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
+                bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
               }
             }
 
@@ -504,22 +501,22 @@
 
       this.physics.add.collider(this.player, this.ground);
 
-      let logo = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'House Call', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
-      logo.setWordWrapWidth(this.sys.game.config.width);
-      logo.setInteractive();
-      this.physics.add.existing(logo, true);
-      this.physics.add.collider(logo, this.playerBulletsHolder, (logo, bullet) =>
+      this.logo = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'House Call', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+      this.logo.setWordWrapWidth(this.sys.game.config.width);
+      this.logo.setInteractive();
+      this.physics.add.existing(this.logo, true);
+      this.physics.add.collider(this.logo, this.playerBulletsHolder, (logo, bullet) =>
       {
         bullet.destroy();
         logo.destroy();
         this.cameras.main.pan(this.sys.game.config.width * 2, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
       });
 
-      let levelSelect = this.add.text((this.sys.game.config.width * 2), this.sys.game.config.height / 2, 'Level 1', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
-      levelSelect.setWordWrapWidth(this.sys.game.config.width);
-      levelSelect.setInteractive();
+      this.levelSelect = this.add.text((this.sys.game.config.width * 2), this.sys.game.config.height / 2, 'Level 1', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+      this.levelSelect.setWordWrapWidth(this.sys.game.config.width);
+      this.levelSelect.setInteractive();
 
-      levelSelect.on('pointerdown', () =>
+      this.levelSelect.on('pointerdown', () =>
       {
         this.scene.start('Level1Game');
       });
@@ -544,22 +541,23 @@
 
     create()
     {
-      this.physics.world.setBounds(0, 0, 4000, 192);
-      pointOnXWhereBulletsDisappear = 4000;
+      const worldWidthX = 1500;
+      this.physics.world.setBounds(0, 0, worldWidthX, 192);
+      pointOnXWhereBulletsDisappear = worldWidthX;
 
       cursors = this.input.keyboard.createCursorKeys();
 
-      this.sky = this.add.tileSprite(0, 0, 4000, this.sys.game.config.height, 'sky').setOrigin(0, 0);
+      this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'sky').setOrigin(0, 0);
       this.sky.setScrollFactor(0.1);
 
-      this.stars = this.add.tileSprite(0, 0, 4000, this.sys.game.config.height, 'stars').setOrigin(0, 0);
+      this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
       this.stars.setScrollFactor(0.1);
 
       this.ground = this.add.tileSprite
       (
               0,
               this.sys.game.config.height,
-              4000,
+              worldWidthX,
               16,
               'ground'
       );
@@ -610,22 +608,39 @@
       this.cults = this.physics.add.group();
       this.cult1 = new cult(this, 750, 100, this.player, this.cultOrbHolder);
       this.cults.add(this.cult1);
+      this.cult2 = new cult(this, 1050, 100, this.player, this.cultOrbHolder);
+      this.cults.add(this.cult2);
+      this.cult3 = new cult(this, 1100, 100, this.player, this.cultOrbHolder);
+      this.cults.add(this.cult3);
       this.physics.add.collider(this.cults, this.ground);
       this.physics.add.collider(this.cults, this.playerBulletsHolder, (cult, bullet) =>
       {
         cult.health -= 1;
         bullet.destroy();
       });
+      this.physics.add.collider(this.cults, this.cults);
+      this.physics.add.overlap(this.cults, this.playerBulletsHolder, (cult, bullet) =>
+      {
+        cult.health -= 1;
+        bullet.destroy();
+      });
 
       this.cultKnifes = this.physics.add.group();
-      this.cult2 = new cultKnife(this, 500, 100, this.player);
-      this.cultKnifes.add(this.cult2);
-      this.cult3 = new cultKnife(this, 625, 100, this.player);
-      this.cultKnifes.add(this.cult3);
-      this.cult4 = new cultKnife(this, 650, 100, this.player);
-      this.cultKnifes.add(this.cult4);
+      this.cultKnife1 = new cultKnife(this, 500, 100, this.player);
+      this.cultKnifes.add(this.cultKnife1);
+      this.cultKnife2 = new cultKnife(this, 625, 100, this.player);
+      this.cultKnifes.add(this.cultKnife2);
+      this.cultKnife3 = new cultKnife(this, 650, 100, this.player);
+      this.cultKnifes.add(this.cultKnife3);
+      this.cultKnife4 = new cultKnife(this, 1000, 100, this.player);
+      this.cultKnifes.add(this.cultKnife4);
       this.physics.add.collider(this.cultKnifes, this.ground);
       this.physics.add.collider(this.cultKnifes, this.playerBulletsHolder, (cult, bullet) =>
+      {
+        cult.health -= 1;
+        bullet.destroy();
+      });
+      this.physics.add.overlap(this.cultKnifes, this.playerBulletsHolder, (cult, bullet) =>
       {
         cult.health -= 1;
         bullet.destroy();
@@ -634,11 +649,12 @@
       {
         player.health -= 10;
       });
+      this.physics.add.collider(this.cultKnifes, this.cultKnifes);
 
       this.grasstop = this.add.tileSprite(
               0,
               this.sys.game.config.height - this.ground.height,
-              4000,
+              worldWidthX,
               16,
               'grasstop'
       );
@@ -654,7 +670,7 @@
       
       this.physics.add.collider(this.player, this.ground);
 
-      this.cameras.main.setBounds(0, 0, 4000, 176);
+      this.cameras.main.setBounds(0, 0, worldWidthX, 176);
       this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
       this.cameras.main.setZoom(1);
     }
