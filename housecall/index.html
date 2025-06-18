@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Lawn Purge</title>
+  <script src="//cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.js"></script>
+  <style type="text/css">
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      background-color: black;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+
+<script type="text/javascript">
+  var cursors;
+  var pointOnXWhereBulletsDisappear;
+
+  class playerBullet extends Phaser.Physics.Arcade.Sprite
+  {
+    constructor(scene, x, y)
+    {
+      super(scene, x, y, 'bullet');
+      this.speed = 400;
+      this.setActive(false);
+      this.setVisible(false);
+    }
+
+    fire(x, y, angle)
+    {
+      this.body.reset(x, y);
+      this.setActive(true);
+      this.setVisible(true);
+      this.setRotation(angle);
+      this.scene.physics.velocityFromRotation(angle, this.speed, this.body.velocity);
+      this.body.allowGravity = false;
+      this.originX = x;
+    }
+
+    preUpdate(time, delta)
+    {
+      super.preUpdate(time, delta);
+
+      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x < 0 || this.x > pointOnXWhereBulletsDisappear || this.x > this.originX + 300 || this.x < this.originX - 300)
+      {
+        this.setActive(false);
+        this.setVisible(false);
+        this.destroy();
+      }
+    }
+
+    collided()
+    {
+      this.setActive(false);
+      this.setVisible(false);
+      this.destroy();
+    }
+  }
+
+  class cultOrb extends Phaser.Physics.Arcade.Sprite
+  {
+    constructor(scene, x, y)
+    {
+      super(scene, x, y, 'cultorb');
+      this.speed = 200;
+      this.setActive(false);
+      this.setVisible(false);
+    }
+
+    fire(x, y, angle)
+    {
+      this.body.reset(x, y);
+      this.setActive(true);
+      this.setVisible(true);
+      this.setRotation(angle);
+      this.scene.physics.velocityFromRotation(angle, this.speed, this.body.velocity);
+      this.body.allowGravity = false;
+      this.originX = x;
+    }
+
+    preUpdate(time, delta)
+    {
+      super.preUpdate(time, delta);
+
+      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x < 0 || this.x > pointOnXWhereBulletsDisappear || this.x > this.originX + 300 || this.x < this.originX - 300)
+      {
+        this.setActive(false);
+        this.setVisible(false);
+        this.destroy();
+      }
+    }
+
+    collided()
+    {
+      this.setActive(false);
+      this.setVisible(false);
+      this.destroy();
+    }
+  }
+
+  class cult extends Phaser.Physics.Arcade.Sprite
+  {
+    constructor(scene, x, y, player, cultOrbHolder)
+    {
+      super(scene, x, y, 'cult');
+
+      scene.add.existing(this);
+      scene.physics.add.existing(this);
+      this.setActive(true);
+      this.setVisible(true);
+      this.health = 15;
+      this.setBounce(0);
+      this.setCollideWorldBounds(true);
+      this.player = player;
+      this.alert = false;
+      this.orbs = cultOrbHolder;
+      this.lastShot = 0;
+      this.fireRate = 1500;
+    }
+
+    preUpdate(time, delta)
+    {
+      super.preUpdate(time, delta);
+
+      if(this.health < 1)
+      {
+        this.setActive(false);
+        this.setVisible(false);
+        this.destroy();
+      }
+      else
+      {
+        this.checkInRange();
+
+        if(this.alert === true || this.health < 15)
+        {
+          if(this.player.x < this.x && Math.abs(this.player.x - this.x) >= 100 + 5)
+          {
+            this.setVelocityX(-110);
+          }
+          else if(this.player.x > this.x && Math.abs(this.player.x - this.x) >= 100 + 5)
+          {
+            this.setVelocityX(110);
+          }
+          else if(Math.abs(this.player.x - this.x) >= 100 - 5 && Math.abs(this.player.x - this.x) <= 100 + 5)
+          {
+            this.setVelocityX(0);
+          }
+          else
+          {
+            if (this.player.x < this.x)
+            {
+              this.setVelocityX(110);
+            }
+            else
+            {
+              this.setVelocityX(-110);
+            }
+          }
+
+          if(time > this.lastShot + this.fireRate)
+          {
+            const orb = this.orbs.get(this.x, this.y, 'cultorb');
+            if(orb)
+            {
+              orb.fire(this.x, this.y, Phaser.Math.DegToRad(180));
+            }
+            this.lastShot = time;
+          }
+        }
+      }
+    }
+
+    checkInRange()
+    {
+      if(this.alert === false && Math.abs(this.player.x - this.x) <= 200)
+      {
+        this.alert = true;
+      }
+    }
+  }
+
+  class cultKnife extends Phaser.Physics.Arcade.Sprite
+  {
+    constructor(scene, x, y, player)
+    {
+      super(scene, x, y, 'cultknife');
+
+      scene.add.existing(this);
+      scene.physics.add.existing(this);
+      this.setActive(true);
+      this.setVisible(true);
+      this.health = 5;
+      this.setBounce(0);
+      this.setCollideWorldBounds(true);
+      this.player = player;
+      this.alert = false;
+    }
+
+    preUpdate(time, delta)
+    {
+      super.preUpdate(time, delta);
+
+      if(this.health < 1)
+      {
+        this.setActive(false);
+        this.setVisible(false);
+        this.destroy();
+      }
+      else
+      {
+        this.checkInRange();
+
+        if(this.alert === true || this.health < 5)
+        {
+          if(Math.abs(this.player.x - this.x) >= 0 - 5 && Math.abs(this.player.x - this.x) <= 0 + 5)
+          {
+            this.setVelocityX(0);
+          }
+          else
+          {
+            if(this.player.x < this.x)
+            {
+              this.setVelocityX(-150);
+              this.setFlipX(false);
+            }
+            else
+            {
+              this.setVelocityX(150);
+              this.setFlipX(true);
+            }
+          }
+        }
+      }
+    }
+
+    checkInRange()
+    {
+      if(this.alert === false && Math.abs(this.player.x - this.x) <= 200)
+      {
+        this.alert = true;
+      }
+    }
+  }
+
+  class player extends Phaser.Physics.Arcade.Sprite
+  {
+    constructor(scene, x, y, playerBulletsHolder)
+    {
+      super(scene, x, y, 'dude');
+
+      scene.add.existing(this);
+      scene.physics.add.existing(this);
+      this.setActive(true);
+      this.setVisible(true);
+      this.flip = false;
+      this.aimAngle = 0;
+      this.fireRate = 750;
+      this.lastPlayerShot = 0;
+      this.health = 10;
+      this.setBounce(0);
+      this.setCollideWorldBounds(true);
+
+      this.wasd = {
+        up: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
+        down: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
+        left: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
+        right: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
+      };
+
+      this.mouseRef = scene.input;
+      this.bullets = playerBulletsHolder;
+    }
+
+    preUpdate(time, delta)
+    {
+      super.preUpdate(time, delta);
+
+      if(this.health < 1)
+      {
+        this.setActive(false);
+        this.setVisible(false);
+        this.destroy();
+      }
+
+      if((this.wasd.left.isDown || cursors.left.isDown))
+      {
+        this.setVelocityX(-120);
+      }
+      else if((this.wasd.right.isDown || cursors.right.isDown))
+      {
+        this.setVelocityX(120);
+      }
+      else
+      {
+        this.setVelocityX(0);
+      }
+
+      if((this.wasd.up.isDown || cursors.up.isDown) && this.body.touching.down)
+      {
+        this.setVelocityY(-120);
+      }
+
+      this.flipPlayer(this.scene.input.activePointer);
+      this.scene.input.activePointer.updateWorldPoint(this.scene.cameras.main);
+      this.updateAimAngle(this.scene.input.activePointer);
+
+      if(this.mouseRef.activePointer.isDown && time > this.lastPlayerShot + this.fireRate)
+      {
+        this.mouseRef.mouse.disableContextMenu();
+
+        var offset = -12.5;
+
+        for (let i = 0; i < 10; i++)
+        {
+          const bullet = this.bullets.get(this.x, this.y, 'bullet');
+
+          if(bullet)
+          {
+            if(this.mouseRef.activePointer.rightButtonDown())
+            {
+              if(this.flip === false)
+              {
+                bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), 0 + Phaser.Math.DegToRad(offset));
+              }
+              else
+              {
+                bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(180) + Phaser.Math.DegToRad(offset));
+              }
+            }
+            else
+            {
+              if(this.flip === false)
+              {
+                bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
+              }
+              else
+              {
+                bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
+              }
+            }
+
+            offset += 2.5;
+          }
+        }
+
+        this.lastPlayerShot = time;
+      }
+    }
+
+    flipPlayer(pointer)
+    {
+      if(pointer.worldX < this.getCenter().x)
+      {
+        this.setFlipX(true);
+        this.flip = true;
+      }
+      else
+      {
+        this.setFlipX(false);
+        this.flip = false;
+      }
+    }
+
+    updateAimAngle(pointer)
+    {
+      if(this.flip === false)
+      {
+        this.aimAngle = Phaser.Math.Angle.Between
+        (
+          this.x + (this.width / 2) + (this.width / 16),
+          this.y - (this.height / 32) - (this.height / 16),
+          pointer.worldX,
+          pointer.worldY
+        );
+      }
+      else
+      {
+        this.aimAngle = Phaser.Math.Angle.Between
+        (
+          this.x - (this.width / 2) - (this.width / 16),
+          this.y - (this.height / 32) - (this.height / 16),
+          pointer.worldX,
+          pointer.worldY
+        );
+      }
+    }
+  }
+
+  class MainMenu extends Phaser.Scene
+  {
+    constructor()
+    {
+      super({ key: 'MainMenu' });
+    }
+    preload ()
+    {
+      this.load.image('sky', 'assets/sky.png');
+      this.load.spritesheet('dude', 'assets/player.png', { frameWidth: 16, frameHeight: 16 });
+      this.load.image('ground', 'assets/grass.png');
+      this.load.image('bullet', 'assets/bullet.png');
+      this.load.image('barn', 'assets/barn.png');
+      this.load.image('fence', 'assets/fence.png');
+      this.load.image('stars', 'assets/stars.png');
+      this.load.image('cross', 'assets/cross.png');
+      this.load.image('cult', './assets/cult.png');
+      this.load.image('couch', './assets/couch.png');
+      this.load.image('tractor', './assets/tractor.png');
+      this.load.image('grasstop', './assets/grasstop.png');
+      this.load.image('grill', './assets/grill.png');
+      this.load.image('cultknife', './assets/cultknife.png');
+      this.load.image('copcar', './assets/copcar.png');
+      this.load.image('cultorb', './assets/cultorb.png');
+      this.load.image('unalivedbody', './assets/unalivedbody.png');
+    }
+
+    create ()
+    {
+      this.physics.world.setBounds(0, 0, this.sys.game.config.width, 192);
+      pointOnXWhereBulletsDisappear = this.sys.game.config.width;
+
+      cursors = this.input.keyboard.createCursorKeys();
+
+      this.sky = this.add.tileSprite(0, 0, this.sys.game.config.width * 3, this.sys.game.config.height, 'sky').setOrigin(0, 0);
+      this.sky.setScrollFactor(0.1);
+
+      this.stars = this.add.tileSprite(0, 0, this.sys.game.config.width * 3, this.sys.game.config.height, 'stars').setOrigin(0, 0);
+      this.stars.setScrollFactor(0.1);
+
+      this.ground = this.add.tileSprite
+      (
+              this.sys.game.config.width / 2,
+              this.sys.game.config.height,
+              this.sys.game.config.width * 3,
+              16,
+              'ground'
+      );
+
+      this.ground.setOrigin(0.25, 1);
+      this.physics.add.existing(this.ground, true);
+
+      this.barn = this.add.image(
+              32,
+              this.sys.game.config.height - this.ground.height,
+              'barn');
+      this.barn.setTint(0x999999);
+      this.barn.setOrigin(0, 1);
+      this.barn.setScrollFactor(0.25);
+
+      this.cross = this.add.image(
+              Math.max(32 + this.barn.width + 24, this.sys.game.config.width + 24),
+              this.sys.game.config.height - this.ground.height,
+              'cross');
+      this.cross.setOrigin(0.5, 1);
+      this.cross.setScrollFactor(0.25);
+      this.cross.setTint(0x999999);
+
+      this.fence = this.add.tileSprite(
+              this.sys.game.config.width / 2,
+              this.sys.game.config.height - this.ground.height,
+              this.sys.game.config.width * 3,
+              16,
+              'fence'
+      );
+      this.fence.setScrollFactor(0.75);
+      this.fence.setOrigin(0.25, 1);
+
+
+
+      this.playerBulletsHolder = this.physics.add.group({
+        classType: playerBullet,
+        maxSize: 30,
+        runChildUpdate: true
+      });
+
+      this.player = new player(this, Math.min(94, this.sys.game.config.width / 2), this.sys.game.config.height - 24, this.playerBulletsHolder);
+
+      this.copcar = this.add.image(
+              8,
+              this.sys.game.config.height - this.ground.height,
+              'copcar'
+      );
+      this.copcar.setOrigin(0, 1);
+
+      this.grasstop = this.add.tileSprite(
+              this.sys.game.config.width / 2,
+              this.sys.game.config.height - this.ground.height,
+              this.sys.game.config.width * 3,
+              16,
+              'grasstop'
+      );
+      this.grasstop.setOrigin(0.25, 1);
+
+      this.cameras.main.setBounds(0, 0, Math.ceil(this.sys.game.config.width) * 3, 192);
+
+      this.physics.add.collider(this.player, this.ground);
+
+      let logo = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'House Call', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+      logo.setWordWrapWidth(this.sys.game.config.width);
+      logo.setInteractive();
+      this.physics.add.existing(logo, true);
+      this.physics.add.collider(logo, this.playerBulletsHolder, (logo, bullet) =>
+      {
+        bullet.destroy();
+        logo.destroy();
+        this.cameras.main.pan(this.sys.game.config.width * 2, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
+      });
+
+      let levelSelect = this.add.text((this.sys.game.config.width * 2), this.sys.game.config.height / 2, 'Level 1', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+      levelSelect.setWordWrapWidth(this.sys.game.config.width);
+      levelSelect.setInteractive();
+
+      levelSelect.on('pointerdown', () =>
+      {
+        this.scene.start('Level1Game');
+      });
+    }
+    update(time)
+    {
+
+    }
+  }
+
+  class Level1Game extends Phaser.Scene
+  {
+    constructor()
+    {
+      super({ key: 'Level1Game' });
+    }
+
+    preload()
+    {
+
+    }
+
+    create()
+    {
+      this.physics.world.setBounds(0, 0, 1000, 192);
+      pointOnXWhereBulletsDisappear = 1000;
+
+      cursors = this.input.keyboard.createCursorKeys();
+
+      this.sky = this.add.tileSprite(0, 0, 1000, this.sys.game.config.height, 'sky').setOrigin(0, 0);
+      this.sky.setScrollFactor(0.1);
+
+      this.stars = this.add.tileSprite(0, 0, 1000, this.sys.game.config.height, 'stars').setOrigin(0, 0);
+      this.stars.setScrollFactor(0.1);
+
+      this.ground = this.add.tileSprite
+      (
+              0,
+              this.sys.game.config.height,
+              1000,
+              16,
+              'ground'
+      );
+
+      this.ground.setOrigin(0, 1);
+      this.physics.add.existing(this.ground);
+      this.ground.body.setImmovable(true);
+      this.ground.body.allowGravity = false;
+
+      this.fence = this.add.tileSprite(
+              0,
+              this.sys.game.config.height - this.ground.height,
+              100,
+              16,
+              'fence'
+      );
+      this.fence.setScrollFactor(0.75);
+      this.fence.setOrigin(0, 1);
+
+      this.couch = this.add.image(45, this.sys.game.config.height - this.ground.height, 'couch');
+      this.couch.setScrollFactor(0.8);
+      this.couch.setOrigin(0, 1);
+
+      this.grill = this.add.image(15, this.sys.game.config.height - this.ground.height, 'grill');
+      this.grill.setScrollFactor(0.8);
+      this.grill.setOrigin(0, 1);
+
+      /*this.unalivedbody = this.add.image(118, this.sys.game.config.height - this.ground.height, 'unalivedbody');
+      this.unalivedbody.setScrollFactor(0.8);
+      this.unalivedbody.setOrigin(0, 1);*/
+
+      this.playerBulletsHolder = this.physics.add.group
+      ({
+        classType: playerBullet,
+        maxSize: 30,
+        runChildUpdate: true
+      });
+
+      this.player = new player(this, 32, this.sys.game.config.height - 24, this.playerBulletsHolder);
+
+      this.cultOrbHolder = this.physics.add.group({
+        classType: cultOrb,
+        maxSize: 30,
+        runChildUpdate: true
+      });
+
+      this.cult1 = new cult(this, 850, 100, this.player, this.cultOrbHolder);
+
+      this.cult2 = new cultKnife(this, 500, 100, this.player);
+
+      this.physics.add.collider(this.player, this.cultOrbHolder, (player, orb) =>
+      {
+        player.health -= 10;
+        orb.destroy();
+      });
+
+      this.grasstop = this.add.tileSprite(
+              0,
+              this.sys.game.config.height - this.ground.height,
+              1000,
+              16,
+              'grasstop'
+      );
+      this.grasstop.setOrigin(0, 1);
+
+      this.tractor = this.physics.add.sprite(200, this.sys.game.config.height - this.ground.height, 'tractor');
+      this.tractor.setOrigin(0, 1);
+      this.tractor.body.allowGravity = false;
+      this.tractor.body.setImmovable(true);
+
+      this.physics.add.collider(this.tractor, this.ground);
+      this.physics.add.collider(this.tractor, this.player);
+
+      this.physics.add.collider(this.cult1, this.ground);
+      this.physics.add.collider(this.cult1, this.playerBulletsHolder, (cult, bullet) =>
+      {
+        cult.health -= 1;
+        bullet.destroy();
+      });
+
+      this.physics.add.collider(this.cult2, this.ground);
+      this.physics.add.collider(this.cult2, this.playerBulletsHolder, (cult, bullet) =>
+      {
+        cult.health -= 1;
+        bullet.destroy();
+      });
+
+      this.physics.add.collider(this.player, this.cult2, (player, cult) =>
+      {
+        player.health -= 10;
+      });
+
+      this.physics.add.collider(this.player, this.ground);
+
+      this.cameras.main.setBounds(0, 0, 1000, 192);
+      this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
+      this.cameras.main.setZoom(1);
+    }
+
+    update(time, delta)
+    {
+      if(this.player.health < 1)
+      {
+        this.scene.start('Level1Game');
+      }
+    }
+  }
+
+  var config =
+  {
+    type: Phaser.AUTO,
+    pixelArt: true,
+    width: (window.innerWidth / window.innerHeight) * 176,
+    height: 176,
+
+    scale:
+    {
+      mode: Phaser.Scale.FIT,
+      autoCenter: Phaser.Scale.CENTER_BOTH,
+    },
+
+    physics:
+    {
+      default: 'arcade',
+      arcade:
+      {
+        gravity: { y: 300 },
+        debug: false
+      }
+    },
+
+    scene:
+    [
+      MainMenu,
+      Level1Game
+    ]
+  };
+
+  var game = new Phaser.Game(config);
+
+</script>
+</body>
+</html>
