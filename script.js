@@ -26,7 +26,7 @@ function initialize()
 	launchOptions = [
 					 "cyberclicker",
 					 "jumpgame",
-					 "lpdemo"
+					 "hcdemo"
 					];
 	selectPast = false;
 	clickedConsoleFirst = false;
@@ -380,8 +380,8 @@ function evaluateCommand(commandEntered)
 			window.location.href = "./jumpgame/index.html";
 			break;
 
-		case "launchlpdemo":
-			window.location.href = "./lawnpurge/index.html";
+		case "launchhcdemo":
+			window.location.href = "./housecall/index.html";
 			break;
 
 		case "launchfp2rbpr":
