@@ -63,9 +63,50 @@
     }
   }
 
-  class cult extends Phaser.Physics.Arcade.Sprite
+  class cultOrb extends Phaser.Physics.Arcade.Sprite
   {
     constructor(scene, x, y)
+    {
+      super(scene, x, y, 'cultorb');
+      this.speed = 200;
+      this.setActive(false);
+      this.setVisible(false);
+    }
+
+    fire(x, y, angle)
+    {
+      this.body.reset(x, y);
+      this.setActive(true);
+      this.setVisible(true);
+      this.setRotation(angle);
+      this.scene.physics.velocityFromRotation(angle, this.speed, this.body.velocity);
+      this.body.allowGravity = false;
+      this.originX = x;
+    }
+
+    preUpdate(time, delta)
+    {
+      super.preUpdate(time, delta);
+
+      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x < 0 || this.x > pointOnXWhereBulletsDisappear || this.x > this.originX + 300 || this.x < this.originX - 300)
+      {
+        this.setActive(false);
+        this.setVisible(false);
+        this.destroy();
+      }
+    }
+
+    collided()
+    {
+      this.setActive(false);
+      this.setVisible(false);
+      this.destroy();
+    }
+  }
+
+  class cult extends Phaser.Physics.Arcade.Sprite
+  {
+    constructor(scene, x, y, player, cultOrbHolder)
     {
       super(scene, x, y, 'cult');
 
@@ -73,16 +114,19 @@
       scene.physics.add.existing(this);
       this.setActive(true);
       this.setVisible(true);
-      this.health = 10;
+      this.health = 15;
       this.setBounce(0);
       this.setCollideWorldBounds(true);
+      this.player = player;
+      this.alert = false;
+      this.orbs = cultOrbHolder;
+      this.lastShot = 0;
+      this.fireRate = 1500;
     }
 
     preUpdate(time, delta)
     {
       super.preUpdate(time, delta);
-
-      this.moveLeft()
 
       if(this.health < 1)
       {
@@ -90,17 +134,61 @@
         this.setVisible(false);
         this.destroy();
       }
+      else
+      {
+        this.checkInRange();
+
+        if(this.alert === true || this.health < 15)
+        {
+          if(this.player.x < this.x && Math.abs(this.player.x - this.x) >= 100 + 5)
+          {
+            this.setVelocityX(-110);
+          }
+          else if(this.player.x > this.x && Math.abs(this.player.x - this.x) >= 100 + 5)
+          {
+            this.setVelocityX(110);
+          }
+          else if(Math.abs(this.player.x - this.x) >= 100 - 5 && Math.abs(this.player.x - this.x) <= 100 + 5)
+          {
+            this.setVelocityX(0);
+          }
+          else
+          {
+            if (this.player.x < this.x)
+            {
+              this.setVelocityX(110);
+            }
+            else
+            {
+              this.setVelocityX(-110);
+            }
+          }
+
+          if(time > this.lastShot + this.fireRate)
+          {
+            const orb = this.orbs.get(this.x, this.y, 'cultorb');
+            if(orb)
+            {
+              orb.fire(this.x, this.y, Phaser.Math.DegToRad(180));
+            }
+            this.lastShot = time;
+          }
+        }
+      }
     }
 
-    moveLeft()
+    checkInRange()
     {
-      this.setVelocityX(-50);
+      if(this.alert === false && Math.abs(this.player.x - this.x) <= 200)
+      {
+        this.alert = true;
+      }
     }
   }
 
   class cultKnife extends Phaser.Physics.Arcade.Sprite
   {
-    constructor(scene, x, y)
+    constructor(scene, x, y, player)
     {
       super(scene, x, y, 'cultknife');
 
@@ -108,16 +196,16 @@
       scene.physics.add.existing(this);
       this.setActive(true);
       this.setVisible(true);
-      this.health = 10;
+      this.health = 5;
       this.setBounce(0);
       this.setCollideWorldBounds(true);
+      this.player = player;
+      this.alert = false;
     }
 
     preUpdate(time, delta)
     {
       super.preUpdate(time, delta);
-
-      this.moveLeft()
 
       if(this.health < 1)
       {
@@ -125,11 +213,39 @@
         this.setVisible(false);
         this.destroy();
       }
+      else
+      {
+        this.checkInRange();
+
+        if(this.alert === true || this.health < 5)
+        {
+          if(Math.abs(this.player.x - this.x) >= 0 - 5 && Math.abs(this.player.x - this.x) <= 0 + 5)
+          {
+            this.setVelocityX(0);
+          }
+          else
+          {
+            if(this.player.x < this.x)
+            {
+              this.setVelocityX(-150);
+              this.setFlipX(false);
+            }
+            else
+            {
+              this.setVelocityX(150);
+              this.setFlipX(true);
+            }
+          }
+        }
+      }
     }
 
-    moveLeft()
+    checkInRange()
     {
-      this.setVelocityX(-75);
+      if(this.alert === false && Math.abs(this.player.x - this.x) <= 200)
+      {
+        this.alert = true;
+      }
     }
   }
 
@@ -299,6 +415,9 @@
       this.load.image('grasstop', './assets/grasstop.png');
       this.load.image('grill', './assets/grill.png');
       this.load.image('cultknife', './assets/cultknife.png');
+      this.load.image('copcar', './assets/copcar.png');
+      this.load.image('cultorb', './assets/cultorb.png');
+      this.load.image('unalivedbody', './assets/unalivedbody.png');
     }
 
     create ()
@@ -352,13 +471,22 @@
       this.fence.setScrollFactor(0.75);
       this.fence.setOrigin(0.25, 1);
 
+
+
       this.playerBulletsHolder = this.physics.add.group({
         classType: playerBullet,
         maxSize: 30,
         runChildUpdate: true
       });
 
-      this.player = new player(this, Math.min(32, this.sys.game.config.width / 2), this.sys.game.config.height - 24, this.playerBulletsHolder);
+      this.player = new player(this, Math.min(94, this.sys.game.config.width / 2), this.sys.game.config.height - 24, this.playerBulletsHolder);
+
+      this.copcar = this.add.image(
+              8,
+              this.sys.game.config.height - this.ground.height,
+              'copcar'
+      );
+      this.copcar.setOrigin(0, 1);
 
       this.grasstop = this.add.tileSprite(
               this.sys.game.config.width / 2,
@@ -373,7 +501,7 @@
 
       this.physics.add.collider(this.player, this.ground);
 
-      let logo = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Lawn Purge', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+      let logo = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'House Call', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
       logo.setWordWrapWidth(this.sys.game.config.width);
       logo.setInteractive();
       this.physics.add.existing(logo, true);
@@ -456,6 +584,10 @@
       this.grill.setScrollFactor(0.8);
       this.grill.setOrigin(0, 1);
 
+      /*this.unalivedbody = this.add.image(118, this.sys.game.config.height - this.ground.height, 'unalivedbody');
+      this.unalivedbody.setScrollFactor(0.8);
+      this.unalivedbody.setOrigin(0, 1);*/
+
       this.playerBulletsHolder = this.physics.add.group
       ({
         classType: playerBullet,
@@ -465,9 +597,21 @@
 
       this.player = new player(this, 32, this.sys.game.config.height - 24, this.playerBulletsHolder);
 
-      this.cult1 = new cult(this, 850, 100);
+      this.cultOrbHolder = this.physics.add.group({
+        classType: cultOrb,
+        maxSize: 30,
+        runChildUpdate: true
+      });
 
-      this.cult2 = new cultKnife(this, 850, 100);
+      this.cult1 = new cult(this, 850, 100, this.player, this.cultOrbHolder);
+
+      this.cult2 = new cultKnife(this, 500, 100, this.player);
+
+      this.physics.add.collider(this.player, this.cultOrbHolder, (player, orb) =>
+      {
+        player.health -= 10;
+        orb.destroy();
+      });
 
       this.grasstop = this.add.tileSprite(
               0,
