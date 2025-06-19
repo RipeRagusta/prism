@@ -88,7 +88,7 @@
     {
       super.preUpdate(time, delta);
 
-      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x < 0 || this.x > pointOnXWhereBulletsDisappear || this.x > this.originX + 200 || this.x < this.originX - 200)
+      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x < 0 || this.x > pointOnXWhereBulletsDisappear || this.x > this.originX + 1000 || this.x < this.originX - 1000)
       {
         this.setActive(false);
         this.setVisible(false);
