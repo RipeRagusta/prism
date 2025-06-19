@@ -263,7 +263,7 @@
       this.aimAngle = 0;
       this.fireRate = 750;
       this.lastPlayerShot = 0;
-      this.health = 10;
+      this.health = 9999999;
       this.setBounce(0);
       this.setCollideWorldBounds(true);
 
@@ -613,11 +613,7 @@
       this.cult3 = new cult(this, 1100, 100, this.player, this.cultOrbHolder);
       this.cults.add(this.cult3);
       this.physics.add.collider(this.cults, this.ground);
-      this.physics.add.collider(this.cults, this.playerBulletsHolder, (cult, bullet) =>
-      {
-        cult.health -= 1;
-        bullet.destroy();
-      });
+
       this.physics.add.collider(this.cults, this.cults);
       this.physics.add.overlap(this.cults, this.playerBulletsHolder, (cult, bullet) =>
       {
@@ -635,11 +631,6 @@
       this.cultKnife4 = new cultKnife(this, 1000, 100, this.player);
       this.cultKnifes.add(this.cultKnife4);
       this.physics.add.collider(this.cultKnifes, this.ground);
-      this.physics.add.collider(this.cultKnifes, this.playerBulletsHolder, (cult, bullet) =>
-      {
-        cult.health -= 1;
-        bullet.destroy();
-      });
       this.physics.add.overlap(this.cultKnifes, this.playerBulletsHolder, (cult, bullet) =>
       {
         cult.health -= 1;
