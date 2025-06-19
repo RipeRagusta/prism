@@ -115,6 +115,7 @@
       this.setActive(true);
       this.setVisible(true);
       this.health = 15;
+      this.initialHealth = this.health;
       this.setBounce(0);
       this.setCollideWorldBounds(true);
       this.player = player;
@@ -122,6 +123,8 @@
       this.orbs = cultOrbHolder;
       this.lastShot = 0;
       this.fireRate = 1500;
+      this.distancePref = 100;
+      this.distanceOffset = 5;
     }
 
     preUpdate(time, delta)
@@ -138,17 +141,17 @@
       {
         this.checkInRange();
 
-        if(this.alert === true || this.health < 15)
+        if(this.alert === true || this.health < this.initialHealth)
         {
-          if(this.player.x < this.x && Math.abs(this.player.x - this.x) >= 100 + 5)
+          if(this.player.x < this.x && Math.abs(this.player.x - this.x) >= this.distancePref + this.distanceOffset)
           {
             this.setVelocityX(-110);
           }
-          else if(this.player.x > this.x && Math.abs(this.player.x - this.x) >= 100 + 5)
+          else if(this.player.x > this.x && Math.abs(this.player.x - this.x) >= this.distancePref + this.distanceOffset)
           {
             this.setVelocityX(110);
           }
-          else if(Math.abs(this.player.x - this.x) >= 100 - 5 && Math.abs(this.player.x - this.x) <= 100 + 5)
+          else if(Math.abs(this.player.x - this.x) >= this.distancePref - this.distanceOffset && Math.abs(this.player.x - this.x) <= this.distancePref + this.distanceOffset)
           {
             this.setVelocityX(0);
           }
@@ -160,7 +163,7 @@
             }
             else
             {
-              this.setVelocityX(-110);
+              this.setVelocityX(110);
             }
           }
 
@@ -526,7 +529,7 @@
 
     }
   }
-
+  
   class Level1Game extends Phaser.Scene
   {
     constructor()
@@ -671,6 +674,11 @@
       if(this.player.health < 1)
       {
         this.scene.start('Level1Game');
+      }
+
+      if(this.cult3.alert === false && this.cult2.alert === true)
+      {
+        this.cult3.alert = true;
       }
     }
   }
