@@ -126,6 +126,7 @@
       this.distancePref = 100;
       this.initalDistancePref = this.distancePref;
       this.distanceOffset = 5;
+      this.flip = false;
     }
 
     preUpdate(time, delta)
@@ -164,16 +165,35 @@
             }
             else
             {
-              this.setVelocityX(110);
+              this.setVelocityX(-110);
             }
+          }
+
+          if(this.x > this.player.x)
+          {
+            this.flip = false;
+            this.setFlipX(false);
+          }
+          else
+          {
+            this.flip = true;
+            this.setFlipX(true);
           }
 
           if(time > this.lastShot + this.fireRate)
           {
             const orb = this.orbs.get(this.x, this.y, 'cultorb');
+
             if(orb)
             {
-              orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(180));
+              if(this.flip === false)
+              {
+                orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(180));
+              }
+              else
+              {
+                orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(0));
+              }
             }
             this.lastShot = time;
           }
@@ -537,29 +557,53 @@
 
   function cultSeparation(cults, player)
   {
-    let cultsWithDistances = [];
+    let cultsWithDistancesRight = [];
+    let cultsWithDistancesLeft = [];
 
     cults.children.entries.forEach(cult =>
     {
       let distance = Phaser.Math.Distance.Between(player.x, player.y, cult.x, cult.y);
 
-      cultsWithDistances.push
-      ({
-        cult: cult,
-        distance: distance
-      });
+      if(player.x < cult.x)
+      {
+        cultsWithDistancesRight.push
+        ({
+          cult: cult,
+          distance: distance
+        });
+      }
+      else
+      {
+        cultsWithDistancesLeft.push
+        ({
+          cult: cult,
+          distance: distance
+        });
+      }
     });
 
-    cultsWithDistances.sort((a, b) =>
+    cultsWithDistancesRight.sort((a, b) =>
     {
       return a.distance - b.distance;
     });
 
-    let newDistanceAdder = 0;
-    cultsWithDistances.forEach(item =>
+    cultsWithDistancesLeft.sort((a, b) =>
     {
-      item.cult.distancePref = item.cult.initalDistancePref + newDistanceAdder;
-      newDistanceAdder += 16;
+      return a.distance - b.distance;
+    });
+
+    let newDistanceAdderRight = 0;
+    cultsWithDistancesRight.forEach(item =>
+    {
+      item.cult.distancePref = item.cult.initalDistancePref + newDistanceAdderRight;
+      newDistanceAdderRight += 16;
+    });
+
+    let newDistanceAdderLeft = 0;
+    cultsWithDistancesLeft.forEach(item =>
+    {
+      item.cult.distancePref = item.cult.initalDistancePref + newDistanceAdderLeft;
+      newDistanceAdderLeft += 16;
     });
   }
   class Level1Game extends Phaser.Scene
