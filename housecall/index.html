@@ -294,6 +294,7 @@
       this.wasd =
       {
         up: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
+        upW: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
         down: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
         left: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
         right: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
@@ -327,7 +328,7 @@
         this.setVelocityX(0);
       }
 
-      if((this.wasd.up.isDown || cursors.up.isDown) && this.body.touching.down)
+      if((this.wasd.up.isDown || this.wasd.upW.isDown || cursors.up.isDown) && this.body.touching.down)
       {
         this.setVelocityY(-120);
       }
@@ -442,6 +443,7 @@
       this.load.image('cultknife', './assets/cultknife.png');
       this.load.image('copcar', './assets/copcar.png');
       this.load.image('cultorb', './assets/cultorb.png');
+      this.load.image('wheat', './assets/wheat.png');
     }
 
     create ()
@@ -646,6 +648,17 @@
       this.ground.body.setImmovable(true);
       this.ground.body.allowGravity = false;
 
+      this.wheat = this.add.tileSprite
+      (
+              0,
+              this.sys.game.config.height - this.ground.height,
+              149,
+              16,
+              'wheat'
+      );
+      this.wheat.setOrigin(0, 1);
+      this.wheat.setScrollFactor(0.5);
+      
       this.fence = this.add.tileSprite
       (
               0,
