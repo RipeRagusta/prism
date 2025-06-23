@@ -126,7 +126,7 @@
       this.distancePref = 100;
       this.initalDistancePref = this.distancePref;
       this.distanceOffset = 5;
-      this.flip = false;
+      this.flip = true;
     }
 
     preUpdate(time, delta)
@@ -198,6 +198,17 @@
             this.lastShot = time;
           }
         }
+        else
+        {
+          if(this.flip === true)
+          {
+            this.setFlipX(true);
+          }
+          else
+          {
+            this.setFlipX(false);
+          }
+        }
       }
     }
 
@@ -225,6 +236,7 @@
       this.setCollideWorldBounds(true);
       this.player = player;
       this.alert = false;
+      this.flip = true;
     }
 
     preUpdate(time, delta)
@@ -252,13 +264,26 @@
             if(this.player.x < this.x)
             {
               this.setVelocityX(-150);
+              this.flip = false;
               this.setFlipX(false);
             }
             else
             {
               this.setVelocityX(150);
+              this.flip = true;
               this.setFlipX(true);
             }
+          }
+        }
+        else
+        {
+          if(this.flip === true)
+          {
+            this.setFlipX(true);
+          }
+          else
+          {
+            this.setFlipX(false);
           }
         }
       }
@@ -444,6 +469,9 @@
       this.load.image('copcar', './assets/copcar.png');
       this.load.image('cultorb', './assets/cultorb.png');
       this.load.image('wheat', './assets/wheat.png');
+      this.load.image('shed', './assets/shed.png');
+      this.load.image('silo', './assets/silo.png');
+      this.load.image('scarecrow', './assets/scarecrow.png');
     }
 
     create ()
@@ -479,9 +507,16 @@
       this.barn.setOrigin(0, 1);
       this.barn.setScrollFactor(0.25);
 
+      this.silo = this.add.image(
+              79,
+              this.sys.game.config.height - this.ground.height,
+              'silo');
+      this.silo.setOrigin(0, 1);
+      this.silo.setScrollFactor(0.225);
+
       this.cross = this.add.image
       (
-              Math.max(32 + this.barn.width + 24, this.sys.game.config.width + 24),
+              Math.max(32 + this.barn.width + 24 + this.silo.width , this.sys.game.config.width + 24),
               this.sys.game.config.height - this.ground.height,
               'cross'
       );
@@ -634,6 +669,31 @@
       this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
       this.stars.setScrollFactor(0.1);
 
+      this.scarecrow = this.add.image(500, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+      this.scarecrow.setScrollFactor(0.4);
+
+      const wheatLayers =
+      [
+        { yOffset: 15, scrollFactor: 0.575 }
+      ];
+
+      this.wheatOffSet = 0;
+      wheatLayers.forEach((layerConfig, index) =>
+      {
+        const wheatLayer = this.add.tileSprite
+        (
+                0,
+                176 - layerConfig.yOffset,
+                worldWidthX,
+                16,
+                'wheat'
+        );
+        wheatLayer.setOrigin(0, 1);
+        wheatLayer.setScrollFactor(layerConfig.scrollFactor);
+        wheatLayer.tilePositionY += this.wheatOffSet;
+        this.wheatOffSet += 1;
+      });
+
       this.ground = this.add.tileSprite
       (
               0,
@@ -648,17 +708,10 @@
       this.ground.body.setImmovable(true);
       this.ground.body.allowGravity = false;
 
-      this.wheat = this.add.tileSprite
-      (
-              0,
-              this.sys.game.config.height - this.ground.height,
-              149,
-              16,
-              'wheat'
-      );
-      this.wheat.setOrigin(0, 1);
-      this.wheat.setScrollFactor(0.5);
-      
+      this.shed = this.add.image(75, this.sys.game.config.height - this.ground.height, 'shed');
+      this.shed.setOrigin(0, 1);
+      this.shed.setScrollFactor(0.65);
+
       this.fence = this.add.tileSprite
       (
               0,
@@ -780,7 +833,7 @@
   {
     type: Phaser.AUTO,
     pixelArt: true,
-    width: (window.innerWidth / window.innerHeight) * 176,
+    width: Math.max(312, Math.min(411, (window.innerWidth / window.innerHeight) * 176)),
     height: 176,
 
     scale:
