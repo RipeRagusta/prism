@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>House Call</title>
+  <meta name="description" content="2d video game">
   <script src="//cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.js"></script>
+  <link rel="shortcut icon" type="image" href="./assets/cultknife.png">
   <style type="text/css">
     body {
       margin: 0;
@@ -444,16 +446,17 @@
     }
   }
 
-  class MainMenu extends Phaser.Scene
+  class Loading extends Phaser.Scene
   {
     constructor()
     {
-      super({ key: 'MainMenu' });
+      super({key: 'Loading'});
     }
-    preload ()
+
+    preload()
     {
       this.load.image('sky', 'assets/sky.png');
-      this.load.spritesheet('dude', 'assets/player.png', { frameWidth: 16, frameHeight: 16 });
+      this.load.spritesheet('dude', 'assets/player.png', {frameWidth: 16, frameHeight: 16});
       this.load.image('ground', 'assets/grass.png');
       this.load.image('bullet', 'assets/bullet.png');
       this.load.image('barn', 'assets/barn.png');
@@ -474,6 +477,29 @@
       this.load.image('scarecrow', './assets/scarecrow.png');
     }
 
+    create()
+    {
+      this.levelSelect = this.add.text((this.sys.game.config.width / 2), this.sys.game.config.height / 2, 'Loading', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+    }
+
+    update()
+    {
+      this.scene.start('MainMenu');
+    }
+  }
+
+  class MainMenu extends Phaser.Scene
+  {
+    constructor()
+    {
+      super({key: 'MainMenu'});
+    }
+
+    preload()
+    {
+
+    }
+
     create ()
     {
       this.physics.world.setBounds(0, 0, this.sys.game.config.width, 176);
@@ -489,36 +515,40 @@
 
       this.ground = this.add.tileSprite
       (
-              this.sys.game.config.width / 2,
-              this.sys.game.config.height,
-              this.sys.game.config.width * 3,
-              16,
-              'ground'
+        this.sys.game.config.width / 2,
+        this.sys.game.config.height,
+        this.sys.game.config.width * 3,
+        16,
+        'ground'
       );
 
       this.ground.setOrigin(0.25, 1);
       this.physics.add.existing(this.ground, true);
 
-      this.barn = this.add.image(
-              32,
-              this.sys.game.config.height - this.ground.height,
-              'barn');
+      this.barn = this.add.image
+      (
+        32,
+        this.sys.game.config.height - this.ground.height,
+        'barn'
+      );
       this.barn.setTint(0x999999);
       this.barn.setOrigin(0, 1);
       this.barn.setScrollFactor(0.25);
 
-      this.silo = this.add.image(
-              79,
-              this.sys.game.config.height - this.ground.height,
-              'silo');
+      this.silo = this.add.image
+      (
+        79,
+        this.sys.game.config.height - this.ground.height,
+        'silo'
+      );
       this.silo.setOrigin(0, 1);
       this.silo.setScrollFactor(0.225);
 
       this.cross = this.add.image
       (
-              Math.max(32 + this.barn.width + 24 + this.silo.width , this.sys.game.config.width + 24),
-              this.sys.game.config.height - this.ground.height,
-              'cross'
+        Math.max(32 + this.barn.width + 24 + this.silo.width , this.sys.game.config.width + 24),
+        this.sys.game.config.height - this.ground.height,
+        'cross'
       );
       this.cross.setOrigin(0.5, 1);
       this.cross.setScrollFactor(0.25);
@@ -546,9 +576,9 @@
 
       this.copcar = this.add.image
       (
-              ((this.sys.game.config.width * 2) + (this.sys.game.config.width / 2)) / 2,
-              this.sys.game.config.height - this.ground.height,
-              'copcar'
+        ((this.sys.game.config.width * 2) + (this.sys.game.config.width / 2)) / 2,
+        this.sys.game.config.height - this.ground.height,
+        'copcar'
       );
       this.copcar.setOrigin(0.5, 1);
 
@@ -568,7 +598,8 @@
 
       this.logo = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'House Call', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
       this.logo.setWordWrapWidth(this.sys.game.config.width);
-      this.logo.setInteractive();
+      this.logo.setInteractive({cursor: 'pointer'});
+
       this.physics.add.existing(this.logo, true);
       this.physics.add.collider(this.logo, this.playerBulletsHolder, (logo, bullet) =>
       {
@@ -577,15 +608,16 @@
         this.cameras.main.pan(this.sys.game.config.width * 2, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
       });
 
-      this.levelSelect = this.add.text((this.sys.game.config.width * 2), this.sys.game.config.height / 2, 'Level 1', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+      this.levelSelect = this.add.text((this.sys.game.config.width * 2), this.sys.game.config.height / 2, 'Start', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
       this.levelSelect.setWordWrapWidth(this.sys.game.config.width);
-      this.levelSelect.setInteractive();
+      this.levelSelect.setInteractive({cursor: 'pointer'});
 
       this.levelSelect.on('pointerdown', () =>
       {
         this.scene.start('Level1Game');
       });
     }
+
     update(time)
     {
 
@@ -643,6 +675,7 @@
       newDistanceAdderLeft += 16;
     });
   }
+
   class Level1Game extends Phaser.Scene
   {
     constructor()
@@ -682,11 +715,11 @@
       {
         const wheatLayer = this.add.tileSprite
         (
-                0,
-                176 - layerConfig.yOffset,
-                worldWidthX,
-                16,
-                'wheat'
+          0,
+          176 - layerConfig.yOffset,
+          worldWidthX,
+          16,
+          'wheat'
         );
         wheatLayer.setOrigin(0, 1);
         wheatLayer.setScrollFactor(layerConfig.scrollFactor);
@@ -696,11 +729,11 @@
 
       this.ground = this.add.tileSprite
       (
-              0,
-              this.sys.game.config.height,
-              worldWidthX * 2,
-              16,
-              'ground'
+        0,
+        this.sys.game.config.height,
+        worldWidthX * 2,
+        16,
+        'ground'
       );
 
       this.ground.setOrigin(0, 1);
@@ -714,11 +747,11 @@
 
       this.fence = this.add.tileSprite
       (
-              0,
-              this.sys.game.config.height - this.ground.height,
-              148,
-              16,
-              'fence'
+        0,
+        this.sys.game.config.height - this.ground.height,
+        148,
+        16,
+        'fence'
       );
       this.fence.setScrollFactor(0.75);
       this.fence.setOrigin(0, 1);
@@ -789,12 +822,13 @@
       });
       this.physics.add.collider(this.cultKnifes, this.cultKnifes);
 
-      this.grasstop = this.add.tileSprite(
-              0,
-              this.sys.game.config.height - this.ground.height,
-              worldWidthX,
-              16,
-              'grasstop'
+      this.grasstop = this.add.tileSprite
+      (
+        0,
+        this.sys.game.config.height - this.ground.height,
+        worldWidthX,
+        16,
+        'grasstop'
       );
       this.grasstop.setOrigin(0, 1);
 
@@ -854,6 +888,7 @@
 
     scene:
     [
+      Loading,
       MainMenu,
       Level1Game
     ]
