@@ -15,13 +15,13 @@ function initialize()
 	pastCommandsPointer = 0;
 	helpValues = [
 				  "about",
-  			 	  "clear",
-  			      "dinfo",
-  				  "help",
-  				  "launch",
-  				  "reload",
-  				  "tban",
-  				  "tbor"
+				  "clear",
+				  "dinfo",
+				  "help",
+				  "launch",
+				  "reload",
+				  "tban",
+				  "tbor"
 				 ];
 	launchOptions = [
 					 "cyberclicker",
@@ -356,7 +356,7 @@ function evaluateCommand(commandEntered)
 			consoleString.innerHTML += "\n";
 			consoleString.appendChild(consoleDecorSeperatorElement(11, false))
 			consoleString.innerHTML += "\n";
-			consoleString.innerHTML += "     ex: launch " + launchOptions[(Math.floor(Math.random() * launchOptions.length))];
+			consoleString.innerHTML += "     ex: launch " + launchOptions[(Math.floor(Math.random() * launchOptions.length))] + "\n";
 
 			consoleFormatBox.appendChild(consoleString);
 			consoleFormatBoxBox.appendChild(consoleFormatBox);
@@ -365,26 +365,33 @@ function evaluateCommand(commandEntered)
 
 		case "launchytp":
 		case "launchvp1":
+		case "ytp":
+		case "vp1":
 			window.location.href = "https://ragusta.com/index.html";
 			break;
 
 		case "launchflesh":
+		case "flesh":
 			window.location.href = "https://flesh.enterprises/index.html";
 			break;
 
 		case "launchcyberclicker":
+		case "cyberclicker":
 			window.location.href = "./cyberclicker/index.html";
 			break;
 
 		case "launchjumpgame":
+		case "jumpgame":
 			window.location.href = "./jumpgame/index.html";
 			break;
 
 		case "launchhcdemo":
+		case "hcdemo":
 			window.location.href = "./housecall/index.html";
 			break;
 
 		case "launchfp2rbpr":
+		case "fp2rbpr":
 			window.location.href = "./fp/index.html";
 			break;
 
