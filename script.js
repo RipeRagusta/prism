@@ -356,7 +356,7 @@ function evaluateCommand(commandEntered)
 			consoleString.innerHTML += "\n";
 			consoleString.appendChild(consoleDecorSeperatorElement(11, false))
 			consoleString.innerHTML += "\n";
-			consoleString.innerHTML += "     ex: launch " + launchOptions[(Math.floor(Math.random() * launchOptions.length))] + "\n";
+			consoleString.innerHTML += "     ex: launch " + launchOptions[(Math.floor(Math.random() * launchOptions.length))];
 
 			consoleFormatBox.appendChild(consoleString);
 			consoleFormatBoxBox.appendChild(consoleFormatBox);
