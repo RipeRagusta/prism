@@ -592,7 +592,7 @@
       );
       this.grasstop.setOrigin(0.25, 1);
 
-      this.cameras.main.setBounds(0, 0, Math.ceil(this.sys.game.config.width) * 3, 192);
+      this.cameras.main.setBounds(0, 0, Math.ceil(this.sys.game.config.width) * 3, 176);
 
       this.physics.add.collider(this.player, this.ground);
 
@@ -691,7 +691,7 @@
     create()
     {
       const worldWidthX = 1800;
-      this.physics.world.setBounds(0, 0, worldWidthX, 192);
+      this.physics.world.setBounds(0, 0, worldWidthX, 176);
       pointOnXWhereBulletsDisappear = worldWidthX;
 
       cursors = this.input.keyboard.createCursorKeys();
