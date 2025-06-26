@@ -529,6 +529,7 @@
       this.load.image('scarecrow', './assets/scarecrow.png');
       this.load.image('pipe', './assets/pipe.png');
       this.load.image('eye', './assets/eye.png');
+      this.load.spritesheet('stab', './assets/stab.png', {frameWidth: 12, frameHeight: 18});
     }
 
     create()
@@ -750,6 +751,8 @@
 
       cursors = this.input.keyboard.createCursorKeys();
 
+
+
       this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'sky').setOrigin(0, 0);
       this.sky.setScrollFactor(0.1);
 
@@ -881,8 +884,26 @@
       this.pipe.body.allowGravity = false;
       this.pipe.body.setImmovable(true);
       this.physics.add.collider(this.pipe, this.ground);
+
+      this.anims.create({
+        key: "stabAnim",
+        frames: this.anims.generateFrameNumbers('stab', {start: 0, end: 2 }),
+        frameRate: 2,
+        repeat: 0
+      });
+      this.stab = this.add.sprite(this.pipe.x, this.pipe.y, "stab").setOrigin(0, 1);
+      this.stab.play("stabAnim", true);
+      this.stab.setActive(false);
+      this.stab.setVisible(false);
+
       this.physics.add.collider(this.pipe, this.player, (pipe, player) =>
       {
+        this.player.destroy();
+        this.stab.setActive(true);
+        this.stab.setVisible(true);
+      });
+
+      this.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
         this.scene.start('Level2Game');
       });
 
@@ -996,14 +1017,13 @@
         runChildUpdate: true
       });
 
-      this.player = new player(this, 32, this.sys.game.config.height - 40, this.playerBulletsHolder);
+      this.player = new player(this, 32, this.sys.game.config.height - 24, this.playerBulletsHolder);
 
-      this.pipe = this.physics.add.sprite(32, this.sys.game.config.height - this.ground.height, 'pipe');
-      this.pipe.setOrigin(0, 1);
-      this.pipe.body.allowGravity = false;
-      this.pipe.body.setImmovable(true);
-      this.physics.add.collider(this.pipe, this.ground);
-      this.physics.add.collider(this.pipe, this.player);
+      this.pipe1 = this.physics.add.sprite(32, this.sys.game.config.height - this.ground.height, 'pipe');
+      this.pipe1.setOrigin(0, 1);
+      this.pipe1.body.allowGravity = false;
+      this.pipe1.body.setImmovable(true);
+      this.physics.add.collider(this.pipe1, this.ground);
 
       this.cultOrbHolder = this.physics.add.group
       ({
@@ -1055,6 +1075,34 @@
       this.physics.add.collider(this.eyes, this.eyes);
       this.physics.add.collider(this.eyes, this.ground);
 
+      this.pipe = this.physics.add.sprite(1600, this.sys.game.config.height - this.ground.height, 'pipe');
+      this.pipe.setOrigin(0, 1);
+      this.pipe.body.allowGravity = false;
+      this.pipe.body.setImmovable(true);
+      this.physics.add.collider(this.pipe, this.ground);
+
+      this.anims.create({
+        key: "stabAnim",
+        frames: this.anims.generateFrameNumbers('stab', {start: 0, end: 2 }),
+        frameRate: 2,
+        repeat: 0
+      });
+      this.stab = this.add.sprite(this.pipe.x, this.pipe.y, "stab").setOrigin(0, 1);
+      this.stab.play("stabAnim", true);
+      this.stab.setActive(false);
+      this.stab.setVisible(false);
+
+      this.physics.add.collider(this.pipe, this.player, (pipe, player) =>
+      {
+        this.player.destroy();
+        this.stab.setActive(true);
+        this.stab.setVisible(true);
+      });
+
+      this.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+        this.scene.start('Level3Game');
+      });
+
       this.grasstop = this.add.tileSprite
       (
               0,
@@ -1088,6 +1136,19 @@
     }
   }
 
+
+  class Level3Game extends Phaser.Scene
+  {
+    constructor()
+    {
+      super({key: 'Level3Game'});
+    }
+
+    create()
+    {
+      this.levelSelect = this.add.text((this.sys.game.config.width / 2), this.sys.game.config.height / 2, 'Place Holder', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+    }
+  }
   const config =
   {
     type: Phaser.AUTO,
@@ -1116,7 +1177,8 @@
       Loading,
       MainMenu,
       Level1Game,
-      Level2Game
+      Level2Game,
+      Level3Game
     ]
   };
 
