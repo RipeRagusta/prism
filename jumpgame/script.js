@@ -19,23 +19,23 @@ var cloudDelay;
 
 function initialize(bestScoreNumber)
 {
-	MAXHEIGHT = 200; //max height for jump
-	PLAYERFLOOR = 450; //min height for jump
-	TIMEINAIR = 11; // ticks where player remains at peak of jump
+	MAXHEIGHT = 200;
+	PLAYERFLOOR = 450;
+	TIMEINAIR = 11;
 	GAMEOVER = false; 
-	SETLOOPLEFT = false; //walk left boolean
-	SETLOOPRIGHT = false; //walk right boolean
-	JUMPING = false; //set by keyboard
-	startedJump = false; //set by jump function
-	ascending = true; //set by jump to determine ascencion
-	PAUSED = false; //set by esc
+	SETLOOPLEFT = false;
+	SETLOOPRIGHT = false;
+	JUMPING = false;
+	startedJump = false;
+	ascending = true;
+	PAUSED = false;
 	score = 0; 
-	MOVESPEED = 2; //default speed of objects and other erlements moving
-	delay = 0; //delay between object spawning is reset within function spawnobstacles
-	obstacleAmount = 3; //amount of obstacle types that can initaly spawn is set to more in increase difficulty
-	initalDelay = 128; //inital delay between obstacles is set to smaller numbers in increase difficulty
-	obstacleOdds = 128; //oddds of spawning an obstacle is decreased in increase difficulty
-	cloudDelay = 0; //minimum delay that clouds can spawn at
+	MOVESPEED = 2;
+	delay = 0;
+	obstacleAmount = 3;
+	initalDelay = 128;
+	obstacleOdds = 128;
+	cloudDelay = 0;
 
 	if(checkStorage() == true)
 	{
