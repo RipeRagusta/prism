@@ -3,7 +3,6 @@ var displaying;
 
 var entering;
 
-var bigPhotoId;
 var clicking;
 
 var timeOut;
@@ -12,8 +11,8 @@ function initialize()
 {
 	displaying = false;
 	clicking = false;
-	notLeftClicking = false;
 	entering = false;
+	timeOut = false;
 
 	bigPhoto = document.createElement("img");
 	bigPhoto.classList.add("bigphoto");
