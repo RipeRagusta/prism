@@ -1,16 +1,11 @@
 var bigPhoto;
 var displaying;
-
 var entering;
-
-var clicking;
-
 var timeOut;
 
 function initialize() 
 {
 	displaying = false;
-	clicking = false;
 	entering = false;
 	timeOut = false;
 
