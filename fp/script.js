@@ -23,7 +23,6 @@ function initialize()
 	{
 		if(displaying == true && timeOut == false)
 		{
-			console.log("removing");
 			document.getElementById("bigdisplayphoto").remove();
 			document.body.style.cursor = "auto";
 	  		displaying = false;
@@ -51,7 +50,6 @@ function expandPhoto(number)
 {
 	if(displaying == false)
 	{
-		console.log("adding");
 		displaying = true;
 		timeOut = true;
 		bigPhoto.src = number + "-small.jpg";
