@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>moon</title>
+  <meta name="description" content="2d video game">
+  <script src="//cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.js"></script>
+  <link rel="shortcut icon" type="image" href="./assets/cultknife.png">
+  <style type="text/css">
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      background-color: black;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+
+<script type="text/javascript">
+  var cursors;
+  
+  class player extends Phaser.Physics.Arcade.Sprite
+  {
+    constructor(scene, x, y)
+    {
+      super(scene, x, y, 'player');
+
+      scene.add.existing(this);
+     // scene.physics.add.existing(this);
+      //this.body.setAllowGravity(false);
+      //this.setCollideWorldBounds(true);
+      this.setFlip(true);
+      
+      this.wasd =
+      {
+        space: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
+        w: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
+        s: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
+        a: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
+        d: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
+      };
+      
+      this.mouseRef = scene.input;
+      
+      scene.anims.create({
+        key: 'block',
+        frames: scene.anims.generateFrameNumbers('player', { start: 2, end: 2 })
+      });
+      
+      scene.anims.create({
+        key: 'idle',
+        frames: scene.anims.generateFrameNumbers('player', { start: 0, end: 1 }),
+        frameRate: 2,
+        repeat: 0
+      });
+    }
+
+    preUpdate(time, delta)
+    { 
+      super.preUpdate(time, delta);
+      
+      //this.follow(this.scene.input.activePointer);
+      
+      /*if((this.wasd.a.isDown || cursors.left.isDown))
+      {
+        this.setVelocityX(-220);
+      }
+      else if((this.wasd.d.isDown || cursors.right.isDown))
+      {
+        this.setVelocityX(220);
+      }
+      else
+      {
+        this.setVelocityX(0);
+      }
+      
+      /*if(this.wasd.s.isDown || cursors.down.isDown)
+      {
+          this.setVelocityY(120);
+      }
+      else if(this.wasd.w.isDown || cursors.up.isDown)
+      {
+          this.setVelocityY(-120);
+      }
+      else
+      {
+        this.setVelocityY(0);
+      }*/
+
+      /*if((this.wasd.space.isDown) && this.body.touching.down)
+      {
+        console.log("space is down");
+        this.setVelocityY(-220);
+      }*/
+      
+      if(this.mouseRef.activePointer.isDown)
+      {
+          this.play("block", true);
+      }
+      else
+      {
+          this.play("idle", true);
+      }
+    }
+    
+    follow(pointer)
+    {
+        this.x = pointer.worldX;
+    }
+    
+    
+  }
+
+    class fullplayer extends Phaser.GameObjects.Container 
+    {
+        
+        constructor(scene, x, y) 
+        {
+            super(scene, x, y);
+            
+            
+            this.hoverboard = this.scene.add.image(0, 32, 'board');
+            this.add(this.hoverboard);
+            
+            this.player = new player(this.scene, 0, 0);
+            this.add(this.player);
+
+            scene.physics.world.enable(this);
+            scene.physics.add.existing(this);
+            this.body.setAllowGravity(true);
+            this.body.setCollideWorldBounds(true);
+            this.body.setOffset(-this.body.width / 2, 3 -this.body.height / 2);
+            
+            this.wasd =
+            {
+              space: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
+              w: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
+              s: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
+              a: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
+              d: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
+            };
+            
+            scene.add.existing(this);
+        }
+        
+        preUpdate(time, delta)
+        {
+
+          if((this.wasd.a.isDown || cursors.left.isDown))
+          {
+            this.body.setVelocityX(-220);
+          }
+          else if((this.wasd.d.isDown || cursors.right.isDown))
+          {
+            this.body.setVelocityX(220);
+          }
+          else
+          {
+            this.body.setVelocityX(0);
+          }
+        
+          /*if(this.wasd.s.isDown || cursors.down.isDown)
+          {
+              this.body.setVelocityY(120);
+          }
+          else if(this.wasd.w.isDown || cursors.up.isDown)
+          {
+              this.body.setVelocityY(-120);
+          }
+          else
+          {
+            this.body.setVelocityY(0);
+          }*/
+
+          if((this.wasd.space.isDown) && this.body.touching.down)
+          {
+            this.body.setVelocityY(-220);
+          }
+        }
+    }
+
+
+
+  class Loading extends Phaser.Scene
+  {
+    constructor()
+    {
+      super({key: 'Loading'});
+    }
+
+    preload()
+    {
+      this.load.spritesheet('player', 'assets/protag.png', {frameWidth: 32, frameHeight: 64});
+      this.load.image('ground', 'assets/moondust.png');
+      this.load.image('board', 'assets/hoverboard.png');
+    }
+
+    create()
+    {
+      cursors = this.input.keyboard.createCursorKeys();
+    }
+
+    update()
+    {
+      this.scene.start('MainMenu');
+    }
+  }
+
+  class MainMenu extends Phaser.Scene
+  {
+    constructor()
+    {
+      super({key: 'MainMenu'});
+    }
+
+    preload()
+    {
+
+    }
+
+    create ()
+    {
+      
+    }
+
+    update(time)
+    {
+        this.scene.start('Level1Game');
+    }
+  }
+
+  class Level1Game extends Phaser.Scene
+  {
+    constructor()
+    {
+      super({ key: 'Level1Game' });
+    }
+
+    preload()
+    {
+        
+    }
+
+    create()
+    {
+      const worldWidthX = 1800;
+      this.physics.world.setBounds(0, 0, worldWidthX, 256);
+      cursors = this.input.keyboard.createCursorKeys();
+      this.fullplayer = new fullplayer(this, 100, this.sys.game.config.height - 123);
+      this.ground = newGround(this, worldWidthX, this.fullplayer);
+      this.cameras.main.setBounds(0, 0, worldWidthX, 256);
+      this.cameras.main.startFollow(this.fullplayer, true, 1, 1, 0, (this.sys.game.config.height / 2));
+      this.cameras.main.setZoom(1);
+      
+    }
+
+    update(time, delta)
+    {
+        
+    }
+  }
+  
+  function newGround(scene, width, player)
+  {
+      const ground = scene.add.tileSprite
+      (
+        0,
+        scene.sys.game.config.height,
+        width * 2,
+        32,
+        'ground'
+      );
+
+      ground.setOrigin(0, 1);
+      scene.physics.add.existing(ground);
+      ground.body.setImmovable(true);
+      ground.body.allowGravity = false;
+      
+      scene.physics.add.collider(ground, player);
+      
+      return ground;
+  }
+  
+  const config =
+  {
+    type: Phaser.AUTO,
+    pixelArt: true,
+    width: (window.innerWidth / window.innerHeight) * 256,
+    height: 256,
+
+    scale:
+    {
+      mode: Phaser.Scale.FIT,
+      autoCenter: Phaser.Scale.CENTER_BOTH,
+    },
+
+    physics:
+    {
+      default: 'arcade',
+      arcade:
+      {
+        gravity: { y: 300 },
+        debug: false
+      }
+    },
+
+    scene:
+    [
+      Loading,
+      MainMenu,
+      Level1Game
+    ]
+  };
+
+  const game = new Phaser.Game(config);
+
+</script>
+</body>
+</html>
