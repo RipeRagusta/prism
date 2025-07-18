@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>moon</title>
+  <title>Moon</title>
   <meta name="description" content="2d video game">
   <script src="//cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.js"></script>
-  <link rel="shortcut icon" type="image" href="./assets/cultknife.png">
+  <link rel="shortcut icon" type="image" href="./assets/moondust.png">
   <style type="text/css">
     body {
       margin: 0;
@@ -65,27 +65,24 @@
       
       //this.follow(this.scene.input.activePointer);
       
-      /*if((this.wasd.a.isDown || cursors.left.isDown))
+      if((this.wasd.a.isDown || cursors.left.isDown))
       {
-        this.setVelocityX(-220);
+        this.setFlip(false);
       }
       else if((this.wasd.d.isDown || cursors.right.isDown))
       {
-        this.setVelocityX(220);
-      }
-      else
-      {
-        this.setVelocityX(0);
+        this.setFlip(true);
       }
       
+      
       /*if(this.wasd.s.isDown || cursors.down.isDown)
-      {
+      {this.setVelocityX(-220);
           this.setVelocityY(120);
       }
       else if(this.wasd.w.isDown || cursors.up.isDown)
       {
           this.setVelocityY(-120);
-      }
+      }this.setVelocityX(220);
       else
       {
         this.setVelocityY(0);
@@ -133,7 +130,7 @@
             scene.physics.add.existing(this);
             this.body.setAllowGravity(true);
             this.body.setCollideWorldBounds(true);
-            this.body.setOffset(-this.body.width / 2, 3 -this.body.height / 2);
+            this.body.setOffset( -this.body.width / 2, 8 - this.body.height / 2);
             
             this.wasd =
             {
@@ -176,9 +173,13 @@
             this.body.setVelocityY(0);
           }*/
 
-          if((this.wasd.space.isDown) && this.body.touching.down)
+          if(this.wasd.space.isDown)
           {
-            this.body.setVelocityY(-220);
+            this.body.setVelocityY(-110);
+          }
+          else if(this.wasd.s.isDown)
+          {
+            this.body.setVelocityY(220);
           }
         }
     }
@@ -253,7 +254,7 @@
       this.fullplayer = new fullplayer(this, 100, this.sys.game.config.height - 123);
       this.ground = newGround(this, worldWidthX, this.fullplayer);
       this.cameras.main.setBounds(0, 0, worldWidthX, 256);
-      this.cameras.main.startFollow(this.fullplayer, true, 1, 1, 0, (this.sys.game.config.height / 2));
+      this.cameras.main.startFollow(this.fullplayer, false, 1, 1, 0, (this.sys.game.config.height / 2));
       this.cameras.main.setZoom(1);
       
     }
@@ -303,7 +304,7 @@
       default: 'arcade',
       arcade:
       {
-        gravity: { y: 300 },
+        gravity: { y: 100 },
         debug: false
       }
     },
