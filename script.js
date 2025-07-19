@@ -25,11 +25,7 @@ function initialize()
 				 ];
 	launchOptions = [
 					 "cyberclicker",
-					 "flesh",
-					 "fp2rbpr",
-					 "hcdemo",
-					 "jumpgame",
-					 "vp1"
+					 "hcdemo"
 					];
 	selectPast = false;
 	clickedConsoleFirst = false;
@@ -381,6 +377,11 @@ function evaluateCommand(commandEntered)
 		case "launchcyberclicker":
 		case "cyberclicker":
 			window.location.href = "./cyberclicker/index.html";
+			break;
+
+		case "launchanimtest":
+		case "animtest":
+			window.location.href = "./hoverboardgame/index.html";
 			break;
 
 		case "launchjumpgame":
