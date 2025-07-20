@@ -110,25 +110,36 @@
   {
     constructor(scene, x, y, player, cultOrbHolder)
     {
-      super(scene, x, y, 'cult');
+        super(scene, x, y, 'cult');
 
-      scene.add.existing(this);
-      scene.physics.add.existing(this);
-      this.setActive(true);
-      this.setVisible(true);
-      this.health = 15;
-      this.initialHealth = this.health;
-      this.setBounce(0);
-      this.setCollideWorldBounds(true);
-      this.player = player;
-      this.alert = false;
-      this.orbs = cultOrbHolder;
-      this.lastShot = 0;
-      this.fireRate = 1500;
-      this.distancePref = 100;
-      this.initalDistancePref = this.distancePref;
-      this.distanceOffset = 5;
-      this.flip = true;
+        scene.add.existing(this);
+        scene.physics.add.existing(this);
+        this.setActive(true);
+        this.setVisible(true);
+        this.health = 15;
+        this.initialHealth = this.health;
+        this.setBounce(0);
+        this.setCollideWorldBounds(true);
+        this.player = player;
+        this.alert = false;
+        this.orbs = cultOrbHolder;
+        this.lastShot = 0;
+        this.fireRate = 1500;
+        this.distancePref = 100;
+        this.initalDistancePref = this.distancePref;
+        this.distanceOffset = 5;
+        this.flip = true;
+      
+        if(!scene.anims.get('orbThrow'))
+        {
+            scene.anims.create
+            ({
+              key: 'orbThrow',
+              frames: scene.anims.generateFrameNumbers('cult', { start: 1, end: 0 }),
+              frameRate: 2,
+              repeat: 0
+            });
+        }
     }
 
     preUpdate(time, delta)
@@ -198,6 +209,7 @@
               }
             }
             this.lastShot = time;
+            this.play('orbThrow', true);
           }
         }
         else
@@ -304,7 +316,7 @@
   {
     constructor(scene, x, y, playerBulletsHolder)
     {
-      super(scene, x, y, 'dude');
+      super(scene, x, y, 'player');
 
       scene.add.existing(this);
       scene.physics.add.existing(this);
@@ -329,6 +341,17 @@
 
       this.mouseRef = scene.input;
       this.bullets = playerBulletsHolder;
+      
+      if(!scene.anims.get('pump'))
+      {
+        scene.anims.create
+        ({
+          key: 'pump',
+          frames: scene.anims.generateFrameNumbers('player', { start: 1, end: 0 }),
+          frameRate: 6,
+          repeat: 0
+        });
+      }
     }
 
     preUpdate(time, delta)
@@ -404,6 +427,7 @@
         }
 
         this.lastPlayerShot = time;
+        this.play("pump", true);
       }
     }
 
@@ -497,6 +521,47 @@
       }
     }
   }
+  
+  class pipeNext extends Phaser.Physics.Arcade.Sprite
+  {
+      constructor(scene, x, y, player, key) 
+      {
+        super(scene, x, y, 'pipe');
+        
+        this.pipe = scene.physics.add.sprite(x, y, 'pipe');
+        this.pipe.setOrigin(0, 1);
+        this.pipe.body.allowGravity = false;
+        this.pipe.body.setImmovable(true);
+        scene.physics.add.collider(this.pipe, this.ground);
+        
+        if(!scene.anims.get('stabAnim'))
+        {
+            scene.anims.create({
+                key: "stabAnim",
+                frames: this.anims.generateFrameNumbers('stab', {start: 0, end: 2 }),
+                frameRate: 2,
+                repeat: 0
+              });
+        }
+        scene.stab = scene.add.sprite(this.pipe.x, this.pipe.y, "stab").setOrigin(0, 1);
+        scene.stab.play("stabAnim", true);
+        scene.stab.setActive(false);
+        scene.stab.setVisible(false);
+        
+        scene.physics.add.collider(this.pipe, player, (pipe, player) =>
+        {
+          player.destroy();
+          scene.stab.setActive(true);
+          scene.stab.setVisible(true);
+        });
+
+        scene.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+          scene.scene.start(key);
+        });
+          
+      }
+      
+  }
 
   class Loading extends Phaser.Scene
   {
@@ -508,14 +573,14 @@
     preload()
     {
       this.load.image('sky', 'assets/sky.png');
-      this.load.spritesheet('dude', 'assets/player.png', {frameWidth: 16, frameHeight: 16});
+      this.load.spritesheet('player', 'assets/player.png', {frameWidth: 16, frameHeight: 16});
       this.load.image('ground', 'assets/grass.png');
       this.load.image('bullet', 'assets/bullet.png');
       this.load.image('barn', 'assets/barn.png');
       this.load.image('fence', 'assets/fence.png');
       this.load.image('stars', 'assets/stars.png');
       this.load.image('cross', 'assets/cross.png');
-      this.load.image('cult', './assets/cult.png');
+      this.load.spritesheet('cult', './assets/cult.png', {frameWidth: 16, frameHeight: 16});
       this.load.image('couch', './assets/couch.png');
       this.load.image('tractor', './assets/tractor.png');
       this.load.image('grasstop', './assets/grasstop.png');
@@ -827,7 +892,8 @@
       });
 
       this.player = new player(this, 32, this.sys.game.config.height - 24, this.playerBulletsHolder);
-
+      this.physics.add.collider(this.player, this.ground);
+      
       this.cultOrbHolder = this.physics.add.group
       ({
         classType: cultOrb,
@@ -876,34 +942,9 @@
         player.health -= 10;
       });
       this.physics.add.collider(this.cultKnifes, this.cultKnifes);
-
-      this.pipe = this.physics.add.sprite(1600, this.sys.game.config.height - this.ground.height, 'pipe');
-      this.pipe.setOrigin(0, 1);
-      this.pipe.body.allowGravity = false;
-      this.pipe.body.setImmovable(true);
-      this.physics.add.collider(this.pipe, this.ground);
-
-      this.anims.create({
-        key: "stabAnim",
-        frames: this.anims.generateFrameNumbers('stab', {start: 0, end: 2 }),
-        frameRate: 2,
-        repeat: 0
-      });
-      this.stab = this.add.sprite(this.pipe.x, this.pipe.y, "stab").setOrigin(0, 1);
-      this.stab.play("stabAnim", true);
-      this.stab.setActive(false);
-      this.stab.setVisible(false);
-
-      this.physics.add.collider(this.pipe, this.player, (pipe, player) =>
-      {
-        this.player.destroy();
-        this.stab.setActive(true);
-        this.stab.setVisible(true);
-      });
-
-      this.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-        this.scene.start('Level2Game');
-      });
+      
+      //(scene, x, y, player, key, ground) 
+      this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - this.ground.height, this.player, 'Level2Game', this.ground);
 
       this.grasstop = this.add.tileSprite
       (
@@ -923,7 +964,7 @@
       this.physics.add.collider(this.tractor, this.ground);
       this.physics.add.collider(this.tractor, this.player);
       
-      this.physics.add.collider(this.player, this.ground);
+      
 
       this.cameras.main.setBounds(0, 0, worldWidthX, 176);
       this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
@@ -1072,34 +1113,9 @@
       this.eyes.add(this.eye1);
       this.physics.add.collider(this.eyes, this.eyes);
       this.physics.add.collider(this.eyes, this.ground);
-
-      this.pipe = this.physics.add.sprite(1600, this.sys.game.config.height - this.ground.height, 'pipe');
-      this.pipe.setOrigin(0, 1);
-      this.pipe.body.allowGravity = false;
-      this.pipe.body.setImmovable(true);
-      this.physics.add.collider(this.pipe, this.ground);
-
-      this.anims.create({
-        key: "stabAnim",
-        frames: this.anims.generateFrameNumbers('stab', {start: 0, end: 2 }),
-        frameRate: 2,
-        repeat: 0
-      });
-      this.stab = this.add.sprite(this.pipe.x, this.pipe.y, "stab").setOrigin(0, 1);
-      this.stab.play("stabAnim", true);
-      this.stab.setActive(false);
-      this.stab.setVisible(false);
-
-      this.physics.add.collider(this.pipe, this.player, (pipe, player) =>
-      {
-        this.player.destroy();
-        this.stab.setActive(true);
-        this.stab.setVisible(true);
-      });
-
-      this.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-        this.scene.start('Level3Game');
-      });
+      
+      //(scene, x, y, player, key, ground) 
+      this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - this.ground.height, this.player, 'Level3Game', this.ground);
 
       this.grasstop = this.add.tileSprite
       (
