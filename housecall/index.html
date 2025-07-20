@@ -140,6 +140,23 @@
               repeat: 0
             });
         }
+        
+        this.bloodEmitter = this.scene.add.particles
+        (
+            0, 0, 
+            'blood',
+            {
+                angle: { min: 0, max: 360 },
+                speed: { min: 100, max: 200 },
+                gravityY: 500,
+                lifespan: { min: 750, max: 750 },
+                quantity: 150,
+                scale: { start: 0.5, end: 0 },
+                alpha: { start: 1, end: 0 },
+                blendMode: 'NORMAL',
+                frequency: -1
+            }
+        );
     }
 
     preUpdate(time, delta)
@@ -148,6 +165,7 @@
 
       if(this.health < 1)
       {
+        this.bloodEmitter.emitParticleAt(this.x, this.y);
         this.setActive(false);
         this.setVisible(false);
         this.destroy();
@@ -251,6 +269,24 @@
       this.player = player;
       this.alert = false;
       this.flip = true;
+      
+      this.bloodEmitter = this.scene.add.particles
+        (
+            0, 0, 
+            'blood',
+            {
+                angle: { min: 0, max: 360 }, 
+                speed: { min: 100, max: 200 },
+                gravityY: 500,
+                lifespan: { min: 750, max: 750 },
+                quantity: 100,
+                scale: { start: 0.5, end: 0 },
+                alpha: { start: 1, end: 0 },
+                blendMode: 'NORMAL',
+                frequency: -1
+            }
+        );
+        
     }
 
     preUpdate(time, delta)
@@ -259,6 +295,7 @@
 
       if(this.health < 1)
       {
+        this.bloodEmitter.emitParticleAt(this.x, this.y);
         this.setActive(false);
         this.setVisible(false);
         this.destroy();
@@ -595,6 +632,7 @@
       this.load.image('pipe', './assets/pipe.png');
       this.load.image('eye', './assets/eye.png');
       this.load.spritesheet('stab', './assets/stab.png', {frameWidth: 12, frameHeight: 18});
+      this.load.image('blood', 'assets/bloodparticle.png');
     }
 
     create()
