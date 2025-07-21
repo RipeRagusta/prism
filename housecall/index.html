@@ -6,7 +6,7 @@
   <title>House Call</title>
   <meta name="description" content="2d video game">
   <script src="//cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.js"></script>
-  <link rel="shortcut icon" type="image" href="./assets/cultknife.png">
+  <link rel="shortcut icon" type="image" href="./assets/cultknifelogo.png">
   <style type="text/css">
     body {
       margin: 0;
@@ -135,9 +135,23 @@
             scene.anims.create
             ({
               key: 'orbThrow',
-              frames: scene.anims.generateFrameNumbers('cult', { start: 1, end: 0 }),
-              frameRate: 2,
+              frames: scene.anims.generateFrameNumbers('cult', { start: 2, end: 0 }),
+              frameRate: 6,
               repeat: 0
+            });
+        }
+        
+        if(!scene.anims.get('cultOrbHurt'))
+        {
+            scene.anims.create
+            ({
+                key: 'cultOrbHurt',
+                frames: [
+                     { key: 'cult', frame: 3 },
+                     { key: 'cult', frame: 0 }
+                 ],
+                frameRate: 2,
+                repeat: 0
             });
         }
         
@@ -165,6 +179,7 @@
 
       if(this.health < 1)
       {
+        this.bloodEmitter.setQuantity(100);
         this.bloodEmitter.emitParticleAt(this.x, this.y);
         this.setActive(false);
         this.setVisible(false);
@@ -227,7 +242,7 @@
               }
             }
             this.lastShot = time;
-            this.play('orbThrow', true);
+            this.play('orbThrow', false);
           }
         }
         else
@@ -257,20 +272,20 @@
   {
     constructor(scene, x, y, player)
     {
-      super(scene, x, y, 'cultknife');
+        super(scene, x, y, 'cultknife');
 
-      scene.add.existing(this);
-      scene.physics.add.existing(this);
-      this.setActive(true);
-      this.setVisible(true);
-      this.health = 5;
-      this.setBounce(0);
-      this.setCollideWorldBounds(true);
-      this.player = player;
-      this.alert = false;
-      this.flip = true;
+        scene.add.existing(this);
+        scene.physics.add.existing(this);
+        this.setActive(true);
+        this.setVisible(true);
+        this.health = 5;
+        this.setBounce(0);
+        this.setCollideWorldBounds(true);
+        this.player = player;
+        this.alert = false;
+        this.flip = true;
       
-      this.bloodEmitter = this.scene.add.particles
+        this.bloodEmitter = this.scene.add.particles
         (
             0, 0, 
             'blood',
@@ -287,6 +302,21 @@
             }
         );
         
+        if(!scene.anims.get('knifeidle'))
+        {
+          scene.anims.create
+          ({
+            key: 'knifeidle',
+            frames: scene.anims.generateFrameNumbers('cultknife', { start: 0, end: 2 }),
+            frameRate: 4,
+            repeat: -1
+          });
+        }
+        
+        if(scene.anims.get('knifeidle'))
+        {
+            this.play('knifeidle');
+        }
     }
 
     preUpdate(time, delta)
@@ -295,6 +325,7 @@
 
       if(this.health < 1)
       {
+        this.bloodEmitter.setQuantity(100);
         this.bloodEmitter.emitParticleAt(this.x, this.y);
         this.setActive(false);
         this.setVisible(false);
@@ -622,7 +653,7 @@
       this.load.image('tractor', './assets/tractor.png');
       this.load.image('grasstop', './assets/grasstop.png');
       this.load.image('grill', './assets/grill.png');
-      this.load.image('cultknife', './assets/cultknife.png');
+      this.load.spritesheet('cultknife', './assets/cultknife.png', {frameWidth: 16, frameHeight: 16});
       this.load.image('copcar', './assets/copcar.png');
       this.load.image('cultorb', './assets/cultorb.png');
       this.load.image('wheat', './assets/wheat.png');
@@ -932,6 +963,10 @@
       this.player = new player(this, 32, this.sys.game.config.height - 24, this.playerBulletsHolder);
       this.physics.add.collider(this.player, this.ground);
       
+      
+      //START ENEMY SETUP
+      
+      
       this.cultOrbHolder = this.physics.add.group
       ({
         classType: cultOrb,
@@ -943,7 +978,7 @@
         player.health -= 10;
         orb.destroy();
       });
-
+      
       this.cults = this.physics.add.group();
       this.cult1 = new cult(this, 750, 100, this.player, this.cultOrbHolder);
       this.cults.add(this.cult1);
@@ -958,6 +993,9 @@
       {
         cult.health -= 1;
         bullet.destroy();
+        cult.play("cultOrbHurt", true);
+        cult.bloodEmitter.setQuantity(4);
+        cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
       });
 
       this.cultKnifes = this.physics.add.group();
@@ -974,12 +1012,18 @@
       {
         cult.health -= 1;
         bullet.destroy();
+        cult.bloodEmitter.setQuantity(4);
+        cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
       });
       this.physics.add.collider(this.player, this.cultKnifes, (player, cult) =>
       {
         player.health -= 10;
       });
       this.physics.add.collider(this.cultKnifes, this.cultKnifes);
+      
+      
+      //END ENEMY SETUP
+      
       
       this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - this.ground.height, this.player, 'Level2Game');
 
