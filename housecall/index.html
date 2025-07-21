@@ -629,9 +629,7 @@
         scene.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
           scene.scene.start(key);
         });
-          
       }
-      
   }
 
   class Loading extends Phaser.Scene
@@ -1164,7 +1162,7 @@
         //START BASIC SETUP Level2Game
 
 
-        const worldWidthX = 1800;
+        const worldWidthX = 1750;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         pointOnXWhereBulletsDisappear = worldWidthX;
         cursors = this.input.keyboard.createCursorKeys();
@@ -1244,9 +1242,12 @@
         [
           { x: 500, y: 100 },
           { x: 500, y: 100 },
-          { x: 500, y: 100 },
-          { x: 500, y: 100 },
-          { x: 500, y: 100 }
+          { x: 1000, y: 100 },
+          { x: 1000, y: 100 },
+          { x: 1000, y: 100 },
+          { x: 1000, y: 100 },
+          { x: 1000, y: 100 }
+          
         ];
         
         cultCreator(this, cultPositions);
@@ -1265,7 +1266,7 @@
         //START POWERUP SETUP
         
         
-        this.eyes = new eye(this, 200, this.sys.game.config.height - 24);
+        this.eyes = new eye(this, 750, this.sys.game.config.height - 24);
         
         
         //END POWERUP SETUP
