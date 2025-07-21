@@ -539,53 +539,58 @@
   {
     constructor(scene, x, y, player)
     {
-      super(scene, x, y, 'eye');
+        super(scene, x, y, 'eye');
 
-      scene.add.existing(this);
-      scene.physics.add.existing(this);
-      this.setActive(true);
-      this.setVisible(true);
-      this.health = 5;
-      this.setBounce(0);
-      this.setCollideWorldBounds(true);
-      this.player = player;
-      this.alert = false;
-      this.body.allowGravity = false;
-      this.body.setImmovable(true);
-    }
+        scene.add.existing(this);
+        scene.physics.add.existing(this);
+        this.setActive(true);
+        this.setVisible(true);
+        this.health = 5;
+        this.setBounce(0);
+        this.setCollideWorldBounds(true);
+        this.player = player;
+        this.alert = false;
+        this.body.allowGravity = false;
+        this.body.setImmovable(true);
 
-    preUpdate(time, delta)
-    {
-      /*if(this.health < 1)
-      {
-        this.destroy();
-      }
-      else
-      {
-        this.checkInRange();
+        this.explode = this.scene.add.particles
+        (
+            0, 0, 
+            'eyechunk',
+            {
+                angle: { min: 0, max: 360 }, 
+                speed: { min: 100, max: 200 },
+                gravityY: 500,
+                lifespan: { min: 750, max: 750 },
+                quantity: 10,
+                scale: { start: 0.5, end: 0 },
+                alpha: { start: 1, end: 0 },
+                blendMode: 'NORMAL',
+                frequency: -1
+            }
+        );
 
-        if(this.alert === true)
+        if(scene.ground)
         {
-          if(this.x > this.player.x)
-          {
-            this.setVelocityX(-140);
-          }
-          else
-          {
-            this.setVelocityX(140);
-          }
+            scene.physics.add.collider(this, scene.ground);
         }
-      }*/
+        
+        if(scene.playerBulletsHolder)
+        {
+            scene.physics.add.overlap(this, scene.playerBulletsHolder, (eye, bullet) =>
+            {
+                this.explode.emitParticleAt(this.x, this.y);
+                eye.destroy();
+                if(scene.player)
+                {
+                    scene.player.fireRate = 325;
+                    scene.anims.get('pump').frameRate = 12;
+                }
+            });
+        }
     }
+}
 
-    checkInRange()
-    {
-      if(this.alert === false && Math.abs(this.player.x - this.x) <= 200)
-      {
-        this.alert = true;
-      }
-    }
-  }
   
   class pipeNext extends Phaser.Physics.Arcade.Sprite
   {
@@ -662,6 +667,7 @@
       this.load.image('eye', './assets/eye.png');
       this.load.spritesheet('stab', './assets/stab.png', {frameWidth: 12, frameHeight: 18});
       this.load.image('blood', 'assets/bloodparticle.png');
+      this.load.image('eyechunk', 'assets/eyechunk.png');
     }
 
     create()
@@ -1238,6 +1244,8 @@
         [
           { x: 500, y: 100 },
           { x: 500, y: 100 },
+          { x: 500, y: 100 },
+          { x: 500, y: 100 },
           { x: 500, y: 100 }
         ];
         
@@ -1245,20 +1253,23 @@
         
         const cultKnifePositions = 
         [
-          { x: -150, y: 100 },
+          { x: -150, y: 100 }
         ];
         
         cultKnifeCreator(this, cultKnifePositions);
 
-        this.eyes = this.physics.add.group();
-        this.eye1 = new eye(this, 100, 100, this.player);
-        this.eyes.add(this.eye1);
-        this.physics.add.collider(this.eyes, this.eyes);
-        this.physics.add.collider(this.eyes, this.ground);
-
 
         //END ENEMY SETUP Level2Game
-
+        
+        
+        //START POWERUP SETUP
+        
+        
+        this.eyes = new eye(this, 200, this.sys.game.config.height - 24);
+        
+        
+        //END POWERUP SETUP
+        
 
         //START PROPS AFTER PLAYER Level2Game
 
