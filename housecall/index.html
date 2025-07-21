@@ -123,8 +123,6 @@
         this.player = player;
         this.alert = false;
         this.orbs = cultOrbHolder;
-        this.lastShot = 0;
-        this.fireRate = 1500;
         this.distancePref = 100;
         this.initalDistancePref = this.distancePref;
         this.distanceOffset = 5;
@@ -225,25 +223,6 @@
             this.flip = true;
             this.setFlipX(true);
           }
-
-          if(time > this.lastShot + this.fireRate)
-          {
-            const orb = this.orbs.get(this.x, this.y, 'cultorb');
-
-            if(orb)
-            {
-              if(this.flip === false)
-              {
-                orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(180));
-              }
-              else
-              {
-                orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(0));
-              }
-            }
-            this.lastShot = time;
-            this.play('orbThrow', false);
-          }
         }
         else
         {
@@ -265,6 +244,24 @@
       {
         this.alert = true;
       }
+    }
+    
+    shoot()
+    {
+        const orb = this.orbs.get(this.x, this.y, 'cultorb');
+
+        if(orb)
+        {
+          if(this.flip === false)
+          {
+            orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(180));
+          }
+          else
+          {
+            orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(0));
+          }
+        }
+        this.play('orbThrow', false);
     }
   }
 
@@ -294,7 +291,7 @@
                 speed: { min: 100, max: 200 },
                 gravityY: 500,
                 lifespan: { min: 750, max: 750 },
-                quantity: 100,
+                quantity: 75,
                 scale: { start: 0.5, end: 0 },
                 alpha: { start: 1, end: 0 },
                 blendMode: 'NORMAL',
@@ -400,11 +397,11 @@
 
       this.wasd =
       {
-        up: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
-        upW: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
-        down: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
-        left: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
-        right: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
+        space: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
+        w: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
+        s: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
+        a: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
+        d: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
       };
 
       this.mouseRef = scene.input;
@@ -433,11 +430,11 @@
         this.destroy();
       }
 
-      if((this.wasd.left.isDown || cursors.left.isDown))
+      if((this.wasd.a.isDown || cursors.left.isDown))
       {
         this.setVelocityX(-120);
       }
-      else if((this.wasd.right.isDown || cursors.right.isDown))
+      else if((this.wasd.d.isDown || cursors.right.isDown))
       {
         this.setVelocityX(120);
       }
@@ -446,7 +443,7 @@
         this.setVelocityX(0);
       }
 
-      if((this.wasd.up.isDown || this.wasd.upW.isDown || cursors.up.isDown) && this.body.touching.down)
+      if((this.wasd.space.isDown || this.wasd.w.isDown || cursors.up.isDown) && this.body.touching.down)
       {
         this.setVelocityY(-120);
       }
@@ -592,7 +589,7 @@
   
   class pipeNext extends Phaser.Physics.Arcade.Sprite
   {
-      constructor(scene, x, y, player, key) 
+      constructor(scene, x, y, key) 
       {
         super(scene, x, y, 'pipe');
         
@@ -604,19 +601,20 @@
         
         if(!scene.anims.get('stabAnim'))
         {
-            scene.anims.create({
+            scene.anims.create
+            ({
                 key: "stabAnim",
                 frames: this.anims.generateFrameNumbers('stab', {start: 0, end: 2 }),
                 frameRate: 2,
                 repeat: 0
-              });
+            });
         }
         scene.stab = scene.add.sprite(this.pipe.x, this.pipe.y, "stab").setOrigin(0, 1);
         scene.stab.play("stabAnim", true);
         scene.stab.setActive(false);
         scene.stab.setVisible(false);
         
-        scene.physics.add.collider(this.pipe, player, (pipe, player) =>
+        scene.physics.add.collider(this.pipe, scene.player, (pipe, player) =>
         {
           player.destroy();
           scene.stab.setActive(true);
@@ -864,6 +862,92 @@
       newDistanceAdderLeft += 16;
     });
   }
+  
+  function cultSynchro(cults)
+  {
+      cults.children.entries.forEach(cult => 
+      {
+        if(cult.active && cult.visible) 
+        {
+            cult.shoot();
+        }
+    });
+  }
+  
+  function cultCreator(scene, cultPositions)
+  {
+        scene.cultOrbHolder = scene.physics.add.group
+        ({
+          classType: cultOrb,
+          maxSize: 30,
+          runChildUpdate: true
+        });
+        scene.physics.add.collider(scene.player, scene.cultOrbHolder, (player, orb) =>
+        {
+          player.health -= 10;
+          orb.destroy();
+        });
+        
+        scene.cults = scene.physics.add.group();
+      
+        cultPositions.forEach(pos => 
+        {
+            const cultInstance = new cult(scene, pos.x, pos.y, scene.player, scene.cultOrbHolder);
+            scene.cults.add(cultInstance);
+        });
+        
+        if(scene.ground)
+        {
+            scene.physics.add.collider(scene.cults, scene.ground);
+        }
+        scene.physics.add.collider(scene.cults, scene.cults);
+        scene.physics.add.overlap(scene.cults, scene.playerBulletsHolder, (cult, bullet) =>
+        {
+          cult.health -= 1;
+          bullet.destroy();
+          cult.play("cultOrbHurt", true);
+          cult.bloodEmitter.setQuantity(4);
+          cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
+        });
+        
+        scene.time.addEvent
+        ({
+            delay: 1500,
+            callback: () => cultSynchro(scene.cults),
+            callbackScope: this,
+            loop: true
+        });
+  }
+  
+  function cultKnifeCreator(scene, cultKnifePositions)
+  {     
+        scene.cultKnifes = scene.physics.add.group();
+      
+        cultKnifePositions.forEach(pos => 
+        {
+            const cultKnifeInstance = new cultKnife(scene, pos.x, pos.y, scene.player);
+            scene.cultKnifes.add(cultKnifeInstance);
+        });
+        
+        if(scene.ground)
+        {
+            scene.physics.add.collider(scene.cultKnifes, scene.ground);
+        }
+        
+        scene.physics.add.overlap(scene.cultKnifes, scene.playerBulletsHolder, (cult, bullet) =>
+        {
+          cult.health -= 1;
+          bullet.destroy();
+          cult.bloodEmitter.setQuantity(4);
+          cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
+        });
+        
+        scene.physics.add.collider(scene.player, scene.cultKnifes, (player, cult) =>
+        {
+          player.health -= 10;
+        });
+        scene.physics.add.collider(scene.cultKnifes, scene.cultKnifes);
+  }
 
   class Level1Game extends Phaser.Scene
   {
@@ -879,177 +963,171 @@
 
     create()
     {
-      const worldWidthX = 1800;
-      this.physics.world.setBounds(0, 0, worldWidthX, 176);
-      pointOnXWhereBulletsDisappear = worldWidthX;
+        //START BASIC SETUP Level1Game
 
-      cursors = this.input.keyboard.createCursorKeys();
 
-      this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'sky').setOrigin(0, 0);
-      this.sky.setScrollFactor(0.1);
+        const worldWidthX = 1800;
+        this.physics.world.setBounds(0, 0, worldWidthX, 176);
+        pointOnXWhereBulletsDisappear = worldWidthX;
+        cursors = this.input.keyboard.createCursorKeys();
 
-      this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
-      this.stars.setScrollFactor(0.1);
 
-      this.scarecrow = this.add.image(500, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-      this.scarecrow.setScrollFactor(0.4);
+        //END BASIC SETUP Level1Game
 
-      const wheatLayers =
-      [
-        { yOffset: 15, scrollFactor: 0.575 }
-      ];
 
-      this.wheatOffSet = 0;
-      wheatLayers.forEach((layerConfig, index) =>
-      {
-        const wheatLayer = this.add.tileSprite
+        //START PROPS BEFORE PLAYER Level1Game
+
+
+        this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'sky').setOrigin(0, 0);
+        this.sky.setScrollFactor(0.1);
+
+        this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
+        this.stars.setScrollFactor(0.1);
+
+        this.scarecrow = this.add.image(500, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        this.scarecrow.setScrollFactor(0.4);
+
+        const wheatLayers =
+        [
+          { yOffset: 15, scrollFactor: 0.575 }
+        ];
+
+        this.wheatOffSet = 0;
+        wheatLayers.forEach((layerConfig, index) =>
+        {
+          const wheatLayer = this.add.tileSprite
+          (
+            0,
+            176 - layerConfig.yOffset,
+            worldWidthX,
+            16,
+            'wheat'
+          );
+          wheatLayer.setOrigin(0, 1);
+          wheatLayer.setScrollFactor(layerConfig.scrollFactor);
+          wheatLayer.tilePositionY += this.wheatOffSet;
+          this.wheatOffSet += 1;
+        });
+
+        this.ground = this.add.tileSprite
         (
           0,
-          176 - layerConfig.yOffset,
+          this.sys.game.config.height,
+          worldWidthX * 2,
+          16,
+          'ground'
+        );
+
+        this.ground.setOrigin(0, 1);
+        this.physics.add.existing(this.ground);
+        this.ground.body.setImmovable(true);
+        this.ground.body.allowGravity = false;
+
+        this.shed = this.add.image(75, this.sys.game.config.height - this.ground.height, 'shed');
+        this.shed.setOrigin(0, 1);
+        this.shed.setScrollFactor(0.65);
+
+        this.fence = this.add.tileSprite
+        (
+          0,
+          this.sys.game.config.height - this.ground.height,
+          148,
+          16,
+          'fence'
+        );
+        this.fence.setScrollFactor(0.75);
+        this.fence.setOrigin(0, 1);
+
+        this.couch = this.add.image(45, this.sys.game.config.height - this.ground.height, 'couch');
+        this.couch.setScrollFactor(0.8);
+        this.couch.setOrigin(0, 1);
+
+        this.grill = this.add.image(15, this.sys.game.config.height - this.ground.height, 'grill');
+        this.grill.setScrollFactor(0.8);
+        this.grill.setOrigin(0, 1);
+
+
+        //END PROPS BEFORE PLAYER Level1Game
+      
+      
+        //START PLAYER SETUP Level1Game
+
+
+        this.playerBulletsHolder = this.physics.add.group
+        ({
+          classType: playerBullet,
+          maxSize: 30,
+          runChildUpdate: true
+        });
+
+        this.player = new player(this, 32, this.sys.game.config.height - 24, this.playerBulletsHolder);
+        this.physics.add.collider(this.player, this.ground);
+
+
+        //END PLAYER SETUP Level1Game
+      
+      
+        //START ENEMY SETUP Level1Game
+        
+        const cultPositions = 
+        [
+          { x: 750, y: 100 },
+          { x: 1050, y: 100 },
+          { x: 1100, y: 100 }
+        ];
+        
+        cultCreator(this, cultPositions);
+        
+        const cultKnifePositions = 
+        [
+          { x: 500, y: 100 },
+          { x: 625, y: 100 },
+          { x: 650, y: 100 },
+          { x: 1000, y: 100 }
+        ];
+        
+        cultKnifeCreator(this, cultKnifePositions);
+      
+      
+        //END ENEMY SETUP Level1Game
+      
+        
+        //START PROPS AFTER PLAYER Level1Game
+        
+        
+        this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - this.ground.height, 'Level2Game');
+
+        this.grasstop = this.add.tileSprite
+        (
+          0,
+          this.sys.game.config.height - this.ground.height,
           worldWidthX,
           16,
-          'wheat'
+          'grasstop'
         );
-        wheatLayer.setOrigin(0, 1);
-        wheatLayer.setScrollFactor(layerConfig.scrollFactor);
-        wheatLayer.tilePositionY += this.wheatOffSet;
-        this.wheatOffSet += 1;
-      });
+        this.grasstop.setOrigin(0, 1);
 
-      this.ground = this.add.tileSprite
-      (
-        0,
-        this.sys.game.config.height,
-        worldWidthX * 2,
-        16,
-        'ground'
-      );
+        this.tractor = this.physics.add.sprite(200, this.sys.game.config.height - this.ground.height, 'tractor');
+        this.tractor.setOrigin(0, 1);
+        this.tractor.body.allowGravity = false;
+        this.tractor.body.setImmovable(true);
 
-      this.ground.setOrigin(0, 1);
-      this.physics.add.existing(this.ground);
-      this.ground.body.setImmovable(true);
-      this.ground.body.allowGravity = false;
-
-      this.shed = this.add.image(75, this.sys.game.config.height - this.ground.height, 'shed');
-      this.shed.setOrigin(0, 1);
-      this.shed.setScrollFactor(0.65);
-
-      this.fence = this.add.tileSprite
-      (
-        0,
-        this.sys.game.config.height - this.ground.height,
-        148,
-        16,
-        'fence'
-      );
-      this.fence.setScrollFactor(0.75);
-      this.fence.setOrigin(0, 1);
-
-      this.couch = this.add.image(45, this.sys.game.config.height - this.ground.height, 'couch');
-      this.couch.setScrollFactor(0.8);
-      this.couch.setOrigin(0, 1);
-
-      this.grill = this.add.image(15, this.sys.game.config.height - this.ground.height, 'grill');
-      this.grill.setScrollFactor(0.8);
-      this.grill.setOrigin(0, 1);
-
-      this.playerBulletsHolder = this.physics.add.group
-      ({
-        classType: playerBullet,
-        maxSize: 30,
-        runChildUpdate: true
-      });
-
-      this.player = new player(this, 32, this.sys.game.config.height - 24, this.playerBulletsHolder);
-      this.physics.add.collider(this.player, this.ground);
+        this.physics.add.collider(this.tractor, this.ground);
+        this.physics.add.collider(this.tractor, this.player);
       
       
-      //START ENEMY SETUP
-      
-      
-      this.cultOrbHolder = this.physics.add.group
-      ({
-        classType: cultOrb,
-        maxSize: 30,
-        runChildUpdate: true
-      });
-      this.physics.add.collider(this.player, this.cultOrbHolder, (player, orb) =>
-      {
-        player.health -= 10;
-        orb.destroy();
-      });
-      
-      this.cults = this.physics.add.group();
-      this.cult1 = new cult(this, 750, 100, this.player, this.cultOrbHolder);
-      this.cults.add(this.cult1);
-      this.cult2 = new cult(this, 1050, 100, this.player, this.cultOrbHolder);
-      this.cults.add(this.cult2);
-      this.cult3 = new cult(this, 1100, 100, this.player, this.cultOrbHolder);
-      this.cults.add(this.cult3);
-      this.physics.add.collider(this.cults, this.ground);
-
-      this.physics.add.collider(this.cults, this.cults);
-      this.physics.add.overlap(this.cults, this.playerBulletsHolder, (cult, bullet) =>
-      {
-        cult.health -= 1;
-        bullet.destroy();
-        cult.play("cultOrbHurt", true);
-        cult.bloodEmitter.setQuantity(4);
-        cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
-      });
-
-      this.cultKnifes = this.physics.add.group();
-      this.cultKnife1 = new cultKnife(this, 500, 100, this.player);
-      this.cultKnifes.add(this.cultKnife1);
-      this.cultKnife2 = new cultKnife(this, 625, 100, this.player);
-      this.cultKnifes.add(this.cultKnife2);
-      this.cultKnife3 = new cultKnife(this, 650, 100, this.player);
-      this.cultKnifes.add(this.cultKnife3);
-      this.cultKnife4 = new cultKnife(this, 1000, 100, this.player);
-      this.cultKnifes.add(this.cultKnife4);
-      this.physics.add.collider(this.cultKnifes, this.ground);
-      this.physics.add.overlap(this.cultKnifes, this.playerBulletsHolder, (cult, bullet) =>
-      {
-        cult.health -= 1;
-        bullet.destroy();
-        cult.bloodEmitter.setQuantity(4);
-        cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
-      });
-      this.physics.add.collider(this.player, this.cultKnifes, (player, cult) =>
-      {
-        player.health -= 10;
-      });
-      this.physics.add.collider(this.cultKnifes, this.cultKnifes);
-      
-      
-      //END ENEMY SETUP
-      
-      
-      this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - this.ground.height, this.player, 'Level2Game');
-
-      this.grasstop = this.add.tileSprite
-      (
-        0,
-        this.sys.game.config.height - this.ground.height,
-        worldWidthX,
-        16,
-        'grasstop'
-      );
-      this.grasstop.setOrigin(0, 1);
-
-      this.tractor = this.physics.add.sprite(200, this.sys.game.config.height - this.ground.height, 'tractor');
-      this.tractor.setOrigin(0, 1);
-      this.tractor.body.allowGravity = false;
-      this.tractor.body.setImmovable(true);
-
-      this.physics.add.collider(this.tractor, this.ground);
-      this.physics.add.collider(this.tractor, this.player);
-      
-      
-
-      this.cameras.main.setBounds(0, 0, worldWidthX, 176);
-      this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
-      this.cameras.main.setZoom(1);
+        //END PROPS AFTER PLAYER Level1Game
+        
+        
+        //START CAMERA SETUP Level1Game
+        
+        
+        this.cameras.main.setBounds(0, 0, worldWidthX, 176);
+        this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
+        this.cameras.main.setZoom(1);
+        
+        
+        //END CAMERA SETUP Level1Game
     }
 
     update(time, delta)
@@ -1060,11 +1138,6 @@
       }
 
       cultSeparation(this.cults, this.player);
-
-      if(this.cult3.alert === false && this.cult2.alert === true)
-      {
-        this.cult3.alert = true;
-      }
     }
   }
 
@@ -1082,136 +1155,147 @@
 
     create()
     {
-      const worldWidthX = 1800;
-      this.physics.world.setBounds(0, 0, worldWidthX, 176);
-      pointOnXWhereBulletsDisappear = worldWidthX;
+        //START BASIC SETUP Level2Game
 
-      cursors = this.input.keyboard.createCursorKeys();
 
-      this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'sky').setOrigin(0, 0);
-      this.sky.setScrollFactor(0.1);
+        const worldWidthX = 1800;
+        this.physics.world.setBounds(0, 0, worldWidthX, 176);
+        pointOnXWhereBulletsDisappear = worldWidthX;
+        cursors = this.input.keyboard.createCursorKeys();
 
-      this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
-      this.stars.setScrollFactor(0.1);
 
-      const wheatLayers =
-              [
-                { yOffset: 15, scrollFactor: 0.575 }
-              ];
+        //END BASIC SETUP Level2Game
 
-      this.wheatOffSet = 0;
-      wheatLayers.forEach((layerConfig, index) =>
-      {
-        const wheatLayer = this.add.tileSprite
+
+        //START PROPS BEFORE PLAYER Level2Game
+
+
+        this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'sky').setOrigin(0, 0);
+        this.sky.setScrollFactor(0.1);
+
+        this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
+        this.stars.setScrollFactor(0.1);
+
+        const wheatLayers =
+                [
+                  { yOffset: 15, scrollFactor: 0.575 }
+                ];
+
+        this.wheatOffSet = 0;
+        wheatLayers.forEach((layerConfig, index) =>
+        {
+          const wheatLayer = this.add.tileSprite
+          (
+                  0,
+                  176 - layerConfig.yOffset,
+                  worldWidthX,
+                  16,
+                  'wheat'
+          );
+          wheatLayer.setOrigin(0, 1);
+          wheatLayer.setScrollFactor(layerConfig.scrollFactor);
+          wheatLayer.tilePositionY += this.wheatOffSet;
+          this.wheatOffSet += 1;
+        });
+
+        this.ground = this.add.tileSprite
+        (
+                -worldWidthX,
+                this.sys.game.config.height,
+                worldWidthX * 3,
+                16,
+                'ground'
+        );
+
+        this.ground.setOrigin(0, 1);
+        this.physics.add.existing(this.ground);
+        this.ground.body.setImmovable(true);
+        this.ground.body.allowGravity = false;
+
+
+        //END PROPS BEFORE PLAYER Level2Game
+
+
+        //START PLAYER SETUP Level2Game
+
+
+        this.playerBulletsHolder = this.physics.add.group
+        ({
+          classType: playerBullet,
+          maxSize: 30,
+          runChildUpdate: true
+        });
+
+        this.player = new player(this, 32, this.sys.game.config.height - 24, this.playerBulletsHolder);
+
+
+        //END PLAYER SETUP Level2Game
+
+
+        //START ENEMY SETUP Level2Game
+
+        const cultPositions = 
+        [
+          { x: 500, y: 100 },
+          { x: 500, y: 100 },
+          { x: 500, y: 100 }
+        ];
+        
+        cultCreator(this, cultPositions);
+        
+        const cultKnifePositions = 
+        [
+          { x: -150, y: 100 },
+        ];
+        
+        cultKnifeCreator(this, cultKnifePositions);
+
+        this.eyes = this.physics.add.group();
+        this.eye1 = new eye(this, 100, 100, this.player);
+        this.eyes.add(this.eye1);
+        this.physics.add.collider(this.eyes, this.eyes);
+        this.physics.add.collider(this.eyes, this.ground);
+
+
+        //END ENEMY SETUP Level2Game
+
+
+        //START PROPS AFTER PLAYER Level2Game
+
+
+        this.pipe1 = this.physics.add.sprite(32, this.sys.game.config.height - this.ground.height, 'pipe');
+        this.pipe1.setOrigin(0, 1);
+        this.pipe1.body.allowGravity = false;
+        this.pipe1.body.setImmovable(true);
+        this.physics.add.collider(this.pipe1, this.ground);
+
+        this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - this.ground.height, 'Level3Game');
+
+        this.grasstop = this.add.tileSprite
         (
                 0,
-                176 - layerConfig.yOffset,
+                this.sys.game.config.height - this.ground.height,
                 worldWidthX,
                 16,
-                'wheat'
+                'grasstop'
         );
-        wheatLayer.setOrigin(0, 1);
-        wheatLayer.setScrollFactor(layerConfig.scrollFactor);
-        wheatLayer.tilePositionY += this.wheatOffSet;
-        this.wheatOffSet += 1;
-      });
+        this.grasstop.setOrigin(0, 1);
 
-      this.ground = this.add.tileSprite
-      (
-              -worldWidthX,
-              this.sys.game.config.height,
-              worldWidthX * 3,
-              16,
-              'ground'
-      );
+        this.physics.add.collider(this.player, this.ground);
 
-      this.ground.setOrigin(0, 1);
-      this.physics.add.existing(this.ground);
-      this.ground.body.setImmovable(true);
-      this.ground.body.allowGravity = false;
 
-      this.playerBulletsHolder = this.physics.add.group
-      ({
-        classType: playerBullet,
-        maxSize: 30,
-        runChildUpdate: true
-      });
+        //END PROPS AFTER PLAYER Level2Game
 
-      this.player = new player(this, 32, this.sys.game.config.height - 24, this.playerBulletsHolder);
 
-      this.pipe1 = this.physics.add.sprite(32, this.sys.game.config.height - this.ground.height, 'pipe');
-      this.pipe1.setOrigin(0, 1);
-      this.pipe1.body.allowGravity = false;
-      this.pipe1.body.setImmovable(true);
-      this.physics.add.collider(this.pipe1, this.ground);
+        //START CAMERA SETUP Level2Game
 
-      this.cultOrbHolder = this.physics.add.group
-      ({
-        classType: cultOrb,
-        maxSize: 30,
-        runChildUpdate: true
-      });
 
-      this.physics.add.collider(this.player, this.cultOrbHolder, (player, orb) =>
-      {
-        player.health -= 10;
-        orb.destroy();
-      });
+        this.cameras.main.setBounds(0, 0, worldWidthX, 176);
+        this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
+        this.cameras.main.setZoom(1);
 
-      this.cults = this.physics.add.group();
-      this.cult1 = new cult(this, -300, 100, this.player, this.cultOrbHolder);
-      this.cults.add(this.cult1);
-      this.cult2 = new cult(this, -400, 100, this.player, this.cultOrbHolder);
-      this.cults.add(this.cult2);
-      this.cult3 = new cult(this, -500, 100, this.player, this.cultOrbHolder);
-      this.cults.add(this.cult3);
-      this.physics.add.collider(this.cults, this.ground);
 
-      this.physics.add.collider(this.cults, this.cults);
-      this.physics.add.overlap(this.cults, this.playerBulletsHolder, (cult, bullet) =>
-      {
-        cult.health -= 1;
-        bullet.destroy();
-      });
-
-      this.cultKnifes = this.physics.add.group();
-      this.cultKnife1 = new cultKnife(this, -300, 100, this.player);
-      this.cultKnifes.add(this.cultKnife1);
-      this.physics.add.collider(this.cultKnifes, this.ground);
-      this.physics.add.overlap(this.cultKnifes, this.playerBulletsHolder, (cult, bullet) =>
-      {
-        cult.health -= 1;
-        bullet.destroy();
-      });
-      this.physics.add.collider(this.player, this.cultKnifes, (player, cult) =>
-      {
-        player.health -= 10;
-      });
-      this.physics.add.collider(this.cultKnifes, this.cultKnifes);
-
-      this.eyes = this.physics.add.group();
-      this.eye1 = new eye(this, 100, 100, this.player);
-      this.eyes.add(this.eye1);
-      this.physics.add.collider(this.eyes, this.eyes);
-      this.physics.add.collider(this.eyes, this.ground);
-      
-      this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - this.ground.height, this.player, 'Level3Game');
-
-      this.grasstop = this.add.tileSprite
-      (
-              0,
-              this.sys.game.config.height - this.ground.height,
-              worldWidthX,
-              16,
-              'grasstop'
-      );
-      this.grasstop.setOrigin(0, 1);
-
-      this.physics.add.collider(this.player, this.ground);
-
-      this.cameras.main.setBounds(0, 0, worldWidthX, 176);
-      this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
-      this.cameras.main.setZoom(1);
+        //END CAMERA SETUP Level2Game
     }
 
     update(time, delta)
@@ -1220,13 +1304,8 @@
       {
         this.scene.start('Level2Game');
       }
-
+      
       cultSeparation(this.cults, this.player);
-
-      if(this.player.x > 100)
-      {
-        this.cultKnife1.alert = true;
-      }
     }
   }
 
