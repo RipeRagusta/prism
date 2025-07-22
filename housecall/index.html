@@ -698,6 +698,7 @@
       this.load.image('blood', 'assets/bloodparticle.png');
       this.load.image('eyechunk', 'assets/eyechunk.png');
       this.load.image('shell', 'assets/shell.png');
+      this.load.image('bloodrain', 'assets/bloodrain.png');
     }
 
     create()
@@ -834,7 +835,6 @@
       this.levelSelect = this.add.text((this.sys.game.config.width * 2), this.sys.game.config.height / 2, 'Start', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
       this.levelSelect.setWordWrapWidth(this.sys.game.config.width);
       this.levelSelect.setInteractive({cursor: 'pointer'});
-
       this.levelSelect.on('pointerdown', () =>
       {
         this.scene.start('Level1Game');
@@ -984,6 +984,31 @@
         });
         scene.physics.add.collider(scene.cultKnifes, scene.cultKnifes);
   }
+  
+  function makeBloodRain(scene)
+  {
+        scene.bloodRain = scene.add.particles
+        (
+            0, 0, 
+            'bloodrain',
+            {
+                x: { min: 0, max: scene.sys.game.config.width + (scene.sys.game.config.width / 5) },
+                y: { min: -15, max:-7 },
+                angle: { min: 90, max: 180 }, 
+                speed: { min: 100, max: 300 },
+                gravityY: 100,
+                lifespan: { min: 1500, max: 1500 },
+                quantity: 20,
+                scale: { start: 0.5, end: 0.25 },
+                alpha: { start: 1, end: 0 },
+                blendMode: 'NORMAL',
+                frequency: 50
+            }
+        );
+
+        scene.bloodRain.start();
+        scene.bloodRain.setScrollFactor(0);
+  }
 
   class Level1Game extends Phaser.Scene
   {
@@ -1012,7 +1037,7 @@
 
 
         //START PROPS BEFORE PLAYER Level1Game
-
+        
 
         this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'sky').setOrigin(0, 0);
         this.sky.setScrollFactor(0.1);
@@ -1150,7 +1175,7 @@
 
         this.physics.add.collider(this.tractor, this.ground);
         this.physics.add.collider(this.tractor, this.player);
-      
+        
       
         //END PROPS AFTER PLAYER Level1Game
         
@@ -1194,7 +1219,7 @@
         //START BASIC SETUP Level2Game
 
 
-        const worldWidthX = 1750;
+        const worldWidthX = 2000;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         pointOnXWhereBulletsDisappear = worldWidthX;
         cursors = this.input.keyboard.createCursorKeys();
@@ -1208,9 +1233,7 @@
 
         this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'sky').setOrigin(0, 0);
         this.sky.setScrollFactor(0.1);
-
-        this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
-        this.stars.setScrollFactor(0.1);
+        this.sky.postFX.addColorMatrix().grayscale(1);
 
         const wheatLayers =
                 [
@@ -1274,11 +1297,11 @@
         [
           { x: 500, y: 100 },
           { x: 500, y: 100 },
-          { x: 1000, y: 100 },
-          { x: 1000, y: 100 },
-          { x: 1000, y: 100 },
-          { x: 1000, y: 100 },
-          { x: 1000, y: 100 }
+          { x: 1500, y: 100 },
+          { x: 1500, y: 100 },
+          { x: 1500, y: 100 },
+          { x: 1500, y: 100 },
+          { x: 1500, y: 100 }
           
         ];
         
@@ -1286,7 +1309,10 @@
         
         const cultKnifePositions = 
         [
-          { x: -150, y: 100 }
+            { x: -150, y: 100 },
+            { x: 1750, y: 100 },
+            { x: 1825, y: 100 },
+            { x: 1900, y: 100 }
         ];
         
         cultKnifeCreator(this, cultKnifePositions);
@@ -1295,13 +1321,13 @@
         //END ENEMY SETUP Level2Game
         
         
-        //START POWERUP SETUP
+        //START POWERUP SETUP Level2Game
         
         
-        this.eyes = new eye(this, 750, this.sys.game.config.height - 24);
+        this.eyes = new eye(this, 1000, this.sys.game.config.height - 24);
         
         
-        //END POWERUP SETUP
+        //END POWERUP SETUP Level2Game
         
 
         //START PROPS AFTER PLAYER Level2Game
@@ -1313,7 +1339,7 @@
         this.pipe1.body.setImmovable(true);
         this.physics.add.collider(this.pipe1, this.ground);
 
-        this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - this.ground.height, 'Level3Game');
+        this.pipe = new pipeNext(this, 1950, this.sys.game.config.height - this.ground.height, 'Level3Game');
 
         this.grasstop = this.add.tileSprite
         (
@@ -1326,8 +1352,10 @@
         this.grasstop.setOrigin(0, 1);
 
         this.physics.add.collider(this.player, this.ground);
-
-
+        
+        makeBloodRain(this);
+        
+        
         //END PROPS AFTER PLAYER Level2Game
 
 
