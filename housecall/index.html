@@ -252,16 +252,17 @@
 
         if(orb)
         {
-          if(this.flip === false)
-          {
-            orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(180));
-          }
-          else
-          {
-            orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(0));
-          }
+            if(this.flip === false)
+            {
+              orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(180));
+            }
+            else
+            {
+              orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(0));
+            }
+
+            this.play('orbThrow', false);
         }
-        this.play('orbThrow', false);
     }
   }
 
@@ -394,6 +395,7 @@
         this.health = 10;
         this.setBounce(0);
         this.setCollideWorldBounds(true);
+        this.scene = scene;
 
         this.wasd =
         {
@@ -522,6 +524,7 @@
         }
 
         this.lastPlayerShot = time;
+        this.scene.sound.play('shotgunshot');
         this.play("pump", true);
         this.shellEmitter.emitParticleAt(this.x, this.y);
       }
@@ -672,33 +675,48 @@
 
     preload()
     {
-      this.load.image('sky', 'assets/sky.png');
-      this.load.spritesheet('player', 'assets/player.png', {frameWidth: 16, frameHeight: 16});
-      this.load.image('ground', 'assets/grass.png');
-      this.load.image('bullet', 'assets/bullet.png');
-      this.load.image('barn', 'assets/barn.png');
-      this.load.image('fence', 'assets/fence.png');
-      this.load.image('stars', 'assets/stars.png');
-      this.load.image('cross', 'assets/cross.png');
-      this.load.spritesheet('cult', './assets/cult.png', {frameWidth: 16, frameHeight: 16});
-      this.load.image('couch', './assets/couch.png');
-      this.load.image('tractor', './assets/tractor.png');
-      this.load.image('grasstop', './assets/grasstop.png');
-      this.load.image('grill', './assets/grill.png');
-      this.load.spritesheet('cultknife', './assets/cultknife.png', {frameWidth: 16, frameHeight: 16});
-      this.load.image('copcar', './assets/copcar.png');
-      this.load.image('cultorb', './assets/cultorb.png');
-      this.load.image('wheat', './assets/wheat.png');
-      this.load.image('shed', './assets/shed.png');
-      this.load.image('silo', './assets/silo.png');
-      this.load.image('scarecrow', './assets/scarecrow.png');
-      this.load.image('pipe', './assets/pipe.png');
-      this.load.image('eye', './assets/eye.png');
-      this.load.spritesheet('stab', './assets/stab.png', {frameWidth: 12, frameHeight: 18});
-      this.load.image('blood', 'assets/bloodparticle.png');
-      this.load.image('eyechunk', 'assets/eyechunk.png');
-      this.load.image('shell', 'assets/shell.png');
-      this.load.image('bloodrain', 'assets/bloodrain.png');
+        this.load.image('sky', 'assets/sky.png');
+        this.load.spritesheet('player', 'assets/player.png', {frameWidth: 16, frameHeight: 16});
+        this.load.image('ground', 'assets/grass.png');
+        this.load.image('bullet', 'assets/bullet.png');
+        this.load.image('barn', 'assets/barn.png');
+        this.load.image('fence', 'assets/fence.png');
+        this.load.image('stars', 'assets/stars.png');
+        this.load.image('cross', 'assets/cross.png');
+        this.load.spritesheet('cult', './assets/cult.png', {frameWidth: 16, frameHeight: 16});
+        this.load.image('couch', './assets/couch.png');
+        this.load.image('tractor', './assets/tractor.png');
+        this.load.image('grasstop', './assets/grasstop.png');
+        this.load.image('grill', './assets/grill.png');
+        this.load.spritesheet('cultknife', './assets/cultknife.png', {frameWidth: 16, frameHeight: 16});
+        this.load.image('copcar', './assets/copcar.png');
+        this.load.image('cultorb', './assets/cultorb.png');
+        this.load.image('wheat', './assets/wheat.png');
+        this.load.image('shed', './assets/shed.png');
+        this.load.image('silo', './assets/silo.png');
+        this.load.image('scarecrow', './assets/scarecrow.png');
+        this.load.image('pipe', './assets/pipe.png');
+        this.load.image('eye', './assets/eye.png');
+        this.load.spritesheet('stab', './assets/stab.png', {frameWidth: 12, frameHeight: 18});
+        this.load.image('blood', 'assets/bloodparticle.png');
+        this.load.image('eyechunk', 'assets/eyechunk.png');
+        this.load.image('shell', 'assets/shell.png');
+        this.load.image('raindrop', 'assets/raindrop.png');
+
+        this.load.audio('shotgunshot', 
+        [
+              'assets/shotgunshot.wav'
+        ]);
+        
+        this.load.audio('orbthrow', 
+        [
+              'assets/orbthrow.wav'
+        ]);
+        
+        this.load.audio('hurt', 
+        [
+              'assets/hurt.wav'
+        ]);
     }
 
     create()
@@ -985,12 +1003,12 @@
         scene.physics.add.collider(scene.cultKnifes, scene.cultKnifes);
   }
   
-  function makeBloodRain(scene)
+  function makeRain(scene)
   {
-        scene.bloodRain = scene.add.particles
+        scene.rain = scene.add.particles
         (
             0, 0, 
-            'bloodrain',
+            'raindrop',
             {
                 x: { min: 0, max: scene.sys.game.config.width + (scene.sys.game.config.width / 5) },
                 y: { min: -15, max:-7 },
@@ -998,16 +1016,16 @@
                 speed: { min: 100, max: 300 },
                 gravityY: 100,
                 lifespan: { min: 1500, max: 1500 },
-                quantity: 20,
-                scale: { start: 0.5, end: 0.25 },
+                quantity: 15,
+                scale: { start: 0.25, end: 0.25 },
                 alpha: { start: 1, end: 0 },
                 blendMode: 'NORMAL',
                 frequency: 50
             }
         );
 
-        scene.bloodRain.start();
-        scene.bloodRain.setScrollFactor(0);
+        scene.rain.start();
+        scene.rain.setScrollFactor(0);
   }
 
   class Level1Game extends Phaser.Scene
@@ -1353,7 +1371,7 @@
 
         this.physics.add.collider(this.player, this.ground);
         
-        makeBloodRain(this);
+        makeRain(this);
         
         
         //END PROPS AFTER PLAYER Level2Game
