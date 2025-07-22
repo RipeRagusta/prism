@@ -381,42 +381,72 @@
   {
     constructor(scene, x, y, playerBulletsHolder)
     {
-      super(scene, x, y, 'player');
+        super(scene, x, y, 'player');
 
-      scene.add.existing(this);
-      scene.physics.add.existing(this);
-      this.setActive(true);
-      this.setVisible(true);
-      this.flip = false;
-      this.aimAngle = 0;
-      this.fireRate = 750;
-      this.lastPlayerShot = 0;
-      this.health = 10;
-      this.setBounce(0);
-      this.setCollideWorldBounds(true);
+        scene.add.existing(this);
+        scene.physics.add.existing(this);
+        this.setActive(true);
+        this.setVisible(true);
+        this.flip = false;
+        this.aimAngle = 0;
+        this.fireRate = 750;
+        this.lastPlayerShot = 0;
+        this.health = 10;
+        this.setBounce(0);
+        this.setCollideWorldBounds(true);
 
-      this.wasd =
-      {
-        space: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
-        w: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
-        s: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
-        a: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
-        d: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
-      };
+        this.wasd =
+        {
+          space: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
+          w: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
+          s: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
+          a: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
+          d: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
+        };
 
-      this.mouseRef = scene.input;
-      this.bullets = playerBulletsHolder;
-      
-      if(!scene.anims.get('pump'))
-      {
-        scene.anims.create
-        ({
-          key: 'pump',
-          frames: scene.anims.generateFrameNumbers('player', { start: 1, end: 0 }),
-          frameRate: 6,
-          repeat: 0
-        });
-      }
+        this.mouseRef = scene.input;
+        this.bullets = playerBulletsHolder;
+
+        if(!scene.anims.get('pump'))
+        {
+          scene.anims.create
+          ({
+            key: 'pump',
+            frames: scene.anims.generateFrameNumbers('player', { start: 1, end: 0 }),
+            frameRate: 6,
+            repeat: 0
+          });
+        }
+
+        this.shellEmitter = this.scene.add.particles
+        (
+            0, 0, 
+            'shell',
+            {
+                angle: 
+                {
+                    onEmit: () => 
+                    {
+                        if(this.flip === true)
+                        {
+                            return Phaser.Math.Between(-45, 45);
+                        }
+                        else
+                        {
+                            return  Phaser.Math.Between(135, 225);
+                        }
+                    }
+                }, 
+                speed: { min: 100, max: 200 },
+                gravityY: 300,
+                lifespan: { min: 1000, max: 1000 },
+                quantity: 1,
+                scale: { start: 1, end: 0.75 },
+                alpha: { start: 1, end: 0.75 },
+                blendMode: 'NORMAL',
+                frequency: -1
+            }
+        );
     }
 
     preUpdate(time, delta)
@@ -493,6 +523,7 @@
 
         this.lastPlayerShot = time;
         this.play("pump", true);
+        this.shellEmitter.emitParticleAt(this.x, this.y);
       }
     }
 
@@ -666,6 +697,7 @@
       this.load.spritesheet('stab', './assets/stab.png', {frameWidth: 12, frameHeight: 18});
       this.load.image('blood', 'assets/bloodparticle.png');
       this.load.image('eyechunk', 'assets/eyechunk.png');
+      this.load.image('shell', 'assets/shell.png');
     }
 
     create()
