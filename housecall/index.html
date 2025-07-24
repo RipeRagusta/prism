@@ -1417,12 +1417,6 @@
         //START PROPS AFTER PLAYER Level2Game
         
 
-        this.pipe1 = this.physics.add.sprite(32, this.sys.game.config.height - this.ground.height, 'pipe');
-        this.pipe1.setOrigin(0, 1);
-        this.pipe1.body.allowGravity = false;
-        this.pipe1.body.setImmovable(true);
-        this.physics.add.collider(this.pipe1, this.ground);
-
         this.pipe = new pipeNext(this, 1950, this.sys.game.config.height - this.ground.height, 'Level3Game');
 
         this.grasstop = this.add.tileSprite
@@ -1547,7 +1541,8 @@
 
         const cultPositions = 
         [
-          { x: 500, y: 100 }
+          { x: 500, y: 100 },
+          { x: 1200, y: 100 }
           
         ];
         
@@ -1555,7 +1550,16 @@
         
         const cultKnifePositions = 
         [
-            { x: 400, y: 100 }
+            { x: 400, y: 100 },
+            { x: 500, y: 100 },
+            { x: 600, y: 100 },
+            { x: 700, y: 100 },
+            { x: 800, y: 100 },
+            { x: 900, y: 100 },
+            { x: 1000, y: 100 },
+            { x: 1100, y: 100 },
+            { x: 1200, y: 100 },
+            { x: 1300, y: 100 }
         ];
         
         cultKnifeCreator(this, cultKnifePositions);
@@ -1574,13 +1578,7 @@
         
 
         //START PROPS AFTER PLAYER Level3Game
-
-
-        this.pipe1 = this.physics.add.sprite(32, this.sys.game.config.height - this.ground.height, 'pipe');
-        this.pipe1.setOrigin(0, 1);
-        this.pipe1.body.allowGravity = false;
-        this.pipe1.body.setImmovable(true);
-        this.physics.add.collider(this.pipe1, this.ground);
+        
 
         this.pipe = new pipeNext(this, 1950, this.sys.game.config.height - this.ground.height, 'Level3Game');
 
