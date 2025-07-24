@@ -228,24 +228,24 @@
         }
         else
         {
-          if(this.flip === true)
-          {
-            this.setFlipX(true);
-          }
-          else
-          {
-            this.setFlipX(false);
-          }
+            if(this.flip === true)
+            {
+                this.setFlipX(true);
+            }
+            else
+            {
+                this.setFlipX(false);
+            }
         }
       }
     }
 
     checkInRange()
     {
-      if(this.alert === false && Math.abs(this.player.x - this.x) <= 200)
-      {
-        this.alert = true;
-      }
+        if(this.alert === false && Math.abs(this.player.x - this.x) <= 200)
+        {
+            this.alert = true;
+        }
     }
     
     shoot()
@@ -361,14 +361,14 @@
         }
         else
         {
-          if(this.flip === true)
-          {
-            this.setFlipX(true);
-          }
-          else
-          {
-            this.setFlipX(false);
-          }
+            if(this.flip === true)
+            {
+              this.setFlipX(true);
+            }
+            else
+            {
+              this.setFlipX(false);
+            }
         }
       }
     }
@@ -591,6 +591,7 @@
         this.body.allowGravity = false;
         this.body.setImmovable(true);
         this.scene = scene;
+        this.player = this.scene.player;
 
         this.explode = this.scene.add.particles
         (
@@ -627,6 +628,18 @@
                     scene.anims.get('pump').frameRate = 12;
                 }
             });
+        }
+    }
+    
+    preUpdate(time, delta)
+    {
+        if(this.player.x > this.x)
+        {
+            this.explode.emitParticleAt(this.x, this.y);
+            this.scene.sound.play('powerup');
+            this.player.fireRate = 325;
+            this.scene.anims.get('pump').frameRate = 12;
+            this.destroy();
         }
     }
 }
@@ -666,7 +679,8 @@
           scene.stab.setVisible(true);
         });
 
-        scene.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+        scene.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => 
+        {
           scene.scene.start(key);
         });
       }
@@ -708,6 +722,7 @@
         this.load.image('eyechunk', 'assets/eyechunk.png');
         this.load.image('shell', 'assets/shell.png');
         this.load.image('raindrop', 'assets/raindrop.png');
+        this.load.image('bloodrain', 'assets/bloodrain.png');
 
         this.load.audio('shotgunshot', 
         [
@@ -1027,12 +1042,12 @@
         scene.physics.add.collider(scene.cultKnifes, scene.cultKnifes);
   }
   
-  function makeRain(scene)
+  function makeRain(scene, texture)
   {
         scene.rain = scene.add.particles
         (
             0, 0, 
-            'raindrop',
+            texture,
             {
                 x: { min: 0, max: scene.sys.game.config.width + (scene.sys.game.config.width / 5) },
                 y: { min: -15, max:-7 },
@@ -1395,7 +1410,7 @@
 
         this.physics.add.collider(this.player, this.ground);
         
-        makeRain(this);
+        makeRain(this, 'raindrop');
         
         
         //END PROPS AFTER PLAYER Level2Game
@@ -1433,7 +1448,159 @@
 
     create()
     {
-      this.levelSelect = this.add.text((this.sys.game.config.width / 2), this.sys.game.config.height / 2, 'Place Holder', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+      //START BASIC SETUP Level3Game
+
+
+        const worldWidthX = 2000;
+        this.physics.world.setBounds(0, 0, worldWidthX, 176);
+        pointOnXWhereBulletsDisappear = worldWidthX;
+        cursors = this.input.keyboard.createCursorKeys();
+
+
+        //END BASIC SETUP Level3Game
+
+
+        //START PROPS BEFORE PLAYER Level3Game
+
+
+        this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'sky').setOrigin(0, 0);
+        this.sky.setScrollFactor(0.1);
+        this.sky.postFX.addColorMatrix().grayscale(1);
+
+        const wheatLayers =
+                [
+                  { yOffset: 15, scrollFactor: 0.575 }
+                ];
+
+        this.wheatOffSet = 0;
+        wheatLayers.forEach((layerConfig, index) =>
+        {
+          const wheatLayer = this.add.tileSprite
+          (
+                  0,
+                  176 - layerConfig.yOffset,
+                  worldWidthX,
+                  16,
+                  'wheat'
+          );
+          wheatLayer.setOrigin(0, 1);
+          wheatLayer.setScrollFactor(layerConfig.scrollFactor);
+          wheatLayer.tilePositionY += this.wheatOffSet;
+          this.wheatOffSet += 1;
+        });
+
+        this.ground = this.add.tileSprite
+        (
+                -worldWidthX,
+                this.sys.game.config.height,
+                worldWidthX * 3,
+                16,
+                'ground'
+        );
+
+        this.ground.setOrigin(0, 1);
+        this.physics.add.existing(this.ground);
+        this.ground.body.setImmovable(true);
+        this.ground.body.allowGravity = false;
+
+
+        //END PROPS BEFORE PLAYER Level3Game
+
+
+        //START PLAYER SETUP Level3Game
+
+
+        this.playerBulletsHolder = this.physics.add.group
+        ({
+          classType: playerBullet,
+          maxSize: 30,
+          runChildUpdate: true
+        });
+
+        this.player = new player(this, 32, this.sys.game.config.height - 24, this.playerBulletsHolder);
+
+
+        //END PLAYER SETUP Level3Game
+
+
+        //START ENEMY SETUP Level3Game
+
+        const cultPositions = 
+        [
+          { x: 500, y: 100 }
+          
+        ];
+        
+        cultCreator(this, cultPositions);
+        
+        const cultKnifePositions = 
+        [
+            { x: 400, y: 100 }
+        ];
+        
+        cultKnifeCreator(this, cultKnifePositions);
+
+
+        //END ENEMY SETUP Level3Game
+        
+        
+        //START POWERUP SETUP Level3Game
+        
+        
+        this.eyes = new eye(this, 200, this.sys.game.config.height - 24);
+        
+        
+        //END POWERUP SETUP Level3Game
+        
+
+        //START PROPS AFTER PLAYER Level3Game
+
+
+        this.pipe1 = this.physics.add.sprite(32, this.sys.game.config.height - this.ground.height, 'pipe');
+        this.pipe1.setOrigin(0, 1);
+        this.pipe1.body.allowGravity = false;
+        this.pipe1.body.setImmovable(true);
+        this.physics.add.collider(this.pipe1, this.ground);
+
+        this.pipe = new pipeNext(this, 1950, this.sys.game.config.height - this.ground.height, 'Level3Game');
+
+        this.grasstop = this.add.tileSprite
+        (
+                0,
+                this.sys.game.config.height - this.ground.height,
+                worldWidthX,
+                16,
+                'grasstop'
+        );
+        this.grasstop.setOrigin(0, 1);
+
+        this.physics.add.collider(this.player, this.ground);
+        
+        makeRain(this, 'bloodrain');
+        
+        
+        //END PROPS AFTER PLAYER Level3Game
+
+
+        //START CAMERA SETUP Level3Game
+
+
+        this.cameras.main.setBounds(0, 0, worldWidthX, 176);
+        this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
+        this.cameras.main.setZoom(1);
+
+
+        //END CAMERA SETUP Level3Game
+    }
+    
+    update(time, delta)
+    {
+      if(this.player.health < 1)
+      {
+        this.scene.start('Level3Game');
+      }
+      
+      cultSeparation(this.cults, this.player);
     }
   }
   const config =
