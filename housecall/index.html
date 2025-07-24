@@ -49,7 +49,7 @@
     {
       super.preUpdate(time, delta);
 
-      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x < 0 || this.x > pointOnXWhereBulletsDisappear || this.x > this.originX + 200 || this.x < this.originX - 200)
+      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x > this.originX + 200 || this.x < this.originX - 200)
       {
         this.setActive(false);
         this.setVisible(false);
@@ -90,7 +90,7 @@
     {
       super.preUpdate(time, delta);
 
-      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x < 0 || this.x > pointOnXWhereBulletsDisappear || this.x > this.originX + 1000 || this.x < this.originX - 1000)
+      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x > this.originX + 1000 || this.x < this.originX - 1000)
       {
         this.setActive(false);
         this.setVisible(false);
@@ -119,7 +119,7 @@
         this.health = 15;
         this.initialHealth = this.health;
         this.setBounce(0);
-        this.setCollideWorldBounds(true);
+        //this.setCollideWorldBounds(true);
         this.player = player;
         this.alert = false;
         this.orbs = cultOrbHolder;
@@ -280,7 +280,7 @@
         this.setVisible(true);
         this.health = 5;
         this.setBounce(0);
-        this.setCollideWorldBounds(true);
+        //this.setCollideWorldBounds(true);
         this.player = player;
         this.alert = false;
         this.flip = true;
@@ -723,6 +723,7 @@
         this.load.image('shell', 'assets/shell.png');
         this.load.image('raindrop', 'assets/raindrop.png');
         this.load.image('bloodrain', 'assets/bloodrain.png');
+        this.load.image('redsky', 'assets/redsky.png');
 
         this.load.audio('shotgunshot', 
         [
@@ -772,7 +773,7 @@
     {
       this.physics.world.setBounds(0, 0, this.sys.game.config.width, 176);
       pointOnXWhereBulletsDisappear = this.sys.game.config.width;
-
+      
       cursors = this.input.keyboard.createCursorKeys();
 
       this.sky = this.add.tileSprite(0, 0, this.sys.game.config.width * 3, this.sys.game.config.height, 'sky').setOrigin(0, 0);
@@ -833,15 +834,8 @@
       this.fence.setScrollFactor(0.75);
       this.fence.setOrigin(0.25, 1);
 
-      this.playerBulletsHolder = this.physics.add.group
-      ({
-        classType: playerBullet,
-        maxSize: 30,
-        runChildUpdate: true
-      });
-
-      this.player = new player(this, Math.min(94, this.sys.game.config.width / 2), this.sys.game.config.height - 24, this.playerBulletsHolder);
-
+      createPlayer(this, Math.min(94, this.sys.game.config.width / 2), this.sys.game.config.height - 24);
+      
       this.copcar = this.add.image
       (
         ((this.sys.game.config.width * 2) + (this.sys.game.config.width / 2)) / 2,
@@ -889,6 +883,49 @@
     {
 
     }
+  }
+  
+  function createLevelProps(scene)
+  {
+    scene.shed = scene.add.image(75, scene.sys.game.config.height - scene.ground.height, 'shed');
+    scene.shed.setOrigin(0, 1);
+    scene.shed.setScrollFactor(0.65);
+
+    scene.fence = scene.add.tileSprite
+    (
+      0,
+      scene.sys.game.config.height - scene.ground.height,
+      148,
+      16,
+      'fence'
+    );
+    scene.fence.setScrollFactor(0.75);
+    scene.fence.setOrigin(0, 1);
+
+    scene.couch = scene.add.image(45, scene.sys.game.config.height - scene.ground.height, 'couch');
+    scene.couch.setScrollFactor(0.8);
+    scene.couch.setOrigin(0, 1);
+
+    scene.grill = scene.add.image(15, scene.sys.game.config.height - scene.ground.height, 'grill');
+    scene.grill.setScrollFactor(0.8);
+    scene.grill.setOrigin(0, 1);
+  }
+  
+  function createPlayer(scene, x, y)
+  {
+        scene.playerBulletsHolder = scene.physics.add.group
+        ({
+          classType: playerBullet,
+          maxSize: 60,
+          runChildUpdate: true
+        });
+
+        scene.player = new player(scene, 32, scene.sys.game.config.height - 24, scene.playerBulletsHolder);
+        
+        if(scene.ground)
+        {
+            scene.physics.add.collider(scene.player, scene.ground);
+        }
   }
 
   function cultSeparation(cults, player)
@@ -997,7 +1034,10 @@
         {
           cult.health -= 1;
           bullet.destroy();
-          cult.play("cultOrbHurt", true);
+          if(!cult.anims.isPlaying)
+          {
+            cult.play("cultOrbHurt", false);
+          }
           cult.bloodEmitter.setQuantity(4);
           cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
         });
@@ -1170,16 +1210,10 @@
       
         //START PLAYER SETUP Level1Game
 
-
-        this.playerBulletsHolder = this.physics.add.group
-        ({
-          classType: playerBullet,
-          maxSize: 30,
-          runChildUpdate: true
-        });
-
-        this.player = new player(this, 32, this.sys.game.config.height - 24, this.playerBulletsHolder);
-        this.physics.add.collider(this.player, this.ground);
+        
+        
+        
+        createPlayer(this, 32, this.sys.game.config.height - 24);
 
 
         //END PLAYER SETUP Level1Game
@@ -1224,7 +1258,7 @@
           'grasstop'
         );
         this.grasstop.setOrigin(0, 1);
-
+        
         this.tractor = this.physics.add.sprite(200, this.sys.game.config.height - this.ground.height, 'tractor');
         this.tractor.setOrigin(0, 1);
         this.tractor.body.allowGravity = false;
@@ -1291,7 +1325,10 @@
         this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'sky').setOrigin(0, 0);
         this.sky.setScrollFactor(0.1);
         this.sky.postFX.addColorMatrix().grayscale(1);
-
+        
+        this.scarecrow = this.add.image(400, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        this.scarecrow.setScrollFactor(0.4);
+        
         const wheatLayers =
                 [
                   { yOffset: 15, scrollFactor: 0.575 }
@@ -1328,22 +1365,15 @@
         this.ground.body.setImmovable(true);
         this.ground.body.allowGravity = false;
 
-
+        createLevelProps(this);
         //END PROPS BEFORE PLAYER Level2Game
 
 
         //START PLAYER SETUP Level2Game
 
 
-        this.playerBulletsHolder = this.physics.add.group
-        ({
-          classType: playerBullet,
-          maxSize: 30,
-          runChildUpdate: true
-        });
-
-        this.player = new player(this, 32, this.sys.game.config.height - 24, this.playerBulletsHolder);
-
+        createPlayer(this, 32, this.sys.game.config.height - 24);
+        
 
         //END PLAYER SETUP Level2Game
 
@@ -1366,10 +1396,7 @@
         
         const cultKnifePositions = 
         [
-            { x: -150, y: 100 },
-            { x: 1750, y: 100 },
-            { x: 1825, y: 100 },
-            { x: 1900, y: 100 }
+            { x: -150, y: 100 }
         ];
         
         cultKnifeCreator(this, cultKnifePositions);
@@ -1388,7 +1415,7 @@
         
 
         //START PROPS AFTER PLAYER Level2Game
-
+        
 
         this.pipe1 = this.physics.add.sprite(32, this.sys.game.config.height - this.ground.height, 'pipe');
         this.pipe1.setOrigin(0, 1);
@@ -1502,7 +1529,7 @@
         this.physics.add.existing(this.ground);
         this.ground.body.setImmovable(true);
         this.ground.body.allowGravity = false;
-
+        createLevelProps(this);
 
         //END PROPS BEFORE PLAYER Level3Game
 
@@ -1510,14 +1537,7 @@
         //START PLAYER SETUP Level3Game
 
 
-        this.playerBulletsHolder = this.physics.add.group
-        ({
-          classType: playerBullet,
-          maxSize: 30,
-          runChildUpdate: true
-        });
-
-        this.player = new player(this, 32, this.sys.game.config.height - 24, this.playerBulletsHolder);
+        createPlayer(this, 32, this.sys.game.config.height - 24);
 
 
         //END PLAYER SETUP Level3Game
