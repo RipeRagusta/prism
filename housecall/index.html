@@ -127,6 +127,7 @@
         this.initalDistancePref = this.distancePref;
         this.distanceOffset = 5;
         this.flip = true;
+        this.scene = scene;
       
         if(!scene.anims.get('orbThrow'))
         {
@@ -179,6 +180,7 @@
       {
         this.bloodEmitter.setQuantity(100);
         this.bloodEmitter.emitParticleAt(this.x, this.y);
+        this.scene.sound.play('hurt');
         this.setActive(false);
         this.setVisible(false);
         this.destroy();
@@ -282,6 +284,7 @@
         this.player = player;
         this.alert = false;
         this.flip = true;
+        this.scene = scene;
       
         this.bloodEmitter = this.scene.add.particles
         (
@@ -325,6 +328,7 @@
       {
         this.bloodEmitter.setQuantity(100);
         this.bloodEmitter.emitParticleAt(this.x, this.y);
+        this.scene.sound.play('hurt');
         this.setActive(false);
         this.setVisible(false);
         this.destroy();
@@ -586,6 +590,7 @@
         this.alert = false;
         this.body.allowGravity = false;
         this.body.setImmovable(true);
+        this.scene = scene;
 
         this.explode = this.scene.add.particles
         (
@@ -614,6 +619,7 @@
             scene.physics.add.overlap(this, scene.playerBulletsHolder, (eye, bullet) =>
             {
                 this.explode.emitParticleAt(this.x, this.y);
+                this.scene.sound.play('powerup');
                 eye.destroy();
                 if(scene.player)
                 {
@@ -705,17 +711,22 @@
 
         this.load.audio('shotgunshot', 
         [
-              'assets/shotgunshot.wav'
+            'assets/shotgunshot.wav'
         ]);
         
         this.load.audio('orbthrow', 
         [
-              'assets/orbthrow.wav'
+            'assets/orbthrow.wav'
         ]);
         
         this.load.audio('hurt', 
         [
-              'assets/hurt.wav'
+            'assets/hurt.wav'
+        ]);
+        
+        this.load.audio('powerup', 
+        [
+            'assets/powerup.wav'
         ]);
     }
 
@@ -917,15 +928,27 @@
     });
   }
   
-  function cultSynchro(cults)
+  function cultSynchro(scene, cults)
   {
-      cults.children.entries.forEach(cult => 
-      {
-        if(cult.active && cult.visible) 
+        let aCultAcvite = false;
+        
+        cults.children.entries.forEach(cult => 
         {
-            cult.shoot();
+            if(cult.alert && cult.visible) 
+            {
+                cult.shoot();
+                
+                if(!aCultAcvite)
+                {
+                    aCultAcvite = !aCultAcvite;
+                }
+            }
+        });
+        
+        if(aCultAcvite)
+        {
+            scene.sound.play('orbthrow');
         }
-    });
   }
   
   function cultCreator(scene, cultPositions)
@@ -967,7 +990,7 @@
         scene.time.addEvent
         ({
             delay: 1500,
-            callback: () => cultSynchro(scene.cults),
+            callback: () => cultSynchro(scene, scene.cults),
             callbackScope: this,
             loop: true
         });
@@ -1000,6 +1023,7 @@
         {
           player.health -= 10;
         });
+        
         scene.physics.add.collider(scene.cultKnifes, scene.cultKnifes);
   }
   
