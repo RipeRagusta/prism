@@ -735,6 +735,7 @@ class skull extends Phaser.Physics.Arcade.Sprite
         this.load.image('bloodrain', 'assets/bloodrain.png');
         this.load.image('redsky', 'assets/redsky.png');
         this.load.image('skull', 'assets/skull.png');
+        this.load.image('redskyrain', 'assets/redskyrain.png');
 
         this.load.audio('shotgunshot', 
         [
@@ -1490,9 +1491,8 @@ class skull extends Phaser.Physics.Arcade.Sprite
         //START PROPS BEFORE PLAYER Level3Game
 
 
-        this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'sky').setOrigin(0, 0);
+        this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'redskyrain').setOrigin(0, 0);
         this.sky.setScrollFactor(0.1);
-        this.sky.postFX.addColorMatrix().grayscale(1);
         
         this.scarecrow = this.add.image(700, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
         this.scarecrow.setScrollFactor(0.4);
