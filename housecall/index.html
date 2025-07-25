@@ -390,6 +390,9 @@
         this.flip = false;
         this.aimAngle = 0;
         this.fireRate = 750;
+        this.baseFireRate = this.fireRate;
+        this.doubleFire = false;
+        this.doubleFireDuration = 1500;
         this.lastPlayerShot = 0;
         this.health = 10;
         this.setBounce(0);
@@ -466,6 +469,14 @@
                 frequency: -1
             }
         );
+
+        this.on(Phaser.GameObjects.Events.DESTROY, () => 
+        {
+            if(this.doubleFireTimer)
+            {
+                 this.doubleFireTimer.remove();
+            }
+        });
     }
 
     preUpdate(time, delta)
@@ -605,6 +616,29 @@
         );
       }
     }
+    
+    activateDoubleFire()
+    {
+        this.doubleFire = true;
+        
+        if(this.doubleFire === true)
+        {
+            this.fireRate = 325;
+            this.scene.anims.get('pump').frameRate = 12;
+        }
+        
+        if(this.doubleFireTimer)
+        {
+             this.doubleFireTimer.remove();
+        }
+        
+        this.doubleFireTimer = this.scene.time.delayedCall(this.doubleFireDuration, () => 
+        {
+            this.doubleFire = false;
+            this.fireRate = this.baseFireRate;
+            this.scene.anims.get('pump').frameRate = 6; 
+        });
+    }
   }
 
   class eye extends Phaser.Physics.Arcade.Sprite
@@ -649,7 +683,7 @@
             scene.physics.add.collider(this, scene.ground);
         }
         
-        if(scene.playerBulletsHolder)
+        /*if(scene.playerBulletsHolder)
         {
             scene.physics.add.overlap(this, scene.playerBulletsHolder, (eye, bullet) =>
             {
@@ -658,23 +692,21 @@
                 eye.destroy();
                 if(scene.player)
                 {
-                    scene.player.fireRate = 325;
-                    scene.anims.get('pump').frameRate = 12;
+                    this.player.doubleFire = true;
                 }
             });
-        }
+        }*/
     }
     
     preUpdate(time, delta)
     {
-        if(this.player.x > this.x)
+        /*if(this.player.x > this.x)
         {
             this.explode.emitParticleAt(this.x, this.y);
             this.scene.sound.play('powerup');
-            this.player.fireRate = 325;
-            this.scene.anims.get('pump').frameRate = 12;
+            this.player.doubleFire = true;
             this.destroy();
-        }
+        }*/
     }
 }
 
@@ -1076,6 +1108,7 @@ class skull extends Phaser.Physics.Arcade.Sprite
           else
           {
               scene.sound.play('block');
+              player.activateDoubleFire();
           }
           orb.destroy();
         });
@@ -1196,7 +1229,6 @@ class skull extends Phaser.Physics.Arcade.Sprite
         {
             scene.grasstop.setTint(color);
         }
-        
         if(scene.wheat)
         {
             scene.wheat.setTint(color);
@@ -1274,8 +1306,6 @@ class skull extends Phaser.Physics.Arcade.Sprite
         //START PLAYER SETUP Level1Game
 
         
-        
-        
         createPlayer(this, 32, this.sys.game.config.height - 24);
 
 
@@ -1286,19 +1316,19 @@ class skull extends Phaser.Physics.Arcade.Sprite
         
         const cultPositions = 
         [
-          { x: 750, y: 100 },
-          { x: 1050, y: 100 },
-          { x: 1100, y: 100 }
+            { x: 750, y: 100 },
+            { x: 1050, y: 100 },
+            { x: 1100, y: 100 }
         ];
         
         cultCreator(this, cultPositions);
         
         const cultKnifePositions = 
         [
-          { x: 500, y: 100 },
-          { x: 625, y: 100 },
-          { x: 650, y: 100 },
-          { x: 1000, y: 100 }
+            { x: 500, y: 100 },
+            { x: 625, y: 100 },
+            { x: 650, y: 100 },
+            { x: 1000, y: 100 }
         ];
         
         cultKnifeCreator(this, cultKnifePositions);
@@ -1421,7 +1451,6 @@ class skull extends Phaser.Physics.Arcade.Sprite
         createLevelProps(this);
        
         
-        
         //END PROPS BEFORE PLAYER Level2Game
 
 
@@ -1436,16 +1465,16 @@ class skull extends Phaser.Physics.Arcade.Sprite
 
         //START ENEMY SETUP Level2Game
 
+
         const cultPositions = 
         [
-          { x: 500, y: 100 },
-          { x: 500, y: 100 },
-          { x: 1500, y: 100 },
-          { x: 1500, y: 100 },
-          { x: 1500, y: 100 },
-          { x: 1500, y: 100 },
-          { x: 1500, y: 100 }
-          
+            { x: 500, y: 100 },
+            { x: 500, y: 100 },
+            { x: 1500, y: 100 },
+            { x: 1500, y: 100 },
+            { x: 1500, y: 100 },
+            { x: 1500, y: 100 },
+            { x: 1500, y: 100 }
         ];
         
         cultCreator(this, cultPositions);
@@ -1460,15 +1489,6 @@ class skull extends Phaser.Physics.Arcade.Sprite
 
         //END ENEMY SETUP Level2Game
         
-        
-        //START POWERUP SETUP Level2Game
-        
-        
-        this.eyes = new eye(this, 1000, this.sys.game.config.height - 24);
-        
-        
-        //END POWERUP SETUP Level2Game
-        
 
         //START PROPS AFTER PLAYER Level2Game
         
@@ -1477,11 +1497,11 @@ class skull extends Phaser.Physics.Arcade.Sprite
 
         this.grasstop = this.add.tileSprite
         (
-                0,
-                this.sys.game.config.height - this.ground.height,
-                worldWidthX,
-                16,
-                'grasstop'
+            0,
+            this.sys.game.config.height - this.ground.height,
+            worldWidthX,
+            16,
+            'grasstop'
         );
         this.grasstop.setOrigin(0, 1);
 
@@ -1508,13 +1528,13 @@ class skull extends Phaser.Physics.Arcade.Sprite
 
     update(time, delta)
     {
-      if(this.player.health < 1)
-      {
-        this.scene.stop('Level2Game');
-        this.scene.start('Level2Game');
-      }
-      
-      cultSeparation(this.cults, this.player);
+        if(this.player.health < 1)
+        {
+            this.scene.stop('Level2Game');
+            this.scene.start('Level2Game');
+        }
+
+        cultSeparation(this.cults, this.player);
     }
   }
 
@@ -1528,7 +1548,7 @@ class skull extends Phaser.Physics.Arcade.Sprite
 
     create()
     {
-      //START BASIC SETUP Level3Game
+        //START BASIC SETUP Level3Game
 
 
         const worldWidthX = 1450;
@@ -1561,11 +1581,11 @@ class skull extends Phaser.Physics.Arcade.Sprite
 
         this.ground = this.add.tileSprite
         (
-                -worldWidthX,
-                this.sys.game.config.height,
-                worldWidthX * 3,
-                16,
-                'ground'
+            -worldWidthX,
+            this.sys.game.config.height,
+            worldWidthX * 3,
+            16,
+            'ground'
         );
 
         this.ground.setOrigin(0, 1);
@@ -1589,11 +1609,11 @@ class skull extends Phaser.Physics.Arcade.Sprite
 
         //START ENEMY SETUP Level3Game
 
+
         const cultPositions = 
         [
-          { x: 500, y: 100 },
-          { x: 1200, y: 100 }
-          
+            { x: 500, y: 100 },
+            { x: 1200, y: 100 }
         ];
         
         cultCreator(this, cultPositions);
@@ -1614,19 +1634,12 @@ class skull extends Phaser.Physics.Arcade.Sprite
         
         cultKnifeCreator(this, cultKnifePositions);
         
+        this.eyes = new eye(this, 200, this.sys.game.config.height - 24);
+        
         
         //END ENEMY SETUP Level3Game
         
         
-        //START POWERUP SETUP Level3Game
-        
-        
-        this.eyes = new eye(this, 200, this.sys.game.config.height - 24);
-        
-        
-        //END POWERUP SETUP Level3Game
-        
-
         //START PROPS AFTER PLAYER Level3Game
         
 
@@ -1684,7 +1697,7 @@ class skull extends Phaser.Physics.Arcade.Sprite
 
     create()
     {
-      //START BASIC SETUP Level4Game
+        //START BASIC SETUP Level4Game
 
 
         const worldWidthX = 1450;
@@ -1745,6 +1758,7 @@ class skull extends Phaser.Physics.Arcade.Sprite
 
         //START ENEMY SETUP Level4Game
 
+
         const cultPositions = 
         [
           
@@ -1759,19 +1773,12 @@ class skull extends Phaser.Physics.Arcade.Sprite
         
         cultKnifeCreator(this, cultKnifePositions);
         
+        this.eyes = new eye(this, 200, this.sys.game.config.height - 24);
+        
         
         //END ENEMY SETUP Level4Game
-        
-        
-        //START POWERUP SETUP Level4Game
-        
-        
-        //this.eyes = new eye(this, 200, this.sys.game.config.height - 24);
-        
-        
-        //END POWERUP SETUP Level4Game
-        
 
+     
         //START PROPS AFTER PLAYER Level4Game
         
 
