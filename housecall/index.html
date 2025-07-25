@@ -21,9 +21,6 @@
 <body>
 
 <script type="text/javascript">
-  var cursors;
-  var pointOnXWhereBulletsDisappear;
-
   class playerBullet extends Phaser.Physics.Arcade.Sprite
   {
     constructor(scene, x, y)
@@ -119,7 +116,6 @@
         this.health = 15;
         this.initialHealth = this.health;
         this.setBounce(0);
-        //this.setCollideWorldBounds(true);
         this.player = player;
         this.alert = false;
         this.orbs = cultOrbHolder;
@@ -280,7 +276,6 @@
         this.setVisible(true);
         this.health = 5;
         this.setBounce(0);
-        //this.setCollideWorldBounds(true);
         this.player = player;
         this.alert = false;
         this.flip = true;
@@ -466,11 +461,11 @@
         this.destroy();
       }
 
-      if((this.wasd.a.isDown || cursors.left.isDown))
+      if((this.wasd.a.isDown || this.scene.cursors.left.isDown))
       {
         this.setVelocityX(-120);
       }
-      else if((this.wasd.d.isDown || cursors.right.isDown))
+      else if((this.wasd.d.isDown || this.scene.cursors.right.isDown))
       {
         this.setVelocityX(120);
       }
@@ -479,7 +474,7 @@
         this.setVelocityX(0);
       }
 
-      if((this.wasd.space.isDown || this.wasd.w.isDown || cursors.up.isDown) && this.body.touching.down)
+      if((this.wasd.space.isDown || this.wasd.w.isDown || this.scene.cursors.up.isDown) && this.body.touching.down)
       {
         this.setVelocityY(-120);
       }
@@ -644,7 +639,22 @@
     }
 }
 
-  
+class skull extends Phaser.Physics.Arcade.Sprite
+  {
+        constructor(scene, x, y, player)
+        {
+            super(scene, x, y, 'skull');
+            scene.add.existing(this);
+            scene.physics.add.existing(this);
+            this.setActive(true);
+            this.setVisible(true);
+            
+            if(scene.ground)
+            {
+                scene.physics.add.collider(this, scene.ground);
+            }
+        }
+    }
   class pipeNext extends Phaser.Physics.Arcade.Sprite
   {
       constructor(scene, x, y, key) 
@@ -724,6 +734,7 @@
         this.load.image('raindrop', 'assets/raindrop.png');
         this.load.image('bloodrain', 'assets/bloodrain.png');
         this.load.image('redsky', 'assets/redsky.png');
+        this.load.image('skull', 'assets/skull.png');
 
         this.load.audio('shotgunshot', 
         [
@@ -772,9 +783,8 @@
     create ()
     {
       this.physics.world.setBounds(0, 0, this.sys.game.config.width, 176);
-      pointOnXWhereBulletsDisappear = this.sys.game.config.width;
       
-      cursors = this.input.keyboard.createCursorKeys();
+      this.cursors = this.input.keyboard.createCursorKeys();
 
       this.sky = this.add.tileSprite(0, 0, this.sys.game.config.width * 3, this.sys.game.config.height, 'sky').setOrigin(0, 0);
       this.sky.setScrollFactor(0.1);
@@ -875,6 +885,7 @@
       this.levelSelect.setInteractive({cursor: 'pointer'});
       this.levelSelect.on('pointerdown', () =>
       {
+        this.scene.stop('MainMenu');
         this.scene.start('Level1Game');
       });
     }
@@ -1106,6 +1117,39 @@
         scene.rain.start();
         scene.rain.setScrollFactor(0);
   }
+  
+  function filterColors(scene, color)
+  {
+        if(scene.shed)
+        {
+            scene.shed.setTint(color);
+        }
+        if(scene.fence)
+        {
+            scene.fence.setTint(color);
+        }
+        if(scene.couch)
+        {
+            scene.couch.setTint(color);
+        }
+        if(scene.grill)
+        {
+            scene.grill.setTint(color);
+        }
+        if(scene.ground)
+        {
+            scene.ground.setTint(color);
+        }
+        if(scene.grasstop)
+        {
+            scene.grasstop.setTint(color);
+        }
+        
+        if(scene.wheat)
+        {
+            scene.wheat.setTint(color);
+        }
+  }
 
   class Level1Game extends Phaser.Scene
   {
@@ -1126,8 +1170,7 @@
 
         const worldWidthX = 1800;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
-        pointOnXWhereBulletsDisappear = worldWidthX;
-        cursors = this.input.keyboard.createCursorKeys();
+        this.cursors = this.input.keyboard.createCursorKeys();
 
 
         //END BASIC SETUP Level1Game
@@ -1145,27 +1188,16 @@
         this.scarecrow = this.add.image(500, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
         this.scarecrow.setScrollFactor(0.4);
 
-        const wheatLayers =
-        [
-          { yOffset: 15, scrollFactor: 0.575 }
-        ];
-
-        this.wheatOffSet = 0;
-        wheatLayers.forEach((layerConfig, index) =>
-        {
-          const wheatLayer = this.add.tileSprite
-          (
+        this.wheat = this.add.tileSprite
+        (
             0,
-            176 - layerConfig.yOffset,
+            176 - 16,
             worldWidthX,
             16,
             'wheat'
-          );
-          wheatLayer.setOrigin(0, 1);
-          wheatLayer.setScrollFactor(layerConfig.scrollFactor);
-          wheatLayer.tilePositionY += this.wheatOffSet;
-          this.wheatOffSet += 1;
-        });
+        );
+        this.wheat.setOrigin(0, 1);
+        this.wheat.setScrollFactor(0.575);
 
         this.ground = this.add.tileSprite
         (
@@ -1181,28 +1213,7 @@
         this.ground.body.setImmovable(true);
         this.ground.body.allowGravity = false;
 
-        this.shed = this.add.image(75, this.sys.game.config.height - this.ground.height, 'shed');
-        this.shed.setOrigin(0, 1);
-        this.shed.setScrollFactor(0.65);
-
-        this.fence = this.add.tileSprite
-        (
-          0,
-          this.sys.game.config.height - this.ground.height,
-          148,
-          16,
-          'fence'
-        );
-        this.fence.setScrollFactor(0.75);
-        this.fence.setOrigin(0, 1);
-
-        this.couch = this.add.image(45, this.sys.game.config.height - this.ground.height, 'couch');
-        this.couch.setScrollFactor(0.8);
-        this.couch.setOrigin(0, 1);
-
-        this.grill = this.add.image(15, this.sys.game.config.height - this.ground.height, 'grill');
-        this.grill.setScrollFactor(0.8);
-        this.grill.setOrigin(0, 1);
+        createLevelProps(this);
 
 
         //END PROPS BEFORE PLAYER Level1Game
@@ -1267,7 +1278,7 @@
         this.physics.add.collider(this.tractor, this.ground);
         this.physics.add.collider(this.tractor, this.player);
         
-      
+        
         //END PROPS AFTER PLAYER Level1Game
         
         
@@ -1286,6 +1297,7 @@
     {
       if(this.player.health < 1)
       {
+        this.scene.stop('Level1Game');
         this.scene.start('Level1Game');
       }
 
@@ -1312,8 +1324,7 @@
 
         const worldWidthX = 2000;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
-        pointOnXWhereBulletsDisappear = worldWidthX;
-        cursors = this.input.keyboard.createCursorKeys();
+        this.cursors = this.input.keyboard.createCursorKeys();
 
 
         //END BASIC SETUP Level2Game
@@ -1329,27 +1340,16 @@
         this.scarecrow = this.add.image(400, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
         this.scarecrow.setScrollFactor(0.4);
         
-        const wheatLayers =
-                [
-                  { yOffset: 15, scrollFactor: 0.575 }
-                ];
-
-        this.wheatOffSet = 0;
-        wheatLayers.forEach((layerConfig, index) =>
-        {
-          const wheatLayer = this.add.tileSprite
-          (
-                  0,
-                  176 - layerConfig.yOffset,
-                  worldWidthX,
-                  16,
-                  'wheat'
-          );
-          wheatLayer.setOrigin(0, 1);
-          wheatLayer.setScrollFactor(layerConfig.scrollFactor);
-          wheatLayer.tilePositionY += this.wheatOffSet;
-          this.wheatOffSet += 1;
-        });
+        this.wheat = this.add.tileSprite
+        (
+            0,
+            176 - 16,
+            worldWidthX,
+            16,
+            'wheat'
+        );
+        this.wheat.setOrigin(0, 1);
+        this.wheat.setScrollFactor(0.575);
 
         this.ground = this.add.tileSprite
         (
@@ -1364,8 +1364,12 @@
         this.physics.add.existing(this.ground);
         this.ground.body.setImmovable(true);
         this.ground.body.allowGravity = false;
+        this.ground.setTint(0xd1e0e0);
 
         createLevelProps(this);
+       
+        
+        
         //END PROPS BEFORE PLAYER Level2Game
 
 
@@ -1433,6 +1437,8 @@
         
         makeRain(this, 'raindrop');
         
+        filterColors(this, 0xd1e0e0);
+        
         
         //END PROPS AFTER PLAYER Level2Game
 
@@ -1452,6 +1458,7 @@
     {
       if(this.player.health < 1)
       {
+        this.scene.stop('Level2Game');
         this.scene.start('Level2Game');
       }
       
@@ -1472,10 +1479,9 @@
       //START BASIC SETUP Level3Game
 
 
-        const worldWidthX = 2000;
+        const worldWidthX = 1450;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
-        pointOnXWhereBulletsDisappear = worldWidthX;
-        cursors = this.input.keyboard.createCursorKeys();
+        this.cursors = this.input.keyboard.createCursorKeys();
 
 
         //END BASIC SETUP Level3Game
@@ -1487,28 +1493,20 @@
         this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'sky').setOrigin(0, 0);
         this.sky.setScrollFactor(0.1);
         this.sky.postFX.addColorMatrix().grayscale(1);
+        
+        this.scarecrow = this.add.image(700, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        this.scarecrow.setScrollFactor(0.4);
 
-        const wheatLayers =
-                [
-                  { yOffset: 15, scrollFactor: 0.575 }
-                ];
-
-        this.wheatOffSet = 0;
-        wheatLayers.forEach((layerConfig, index) =>
-        {
-          const wheatLayer = this.add.tileSprite
-          (
-                  0,
-                  176 - layerConfig.yOffset,
-                  worldWidthX,
-                  16,
-                  'wheat'
-          );
-          wheatLayer.setOrigin(0, 1);
-          wheatLayer.setScrollFactor(layerConfig.scrollFactor);
-          wheatLayer.tilePositionY += this.wheatOffSet;
-          this.wheatOffSet += 1;
-        });
+        this.wheat = this.add.tileSprite
+        (
+            0,
+            176 - 16,
+            worldWidthX,
+            16,
+            'wheat'
+        );
+        this.wheat.setOrigin(0, 1);
+        this.wheat.setScrollFactor(0.575);
 
         this.ground = this.add.tileSprite
         (
@@ -1524,6 +1522,7 @@
         this.ground.body.setImmovable(true);
         this.ground.body.allowGravity = false;
         createLevelProps(this);
+     
 
         //END PROPS BEFORE PLAYER Level3Game
 
@@ -1563,8 +1562,8 @@
         ];
         
         cultKnifeCreator(this, cultKnifePositions);
-
-
+        
+        
         //END ENEMY SETUP Level3Game
         
         
@@ -1580,7 +1579,7 @@
         //START PROPS AFTER PLAYER Level3Game
         
 
-        this.pipe = new pipeNext(this, 1950, this.sys.game.config.height - this.ground.height, 'Level3Game');
+        this.pipe = new pipeNext(this, 1400, this.sys.game.config.height - this.ground.height, 'Level4Game');
 
         this.grasstop = this.add.tileSprite
         (
@@ -1591,10 +1590,12 @@
                 'grasstop'
         );
         this.grasstop.setOrigin(0, 1);
-
+        
         this.physics.add.collider(this.player, this.ground);
         
         makeRain(this, 'bloodrain');
+        
+        filterColors(this, 0xffcccc);
         
         
         //END PROPS AFTER PLAYER Level3Game
@@ -1615,12 +1616,157 @@
     {
       if(this.player.health < 1)
       {
+        this.scene.stop('Level3Game');
         this.scene.start('Level3Game');
       }
       
       cultSeparation(this.cults, this.player);
     }
   }
+  
+  class Level4Game extends Phaser.Scene
+  {
+    constructor()
+    {
+      super({key: 'Level4Game'});
+    }
+
+    create()
+    {
+      //START BASIC SETUP Level4Game
+
+
+        const worldWidthX = 1450;
+        this.physics.world.setBounds(0, 0, worldWidthX, 176);
+        this.cursors = this.input.keyboard.createCursorKeys();
+
+
+        //END BASIC SETUP Level4Game
+
+
+        //START PROPS BEFORE PLAYER Level4Game
+
+
+        this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'redsky').setOrigin(0, 0);
+        this.sky.setScrollFactor(0.1);
+        
+        this.scarecrow = this.add.image(200, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        this.scarecrow.setScrollFactor(0.4);
+
+        this.wheat = this.add.tileSprite
+        (
+            0,
+            176 - 16,
+            worldWidthX,
+            16,
+            'wheat'
+        );
+        this.wheat.setOrigin(0, 1);
+        this.wheat.setScrollFactor(0.575);
+
+        this.ground = this.add.tileSprite
+        (
+                -worldWidthX,
+                this.sys.game.config.height,
+                worldWidthX * 3,
+                16,
+                'ground'
+        );
+
+        this.ground.setOrigin(0, 1);
+        this.physics.add.existing(this.ground);
+        this.ground.body.setImmovable(true);
+        this.ground.body.allowGravity = false;
+        createLevelProps(this);
+     
+
+        //END PROPS BEFORE PLAYER Level4Game
+
+
+        //START PLAYER SETUP Level4Game
+
+
+        createPlayer(this, 32, this.sys.game.config.height - 24);
+
+
+        //END PLAYER SETUP Level4Game
+
+
+        //START ENEMY SETUP Level4Game
+
+        const cultPositions = 
+        [
+          
+        ];
+        
+        cultCreator(this, cultPositions);
+        
+        const cultKnifePositions = 
+        [
+           
+        ];
+        
+        cultKnifeCreator(this, cultKnifePositions);
+        
+        
+        //END ENEMY SETUP Level4Game
+        
+        
+        //START POWERUP SETUP Level4Game
+        
+        
+        //this.eyes = new eye(this, 200, this.sys.game.config.height - 24);
+        
+        
+        //END POWERUP SETUP Level4Game
+        
+
+        //START PROPS AFTER PLAYER Level4Game
+        
+
+        this.pipe = new pipeNext(this, 1400, this.sys.game.config.height - this.ground.height, 'MainMenu');
+
+        this.grasstop = this.add.tileSprite
+        (
+                0,
+                this.sys.game.config.height - this.ground.height,
+                worldWidthX,
+                16,
+                'grasstop'
+        );
+        this.grasstop.setOrigin(0, 1);
+        
+        this.physics.add.collider(this.player, this.ground);
+        
+        filterColors(this, 0xff9999);
+        
+        
+        //END PROPS AFTER PLAYER Level4Game
+
+
+        //START CAMERA SETUP Level4Game
+
+
+        this.cameras.main.setBounds(0, 0, worldWidthX, 176);
+        this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
+        this.cameras.main.setZoom(1);
+
+
+        //END CAMERA SETUP Level4Game
+    }
+    
+    update(time, delta)
+    {
+      if(this.player.health < 1)
+      {
+        this.scene.stop('Level4Game');
+        this.scene.start('Level4Game');
+      }
+      
+      cultSeparation(this.cults, this.player);
+    }
+  }
+  
   const config =
   {
     type: Phaser.AUTO,
@@ -1650,7 +1796,8 @@
       MainMenu,
       Level1Game,
       Level2Game,
-      Level3Game
+      Level3Game,
+      Level4Game
     ]
   };
 
