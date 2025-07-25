@@ -395,6 +395,9 @@
         this.setBounce(0);
         this.setCollideWorldBounds(true);
         this.scene = scene;
+        this.lastPlayerBlock = 0;
+        this.blockRate = 750;
+        this.block = false;
 
         this.wasd =
         {
@@ -402,7 +405,8 @@
           w: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
           s: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
           a: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
-          d: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
+          d: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
+          shift: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT)
         };
 
         this.mouseRef = scene.input;
@@ -415,6 +419,20 @@
             key: 'pump',
             frames: scene.anims.generateFrameNumbers('player', { start: 1, end: 0 }),
             frameRate: 6,
+            repeat: 0
+          });
+        }
+        
+        if(!scene.anims.get('block'))
+        {
+          scene.anims.create
+          ({
+            key: 'block',
+            frames: [
+                     { key: 'player', frame: 2 },
+                     { key: 'player', frame: 0 }
+                    ],
+            frameRate: 2,
             repeat: 0
           });
         }
@@ -460,6 +478,8 @@
         this.setVisible(false);
         this.destroy();
       }
+      
+      this.checkBlock(time);
 
       if((this.wasd.a.isDown || this.scene.cursors.left.isDown))
       {
@@ -478,7 +498,7 @@
       {
         this.setVelocityY(-120);
       }
-
+      
       this.flipPlayer(this.scene.input.activePointer);
       this.scene.input.activePointer.updateWorldPoint(this.scene.cameras.main);
       this.updateAimAngle(this.scene.input.activePointer);
@@ -527,6 +547,25 @@
         this.play("pump", true);
         this.shellEmitter.emitParticleAt(this.x, this.y);
       }
+    }
+    
+    checkBlock(time)
+    {
+        if(this.wasd.shift.isDown && time > this.lastPlayerBlock + this.blockRate)
+        {
+          this.play("block", true);
+
+          this.lastPlayerBlock = time;
+        }
+      
+        if(this.anims.isPlaying && this.anims.currentAnim.key === 'block' && this.anims.currentFrame.index === 1)
+        {
+            this.block = true;
+        }
+        else
+        {
+            this.block = false;
+        }
     }
 
     flipPlayer(pointer)
@@ -755,6 +794,11 @@ class skull extends Phaser.Physics.Arcade.Sprite
         this.load.audio('powerup', 
         [
             'assets/powerup.wav'
+        ]);
+        
+        this.load.audio('block', 
+        [
+            'assets/block.wav'
         ]);
     }
 
@@ -1025,7 +1069,14 @@ class skull extends Phaser.Physics.Arcade.Sprite
         });
         scene.physics.add.collider(scene.player, scene.cultOrbHolder, (player, orb) =>
         {
-          player.health -= 10;
+          if(!player.block)
+          {
+              player.health -= 10;
+          }
+          else
+          {
+              scene.sound.play('block');
+          }
           orb.destroy();
         });
         
