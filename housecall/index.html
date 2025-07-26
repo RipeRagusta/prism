@@ -23,9 +23,9 @@
 <script type="text/javascript">
   class playerBullet extends Phaser.Physics.Arcade.Sprite
   {
-    constructor(scene, x, y)
+    constructor(scene, x, y, texture)
     {
-      super(scene, x, y, 'bullet');
+      super(scene, x, y, texture);
       this.speed = 400;
       this.setActive(false);
       this.setVisible(false);
@@ -401,6 +401,7 @@
         this.lastPlayerBlock = 0;
         this.blockRate = 750;
         this.block = false;
+        this.playerBulletsHolder = playerBulletsHolder;
 
         this.wasd =
         {
@@ -522,7 +523,9 @@
 
         for (let i = 0; i < 10; i++)
         {
-          const bullet = this.bullets.get(this.x, this.y, 'bullet');
+          const bulletType = this.doubleFire ? 'bulletcult' : 'bullet';
+          
+          const bullet = this.bullets.get(this.x, this.y, bulletType);
 
           if(bullet)
           {
@@ -636,7 +639,7 @@
         {
             this.doubleFire = false;
             this.fireRate = this.baseFireRate;
-            this.scene.anims.get('pump').frameRate = 6; 
+            this.scene.anims.get('pump').frameRate = 6;
         });
     }
   }
@@ -749,7 +752,6 @@ class skull extends Phaser.Physics.Arcade.Sprite
             });
         }
         scene.stab = scene.add.sprite(this.pipe.x, this.pipe.y, "stab").setOrigin(0, 1);
-        scene.stab.play("stabAnim", true);
         scene.stab.setActive(false);
         scene.stab.setVisible(false);
         
@@ -758,7 +760,20 @@ class skull extends Phaser.Physics.Arcade.Sprite
           player.destroy();
           scene.stab.setActive(true);
           scene.stab.setVisible(true);
+          scene.sound.play('powerup');
+          
+          scene.stab.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
+            {
+                if(frame.index === 2) 
+                {
+                    scene.sound.play('stab');
+                }
+            });
+        
+          scene.stab.play("stabAnim", true);
         });
+        
+        
 
         scene.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => 
         {
@@ -807,6 +822,7 @@ class skull extends Phaser.Physics.Arcade.Sprite
         this.load.image('redsky', 'assets/redsky.png');
         this.load.image('skull', 'assets/skull.png');
         this.load.image('redskyrain', 'assets/redskyrain.png');
+        this.load.image('bulletcult', 'assets/bulletcult.png');
 
         this.load.audio('shotgunshot', 
         [
@@ -831,6 +847,11 @@ class skull extends Phaser.Physics.Arcade.Sprite
         this.load.audio('block', 
         [
             'assets/block.wav'
+        ]);
+        
+        this.load.audio('stab', 
+        [
+            'assets/stab.wav'
         ]);
     }
 
