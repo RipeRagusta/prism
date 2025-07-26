@@ -471,6 +471,36 @@
             }
         );
 
+        this.orbDestory = this.scene.add.particles
+        (
+            0, 0, 
+            'bulletcult',
+            {
+                angle: 
+                {
+                    onEmit: () => 
+                    {
+                        if(this.flip === true)
+                        {
+                            return  Phaser.Math.Between(135, 225);
+                        }
+                        else
+                        {
+                            return Phaser.Math.Between(-45, 45);
+                        }
+                    }
+                }, 
+                speed: { min: 200, max: 200 },
+                gravityY: 0,
+                lifespan: { min: 1000, max: 1000 },
+                quantity: 4,
+                scale: { start: 1, end: 1 },
+                alpha: { start: 1, end: 0 },
+                blendMode: 'NORMAL',
+                frequency: -1
+            }
+        );
+
         this.on(Phaser.GameObjects.Events.DESTROY, () => 
         {
             if(this.doubleFireTimer)
@@ -515,7 +545,7 @@
       this.scene.input.activePointer.updateWorldPoint(this.scene.cameras.main);
       this.updateAimAngle(this.scene.input.activePointer);
 
-      if(this.mouseRef.activePointer.isDown && time > this.lastPlayerShot + this.fireRate)
+      if(this.mouseRef.activePointer.isDown && time > this.lastPlayerShot + this.fireRate && this.mouseRef.activePointer.leftButtonDown())
       {
         this.mouseRef.mouse.disableContextMenu();
 
@@ -529,19 +559,6 @@
 
           if(bullet)
           {
-            if(this.mouseRef.activePointer.rightButtonDown())
-            {
-              if(this.flip === false)
-              {
-                bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), 0 + Phaser.Math.DegToRad(offset));
-              }
-              else
-              {
-                bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(180) + Phaser.Math.DegToRad(offset));
-              }
-            }
-            else
-            {
               if(this.flip === false)
               {
                 bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
@@ -550,8 +567,6 @@
               {
                 bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
               }
-            }
-
             offset += 2.5;
           }
         }
@@ -561,6 +576,25 @@
         this.play("pump", true);
         this.shellEmitter.emitParticleAt(this.x, this.y);
       }
+      
+      if(this.mouseRef.activePointer.isDown && time > this.lastPlayerBlock + this.blockRate && this.mouseRef.activePointer.rightButtonDown())
+      {
+          this.mouseRef.mouse.disableContextMenu();
+          this.play("block", true);
+          this.lastPlayerBlock = time;
+      }
+    }
+    
+    defenceParticles()
+    {
+        if(this.flip === false)
+        {
+            this.orbDestory.emitParticleAt(this.x + 6, this.y);
+        }
+        else
+        {
+             this.orbDestory.emitParticleAt(this.x - 6, this.y);
+        }
     }
     
     checkBlock(time)
@@ -1129,6 +1163,7 @@ class skull extends Phaser.Physics.Arcade.Sprite
           else
           {
               scene.sound.play('block');
+              player.defenceParticles();
               player.activateDoubleFire();
           }
           orb.destroy();
