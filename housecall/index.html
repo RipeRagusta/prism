@@ -680,7 +680,7 @@
 
   class eye extends Phaser.Physics.Arcade.Sprite
   {
-    constructor(scene, x, y, player)
+    constructor(scene, x, y, eyeOrbHolder)
     {
         super(scene, x, y, 'eye');
 
@@ -688,15 +688,19 @@
         scene.physics.add.existing(this);
         this.setActive(true);
         this.setVisible(true);
-        this.health = 5;
         this.setBounce(0);
         this.setCollideWorldBounds(true);
-        this.player = player;
-        this.alert = false;
+        this.body.setAllowGravity(false);
         this.body.allowGravity = false;
-        this.body.setImmovable(true);
+        this.health = 4;
+        this.initialHealth = this.health;
+        this.alert = false;
         this.scene = scene;
         this.player = this.scene.player;
+        this.distancePref = 100;
+        this.initalDistancePref = this.distancePref;
+        this.distanceOffset = 5;
+        this.orbs = eyeOrbHolder;
 
         this.explode = this.scene.add.particles
         (
@@ -719,31 +723,74 @@
         {
             scene.physics.add.collider(this, scene.ground);
         }
-        
-        /*if(scene.playerBulletsHolder)
-        {
-            scene.physics.add.overlap(this, scene.playerBulletsHolder, (eye, bullet) =>
-            {
-                this.explode.emitParticleAt(this.x, this.y);
-                this.scene.sound.play('powerup');
-                eye.destroy();
-                if(scene.player)
-                {
-                    this.player.doubleFire = true;
-                }
-            });
-        }*/
     }
     
     preUpdate(time, delta)
     {
-        /*if(this.player.x > this.x)
+        if(this.health < 1)
         {
             this.explode.emitParticleAt(this.x, this.y);
-            this.scene.sound.play('powerup');
-            this.player.doubleFire = true;
+            this.scene.sound.play('hurt');
             this.destroy();
-        }*/
+        }
+        else
+        {
+            this.checkInRange();
+
+            if(this.alert === true || this.health < this.initialHealth)
+            {
+              if(this.player.x < this.x && Math.abs(this.player.x - this.x) >= this.distancePref + this.distanceOffset)
+              {
+                this.setVelocityX(-110);
+              }
+              else if(this.player.x > this.x && Math.abs(this.player.x - this.x) >= this.distancePref + this.distanceOffset)
+              {
+                this.setVelocityX(110);
+              }
+              else if(Math.abs(this.player.x - this.x) >= this.distancePref - this.distanceOffset && Math.abs(this.player.x - this.x) <= this.distancePref + this.distanceOffset)
+              {
+                this.setVelocityX(0);
+              }
+              else
+              {
+                if (this.player.x < this.x)
+                {
+                  this.setVelocityX(110);
+                }
+                else
+                {
+                  this.setVelocityX(-110);
+                }
+              }
+
+              if(this.x > this.player.x)
+              {
+                this.flip = false;
+              }
+              else
+              {
+                this.flip = true;
+              }
+            }
+        }
+    }
+    
+    shoot()
+    {
+        const orb = this.orbs.get(this.x, this.y, 'cultorb');
+
+        if(orb)
+        {
+            orb.fire(this.x, this.y, Phaser.Math.Angle.Between(this.x, this.y, this.player.x, this.player.y));
+        }
+    }
+    
+    checkInRange()
+    {
+        if(this.alert === false && Math.abs(this.player.x - this.x) <= 200)
+        {
+            this.alert = true;
+        }
     }
 }
 
@@ -807,8 +854,6 @@ class skull extends Phaser.Physics.Arcade.Sprite
           scene.stab.play("stabAnim", true);
         });
         
-        
-
         scene.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => 
         {
           scene.scene.start(key);
@@ -886,6 +931,11 @@ class skull extends Phaser.Physics.Arcade.Sprite
         this.load.audio('stab', 
         [
             'assets/stab.wav'
+        ]);
+        
+        this.load.audio('eyeorb', 
+        [
+            'assets/eyeorb.wav'
         ]);
     }
 
@@ -1084,16 +1134,16 @@ class skull extends Phaser.Physics.Arcade.Sprite
       {
         cultsWithDistancesRight.push
         ({
-          cult: cult,
-          distance: distance
+            cult: cult,
+            distance: distance
         });
       }
       else
       {
         cultsWithDistancesLeft.push
         ({
-          cult: cult,
-          distance: distance
+            cult: cult,
+            distance: distance
         });
       }
     });
@@ -1156,17 +1206,17 @@ class skull extends Phaser.Physics.Arcade.Sprite
         });
         scene.physics.add.collider(scene.player, scene.cultOrbHolder, (player, orb) =>
         {
-          if(!player.block)
-          {
-              player.health -= 10;
-          }
-          else
-          {
-              scene.sound.play('block');
-              player.defenceParticles();
-              player.activateDoubleFire();
-          }
-          orb.destroy();
+            if(!player.block)
+            {
+                player.health -= 10;
+            }
+            else
+            {
+                scene.sound.play('block');
+                player.defenceParticles();
+                player.activateDoubleFire();
+            }
+            orb.destroy();
         });
         
         scene.cults = scene.physics.add.group();
@@ -1232,6 +1282,136 @@ class skull extends Phaser.Physics.Arcade.Sprite
         });
         
         scene.physics.add.collider(scene.cultKnifes, scene.cultKnifes);
+  }
+  
+  function eyeCreator(scene, eyePositions)
+  {
+        scene.eyeOrbHolder = scene.physics.add.group
+        ({
+          classType: cultOrb,
+          maxSize: 30,
+          runChildUpdate: true
+        });
+        scene.physics.add.collider(scene.player, scene.eyeOrbHolder, (player, orb) =>
+        {
+          if(!player.block)
+          {
+              player.health -= 10;
+          }
+          else
+          {
+              scene.sound.play('block');
+              player.defenceParticles();
+              player.activateDoubleFire();
+          }
+          orb.destroy();
+        });
+        
+        scene.eyes = scene.physics.add.group
+        ({
+            immovable: true,
+            allowGravity: false
+        });
+
+        eyePositions.forEach(pos =>
+        {
+            const eyeInstance = new eye(scene, pos.x, pos.y, scene.eyeOrbHolder);
+            scene.eyes.add(eyeInstance);
+        });
+
+        if(scene.ground)
+        {
+            scene.physics.add.collider(scene.cultKnifes, scene.ground);
+        }
+        
+        scene.physics.add.overlap(scene.eyes, scene.playerBulletsHolder, (eye, bullet) =>
+        {
+          eye.health -= 1;
+          bullet.destroy();
+        });
+        
+        scene.time.addEvent
+        ({
+            delay: 1500,
+            callback: () => eyeSynchro(scene, scene.eyes),
+            callbackScope: this,
+            loop: true
+        });
+  }
+  
+  function eyeSeparation(eyes, player)
+  {
+    let eyesWithDistancesRight = [];
+    let eyesWithDistancesLeft = [];
+
+    eyes.children.entries.forEach(eye =>
+    {
+      let distance = Phaser.Math.Distance.Between(player.x, player.y, eye.x, eye.y);
+
+      if(player.x < eye.x)
+      {
+        eyesWithDistancesRight.push
+        ({
+            eye: eye,
+            distance: distance
+        });
+      }
+      else
+      {
+        eyesWithDistancesLeft.push
+        ({
+            eye: eye,
+            distance: distance
+        });
+      }
+    });
+
+    eyesWithDistancesRight.sort((a, b) =>
+    {
+      return a.distance - b.distance;
+    });
+
+    eyesWithDistancesLeft.sort((a, b) =>
+    {
+      return a.distance - b.distance;
+    });
+
+    let newDistanceAdderRight = 0;
+    eyesWithDistancesRight.forEach(item =>
+    {
+      item.eye.distancePref = item.eye.initalDistancePref + newDistanceAdderRight;
+      newDistanceAdderRight += 32;
+    });
+
+    let newDistanceAdderLeft = 0;
+    eyesWithDistancesLeft.forEach(item =>
+    {
+      item.eye.distancePref = item.eye.initalDistancePref + newDistanceAdderLeft;
+      newDistanceAdderLeft += 32;
+    });
+  }
+  
+  function eyeSynchro(scene, eyes)
+  {
+        let anEyeAcvite = false;
+        
+        eyes.children.entries.forEach(eye => 
+        {
+            if(eye.alert && (eye.visible))
+            {
+                eye.shoot();
+                
+                if(!anEyeAcvite)
+                {
+                    anEyeAcvite = !anEyeAcvite;
+                }
+            }
+        });
+        
+        if(anEyeAcvite)
+        {
+            scene.sound.play('eyeorb');
+        }
   }
   
   function makeRain(scene, texture)
@@ -1388,8 +1568,16 @@ class skull extends Phaser.Physics.Arcade.Sprite
         ];
         
         cultKnifeCreator(this, cultKnifePositions);
-      
-      
+        
+        const eyePositions = 
+        [
+            //{ x: 200, y: 100 },
+            //{ x: 200, y: 100 }
+        ];
+        
+        eyeCreator(this, eyePositions);
+        
+        //this.eyes = new eye(this, 200, this.sys.game.config.height - 24);
         //END ENEMY SETUP Level1Game
       
         
@@ -1440,6 +1628,7 @@ class skull extends Phaser.Physics.Arcade.Sprite
       }
 
       cultSeparation(this.cults, this.player);
+      //eyeSeparation(this.eyes, this.player);
     }
   }
 
@@ -1526,6 +1715,8 @@ class skull extends Phaser.Physics.Arcade.Sprite
         [
             { x: 500, y: 100 },
             { x: 500, y: 100 },
+            { x: 1000, y: 100 },
+            { x: 1000, y: 100 },
             { x: 1500, y: 100 },
             { x: 1500, y: 100 },
             { x: 1500, y: 100 },
@@ -1587,10 +1778,11 @@ class skull extends Phaser.Physics.Arcade.Sprite
         if(this.player.health < 1)
         {
             this.scene.stop('Level2Game');
-            this.scene.start('Level2Game');
+            this.scene.start('Level1Game');
         }
 
         cultSeparation(this.cults, this.player);
+        //eyeSeparation(this.eyes, this.player);
     }
   }
 
@@ -1690,7 +1882,13 @@ class skull extends Phaser.Physics.Arcade.Sprite
         
         cultKnifeCreator(this, cultKnifePositions);
         
-        this.eyes = new eye(this, 200, this.sys.game.config.height - 24);
+        const eyePositions = 
+        [
+            { x: 500, y: 100 },
+            { x: 1200, y: 100 }
+        ];
+        
+        eyeCreator(this, eyePositions);
         
         
         //END ENEMY SETUP Level3Game
@@ -1737,10 +1935,11 @@ class skull extends Phaser.Physics.Arcade.Sprite
       if(this.player.health < 1)
       {
         this.scene.stop('Level3Game');
-        this.scene.start('Level3Game');
+        this.scene.start('Level2Game');
       }
       
       cultSeparation(this.cults, this.player);
+      eyeSeparation(this.eyes, this.player);
     }
   }
   
@@ -1756,7 +1955,7 @@ class skull extends Phaser.Physics.Arcade.Sprite
         //START BASIC SETUP Level4Game
 
 
-        const worldWidthX = 1450;
+        const worldWidthX = 2000;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -1817,19 +2016,47 @@ class skull extends Phaser.Physics.Arcade.Sprite
 
         const cultPositions = 
         [
-          
+          { x: 600, y: 100 },
+          { x: 600, y: 100 },
+          { x: 600, y: 100 },
+          { x: 600, y: 100 },
+          { x: 600, y: 100 },
+          { x: 600, y: 100 },
+          { x: 900, y: 100 },
+          { x: 1000, y: 100 },
+          { x: 1500, y: 100 },
+          { x: 1500, y: 100 },
+          { x: 1500, y: 100 },
+          { x: 1500, y: 100 },
+          { x: 1500, y: 100 },
+          { x: 1500, y: 100 }
         ];
         
         cultCreator(this, cultPositions);
         
         const cultKnifePositions = 
         [
-           
+            { x: -150, y: 100 },
+            { x: 400, y: 100 },
+            { x: 700, y: 100 },
+            { x: 800, y: 100 },
+            { x: 900, y: 100 }
         ];
         
         cultKnifeCreator(this, cultKnifePositions);
         
-        this.eyes = new eye(this, 200, this.sys.game.config.height - 24);
+        const eyePositions = 
+        [
+            { x: 600, y: 100 },
+            { x: 600, y: 100 },
+            { x: 600, y: 100 },
+            { x: 900, y: 100 },
+            { x: 1500, y: 100 },
+            { x: 1500, y: 100 },
+            { x: 1500, y: 100 },
+        ];
+        
+        eyeCreator(this, eyePositions);
         
         
         //END ENEMY SETUP Level4Game
@@ -1838,7 +2065,7 @@ class skull extends Phaser.Physics.Arcade.Sprite
         //START PROPS AFTER PLAYER Level4Game
         
 
-        this.pipe = new pipeNext(this, 1400, this.sys.game.config.height - this.ground.height, 'MainMenu');
+        this.pipe = new pipeNext(this, 1950, this.sys.game.config.height - this.ground.height, 'MainMenu');
 
         this.grasstop = this.add.tileSprite
         (
@@ -1874,10 +2101,11 @@ class skull extends Phaser.Physics.Arcade.Sprite
       if(this.player.health < 1)
       {
         this.scene.stop('Level4Game');
-        this.scene.start('Level4Game');
+        this.scene.start('Level3Game');
       }
       
       cultSeparation(this.cults, this.player);
+      eyeSeparation(this.eyes, this.player);
     }
   }
   
