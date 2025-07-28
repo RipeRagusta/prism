@@ -102,6 +102,47 @@
       this.destroy();
     }
   }
+  
+  /*class eyeOrb extends Phaser.Physics.Arcade.Sprite
+  {
+      constructor(scene, x, y)
+    {
+      super(scene, x, y, 'cultorb');
+      this.speed = 200;
+      this.setActive(false);
+      this.setVisible(false);
+    }
+
+    fire(x, y, angle, playerMomentumX)
+    {
+      this.body.reset(x, y);
+      this.setActive(true);
+      this.setVisible(true);
+      this.setRotation(angle);
+      this.scene.physics.velocityFromRotation(angle, this.speed + playerMomentumX, this.body.velocity);
+      this.body.allowGravity = false;
+      this.originX = x;
+    }
+
+    preUpdate(time, delta)
+    {
+      super.preUpdate(time, delta);
+
+      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x > this.originX + 1000 || this.x < this.originX - 1000)
+      {
+        this.setActive(false);
+        this.setVisible(false);
+        this.destroy();
+      }
+    }
+
+    collided()
+    {
+      this.setActive(false);
+      this.setVisible(false);
+      this.destroy();
+    }
+  }*/
 
   class cult extends Phaser.Physics.Arcade.Sprite
   {
@@ -122,7 +163,7 @@
         this.distancePref = 100;
         this.initalDistancePref = this.distancePref;
         this.distanceOffset = 5;
-        this.flip = true;
+        this.flip = false;
         this.scene = scene;
       
         if(!scene.anims.get('orbThrow'))
@@ -261,6 +302,11 @@
 
             this.play('orbThrow', false);
         }
+    }
+    
+    buddah()
+    {
+        this.health = Number.MAX_SAFE_INTEGER;
     }
   }
 
@@ -676,6 +722,11 @@
             this.scene.anims.get('pump').frameRate = 6;
         });
     }
+    
+    buddah()
+    {
+        this.health = Number.MAX_SAFE_INTEGER;
+    }
   }
 
   class eye extends Phaser.Physics.Arcade.Sprite
@@ -937,6 +988,11 @@ class skull extends Phaser.Physics.Arcade.Sprite
         [
             'assets/eyeorb.wav'
         ]);
+        
+        this.load.audio('mainmenu', 
+        [
+            'assets/mainmenu.wav'
+        ]);
     }
 
     create()
@@ -964,117 +1020,254 @@ class skull extends Phaser.Physics.Arcade.Sprite
 
     create ()
     {
-      this.physics.world.setBounds(0, 0, this.sys.game.config.width, 176);
+        //START BASIC SETUP MainMenu
+
+
+        const worldWidthX = this.sys.game.config.width * 3;
+        this.physics.world.setBounds(0, 0, worldWidthX, 176);
+        this.cursors = this.input.keyboard.createCursorKeys();
+
+
+        //END BASIC SETUP MainMenu
+
+
+        //START PROPS BEFORE PLAYER MainMenu
+        
+
+        this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'sky').setOrigin(0, 0);
+        this.sky.setScrollFactor(0.1);
+
+        this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
+        this.stars.setScrollFactor(0.1);
+        
+        this.ground = this.add.tileSprite
+        (
+          0,
+          this.sys.game.config.height,
+          worldWidthX * 2,
+          16,
+          'ground'
+        );
+
+        this.ground.setOrigin(0, 1);
+        this.physics.add.existing(this.ground);
+        this.ground.body.setImmovable(true);
+        this.ground.body.allowGravity = false;
+        
+        this.barn = this.add.image
+        (
+          (worldWidthX / 3) / 30,
+          this.sys.game.config.height - this.ground.height,
+          'barn'
+        ).setOrigin(0, 1);
+        this.barn.setTint(0x999999);
+        this.barn.setScrollFactor(0.25);
+        
+        this.silo = this.add.image
+        (
+          this.barn.width + (worldWidthX / 3) / 30,
+          this.sys.game.config.height - this.ground.height,
+          'silo'
+        );
+        this.silo.setOrigin(0, 1);
+        this.silo.setScrollFactor(0.225);
+        
+        this.cross = this.add.image
+        (
+          (worldWidthX / 3) + ((worldWidthX / 3) / 30),
+          this.sys.game.config.height - this.ground.height,
+          'cross'
+        );
+        this.cross.setOrigin(0, 1);
+        this.cross.setScrollFactor(0.25);
+        this.cross.setTint(0x999999);
+
+        this.fence = this.add.tileSprite
+        (
+                this.sys.game.config.width / 2,
+                this.sys.game.config.height - this.ground.height,
+                worldWidthX,
+                16,
+                'fence'
+        );
+        this.fence.setScrollFactor(0.75);
+        this.fence.setOrigin(0.25, 1);
+
+
+        //END PROPS BEFORE PLAYER MainMenu
       
-      this.cursors = this.input.keyboard.createCursorKeys();
-
-      this.sky = this.add.tileSprite(0, 0, this.sys.game.config.width * 3, this.sys.game.config.height, 'sky').setOrigin(0, 0);
-      this.sky.setScrollFactor(0.1);
-
-      this.stars = this.add.tileSprite(0, 0, this.sys.game.config.width * 3, this.sys.game.config.height, 'stars').setOrigin(0, 0);
-      this.stars.setScrollFactor(0.1);
-
-      this.ground = this.add.tileSprite
-      (
-        this.sys.game.config.width / 2,
-        this.sys.game.config.height,
-        this.sys.game.config.width * 3,
-        16,
-        'ground'
-      );
-
-      this.ground.setOrigin(0.25, 1);
-      this.physics.add.existing(this.ground, true);
-
-      this.barn = this.add.image
-      (
-        32,
-        this.sys.game.config.height - this.ground.height,
-        'barn'
-      );
-      this.barn.setTint(0x999999);
-      this.barn.setOrigin(0, 1);
-      this.barn.setScrollFactor(0.25);
-
-      this.silo = this.add.image
-      (
-        79,
-        this.sys.game.config.height - this.ground.height,
-        'silo'
-      );
-      this.silo.setOrigin(0, 1);
-      this.silo.setScrollFactor(0.225);
-
-      this.cross = this.add.image
-      (
-        Math.max(32 + this.barn.width + 24 + this.silo.width , this.sys.game.config.width + 24),
-        this.sys.game.config.height - this.ground.height,
-        'cross'
-      );
-      this.cross.setOrigin(0.5, 1);
-      this.cross.setScrollFactor(0.25);
-      this.cross.setTint(0x999999);
-
-      this.fence = this.add.tileSprite
-      (
-              this.sys.game.config.width / 2,
-              this.sys.game.config.height - this.ground.height,
-              this.sys.game.config.width * 3,
-              16,
-              'fence'
-      );
-      this.fence.setScrollFactor(0.75);
-      this.fence.setOrigin(0.25, 1);
-
-      createPlayer(this, Math.min(94, this.sys.game.config.width / 2), this.sys.game.config.height - 24);
       
-      this.copcar = this.add.image
-      (
-        ((this.sys.game.config.width * 2) + (this.sys.game.config.width / 2)) / 2,
-        this.sys.game.config.height - this.ground.height,
-        'copcar'
-      );
-      this.copcar.setOrigin(0.5, 1);
+        //START PLAYER SETUP MainMenu
 
-      this.grasstop = this.add.tileSprite
-      (
-              this.sys.game.config.width / 2,
-              this.sys.game.config.height - this.ground.height,
-              this.sys.game.config.width * 3,
-              16,
-              'grasstop'
-      );
-      this.grasstop.setOrigin(0.25, 1);
 
-      this.cameras.main.setBounds(0, 0, Math.ceil(this.sys.game.config.width) * 3, 176);
+        createPlayer(this, Math.min(94, this.sys.game.config.width / 2), this.sys.game.config.height - 24);
+        this.player.buddah();
 
-      this.physics.add.collider(this.player, this.ground);
 
-      this.logo = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'House Call', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
-      this.logo.setWordWrapWidth(this.sys.game.config.width);
-      this.logo.setInteractive({cursor: 'pointer'});
-
-      this.physics.add.existing(this.logo, true);
-      this.physics.add.collider(this.logo, this.playerBulletsHolder, (logo, bullet) =>
-      {
-        bullet.destroy();
-        logo.destroy();
-        this.cameras.main.pan(this.sys.game.config.width * 2, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
-      });
-
-      this.levelSelect = this.add.text((this.sys.game.config.width * 2), this.sys.game.config.height / 2, 'Start', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
-      this.levelSelect.setWordWrapWidth(this.sys.game.config.width);
-      this.levelSelect.setInteractive({cursor: 'pointer'});
-      this.levelSelect.on('pointerdown', () =>
-      {
-        this.scene.stop('MainMenu');
-        this.scene.start('Level1Game');
-      });
+        //END PLAYER SETUP MainMenu
+      
+      
+        //START ENEMY SETUP MainMenu
+        
+      
+        const cultPositions = 
+        [
+            { x: worldWidthX / 2, y: 100 }
+        ];
+        
+        cultCreator(this, cultPositions);
+        
+        this.cults.children.entries.forEach(cult => 
+        {
+            cult.buddah();
+        });
+        
+        
+        //END ENEMY SETUP MainMenu
+      
+        
+        //START PROPS AFTER PLAYER MainMenu
+        
+        
+        this.copcar = this.add.image
+        (
+          worldWidthX / 4 + this.sys.game.config.width / 4 - this.sys.game.config.width / 8,
+          this.sys.game.config.height - this.ground.height,
+          'copcar'
+        ).setOrigin(1, 1);
+        
+        this.pipe = this.physics.add.sprite(worldWidthX / 2 + this.sys.game.config.width / 4, this.sys.game.config.height - this.ground.height, 'pipe');
+        this.pipe.setOrigin(0, 1);
+        this.pipe.body.allowGravity = false;
+        this.pipe.body.setImmovable(true);
+        this.physics.add.collider(this.pipe, this.ground);
+        
+        if(!this.anims.get('stabAnim'))
+        {
+            this.anims.create
+            ({
+                key: "stabAnim",
+                frames: this.anims.generateFrameNumbers('stab', {start: 0, end: 2 }),
+                frameRate: 2,
+                repeat: 0
+            });
+        }
+        this.stab = this.add.sprite(this.pipe.x, this.pipe.y, "stab").setOrigin(0, 1);
+        this.stab.setActive(false);
+        this.stab.setVisible(false);
+        
+        this.physics.add.collider(this.pipe, this.player, (pipe, player) =>
+        {
+          player.destroy();
+          this.stab.setActive(true);
+          this.stab.setVisible(true);
+          this.sound.play('powerup');
+          
+          this.stab.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
+            {
+                if(frame.index === 2) 
+                {
+                    this.sound.play('stab');
+                    
+                    this.cults.children.entries.forEach(cult => 
+                    {
+                        cult.health = -100;
+                    });
+                    
+                    this.controls.destroy();
+                    this.strafeControls.destroy();
+                    this.jumpControls.destroy();
+                    this.leftClickControls.destroy();
+                    this.rightClickControls.destroy();
+                }
+            });
+        
+            this.stab.play("stabAnim", true);
+        });
+        
+        this.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => 
+        {
+          this.cameras.main.pan(worldWidthX, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
+        });
+        
+        this.grasstop = this.add.tileSprite
+        (
+          0,
+          this.sys.game.config.height - this.ground.height,
+          worldWidthX,
+          16,
+          'grasstop'
+        );
+        this.grasstop.setOrigin(0, 1);
+     
+        this.logo = this.createText(this, worldWidthX / 6, this.sys.game.config.height / 2, 'House Call', 16).setOrigin(0.5, 0.5);
+        this.logo.setInteractive({cursor: 'pointer'});
+      
+        this.physics.add.existing(this.logo, true);
+        this.physics.add.collider(this.logo, this.playerBulletsHolder, (logo, bullet) =>
+        {
+          bullet.destroy();
+          logo.destroy();
+          this.cameras.main.pan(worldWidthX / 2, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
+          
+            this.time.delayedCall(2000, () =>
+            {
+                this.player.x = worldWidthX / 3 - this.player.width / 2;
+                this.tweens.add
+                ({
+                    targets: this.player, 
+                    x: worldWidthX / 3 + this.player.width / 2,               
+                    y: this.sys.game.config.height - 24,               
+                    duration: 250,       
+                    ease: 'linear',       
+                    onComplete: () => 
+                    {
+                        this.physics.world.setBounds(this.sys.game.config.width, 0, this.sys.game.config.width, 176);
+                    }
+                });
+            }, [], this);
+            
+        });
+        
+        this.controls = this.createText(this, worldWidthX / 2, 5, 'Controls:', 16);
+        
+        this.strafeControls = this.createText(this, worldWidthX / 2, 0 + this.controls.height + 10, 'A/D, ←/→: Strafe', 12);
+        this.jumpControls = this.createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + 15, 'W, Space, ↑: Jump', 12);
+        this.rightClickControls = this.createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 20, 'Right-Click: Block', 12);
+        this.leftClickControls = this.createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 25, 'Left-Click: Shoot', 12);
+        
+        this.start = this.createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Start', 16).setOrigin(0.5, 0.5);
+        this.start.setInteractive({cursor: 'pointer'});
+        this.start.on('pointerdown', () =>
+        {
+          this.scene.stop('MainMenu');
+          this.scene.start('Level1Game');
+        });
+        
+        
+        //END PROPS AFTER PLAYER MainMenu
+        
+        
+        //START CAMERA SETUP MainMenu
+        
+        
+        this.cameras.main.setBounds(0, 0, worldWidthX, 176);
+        //this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
+        this.cameras.main.setZoom(1);
+        
+        
+        //END CAMERA SETUP MainMenu
     }
 
     update(time)
     {
-
+        
+    }
+    
+    createText(scene, x, y, words, size)
+    {
+        let newText = scene.add.text(x, y, words, { fontSize: size, fill: '#fff'}).setOrigin(0.5, 0);
+        return newText;
     }
   }
   
@@ -2113,7 +2306,7 @@ class skull extends Phaser.Physics.Arcade.Sprite
   {
     type: Phaser.AUTO,
     pixelArt: true,
-    width: Math.max(312, Math.min(411, (window.innerWidth / window.innerHeight) * 176)),
+    width: Math.max(385, Math.min(400, (window.innerWidth / window.innerHeight) * 176)),
     height: 176,
 
     scale:
