@@ -215,12 +215,8 @@
 
       if(this.health < 1)
       {
-        this.bloodEmitter.setQuantity(100);
-        this.bloodEmitter.emitParticleAt(this.x, this.y);
         this.scene.sound.play('hurt');
-        this.setActive(false);
-        this.setVisible(false);
-        this.destroy();
+        this.kill();
       }
       else
       {
@@ -308,6 +304,16 @@
     {
         this.health = Number.MAX_SAFE_INTEGER;
     }
+    
+    kill()
+    {
+        this.bloodEmitter.setQuantity(100);
+        this.bloodEmitter.emitParticleAt(this.x, this.y);
+        //this.scene.sound.play('hurt');
+        this.setActive(false);
+        this.setVisible(false);
+        this.destroy();
+    }
   }
 
   class cultKnife extends Phaser.Physics.Arcade.Sprite
@@ -367,12 +373,8 @@
 
       if(this.health < 1)
       {
-        this.bloodEmitter.setQuantity(100);
-        this.bloodEmitter.emitParticleAt(this.x, this.y);
         this.scene.sound.play('hurt');
-        this.setActive(false);
-        this.setVisible(false);
-        this.destroy();
+        this.kill();
       }
       else
       {
@@ -420,6 +422,15 @@
       {
         this.alert = true;
       }
+    }
+    
+    kill()
+    {
+        this.bloodEmitter.setQuantity(100);
+        this.bloodEmitter.emitParticleAt(this.x, this.y);
+        this.setActive(false);
+        this.setVisible(false);
+        this.destroy();
     }
   }
 
@@ -780,9 +791,8 @@
     {
         if(this.health < 1)
         {
-            this.explode.emitParticleAt(this.x, this.y);
             this.scene.sound.play('hurt');
-            this.destroy();
+            this.kill();
         }
         else
         {
@@ -843,6 +853,12 @@
             this.alert = true;
         }
     }
+    
+    kill()
+    {
+        this.explode.emitParticleAt(this.x, this.y);
+        this.destroy();
+    }
 }
 
 class skull extends Phaser.Physics.Arcade.Sprite
@@ -898,7 +914,49 @@ class skull extends Phaser.Physics.Arcade.Sprite
             {
                 if(frame.index === 2) 
                 {
+                    let aCultActive = false;
                     scene.sound.play('stab');
+                    
+                    if(scene.cults && scene.cults.children.entries)
+                    {
+                        const cultsArray = scene.cults.children.entries; 
+                        
+                        for(let i = cultsArray.length - 1; i >= 0; i--) 
+                        {
+                            const cult = cultsArray[i];
+                            aCultActive = true;
+                            cult.kill();  
+                        }
+                    }
+                    
+                    if(scene.cultKnifes && scene.cultKnifes.children.entries)
+                    {
+                        const cultKnifesArray = scene.cultKnifes.children.entries; 
+                        
+                        for(let i = cultKnifesArray.length - 1; i >= 0; i--) 
+                        {
+                            const cultKnife = cultKnifesArray[i];
+                            aCultActive = true;
+                            cultKnife.kill();  
+                        }
+                    }
+                    
+                    if(scene.eyes && scene.eyes.children.entries)
+                    {
+                        const eyesArray = scene.eyes.children.entries; 
+                        
+                        for(let i = eyesArray.length - 1; i >= 0; i--) 
+                        {
+                            const eye = eyesArray[i];
+                            aCultActive = true;
+                            eye.kill();  
+                        }
+                    }
+                    
+                    if(aCultActive)
+                    {
+                        scene.sound.play('hurt');
+                    }
                 }
             });
         
