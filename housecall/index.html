@@ -1019,7 +1019,7 @@ class skull extends Phaser.Physics.Arcade.Sprite
 
 
         const worldWidthX = this.sys.game.config.width * 3;
-        this.physics.world.setBounds(0, 0, worldWidthX, 176);
+        this.physics.world.setBounds(0, 0, worldWidthX / 3, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
 
 
@@ -2307,7 +2307,7 @@ class skull extends Phaser.Physics.Arcade.Sprite
     scale:
     {
       mode: Phaser.Scale.FIT,
-      autoCenter: Phaser.Scale.CENTER_BOTH,
+      autoCenter: Phaser.Scale.CENTER_BOTH
     },
 
     physics:
