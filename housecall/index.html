@@ -102,47 +102,6 @@
       this.destroy();
     }
   }
-  
-  /*class eyeOrb extends Phaser.Physics.Arcade.Sprite
-  {
-      constructor(scene, x, y)
-    {
-      super(scene, x, y, 'cultorb');
-      this.speed = 200;
-      this.setActive(false);
-      this.setVisible(false);
-    }
-
-    fire(x, y, angle, playerMomentumX)
-    {
-      this.body.reset(x, y);
-      this.setActive(true);
-      this.setVisible(true);
-      this.setRotation(angle);
-      this.scene.physics.velocityFromRotation(angle, this.speed + playerMomentumX, this.body.velocity);
-      this.body.allowGravity = false;
-      this.originX = x;
-    }
-
-    preUpdate(time, delta)
-    {
-      super.preUpdate(time, delta);
-
-      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x > this.originX + 1000 || this.x < this.originX - 1000)
-      {
-        this.setActive(false);
-        this.setVisible(false);
-        this.destroy();
-      }
-    }
-
-    collided()
-    {
-      this.setActive(false);
-      this.setVisible(false);
-      this.destroy();
-    }
-  }*/
 
   class cult extends Phaser.Physics.Arcade.Sprite
   {
@@ -1775,6 +1734,7 @@
 
         
         createPlayer(this, 32, this.sys.game.config.height - 24);
+        //this.player.buddha();
 
 
         //END PLAYER SETUP Level1Game
@@ -1939,6 +1899,7 @@
 
 
         createPlayer(this, 32, this.sys.game.config.height - 24);
+        //this.player.buddha();
         
 
         //END PLAYER SETUP Level2Game
@@ -1976,7 +1937,7 @@
         //START PROPS AFTER PLAYER Level2Game
         
 
-        this.pipe = new pipeNext(this, 1950, this.sys.game.config.height - this.ground.height, 'Level3Game');
+        this.pipe = new pipeNext(this, 2100, this.sys.game.config.height - this.ground.height, 'Level3Game');
 
         this.grasstop = this.add.tileSprite
         (
@@ -2035,7 +1996,7 @@
         //START BASIC SETUP Level3Game
 
 
-        const worldWidthX = 1450;
+        const worldWidthX = 1325;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -2156,7 +2117,7 @@
         //START PROPS AFTER PLAYER Level3Game
         
 
-        this.pipe = new pipeNext(this, 1400, this.sys.game.config.height - this.ground.height, 'Level4Game');
+        this.pipe = new pipeNext(this, 1300, this.sys.game.config.height - this.ground.height, 'Level4Game');
 
         this.grasstop = this.add.tileSprite
         (
@@ -2214,7 +2175,7 @@
         //START BASIC SETUP Level4Game
 
 
-        const worldWidthX = 2000;
+        const worldWidthX = 2100;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -2287,7 +2248,8 @@
 
 
         createPlayer(this, 32, this.sys.game.config.height - 24);
-
+        //this.player.buddha();
+        
 
         //END PLAYER SETUP Level4Game
 
@@ -2334,7 +2296,7 @@
             { x: 900, y: 100 },
             { x: 1500, y: 100 },
             { x: 1500, y: 100 },
-            { x: 1500, y: 100 },
+            { x: 1500, y: 100 }
         ];
         
         eyeCreator(this, eyePositions);
@@ -2346,7 +2308,7 @@
         //START PROPS AFTER PLAYER Level4Game
         
 
-        this.pipe = new pipeNext(this, 1950, this.sys.game.config.height - this.ground.height, 'MainMenu');
+        this.pipe = new pipeNext(this, 2050, this.sys.game.config.height - this.ground.height, 'MainMenu');
 
         this.grasstop = this.add.tileSprite
         (
