@@ -1737,7 +1737,7 @@
         this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
         this.stars.setScrollFactor(0.1);
 
-        this.scarecrow = this.add.image(500, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        this.scarecrow = this.add.image(600, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
         this.scarecrow.setScrollFactor(0.4);
 
         this.wheat = this.add.tileSprite
@@ -1896,7 +1896,7 @@
         this.sky.setScrollFactor(0.1);
         this.sky.postFX.addColorMatrix().grayscale(1);
         
-        this.scarecrow = this.add.image(400, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        this.scarecrow = this.add.image(750, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
         this.scarecrow.setScrollFactor(0.4);
         
         this.wheat = this.add.tileSprite
@@ -2035,7 +2035,7 @@
         //START BASIC SETUP Level3Game
 
 
-        const worldWidthX = 1650;
+        const worldWidthX = 1450;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -2049,7 +2049,7 @@
         this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'redskyrain').setOrigin(0, 0);
         this.sky.setScrollFactor(0.1);
         
-        this.scarecrow = this.add.image(700, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        this.scarecrow = this.add.image(633, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
         this.scarecrow.setScrollFactor(0.4);
 
         this.wheat = this.add.tileSprite
@@ -2108,7 +2108,8 @@
 
 
         createPlayer(this, 32, this.sys.game.config.height - 24);
-
+        //this.player.buddha();
+        
 
         //END PLAYER SETUP Level3Game
 
@@ -2227,7 +2228,7 @@
         this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'redsky').setOrigin(0, 0);
         this.sky.setScrollFactor(0.1);
         
-        this.scarecrow = this.add.image(200, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        this.scarecrow = this.add.image(750, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
         this.scarecrow.setScrollFactor(0.4);
 
         this.wheat = this.add.tileSprite
