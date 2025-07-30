@@ -999,7 +999,7 @@
 
     update()
     {
-      this.scene.start('MainMenu');
+      this.scene.start('Level4Game');
     }
   }
 
@@ -1306,7 +1306,7 @@
           runChildUpdate: true
         });
 
-        scene.player = new player(scene, 32, scene.sys.game.config.height - 24, scene.playerBulletsHolder);
+        scene.player = new player(scene, x, scene.sys.game.config.height - 24, scene.playerBulletsHolder);
         
         if(scene.ground)
         {
@@ -1889,9 +1889,9 @@
 
         //createLevelProps(this);
         
-        this.grill = this.add.image(15, this.sys.game.config.height - this.ground.height, 'pipe');
-        this.grill.setScrollFactor(0.8);
-        this.grill.setOrigin(0, 1);
+        this.pipe = this.add.image(15, this.sys.game.config.height - this.ground.height, 'pipe');
+        this.pipe.setScrollFactor(0.8);
+        this.pipe.setOrigin(0, 1);
        
         
         //END PROPS BEFORE PLAYER Level2Game
@@ -2059,9 +2059,9 @@
         //this.couch.setScrollFactor(0.8);
         //this.couch.setOrigin(0, 1);
 
-        this.grill = this.add.image(15, this.sys.game.config.height - this.ground.height, 'pipe');
-        this.grill.setScrollFactor(0.8);
-        this.grill.setOrigin(0, 1);
+        this.pipe = this.add.image(15, this.sys.game.config.height - this.ground.height, 'pipe');
+        this.pipe.setScrollFactor(0.8);
+        this.pipe.setOrigin(0, 1);
      
 
         //END PROPS BEFORE PLAYER Level3Game
@@ -2219,28 +2219,32 @@
         this.ground.body.setImmovable(true);
         this.ground.body.allowGravity = false;
         
-        //this.shed = this.add.image(75, this.sys.game.config.height - this.ground.height, 'shed');
-        //this.shed.setOrigin(0, 1);
-        //this.shed.setScrollFactor(0.65);
+        this.shed = this.add.image(1557, this.sys.game.config.height - this.ground.height, 'shed');
+        this.shed.setOrigin(0, 1);
+        this.shed.setScrollFactor(0.65);
 
-        /*this.fence = this.add.tileSprite
+        this.fence = this.add.tileSprite
         (
-          0,
+          1748,
           this.sys.game.config.height - this.ground.height,
           148,
           16,
           'fence'
         );
         this.fence.setScrollFactor(0.75);
-        this.fence.setOrigin(0, 1);*/
+        this.fence.setOrigin(0, 1);
 
-        //this.couch = this.add.image(45, this.sys.game.config.height - this.ground.height, 'couch');
-        //this.couch.setScrollFactor(0.8);
-        //this.couch.setOrigin(0, 1);
-
-        this.grill = this.add.image(15, this.sys.game.config.height - this.ground.height, 'pipe');
+        this.couch = this.add.image(1921, this.sys.game.config.height - this.ground.height, 'couch');
+        this.couch.setScrollFactor(0.8);
+        this.couch.setOrigin(0, 1);
+        
+        this.grill = this.add.image(1967, this.sys.game.config.height - this.ground.height, 'grill');
         this.grill.setScrollFactor(0.8);
         this.grill.setOrigin(0, 1);
+        
+        this.pipe = this.add.image(15, this.sys.game.config.height - this.ground.height, 'pipe');
+        this.pipe.setScrollFactor(0.8);
+        this.pipe.setOrigin(0, 1);
      
 
         //END PROPS BEFORE PLAYER Level4Game
@@ -2310,7 +2314,7 @@
         //START PROPS AFTER PLAYER Level4Game
         
 
-        this.pipe = new pipeNext(this, 2375, this.sys.game.config.height - this.ground.height, 'MainMenu');
+        this.pipe = new pipeNext(this, 2225, this.sys.game.config.height - this.ground.height, 'MainMenu');
 
         this.grasstop = this.add.tileSprite
         (
