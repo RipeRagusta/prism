@@ -598,7 +598,7 @@
       if(this.mouseRef.activePointer.isDown && time > this.lastPlayerBlock + this.blockRate && this.mouseRef.activePointer.rightButtonDown())
       {
           this.mouseRef.mouse.disableContextMenu();
-          this.play("block", true);
+          this.play("block", false);
           this.lastPlayerBlock = time;
       }
     }
@@ -619,7 +619,7 @@
     {
         if(this.wasd.shift.isDown && time > this.lastPlayerBlock + this.blockRate)
         {
-          this.play("block", true);
+          this.play("block", false);
 
           this.lastPlayerBlock = time;
         }
