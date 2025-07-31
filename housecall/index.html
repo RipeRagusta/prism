@@ -1197,7 +1197,7 @@
         );
         this.grasstop.setOrigin(0, 1);
      
-        this.logo = this.createText(this, worldWidthX / 6, this.sys.game.config.height / 2, 'House Call', 16).setOrigin(0.5, 0.5);
+        this.logo = this.createText(this, worldWidthX / 6, this.sys.game.config.height / 2, 'House Call', 16, '#fff').setOrigin(0.5, 0.5);
         this.logo.setInteractive({cursor: 'pointer'});
       
         this.physics.add.existing(this.logo, true);
@@ -1226,14 +1226,14 @@
             
         });
         
-        this.controls = this.createText(this, worldWidthX / 2, 10, 'Controls:', 16);
+        this.controls = this.createText(this, worldWidthX / 2, 10, 'Controls:', 16, '#fff');
         
-        this.strafeControls = this.createText(this, worldWidthX / 2, 0 + this.controls.height + 20, 'A/D, ←/→: Strafe', 12);
-        this.jumpControls = this.createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + 25, 'W, Space, ↑: Jump', 12);
-        this.rightClickControls = this.createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 30, 'Right-Click, L-Shift: Block', 12);
-        this.leftClickControls = this.createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 35, 'Left-Click: Shoot', 12);
+        this.strafeControls = this.createText(this, worldWidthX / 2, 0 + this.controls.height + 20, 'A/D, ←/→: Strafe', 12, '#fff');
+        this.jumpControls = this.createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + 25, 'W, Space, ↑: Jump', 12, '#fff');
+        this.rightClickControls = this.createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 30, 'Right-Click, L-Shift: Block', 12, '#ff0000');
+        this.leftClickControls = this.createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 35, 'Left-Click: Shoot (Hold)', 12, '#fff');
         
-        this.start = this.createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Start', 16).setOrigin(0.5, 0.5);
+        this.start = this.createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Start', 16, '#fff').setOrigin(0.5, 0.5);
         this.start.setInteractive({cursor: 'pointer'});
         this.start.on('pointerdown', () =>
         {
@@ -1264,9 +1264,9 @@
         }
     }
     
-    createText(scene, x, y, words, size)
+    createText(scene, x, y, words, size, color)
     {
-        let newText = scene.add.text(x, y, words, { fontSize: size, fill: '#fff'}).setOrigin(0.5, 0);
+        let newText = scene.add.text(x, y, words, { fontSize: size, fill: color}).setOrigin(0.5, 0);
         return newText;
     }
   }
@@ -1408,6 +1408,7 @@
                 scene.sound.play('block');
                 player.defenceParticles();
                 player.activateDoubleFire();
+                player.play("block", false);
             }
             orb.destroy();
         });
@@ -1496,6 +1497,7 @@
               scene.sound.play('block');
               player.defenceParticles();
               player.activateDoubleFire();
+              player.play("block", false);
           }
           orb.destroy();
         });
