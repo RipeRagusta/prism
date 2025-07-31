@@ -379,11 +379,6 @@ function evaluateCommand(commandEntered)
 			window.location.href = "./cyberclicker/index.html";
 			break;
 
-		case "launchanimtest":
-		case "animtest":
-			window.location.href = "./hoverboardgame/index.html";
-			break;
-
 		case "launchjumpgame":
 		case "jumpgame":
 			window.location.href = "./jumpgame/index.html";
