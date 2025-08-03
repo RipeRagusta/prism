@@ -418,6 +418,7 @@
         this.blockRate = 750;
         this.block = false;
         this.playerBulletsHolder = playerBulletsHolder;
+        this.canShoot = true;
 
         this.wasd =
         {
@@ -566,33 +567,36 @@
       if(this.mouseRef.activePointer.isDown && time > this.lastPlayerShot + this.fireRate && this.mouseRef.activePointer.leftButtonDown())
       {
         this.mouseRef.mouse.disableContextMenu();
-
-        let offset = -12.5;
-
-        for (let i = 0; i < 10; i++)
+        
+        if(this.canShoot)
         {
-          const bulletType = this.doubleFire ? 'bulletcult' : 'bullet';
-          
-          const bullet = this.bullets.get(this.x, this.y, bulletType);
+            let offset = -12.5;
 
-          if(bullet)
-          {
-              if(this.flip === false)
+            for (let i = 0; i < 10; i++)
+            {
+              const bulletType = this.doubleFire ? 'bulletcult' : 'bullet';
+
+              const bullet = this.bullets.get(this.x, this.y, bulletType);
+
+              if(bullet)
               {
-                bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
+                  if(this.flip === false)
+                  {
+                    bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
+                  }
+                  else
+                  {
+                    bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
+                  }
+                offset += 2.5;
               }
-              else
-              {
-                bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
-              }
-            offset += 2.5;
-          }
+            }
+
+            this.lastPlayerShot = time;
+            this.scene.sound.play('shotgunshot');
+            this.play("pump", true);
+            this.shellEmitter.emitParticleAt(this.x, this.y);
         }
-
-        this.lastPlayerShot = time;
-        this.scene.sound.play('shotgunshot');
-        this.play("pump", true);
-        this.shellEmitter.emitParticleAt(this.x, this.y);
       }
       
       if(this.mouseRef.activePointer.isDown && time > this.lastPlayerBlock + this.blockRate && this.mouseRef.activePointer.rightButtonDown())
@@ -1238,6 +1242,7 @@
         this.start.on('pointerdown', () =>
         {
           this.scene.stop('MainMenu');
+          event.stopPropagation();
           this.scene.start('Level1Game');
         });
         
@@ -1414,10 +1419,13 @@
         });
         
         scene.cults = scene.physics.add.group();
-      
+        
+        let cultId = 0;
         cultPositions.forEach(pos => 
         {
+            cultId += 1;
             const cultInstance = new cult(scene, pos.x, pos.y, scene.player, scene.cultOrbHolder);
+            cultInstance.id = cultId;
             scene.cults.add(cultInstance);
         });
         
@@ -1507,10 +1515,13 @@
             immovable: true,
             allowGravity: false
         });
-
+        
+        let eyeId = 0;
         eyePositions.forEach(pos =>
         {
+            eyeId += 1;
             const eyeInstance = new eye(scene, pos.x, pos.y, scene.eyeOrbHolder);
+            eyeInstance.id = eyeId;
             scene.eyes.add(eyeInstance);
         });
 
@@ -1738,6 +1749,8 @@
 
         
         createPlayer(this, 32, this.sys.game.config.height - 24);
+        this.player.canShoot = false;
+        this.time.delayedCall(200, () => this.player.canShoot = true);
         //this.player.buddha();
 
 
@@ -1915,17 +1928,21 @@
         const cultPositions = 
         [
             { x: 500, y: 100 },
-            { x: 500, y: 100 },
+            { x: 516, y: 100 },
             { x: 1000, y: 100 },
-            { x: 1000, y: 100 },
-            { x: 1500, y: 100 },
-            { x: 1500, y: 100 },
-            { x: 1500, y: 100 },
-            { x: 1500, y: 100 },
-            { x: 1500, y: 100 }
+            { x: 1016, y: 100 },
+            { x: 1516, y: 100 },
+            { x: 1532, y: 100 },
+            { x: 1548, y: 100 },
+            { x: 1564, y: 100 },
+            { x: 1580, y: 100 }
         ];
         
         cultCreator(this, cultPositions);
+        
+        this.cultGroup1 = new Set([1, 2]);
+        this.cultGroup2 = new Set([3, 4]);
+        this.cultGroup3 = new Set([5, 6, 7, 8, 9]);
         
         const cultKnifePositions = 
         [
@@ -1984,8 +2001,36 @@
 
         cultSeparation(this.cults, this.player);
         //eyeSeparation(this.eyes, this.player);
+        
+        activateCultGroups(this, this.cultGroup1);
+        activateCultGroups(this, this.cultGroup2);
+        activateCultGroups(this, this.cultGroup3);
     }
   }
+  
+  function activateCultGroups(scene, cultGroup)
+  {
+        scene.cults.children.entries.forEach(cult =>
+        {
+            if(cult.alert)
+            {
+                if(cultGroup.has(cult.id))
+                {
+                    cultGroup.forEach(cultId => 
+                    {
+                        const cultInstance = scene.cults.children.entries.find(cult => cult.id === cultId);
+                        
+                        if(cultInstance && !cultInstance.alet) 
+                        {
+                            cultInstance.alert = true;
+                        }
+                    });
+                }
+            }
+        });
+  }
+  
+  
 
 
   class Level3Game extends Phaser.Scene
@@ -2268,22 +2313,25 @@
         const cultPositions = 
         [
           { x: 600, y: 100 },
-          { x: 600, y: 100 },
-          { x: 600, y: 100 },
-          { x: 600, y: 100 },
-          { x: 600, y: 100 },
-          { x: 600, y: 100 },
+          { x: 616, y: 100 },
+          { x: 632, y: 100 },
+          { x: 648, y: 100 },
+          { x: 664, y: 100 },
+          { x: 680, y: 100 },
           { x: 900, y: 100 },
           { x: 1000, y: 100 },
           { x: 1500, y: 100 },
-          { x: 1500, y: 100 },
-          { x: 1500, y: 100 },
-          { x: 1500, y: 100 },
-          { x: 1500, y: 100 },
-          { x: 1500, y: 100 }
+          { x: 1516, y: 100 },
+          { x: 1532, y: 100 },
+          { x: 1548, y: 100 },
+          { x: 1564, y: 100 },
+          { x: 1580, y: 100 }
         ];
         
         cultCreator(this, cultPositions);
+        
+        this.cultGroup1 = new Set([1, 2, 3, 4, 5, 6]);
+        this.cultGroup2 = new Set([9, 10, 11, 12, 13, 14]);
         
         const cultKnifePositions = 
         [
@@ -2299,16 +2347,18 @@
         const eyePositions = 
         [
             { x: 600, y: 100 },
-            { x: 600, y: 100 },
-            { x: 600, y: 100 },
+            { x: 632, y: 100 },
+            { x: 664, y: 100 },
             { x: 900, y: 100 },
             { x: 1500, y: 100 },
-            { x: 1500, y: 100 },
-            { x: 1500, y: 100 }
+            { x: 1532, y: 100 },
+            { x: 1564, y: 100 }
         ];
         
         eyeCreator(this, eyePositions);
         
+        this.eyeGroup1 = new Set([1, 2, 3]);
+        this.eyeGroup2 = new Set([5, 6, 7]);
         
         //END ENEMY SETUP Level4Game
 
@@ -2357,7 +2407,35 @@
       
       cultSeparation(this.cults, this.player);
       eyeSeparation(this.eyes, this.player);
+      
+      activateCultGroups(this, this.cultGroup1);
+      activateCultGroups(this, this.cultGroup2);
+      
+      activateEyeGroups(this, this.eyeGroup1);
+      activateEyeGroups(this, this.eyeGroup2);
     }
+  }
+  
+  function activateEyeGroups(scene, eyeGroup)
+  {
+        scene.eyes.children.entries.forEach(eye =>
+        {
+            if(eye.alert)
+            {
+                if(eyeGroup.has(eye.id))
+                {
+                    eyeGroup.forEach(eyeId => 
+                    {
+                        const eyeInstance = scene.eyes.children.entries.find(eye => eye.id === eyeId);
+                        
+                        if(eyeInstance && !eyeInstance.alet) 
+                        {
+                            eyeInstance.alert = true;
+                        }
+                    });
+                }
+            }
+        });
   }
   
   const config =
@@ -2366,6 +2444,11 @@
     pixelArt: true,
     width: Math.max(385, Math.min(400, (window.innerWidth / window.innerHeight) * 176)),
     height: 176,
+    
+    audio:
+    {
+        pauseOnBlur: true
+    },
 
     scale:
     {
