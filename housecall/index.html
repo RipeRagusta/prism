@@ -29,17 +29,26 @@
       this.speed = 400;
       this.setActive(false);
       this.setVisible(false);
+      this.scene = scene;
     }
 
     fire(x, y, angle)
     {
-      this.originX = x;
-      this.body.reset(x, y);
-      this.setActive(true);
-      this.setVisible(true);
-      this.setRotation(angle);
-      this.scene.physics.velocityFromRotation(angle, this.speed, this.body.velocity);
-      this.body.allowGravity = false;
+        this.originX = x;
+        this.body.reset(x, y);
+        this.setActive(true);
+        this.setVisible(true);
+        this.setRotation(angle);
+     
+        this.scene.physics.velocityFromRotation(angle, this.speed, this.body.velocity);
+       
+        const isFollowingX = Math.abs(this.scene.cameras.main.midPoint.x - this.scene.player.x) < 1;
+        if(isFollowingX)
+        {
+            this.body.velocity.x += this.scene.player.body.velocity.x;
+        }
+      
+        this.body.allowGravity = false;
     }
 
     preUpdate(time, delta)
