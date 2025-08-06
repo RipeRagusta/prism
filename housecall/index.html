@@ -268,6 +268,14 @@
     {
         this.bloodEmitter.setQuantity(100);
         this.bloodEmitter.emitParticleAt(this.x, this.y);
+        const gameManager = this.scene.gameManager;
+        if(gameManager.doubleFireUpgrade)
+        {
+            if(this.scene.player && this.scene.player.active)
+            {
+                this.scene.player.activateDoubleFire();
+            } 
+        }
         //this.scene.sound.play('hurt');
         this.setActive(false);
         this.setVisible(false);
@@ -387,6 +395,14 @@
     {
         this.bloodEmitter.setQuantity(100);
         this.bloodEmitter.emitParticleAt(this.x, this.y);
+        const gameManager = this.scene.gameManager;
+        if(gameManager.doubleFireUpgrade)
+        {
+            if(this.scene.player && this.scene.player.active)
+            {
+                this.scene.player.activateDoubleFire();
+            } 
+        }
         this.setActive(false);
         this.setVisible(false);
         this.destroy();
@@ -420,6 +436,8 @@
         this.playerBulletsHolder = playerBulletsHolder;
         this.canShoot = true;
         this.damagePerShot = 1;
+        this.baseDamage = 1;
+        this.initialDamage = this.baseDamage;
         this.fireMode = 'buckshot';
         this.fireModeSwitchRate = 200;
         this.lastFireModeSwitch = 0;
@@ -673,15 +691,15 @@
             
             if(this.fireMode === 'buckshot')
             {
-                this.damagePerShot = 1;
+                this.damagePerShot = this.baseDamage;
             }
             else if(this.fireMode === 'slug')
             {
-                this.damagePerShot = 5;
+                this.damagePerShot = this.baseDamage * 5;
             }
             else if(this.fireMode === 'birdshot')
             {
-                this.damagePerShot = 0.3;
+                this.damagePerShot = this.baseDamage * 0.55;
             }
         //}
     }
@@ -973,6 +991,14 @@
     kill()
     {
         this.explode.emitParticleAt(this.x, this.y);
+        const gameManager = this.scene.gameManager;
+        if(gameManager.doubleFireUpgrade && this.scene.player.active)
+        {
+            if(this.scene.player && this.scene.player.active)
+            {
+                this.scene.player.activateDoubleFire();
+            } 
+        }
         this.destroy();
     }
 }
@@ -1243,8 +1269,8 @@
         const worldWidthX = this.sys.game.config.width * 3;
         this.physics.world.setBounds(0, 0, worldWidthX / 3, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
-        const gameManager = this.scene.get('GameManager');
-        gameManager.reset();
+        this.gameManager = this.scene.get('GameManager');
+        this.gameManager.reset();
 
 
         //END BASIC SETUP MainMenu
@@ -1319,7 +1345,7 @@
         //START PLAYER SETUP MainMenu
 
 
-        createPlayer(this, Math.min(94, this.sys.game.config.width / 2), this.sys.game.config.height - 24);
+        createPlayer(this, Math.min(94, this.sys.game.config.width / 2), this.sys.game.config.height - 24, this.gameManager);
         this.player.buddha();
 
 
@@ -1334,7 +1360,7 @@
             { x: worldWidthX / 2, y: 100 }
         ];
         
-        cultCreator(this, cultPositions);
+        cultCreator(this, cultPositions, this.gameManager);
         
         this.cults.children.entries.forEach(cult => 
         {
@@ -1419,7 +1445,7 @@
         );
         this.grasstop.setOrigin(0, 1);
      
-        this.logo = this.createText(this, worldWidthX / 6, this.sys.game.config.height / 2, 'House Call', 16, '#fff').setOrigin(0.5, 0.5);
+        this.logo = createText(this, worldWidthX / 6, this.sys.game.config.height / 2, 'House Call', 16, '#fff').setOrigin(0.5, 0.5);
         this.logo.setInteractive({cursor: 'pointer'});
       
         this.physics.add.existing(this.logo, true);
@@ -1448,14 +1474,14 @@
             
         });
         
-        this.controls = this.createText(this, worldWidthX / 2, 10, 'Controls:', 16, '#fff');
+        this.controls = createText(this, worldWidthX / 2, 10, 'Controls:', 16, '#fff');
         
-        this.strafeControls = this.createText(this, worldWidthX / 2, 0 + this.controls.height + 20, 'A/D, ←/→: Strafe', 12, '#fff');
-        this.jumpControls = this.createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + 25, 'W, Space, ↑: Jump', 12, '#fff');
-        this.rightClickControls = this.createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 30, 'Right-Click, L-Shift: Block', 12, '#ff0000');
-        this.leftClickControls = this.createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 35, 'Left-Click: Shoot (Hold)', 12, '#fff');
+        this.strafeControls = createText(this, worldWidthX / 2, 0 + this.controls.height + 20, 'A/D, ←/→: Strafe', 12, '#fff');
+        this.jumpControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + 25, 'W, Space, ↑: Jump', 12, '#fff');
+        this.rightClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 30, 'Right-Click, L-Shift: Block', 12, '#ff0000');
+        this.leftClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 35, 'Left-Click: Shoot (Hold)', 12, '#fff');
         
-        this.start = this.createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Start', 16, '#fff').setOrigin(0.5, 0.5);
+        this.start = createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Start', 16, '#fff').setOrigin(0.5, 0.5);
         this.start.setInteractive({cursor: 'pointer'});
         this.start.on('pointerdown', () =>
         {
@@ -1489,12 +1515,14 @@
         }
     }
     
-    createText(scene, x, y, words, size, color)
+    
+  }
+  
+    function createText(scene, x, y, words, size, color)
     {
         let newText = scene.add.text(x, y, words, { fontSize: size, fill: color}).setOrigin(0.5, 0);
         return newText;
     }
-  }
   
   function createLevelProps(scene)
   {
@@ -1522,7 +1550,7 @@
     scene.grill.setOrigin(0, 1);
   }
   
-  function createPlayer(scene, x, gameManager)
+  function createPlayer(scene, x, y, gameManager)
   {
         scene.playerBulletsHolder = scene.physics.add.group
         ({
@@ -1536,6 +1564,18 @@
         if(scene.ground)
         {
             scene.physics.add.collider(scene.player, scene.ground);
+        }
+        
+        scene.player.fireMode = gameManager.fireModeUpgrade;
+        
+        if(gameManager.damageUpgrade)
+        {
+            scene.player.baseDamage = 1.25;
+        }
+        
+        if(gameManager.healthUpgrade)
+        {
+            scene.player.health = 20;
         }
   }
 
@@ -1614,7 +1654,7 @@
         }
   }
   
-  function cultCreator(scene, cultPositions)
+  function cultCreator(scene, cultPositions, gameManager)
   {
         scene.cultOrbHolder = scene.physics.add.group
         ({
@@ -1633,7 +1673,10 @@
                 scene.sound.play('block');
                 player.defenceParticles();
                 player.activateDoubleFire();
-                //player.play("block", false);
+                if(gameManager.blockUpgrade)
+                {
+                    player.play("block", false);
+                }
             }
             orb.destroy();
         });
@@ -1675,7 +1718,7 @@
         });
   }
   
-  function cultKnifeCreator(scene, cultKnifePositions)
+  function cultKnifeCreator(scene, cultKnifePositions, gameManager)
   {     
         scene.cultKnifes = scene.physics.add.group();
       
@@ -1706,7 +1749,7 @@
         scene.physics.add.collider(scene.cultKnifes, scene.cultKnifes);
   }
   
-  function eyeCreator(scene, eyePositions)
+  function eyeCreator(scene, eyePositions, gameManager)
   {
         scene.eyeOrbHolder = scene.physics.add.group
         ({
@@ -1725,7 +1768,10 @@
               scene.sound.play('block');
               player.defenceParticles();
               player.activateDoubleFire();
-              //player.play("block", false);
+              if(gameManager.blockUpgrade)
+                {
+                    player.play("block", false);
+                }
           }
           orb.destroy();
         });
@@ -1917,9 +1963,9 @@
         const worldWidthX = 1800;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
-        const gameManager = this.scene.get('GameManager');
-        gameManager.updateHighestLevel(1);
-        gameManager.updateCurrentLevel(1);
+        this.gameManager = this.scene.get('GameManager');
+        this.gameManager.updateHighestLevel(1);
+        this.gameManager.updateCurrentLevel(1);
         
 
         //END BASIC SETUP Level1Game
@@ -1971,7 +2017,7 @@
         //START PLAYER SETUP Level1Game
 
         
-        createPlayer(this, 32, this.sys.game.config.height - 24, gameManager);
+        createPlayer(this, 32, this.sys.game.config.height - 24, this.gameManager);
         this.player.canShoot = false;
         this.time.delayedCall(200, () => this.player.canShoot = true);
         //this.player.buddha();
@@ -1989,7 +2035,7 @@
             { x: 1100, y: 100 }
         ];
         
-        cultCreator(this, cultPositions);
+        cultCreator(this, cultPositions, this.gameManager);
         
         const cultKnifePositions = 
         [
@@ -1999,7 +2045,7 @@
             { x: 1000, y: 100 }
         ];
         
-        cultKnifeCreator(this, cultKnifePositions);
+        cultKnifeCreator(this, cultKnifePositions, this.gameManager);
         
         const eyePositions = 
         [
@@ -2007,7 +2053,7 @@
             //{ x: 200, y: 100 }
         ];
         
-        eyeCreator(this, eyePositions);
+        eyeCreator(this, eyePositions, this.gameManager);
         
         //this.eyes = new eye(this, 200, this.sys.game.config.height - 24);
 
@@ -2018,7 +2064,7 @@
         //START PROPS AFTER PLAYER Level1Game
         
         const thisLevel = 1;
-        this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - this.ground.height, 'Level2Game', thisLevel, gameManager);
+        this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - this.ground.height, 'Level2Game', thisLevel, this.gameManager);
 
         this.grasstop = this.add.tileSprite
         (
@@ -2088,9 +2134,9 @@
         const worldWidthX = 2250;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
-        const gameManager = this.scene.get('GameManager');
-        gameManager.updateHighestLevel(2);
-        gameManager.updateCurrentLevel(2);
+        this.gameManager = this.scene.get('GameManager');
+        this.gameManager.updateHighestLevel(2);
+        this.gameManager.updateCurrentLevel(2);
 
 
         //END BASIC SETUP Level2Game
@@ -2145,7 +2191,7 @@
         //START PLAYER SETUP Level2Game
 
 
-        createPlayer(this, 32, this.sys.game.config.height - 24, gameManager);
+        createPlayer(this, 32, this.sys.game.config.height - 24, this.gameManager);
         //this.player.buddha();
         
 
@@ -2168,7 +2214,7 @@
             { x: 1580, y: 100 }
         ];
         
-        cultCreator(this, cultPositions);
+        cultCreator(this, cultPositions, this.gameManager);
         
         this.cultGroup1 = new Set([1, 2]);
         this.cultGroup2 = new Set([3, 4]);
@@ -2179,7 +2225,7 @@
             { x: -150, y: 100 }
         ];
         
-        cultKnifeCreator(this, cultKnifePositions);
+        cultKnifeCreator(this, cultKnifePositions, this.gameManager);
 
 
         //END ENEMY SETUP Level2Game
@@ -2189,7 +2235,7 @@
         
         
         const thisLevel = 2;
-        this.pipe = new pipeNext(this, 2050, this.sys.game.config.height - this.ground.height, 'Level3Game', 2, gameManager);
+        this.pipe = new pipeNext(this, 2050, this.sys.game.config.height - this.ground.height, 'Level3Game', 2, this.gameManager);
 
         this.grasstop = this.add.tileSprite
         (
@@ -2278,9 +2324,9 @@
         const worldWidthX = 1325;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
-        const gameManager = this.scene.get('GameManager');
-        gameManager.updateHighestLevel(3);
-        gameManager.updateCurrentLevel(3);
+        this.gameManager = this.scene.get('GameManager');
+        this.gameManager.updateHighestLevel(3);
+        this.gameManager.updateCurrentLevel(3);
         
 
         //END BASIC SETUP Level3Game
@@ -2331,7 +2377,7 @@
         //START PLAYER SETUP Level3Game
 
 
-        createPlayer(this, 32, this.sys.game.config.height - 24, gameManager);
+        createPlayer(this, 32, this.sys.game.config.height - 24, this.gameManager);
         //this.player.buddha();
         
 
@@ -2347,7 +2393,7 @@
             { x: 1200, y: 100 }
         ];
         
-        cultCreator(this, cultPositions);
+        cultCreator(this, cultPositions, this.gameManager);
         
         const cultKnifePositions = 
         [
@@ -2363,7 +2409,7 @@
             { x: 1300, y: 100 }
         ];
         
-        cultKnifeCreator(this, cultKnifePositions);
+        cultKnifeCreator(this, cultKnifePositions, this.gameManager);
         
         const eyePositions = 
         [
@@ -2371,7 +2417,7 @@
             { x: 1200, y: 100 }
         ];
         
-        eyeCreator(this, eyePositions);
+        eyeCreator(this, eyePositions, this.gameManager);
         
         
         //END ENEMY SETUP Level3Game
@@ -2381,7 +2427,7 @@
         
         
         const thisLevel = 3;
-        this.pipe = new pipeNext(this, 1300, this.sys.game.config.height - this.ground.height, 'Level4Game', thisLevel, gameManager);
+        this.pipe = new pipeNext(this, 1300, this.sys.game.config.height - this.ground.height, 'Level4Game', thisLevel, this.gameManager);
 
         this.grasstop = this.add.tileSprite
         (
@@ -2444,9 +2490,9 @@
         const worldWidthX = 2400;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
-        const gameManager = this.scene.get('GameManager');
-        gameManager.updateHighestLevel(4);
-        gameManager.updateCurrentLevel(4);
+        this.gameManager = this.scene.get('GameManager');
+        this.gameManager.updateHighestLevel(4);
+        this.gameManager.updateCurrentLevel(4);
         
 
         //END BASIC SETUP Level4Game
@@ -2520,7 +2566,7 @@
         //START PLAYER SETUP Level4Game
 
 
-        createPlayer(this, 32, this.sys.game.config.height - 24, gameManager);
+        createPlayer(this, 32, this.sys.game.config.height - 24, this.gameManager);
         //this.player.buddha();
         
 
@@ -2548,7 +2594,7 @@
           { x: 1580, y: 100 }
         ];
         
-        cultCreator(this, cultPositions);
+        cultCreator(this, cultPositions, this.gameManager);
         
         this.cultGroup1 = new Set([1, 2, 3, 4, 5, 6]);
         this.cultGroup2 = new Set([9, 10, 11, 12, 13, 14]);
@@ -2562,7 +2608,7 @@
             { x: 900, y: 100 }
         ];
         
-        cultKnifeCreator(this, cultKnifePositions);
+        cultKnifeCreator(this, cultKnifePositions, this.gameManager);
         
         const eyePositions = 
         [
@@ -2575,7 +2621,7 @@
             { x: 1564, y: 100 }
         ];
         
-        eyeCreator(this, eyePositions);
+        eyeCreator(this, eyePositions, this.gameManager);
         
         this.eyeGroup1 = new Set([1, 2, 3]);
         this.eyeGroup2 = new Set([5, 6, 7]);
@@ -2588,7 +2634,7 @@
         
         
         const thisLevel = 4;
-        this.pipe = new pipeNext(this, 2225, this.sys.game.config.height - this.ground.height, 'MainMenu', 4, gameManager);
+        this.pipe = new pipeNext(this, 2225, this.sys.game.config.height - this.ground.height, 'MainMenu', 4, this.gameManager);
 
         this.grasstop = this.add.tileSprite
         (
@@ -2668,7 +2714,7 @@
     {
         super({key: 'UpgradeRoom'});
         
-        this.cardAmount = 5;
+        this.cardAmount = 6;
         
         this.upgradeCardData = 
         {
@@ -2676,52 +2722,98 @@
             {
                 id: 1,
                 name: 'Birdshot',
-                description: 'Replace shells with Birdshot.'
+                description: 'Replace shells with Birdshot.',
+                effect: (gameManager) => 
+                {
+                    gameManager.fireModeUpgrade = 'birdshot';
+                }
             },
             'slugs': 
             {
                 id: 2,
                 name: 'Slugs',
-                description: 'Replace shells with Slugs.'
+                description: 'Replace shells with Slugs.',
+                effect: (gameManager) => 
+                {
+                    gameManager.fireModeUpgrade = 'slug';
+                }
             },
             'damage': 
             {
                 id: 3,
                 name: 'Damage Boost',
-                description: 'Increase Damage by 25%.'
+                description: 'Increase Damage by 25%.',
+                effect: (gameManager) => 
+                {
+                    gameManager.damageUpgrade = true;
+                }
             },
             'block': 
             {
-                id: 3,
+                id: 4,
                 name: 'Block Upgrade',
-                description: 'Succesful blocks reset block duration.'
+                description: 'Succesful blocks reset block duration.',
+                effect: (gameManager) => 
+                {
+                    gameManager.blockUpgrade = true;
+                }
+                
             },
             'health': 
             {
-                id: 4,
+                id: 5,
                 name: 'Extra Life',
-                description: 'Survive an extra hit.'
+                description: 'Survive an extra hit.',
+                effect: (gameManager) => 
+                {
+                    gameManager.healthUpgrade = true;
+                }
             },
             'doublefire': 
             {
-                id: 5,
+                id: 6,
                 name: 'Cult Energy',
-                description: 'Succesful kills trigger double fire rate.'
+                description: 'Succesful kills trigger double fire rate.',
+                effect: (gameManager) => 
+                {
+                    gameManager.doubleFireUpgrade = true;
+                }
             }
         };
     }
 
     create()
     {
-        console.log("visiting upgrade room");
-        const gameManager = this.scene.get('GameManager');
+        this.gameManager = this.scene.get('GameManager');
         
-        let card1 = this.getRandomCardId();
-        let card2 = this.getRandomCardId();
+        let card1;
+        let card2;
         
-        console.log(card1, card2);
+        do
+        {
+            card1 = this.getRandomCardId();
+        }
+        while(this.gameManager.ownedCards.has(card1))
         
-        transitionLevels(this, gameManager);
+        do
+        {
+            card2 = this.getRandomCardId();
+        }
+        while(card2 === card1 || this.gameManager.ownedCards.has(card2))
+    
+        this.cardDisplay1 = this.displayCard(card1, 'left');
+        this.cardDisplay1.setInteractive({cursor: 'pointer'});
+        this.cardDisplay1.on('pointerdown', () =>
+        {
+            this.acceptCard(card1);
+        });
+        
+        this.cardDisplay2 = this.displayCard(card2, 'right');
+        this.cardDisplay2.setInteractive({cursor: 'pointer'});
+        this.cardDisplay2.on('pointerdown', () =>
+        {
+            this.acceptCard(card2);
+        }); 
     }
     
     update(time, delta)
@@ -2729,9 +2821,56 @@
         
     }
     
+    acceptCard(id)
+    {
+        const card = Object.values(this.upgradeCardData).find(c => c.id === id);
+        card.effect(this.gameManager);
+        this.gameManager.ownedCards.add(id); 
+        transitionLevels(this, this.gameManager);
+    }
+    
     getRandomCardId()
     {
         return Math.floor(Math.random() * (this.cardAmount - 1 + 1)) + 1;
+    }
+    
+    displayCard(id, position)
+    {
+        const card = Object.values(this.upgradeCardData).find(c => c.id === id);
+        let titleText;
+        let descriptionText;
+        let xPos;
+        const yCenter = this.sys.game.config.height / 2;
+
+        if(position === 'left')
+        {
+            xPos = this.sys.game.config.width / 4;
+        }
+        else
+        {
+            xPos = (this.sys.game.config.width / 4) * 3;
+        }
+        
+        const cardContainer = this.add.container(xPos, yCenter);
+        titleText = createText(this, 0, 50, card.name, 16, '#fff').setOrigin(0.5, 0.5);
+        descriptionText = createText(this, 0, 0, card.description, 8, '#fff').setOrigin(0.5, 0.5);
+        
+        cardContainer.add([titleText, descriptionText]);
+        
+        const hitAreaWidth = this.sys.game.config.width / 2;
+        const hitAreaHeight = this.sys.game.config.height;
+
+        const hitArea = new Phaser.Geom.Rectangle
+        (
+            -hitAreaWidth / 2,
+            -hitAreaHeight / 2,
+            hitAreaWidth,
+            hitAreaHeight
+        );
+
+        cardContainer.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        
+        return cardContainer;
     }
   }
   
@@ -2748,6 +2887,8 @@
         this.visitedUpgradeRoom2 = false;
         this.visitedUpgradeRoom3 = false;
         
+        this.ownedCards = new Set();
+        
         this.fireModeUpgrade = 'buckshot';
         this.damageUpgrade = false;
         this.blockUpgrade = false;
@@ -2762,7 +2903,7 @@
     
     update(time, delta)
     {
-        console.log("highest level: " + this.highestLevel, "current level: " + this.currentLevel);
+        
     }
     
     updateHighestLevel(newHigh)
@@ -2780,7 +2921,20 @@
     
     reset()
     {
-        this.highestLevel = this.initialHighestLevel;
+        this.highestLevel = 0;
+        this.initialHighestLevel = this.highestLevel;
+        this.currentLevel = 0;
+        this.visitedUpgradeRoom1 = false;
+        this.visitedUpgradeRoom2 = false;
+        this.visitedUpgradeRoom3 = false;
+        
+        this.ownedCards = new Set();
+        
+        this.fireModeUpgrade = 'buckshot';
+        this.damageUpgrade = false;
+        this.blockUpgrade = false;
+        this.healthUpgrade = false;
+        this.doubleFireUpgrade = false;
     }
   }
   
