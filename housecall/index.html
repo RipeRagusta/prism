@@ -644,15 +644,15 @@
             this.checkMovement(); 
             this.checkFireMode(time);
             this.checkShooting(time);
-            this.checkFlip(this.scene.input.activePointer);
             this.scene.input.activePointer.updateWorldPoint(this.scene.cameras.main);
+            this.checkFlip(this.scene.input.activePointer);
             this.updateAimAngle(this.scene.input.activePointer);
         } 
     }
     
     checkFireMode(time)
     {
-        if(this.wasd.v.isDown && time > this.lastFireModeSwitch + this.fireModeSwitchRate)
+        /*if(this.wasd.v.isDown && time > this.lastFireModeSwitch + this.fireModeSwitchRate)
         {
             if(this.fireMode === 'buckshot')
             {
@@ -669,7 +669,7 @@
             
             this.scene.sound.play('switchfiremode');
             
-            this.lastFireModeSwitch = time;
+            this.lastFireModeSwitch = time;*/
             
             if(this.fireMode === 'buckshot')
             {
@@ -683,7 +683,7 @@
             {
                 this.damagePerShot = 0.3;
             }
-        }
+        //}
     }
     
     checkShooting(time)
@@ -979,7 +979,7 @@
 
   class pipeNext extends Phaser.Physics.Arcade.Sprite
   {
-      constructor(scene, x, y, key) 
+      constructor(scene, x, y, key, fromLevel, gameManager) 
       {
         super(scene, x, y, 'pipe');
         
@@ -1065,9 +1065,53 @@
         
         scene.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => 
         {
-          scene.scene.start(key);
+            transitionLevels(scene, gameManager);
         });
       }
+  }
+  
+  function transitionLevels(scene, gameManager)
+  {
+        if(gameManager.currentLevel === 1)
+        {
+            if(gameManager.visitedUpgradeRoom1 === true)
+            {
+                scene.scene.start('Level2Game');
+            }
+            else
+            {
+                gameManager.visitedUpgradeRoom1 = true;
+                scene.scene.start('UpgradeRoom');
+            }
+        }
+        else if(gameManager.currentLevel === 2)
+        {
+            if(gameManager.visitedUpgradeRoom2 === true)
+            {
+                scene.scene.start('Level3Game');
+            }
+            else
+            {
+                gameManager.visitedUpgradeRoom2 = true;
+                scene.scene.start('UpgradeRoom');
+            }
+        }
+        else if(gameManager.currentLevel === 3)
+        {
+            if(gameManager.visitedUpgradeRoom3 === true)
+            {
+                scene.scene.start('Level4Game');
+            }
+            else
+            {
+                gameManager.visitedUpgradeRoom3 = true;
+                scene.scene.start('UpgradeRoom');
+            }
+        }
+        else if(gameManager.currentLevel === 4)
+        {
+            scene.scene.start('MainMenu');
+        }
   }
 
   class Loading extends Phaser.Scene
@@ -1174,6 +1218,7 @@
     update()
     {
         this.scene.stop('Loading');
+        this.scene.start('GameManager');
         this.scene.start('MainMenu');
     }
   }
@@ -1198,6 +1243,8 @@
         const worldWidthX = this.sys.game.config.width * 3;
         this.physics.world.setBounds(0, 0, worldWidthX / 3, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
+        const gameManager = this.scene.get('GameManager');
+        gameManager.reset();
 
 
         //END BASIC SETUP MainMenu
@@ -1425,6 +1472,8 @@
         
         
         this.cameras.main.setBounds(0, 0, worldWidthX, 176);
+        this.cameras.scrollX = 0;
+        this.cameras.scrollY = 0;
         //this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
         this.cameras.main.setZoom(1);
         
@@ -1473,7 +1522,7 @@
     scene.grill.setOrigin(0, 1);
   }
   
-  function createPlayer(scene, x, y)
+  function createPlayer(scene, x, gameManager)
   {
         scene.playerBulletsHolder = scene.physics.add.group
         ({
@@ -1868,7 +1917,10 @@
         const worldWidthX = 1800;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
-
+        const gameManager = this.scene.get('GameManager');
+        gameManager.updateHighestLevel(1);
+        gameManager.updateCurrentLevel(1);
+        
 
         //END BASIC SETUP Level1Game
 
@@ -1919,7 +1971,7 @@
         //START PLAYER SETUP Level1Game
 
         
-        createPlayer(this, 32, this.sys.game.config.height - 24);
+        createPlayer(this, 32, this.sys.game.config.height - 24, gameManager);
         this.player.canShoot = false;
         this.time.delayedCall(200, () => this.player.canShoot = true);
         //this.player.buddha();
@@ -1965,8 +2017,8 @@
         
         //START PROPS AFTER PLAYER Level1Game
         
-        
-        this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - this.ground.height, 'Level2Game');
+        const thisLevel = 1;
+        this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - this.ground.height, 'Level2Game', thisLevel, gameManager);
 
         this.grasstop = this.add.tileSprite
         (
@@ -1996,6 +2048,8 @@
         this.cameras.main.setBounds(0, 0, worldWidthX, 176);
         this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
         this.cameras.main.setZoom(1);
+        this.cameras.scrollX = 0;
+        this.cameras.scrollY = 0;
         
         
         //END CAMERA SETUP Level1Game
@@ -2034,6 +2088,9 @@
         const worldWidthX = 2250;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
+        const gameManager = this.scene.get('GameManager');
+        gameManager.updateHighestLevel(2);
+        gameManager.updateCurrentLevel(2);
 
 
         //END BASIC SETUP Level2Game
@@ -2088,7 +2145,7 @@
         //START PLAYER SETUP Level2Game
 
 
-        createPlayer(this, 32, this.sys.game.config.height - 24);
+        createPlayer(this, 32, this.sys.game.config.height - 24, gameManager);
         //this.player.buddha();
         
 
@@ -2130,8 +2187,9 @@
 
         //START PROPS AFTER PLAYER Level2Game
         
-
-        this.pipe = new pipeNext(this, 2050, this.sys.game.config.height - this.ground.height, 'Level3Game');
+        
+        const thisLevel = 2;
+        this.pipe = new pipeNext(this, 2050, this.sys.game.config.height - this.ground.height, 'Level3Game', 2, gameManager);
 
         this.grasstop = this.add.tileSprite
         (
@@ -2159,6 +2217,8 @@
         this.cameras.main.setBounds(0, 0, worldWidthX, 176);
         this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
         this.cameras.main.setZoom(1);
+        this.cameras.scrollX = 0;
+        this.cameras.scrollY = 0;
 
 
         //END CAMERA SETUP Level2Game
@@ -2218,7 +2278,10 @@
         const worldWidthX = 1325;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
-
+        const gameManager = this.scene.get('GameManager');
+        gameManager.updateHighestLevel(3);
+        gameManager.updateCurrentLevel(3);
+        
 
         //END BASIC SETUP Level3Game
 
@@ -2268,7 +2331,7 @@
         //START PLAYER SETUP Level3Game
 
 
-        createPlayer(this, 32, this.sys.game.config.height - 24);
+        createPlayer(this, 32, this.sys.game.config.height - 24, gameManager);
         //this.player.buddha();
         
 
@@ -2316,8 +2379,9 @@
         
         //START PROPS AFTER PLAYER Level3Game
         
-
-        this.pipe = new pipeNext(this, 1300, this.sys.game.config.height - this.ground.height, 'Level4Game');
+        
+        const thisLevel = 3;
+        this.pipe = new pipeNext(this, 1300, this.sys.game.config.height - this.ground.height, 'Level4Game', thisLevel, gameManager);
 
         this.grasstop = this.add.tileSprite
         (
@@ -2345,6 +2409,8 @@
         this.cameras.main.setBounds(0, 0, worldWidthX, 176);
         this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
         this.cameras.main.setZoom(1);
+        this.cameras.scrollX = 0;
+        this.cameras.scrollY = 0;
 
 
         //END CAMERA SETUP Level3Game
@@ -2378,7 +2444,10 @@
         const worldWidthX = 2400;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
-
+        const gameManager = this.scene.get('GameManager');
+        gameManager.updateHighestLevel(4);
+        gameManager.updateCurrentLevel(4);
+        
 
         //END BASIC SETUP Level4Game
 
@@ -2451,7 +2520,7 @@
         //START PLAYER SETUP Level4Game
 
 
-        createPlayer(this, 32, this.sys.game.config.height - 24);
+        createPlayer(this, 32, this.sys.game.config.height - 24, gameManager);
         //this.player.buddha();
         
 
@@ -2517,8 +2586,9 @@
      
         //START PROPS AFTER PLAYER Level4Game
         
-
-        this.pipe = new pipeNext(this, 2225, this.sys.game.config.height - this.ground.height, 'MainMenu');
+        
+        const thisLevel = 4;
+        this.pipe = new pipeNext(this, 2225, this.sys.game.config.height - this.ground.height, 'MainMenu', 4, gameManager);
 
         this.grasstop = this.add.tileSprite
         (
@@ -2544,6 +2614,8 @@
         this.cameras.main.setBounds(0, 0, worldWidthX, 176);
         this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
         this.cameras.main.setZoom(1);
+        this.cameras.scrollX = 0;
+        this.cameras.scrollY = 0;
 
 
         //END CAMERA SETUP Level4Game
@@ -2590,6 +2662,128 @@
         });
   }
   
+  class UpgradeRoom extends Phaser.Scene
+  {
+    constructor()
+    {
+        super({key: 'UpgradeRoom'});
+        
+        this.cardAmount = 5;
+        
+        this.upgradeCardData = 
+        {
+            'birdshot': 
+            {
+                id: 1,
+                name: 'Birdshot',
+                description: 'Replace shells with Birdshot.'
+            },
+            'slugs': 
+            {
+                id: 2,
+                name: 'Slugs',
+                description: 'Replace shells with Slugs.'
+            },
+            'damage': 
+            {
+                id: 3,
+                name: 'Damage Boost',
+                description: 'Increase Damage by 25%.'
+            },
+            'block': 
+            {
+                id: 3,
+                name: 'Block Upgrade',
+                description: 'Succesful blocks reset block duration.'
+            },
+            'health': 
+            {
+                id: 4,
+                name: 'Extra Life',
+                description: 'Survive an extra hit.'
+            },
+            'doublefire': 
+            {
+                id: 5,
+                name: 'Cult Energy',
+                description: 'Succesful kills trigger double fire rate.'
+            }
+        };
+    }
+
+    create()
+    {
+        console.log("visiting upgrade room");
+        const gameManager = this.scene.get('GameManager');
+        
+        let card1 = this.getRandomCardId();
+        let card2 = this.getRandomCardId();
+        
+        console.log(card1, card2);
+        
+        transitionLevels(this, gameManager);
+    }
+    
+    update(time, delta)
+    {
+        
+    }
+    
+    getRandomCardId()
+    {
+        return Math.floor(Math.random() * (this.cardAmount - 1 + 1)) + 1;
+    }
+  }
+  
+  class GameManager extends Phaser.Scene
+  {
+    constructor()
+    {
+        super({key: 'GameManager'});
+        
+        this.highestLevel = 0;
+        this.initialHighestLevel = this.highestLevel;
+        this.currentLevel = 0;
+        this.visitedUpgradeRoom1 = false;
+        this.visitedUpgradeRoom2 = false;
+        this.visitedUpgradeRoom3 = false;
+        
+        this.fireModeUpgrade = 'buckshot';
+        this.damageUpgrade = false;
+        this.blockUpgrade = false;
+        this.healthUpgrade = false;
+        this.doubleFireUpgrade = false;
+    }
+
+    create()
+    {
+        
+    }
+    
+    update(time, delta)
+    {
+        console.log("highest level: " + this.highestLevel, "current level: " + this.currentLevel);
+    }
+    
+    updateHighestLevel(newHigh)
+    {
+        if(newHigh > this.highestLevel)
+        {
+            this.highestLevel = newHigh;
+        }
+    }
+    
+    updateCurrentLevel(newCurrent)
+    {
+        this.currentLevel = newCurrent;
+    }
+    
+    reset()
+    {
+        this.highestLevel = this.initialHighestLevel;
+    }
+  }
+  
   const config =
   {
     type: Phaser.AUTO,
@@ -2622,6 +2816,8 @@
     [
       Loading,
       MainMenu,
+      GameManager,
+      UpgradeRoom,
       Level1Game,
       Level2Game,
       Level3Game,
