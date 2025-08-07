@@ -1951,6 +1951,93 @@
             scene.wheat.setTint(color);
         }
   }
+  
+    function createRandomEnemies(scene, spawnList, worldWidthX, gameManager)
+    {
+        function getRandomCoords(worldWidthX) 
+        {
+            let min = 416;
+            return Math.floor(Math.random() * (worldWidthX - min + 1)) + min;
+        }
+        
+        for (const enemy of spawnList) 
+        {
+            const currentEnemy = enemy.type;
+            const enemyAmount = enemy.amount;
+            
+            
+            let positions = new Array();
+            
+            if(currentEnemy === 'cult')
+            {
+                const chosenPositions = new Set();
+                
+                for(let i = 0; i < enemyAmount; i++)
+                {
+                    let xCoord;
+                    
+                    do
+                    {
+                        xCoord = getRandomCoords(worldWidthX);
+                        console.log(xCoord);
+                    }
+                    while(chosenPositions.has(xCoord));
+                     
+                    const newCult = { x: xCoord, y: 100 };
+                    chosenPositions.add(xCoord);
+                    positions.push(newCult);
+                }
+                
+                cultCreator(scene, positions, gameManager);
+            }    
+            else if(currentEnemy === 'cultKnife')
+            {
+                const chosenPositions = new Set();
+                
+                for(let i = 0; i < enemyAmount; i++)
+                {
+                    let xCoord;
+                    
+                    do
+                    {
+                        xCoord = getRandomCoords(worldWidthX);
+                        console.log(xCoord);
+                    }
+                    while(chosenPositions.has(xCoord));
+                     
+                    const newCultKnife = { x: xCoord, y: 100 };
+                    chosenPositions.add(xCoord);
+                    positions.push(newCultKnife);
+                }
+                
+                cultKnifeCreator(scene, positions, gameManager);
+            }
+            else if(currentEnemy === 'eye')
+            {
+                const chosenPositions = new Set();
+                
+                for(let i = 0; i < enemyAmount; i++)
+                {
+                    let xCoord;
+                    
+                    do
+                    {
+                        xCoord = getRandomCoords(worldWidthX);
+                        console.log(xCoord);
+                    }
+                    while(chosenPositions.has(xCoord));
+                     
+                    const newEye = { x: xCoord, y: 100 };
+                    chosenPositions.add(xCoord);
+                    positions.push(newEye);
+                }
+                
+                eyeCreator(scene, positions, gameManager);
+            }
+        }
+    }
+    
+    
 
   class Level1Game extends Phaser.Scene
   {
@@ -2037,7 +2124,17 @@
       
         //START ENEMY SETUP Level1Game
         
-        const cultPositions = 
+        
+        this.spawnList = 
+        [
+            { type: 'cult', amount: 3 },
+            { type: 'cultKnife', amount: 5 }
+        ];
+        
+        createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
+
+        
+        /*const cultPositions = 
         [
             { x: 750, y: 100 },
             { x: 1050, y: 100 },
@@ -2062,7 +2159,7 @@
             //{ x: 200, y: 100 }
         ];
         
-        eyeCreator(this, eyePositions, this.gameManager);
+        eyeCreator(this, eyePositions, this.gameManager);*/ //OLD PRESET LEVEL
         
         //this.eyes = new eye(this, 200, this.sys.game.config.height - 24);
 
@@ -2210,7 +2307,16 @@
         //START ENEMY SETUP Level2Game
 
 
-        const cultPositions = 
+        this.spawnList = 
+        [
+            { type: 'cult', amount: 9 },
+            { type: 'cultKnife', amount: 1 }
+        ];
+        
+        createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
+
+
+        /*const cultPositions = 
         [
             { x: 500, y: 100 },
             { x: 516, y: 100 },
@@ -2234,7 +2340,7 @@
             { x: -150, y: 100 }
         ];
         
-        cultKnifeCreator(this, cultKnifePositions, this.gameManager);
+        cultKnifeCreator(this, cultKnifePositions, this.gameManager);*/ //OLD PRESET LEVEL
 
 
         //END ENEMY SETUP Level2Game
@@ -2290,11 +2396,13 @@
         cultSeparation(this.cults, this.player);
         //eyeSeparation(this.eyes, this.player);
         
-        activateCultGroups(this, this.cultGroup1);
-        activateCultGroups(this, this.cultGroup2);
-        activateCultGroups(this, this.cultGroup3);
+        //activateCultGroups(this, this.cultGroup1); //OLD PRESET
+        //activateCultGroups(this, this.cultGroup2);
+        //activateCultGroups(this, this.cultGroup3);
     }
   }
+  
+  
   
   function activateCultGroups(scene, cultGroup)
   {
@@ -2396,7 +2504,17 @@
         //START ENEMY SETUP Level3Game
 
 
-        const cultPositions = 
+        this.spawnList = 
+        [
+            { type: 'cult', amount: 2 },
+            { type: 'cultKnife', amount: 10 },
+            { type: 'eye', amount: 2 }
+        ];
+        
+        createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
+
+
+        /*const cultPositions = 
         [
             { x: 500, y: 100 },
             { x: 1200, y: 100 }
@@ -2426,7 +2544,7 @@
             { x: 1200, y: 100 }
         ];
         
-        eyeCreator(this, eyePositions, this.gameManager);
+        eyeCreator(this, eyePositions, this.gameManager); */ // OLD PRESET
         
         
         //END ENEMY SETUP Level3Game
@@ -2585,7 +2703,17 @@
         //START ENEMY SETUP Level4Game
 
 
-        const cultPositions = 
+        this.spawnList = 
+        [
+            { type: 'cult', amount: 14 },
+            { type: 'cultKnife', amount: 5 },
+            { type: 'eye', amount: 7 }
+        ];
+        
+        createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
+
+
+        /*const cultPositions = 
         [
           { x: 600, y: 100 },
           { x: 616, y: 100 },
@@ -2633,7 +2761,7 @@
         eyeCreator(this, eyePositions, this.gameManager);
         
         this.eyeGroup1 = new Set([1, 2, 3]);
-        this.eyeGroup2 = new Set([5, 6, 7]);
+        this.eyeGroup2 = new Set([5, 6, 7]);*/ //OLD PRESET LEVEL
         
         
         //END ENEMY SETUP Level4Game
@@ -2687,11 +2815,11 @@
       cultSeparation(this.cults, this.player);
       eyeSeparation(this.eyes, this.player);
       
-      activateCultGroups(this, this.cultGroup1);
-      activateCultGroups(this, this.cultGroup2);
+     // activateCultGroups(this, this.cultGroup1);
+      //activateCultGroups(this, this.cultGroup2);
       
-      activateEyeGroups(this, this.eyeGroup1);
-      activateEyeGroups(this, this.eyeGroup2);
+      //activateEyeGroups(this, this.eyeGroup1); OLD PRESET UPDATE
+      //activateEyeGroups(this, this.eyeGroup2);
     }
   }
   
