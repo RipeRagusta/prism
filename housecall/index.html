@@ -1570,6 +1570,9 @@
 
         scene.player = new player(scene, x, scene.sys.game.config.height - 24, scene.playerBulletsHolder);
         
+        scene.player.canShoot = false;
+        scene.time.delayedCall(200, () => scene.player.canShoot = true);
+        
         if(scene.ground)
         {
             scene.physics.add.collider(scene.player, scene.ground);
@@ -2130,8 +2133,8 @@
 
         
         createPlayer(this, 32, this.sys.game.config.height - 24, this.gameManager);
-        this.player.canShoot = false;
-        this.time.delayedCall(200, () => this.player.canShoot = true);
+       
+       
         //this.player.buddha();
 
 
