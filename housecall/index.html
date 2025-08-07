@@ -1979,7 +1979,6 @@
                     do
                     {
                         xCoord = getRandomCoords(worldWidthX);
-                        console.log(xCoord);
                     }
                     while(chosenPositions.has(xCoord));
                      
@@ -2001,7 +2000,6 @@
                     do
                     {
                         xCoord = getRandomCoords(worldWidthX);
-                        console.log(xCoord);
                     }
                     while(chosenPositions.has(xCoord));
                      
@@ -2023,7 +2021,6 @@
                     do
                     {
                         xCoord = getRandomCoords(worldWidthX);
-                        console.log(xCoord);
                     }
                     while(chosenPositions.has(xCoord));
                      
@@ -2037,8 +2034,11 @@
         }
     }
     
+    function getRandomXAnywhere(worldWidthX)
+    {
+        return (Math.floor(Math.random() * (worldWidthX - 0 + 1)) + 0);
+    }
     
-
   class Level1Game extends Phaser.Scene
   {
     constructor()
@@ -2075,10 +2075,11 @@
 
         this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
         this.stars.setScrollFactor(0.1);
-
-        this.scarecrow = this.add.image(600, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        
+        //preset was at 600 x for scarecrow
+        this.scarecrow = this.add.image(getRandomXAnywhere(worldWidthX), this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
         this.scarecrow.setScrollFactor(0.4);
-
+        
         this.wheat = this.add.tileSprite
         (
             0,
@@ -2214,7 +2215,7 @@
         this.scene.stop('Level1Game');
         this.scene.start('Level1Game');
       }
-
+      
       cultSeparation(this.cults, this.player);
       //eyeSeparation(this.eyes, this.player);
     }
@@ -2255,7 +2256,8 @@
         this.sky.setScrollFactor(0.1);
         this.sky.postFX.addColorMatrix().grayscale(1);
         
-        this.scarecrow = this.add.image(750, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        //preset was at 750 x for scarecrow
+        this.scarecrow = this.add.image(getRandomXAnywhere(worldWidthX), this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
         this.scarecrow.setScrollFactor(0.4);
         
         this.wheat = this.add.tileSprite
@@ -2455,7 +2457,8 @@
         this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'redskyrain').setOrigin(0, 0);
         this.sky.setScrollFactor(0.1);
         
-        this.scarecrow = this.add.image(633, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        //preset was at 633 for x for scarecrow
+        this.scarecrow = this.add.image(getRandomXAnywhere(worldWidthX), this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
         this.scarecrow.setScrollFactor(0.4);
 
         this.wheat = this.add.tileSprite
@@ -2631,7 +2634,8 @@
         this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'redsky').setOrigin(0, 0);
         this.sky.setScrollFactor(0.1);
         
-        this.scarecrow = this.add.image(750, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        //preset was at 750 x for scarecrow
+        this.scarecrow = this.add.image(getRandomXAnywhere(worldWidthX), this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
         this.scarecrow.setScrollFactor(0.4);
 
         this.wheat = this.add.tileSprite
