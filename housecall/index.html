@@ -1956,15 +1956,27 @@
     {
         function getRandomCoords(worldWidthX) 
         {
-            let min = 416;
+            let min = 600;
             return Math.floor(Math.random() * (worldWidthX - min + 1)) + min;
+        }
+        
+        function positionTaken(xCoord, chosenPositions, range)
+        {
+            for(const position of chosenPositions) 
+            {
+                if(Math.abs(position - xCoord) <= 8) 
+                {
+                    return true;
+                }
+            }
+            
+            return false;
         }
         
         for (const enemy of spawnList) 
         {
             const currentEnemy = enemy.type;
             const enemyAmount = enemy.amount;
-            
             
             let positions = new Array();
             
@@ -1974,13 +1986,14 @@
                 
                 for(let i = 0; i < enemyAmount; i++)
                 {
+                    let range = 8;
                     let xCoord;
                     
                     do
                     {
                         xCoord = getRandomCoords(worldWidthX);
                     }
-                    while(chosenPositions.has(xCoord));
+                    while(positionTaken(xCoord, chosenPositions, range));
                      
                     const newCult = { x: xCoord, y: 100 };
                     chosenPositions.add(xCoord);
@@ -1995,13 +2008,14 @@
                 
                 for(let i = 0; i < enemyAmount; i++)
                 {
+                    let range = 8;
                     let xCoord;
                     
                     do
                     {
                         xCoord = getRandomCoords(worldWidthX);
                     }
-                    while(chosenPositions.has(xCoord));
+                    while(positionTaken(xCoord, chosenPositions, range));
                      
                     const newCultKnife = { x: xCoord, y: 100 };
                     chosenPositions.add(xCoord);
@@ -2016,13 +2030,14 @@
                 
                 for(let i = 0; i < enemyAmount; i++)
                 {
+                    let range = 16;
                     let xCoord;
                     
                     do
                     {
                         xCoord = getRandomCoords(worldWidthX);
                     }
-                    while(chosenPositions.has(xCoord));
+                    while(positionTaken(xCoord, chosenPositions, range));
                      
                     const newEye = { x: xCoord, y: 100 };
                     chosenPositions.add(xCoord);
@@ -2311,7 +2326,7 @@
 
         this.spawnList = 
         [
-            { type: 'cult', amount: 9 },
+            { type: 'cult', amount: 14 },
             { type: 'cultKnife', amount: 1 }
         ];
         
@@ -2709,7 +2724,7 @@
 
         this.spawnList = 
         [
-            { type: 'cult', amount: 14 },
+            { type: 'cult', amount: 21 },
             { type: 'cultKnife', amount: 5 },
             { type: 'eye', amount: 7 }
         ];
