@@ -1192,6 +1192,7 @@
         this.load.image('slug', 'assets/slug.png');
         this.load.image('slugcult', 'assets/slugcult.png');
         this.load.image('slugshell', 'assets/slugshell.png');
+        this.load.image('slugicon', 'assets/slugicon.png');
         this.load.image('birdshotshell', 'assets/birdshotshell.png');
 
         this.load.audio('shotgunshot', 
@@ -1976,6 +1977,8 @@
             return false;
         }
         
+        const enemyData = new Map();
+        
         for (const enemy of spawnList) 
         {
             const currentEnemy = enemy.type;
@@ -2003,6 +2006,7 @@
                     positions.push(newCult);
                 }
                 
+                enemyData.set('cult', { positions: positions });
                 cultCreator(scene, positions, gameManager);
             }    
             else if(currentEnemy === 'cultKnife')
@@ -2025,6 +2029,7 @@
                     positions.push(newCultKnife);
                 }
                 
+                enemyData.set('cultKnife', { positions: positions });
                 cultKnifeCreator(scene, positions, gameManager);
             }
             else if(currentEnemy === 'eye')
@@ -2047,9 +2052,14 @@
                     positions.push(newEye);
                 }
                 
+                enemyData.set('eye', { positions: positions });
                 eyeCreator(scene, positions, gameManager);
             }
         }
+        
+        //console.log(enemyData);
+        
+        return enemyData;
     }
     
     function getRandomXAnywhere(worldWidthX)
@@ -2143,14 +2153,41 @@
       
         //START ENEMY SETUP Level1Game
         
+        if(this.gameManager.level1Data === null)
+        {
+            this.spawnList = 
+            [
+                { type: 'cult', amount: 3 },
+                { type: 'cultKnife', amount: 5 }
+            ];
+
+            this.gameManager.level1Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
+        }
+        else
+        {
+            //console.log(this.gameManager.level1Data);
+            
+            for(const enemy of this.gameManager.level1Data.keys()) 
+            {
+                //console.log(enemy);
+                if(enemy === 'cult')
+                {
+                    let enemyData = this.gameManager.level1Data.get(enemy);
+                    let enemyPositionArray = enemyData.positions;
+                    //console.log("enemy positions: " + enemyPositionArray);
+                    cultCreator(this, enemyPositionArray, this.gameManager);
+                }
+                else if(enemy === 'cultKnife')
+                {
+                    let enemyData = this.gameManager.level1Data.get(enemy);
+                    let enemyPositionArray = enemyData.positions;
+                    //console.log("enemy positions: " + enemyPositionArray);
+                    cultKnifeCreator(this, enemyPositionArray, this.gameManager);
+                }
+            }
+        }
         
-        this.spawnList = 
-        [
-            { type: 'cult', amount: 3 },
-            { type: 'cultKnife', amount: 5 }
-        ];
         
-        createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
 
         
         /*const cultPositions = 
@@ -2327,40 +2364,34 @@
         //START ENEMY SETUP Level2Game
 
 
-        this.spawnList = 
-        [
-            { type: 'cult', amount: 14 },
-            { type: 'cultKnife', amount: 1 }
-        ];
-        
-        createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
+        if(this.gameManager.level2Data === null)
+        {
+            this.spawnList = 
+            [
+                { type: 'cult', amount: 14 },
+                { type: 'cultKnife', amount: 1 }
+            ];
 
-
-        /*const cultPositions = 
-        [
-            { x: 500, y: 100 },
-            { x: 516, y: 100 },
-            { x: 1000, y: 100 },
-            { x: 1016, y: 100 },
-            { x: 1516, y: 100 },
-            { x: 1532, y: 100 },
-            { x: 1548, y: 100 },
-            { x: 1564, y: 100 },
-            { x: 1580, y: 100 }
-        ];
-        
-        cultCreator(this, cultPositions, this.gameManager);
-        
-        this.cultGroup1 = new Set([1, 2]);
-        this.cultGroup2 = new Set([3, 4]);
-        this.cultGroup3 = new Set([5, 6, 7, 8, 9]);
-        
-        const cultKnifePositions = 
-        [
-            { x: -150, y: 100 }
-        ];
-        
-        cultKnifeCreator(this, cultKnifePositions, this.gameManager);*/ //OLD PRESET LEVEL
+            this.gameManager.level2Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
+        }
+        else
+        { 
+            for(const enemy of this.gameManager.level2Data.keys()) 
+            {
+                if(enemy === 'cult')
+                {
+                    let enemyData = this.gameManager.level2Data.get(enemy);
+                    let enemyPositionArray = enemyData.positions;
+                    cultCreator(this, enemyPositionArray, this.gameManager);
+                }
+                else if(enemy === 'cultKnife')
+                {
+                    let enemyData = this.gameManager.level2Data.get(enemy);
+                    let enemyPositionArray = enemyData.positions;
+                    cultKnifeCreator(this, enemyPositionArray, this.gameManager);
+                }
+            }
+        }
 
 
         //END ENEMY SETUP Level2Game
@@ -2523,49 +2554,43 @@
 
 
         //START ENEMY SETUP Level3Game
+        
 
+        if(this.gameManager.level3Data === null)
+        {
+            this.spawnList = 
+            [
+                { type: 'cult', amount: 2 },
+                { type: 'cultKnife', amount: 10 },
+                { type: 'eye', amount: 2 }
+            ];
 
-        this.spawnList = 
-        [
-            { type: 'cult', amount: 2 },
-            { type: 'cultKnife', amount: 10 },
-            { type: 'eye', amount: 2 }
-        ];
-        
-        createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
-
-
-        /*const cultPositions = 
-        [
-            { x: 500, y: 100 },
-            { x: 1200, y: 100 }
-        ];
-        
-        cultCreator(this, cultPositions, this.gameManager);
-        
-        const cultKnifePositions = 
-        [
-            { x: 416, y: 100 },
-            { x: 500, y: 100 },
-            { x: 600, y: 100 },
-            { x: 700, y: 100 },
-            { x: 800, y: 100 },
-            { x: 900, y: 100 },
-            { x: 1000, y: 100 },
-            { x: 1100, y: 100 },
-            { x: 1200, y: 100 },
-            { x: 1300, y: 100 }
-        ];
-        
-        cultKnifeCreator(this, cultKnifePositions, this.gameManager);
-        
-        const eyePositions = 
-        [
-            { x: 500, y: 100 },
-            { x: 1200, y: 100 }
-        ];
-        
-        eyeCreator(this, eyePositions, this.gameManager); */ // OLD PRESET
+            this.gameManager.level3Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
+        }
+        else
+        { 
+            for(const enemy of this.gameManager.level3Data.keys()) 
+            {
+                if(enemy === 'cult')
+                {
+                    let enemyData = this.gameManager.level3Data.get(enemy);
+                    let enemyPositionArray = enemyData.positions;
+                    cultCreator(this, enemyPositionArray, this.gameManager);
+                }
+                else if(enemy === 'cultKnife')
+                {
+                    let enemyData = this.gameManager.level3Data.get(enemy);
+                    let enemyPositionArray = enemyData.positions;
+                    cultKnifeCreator(this, enemyPositionArray, this.gameManager);
+                }
+                else if(enemy === 'eye')
+                {
+                    let enemyData = this.gameManager.level3Data.get(enemy);
+                    let enemyPositionArray = enemyData.positions;
+                    eyeCreator(this, enemyPositionArray, this.gameManager);
+                }
+            }
+        }
         
         
         //END ENEMY SETUP Level3Game
@@ -2725,65 +2750,41 @@
         //START ENEMY SETUP Level4Game
 
 
-        this.spawnList = 
-        [
-            { type: 'cult', amount: 21 },
-            { type: 'cultKnife', amount: 5 },
-            { type: 'eye', amount: 7 }
-        ];
-        
-        createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
+        if(this.gameManager.level4Data === null)
+        {
+            this.spawnList = 
+            [
+                { type: 'cult', amount: 21 },
+                { type: 'cultKnife', amount: 5 },
+                { type: 'eye', amount: 7 }
+            ];
 
-
-        /*const cultPositions = 
-        [
-          { x: 600, y: 100 },
-          { x: 616, y: 100 },
-          { x: 632, y: 100 },
-          { x: 648, y: 100 },
-          { x: 664, y: 100 },
-          { x: 680, y: 100 },
-          { x: 900, y: 100 },
-          { x: 1000, y: 100 },
-          { x: 1500, y: 100 },
-          { x: 1516, y: 100 },
-          { x: 1532, y: 100 },
-          { x: 1548, y: 100 },
-          { x: 1564, y: 100 },
-          { x: 1580, y: 100 }
-        ];
-        
-        cultCreator(this, cultPositions, this.gameManager);
-        
-        this.cultGroup1 = new Set([1, 2, 3, 4, 5, 6]);
-        this.cultGroup2 = new Set([9, 10, 11, 12, 13, 14]);
-        
-        const cultKnifePositions = 
-        [
-            { x: -150, y: 100 },
-            { x: 416, y: 100 },
-            { x: 700, y: 100 },
-            { x: 800, y: 100 },
-            { x: 900, y: 100 }
-        ];
-        
-        cultKnifeCreator(this, cultKnifePositions, this.gameManager);
-        
-        const eyePositions = 
-        [
-            { x: 600, y: 100 },
-            { x: 632, y: 100 },
-            { x: 664, y: 100 },
-            { x: 900, y: 100 },
-            { x: 1500, y: 100 },
-            { x: 1532, y: 100 },
-            { x: 1564, y: 100 }
-        ];
-        
-        eyeCreator(this, eyePositions, this.gameManager);
-        
-        this.eyeGroup1 = new Set([1, 2, 3]);
-        this.eyeGroup2 = new Set([5, 6, 7]);*/ //OLD PRESET LEVEL
+            this.gameManager.level4Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
+        }
+        else
+        { 
+            for(const enemy of this.gameManager.level4Data.keys()) 
+            {
+                if(enemy === 'cult')
+                {
+                    let enemyData = this.gameManager.level4Data.get(enemy);
+                    let enemyPositionArray = enemyData.positions;
+                    cultCreator(this, enemyPositionArray, this.gameManager);
+                }
+                else if(enemy === 'cultKnife')
+                {
+                    let enemyData = this.gameManager.level4Data.get(enemy);
+                    let enemyPositionArray = enemyData.positions;
+                    cultKnifeCreator(this, enemyPositionArray, this.gameManager);
+                }
+                else if(enemy === 'eye')
+                {
+                    let enemyData = this.gameManager.level4Data.get(enemy);
+                    let enemyPositionArray = enemyData.positions;
+                    eyeCreator(this, enemyPositionArray, this.gameManager);
+                }
+            }
+        }
         
         
         //END ENEMY SETUP Level4Game
@@ -2892,6 +2893,7 @@
                 id: 2,
                 name: 'Slugs',
                 description: 'Replace shells with Slugs.',
+                icon: 'slugicon',
                 effect: (gameManager) => 
                 {
                     gameManager.fireModeUpgrade = 'slug';
@@ -2998,6 +3000,7 @@
         const card = Object.values(this.upgradeCardData).find(c => c.id === id);
         let titleText;
         let descriptionText;
+        let icon;
         let xPos;
         const yCenter = this.sys.game.config.height / 2;
 
@@ -3013,6 +3016,15 @@
         const cardContainer = this.add.container(xPos, yCenter);
         titleText = createText(this, 0, 50, card.name, 16, '#fff').setOrigin(0.5, 0.5);
         descriptionText = createText(this, 0, 0, card.description, 8, '#fff').setOrigin(0.5, 0.5);
+        if(card.icon)
+        {
+            icon = this.add.image
+            (
+              xPos,
+              0,
+              card.icon
+            ).setOrigin(0.5, 0);
+        }
         
         cardContainer.add([titleText, descriptionText]);
         
@@ -3053,6 +3065,11 @@
         this.blockUpgrade = false;
         this.healthUpgrade = false;
         this.doubleFireUpgrade = false;
+        
+        this.level1Data = null;
+        this.level2Data = null;
+        this.level3Data = null;
+        this.level4Data = null;
     }
 
     create()
@@ -3094,6 +3111,11 @@
         this.blockUpgrade = false;
         this.healthUpgrade = false;
         this.doubleFireUpgrade = false;
+        
+        this.level1Data = null;
+        this.level2Data = null;
+        this.level3Data = null;
+        this.level4Data = null;
     }
   }
   
