@@ -1590,6 +1590,11 @@
         {
             scene.player.health = 20;
         }
+        
+        if(gameManager.alwaysBuddha)
+        {
+            scene.player.buddha();
+        }
   }
 
   function cultSeparation(cults, player)
@@ -2368,7 +2373,7 @@
         {
             this.spawnList = 
             [
-                { type: 'cult', amount: 14 },
+                { type: 'cult', amount: 10 },
                 { type: 'cultKnife', amount: 1 }
             ];
 
@@ -3116,6 +3121,8 @@
         this.level2Data = null;
         this.level3Data = null;
         this.level4Data = null;
+        
+        this.alwaysBuddha = false;
     }
   }
   
