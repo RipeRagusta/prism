@@ -2956,6 +2956,8 @@
                 }
             }
         };
+        
+        this.ammoUpgrades = new Set([1, 2]);
     }
 
     create()
@@ -2981,7 +2983,7 @@
         {
             card2 = this.getRandomCardId();
         }
-        while(card2 === card1 || this.gameManager.ownedCards.has(card2))
+        while(card2 === card1 || this.gameManager.ownedCards.has(card2) || (this.ammoUpgrades.has(card1) && this.ammoUpgrades.has(card2)))
     
         this.cardDisplay1 = this.displayCard(card1, 'left');
         this.cardDisplay1.on('pointerdown', () =>
