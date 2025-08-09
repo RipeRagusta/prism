@@ -720,13 +720,13 @@
 
                     if(bullet)
                     {
-                        let pistolDamage = 5;
+                        let pistolDamage = 7;
                         
                         const gameManager = this.scene.gameManager;
                          
                         if(gameManager.pistolUpgrade)
                         {
-                            pistolDamage = 10;
+                            pistolDamage = 14;
                         }
                         
                         if(this.flip === false)
@@ -2989,7 +2989,7 @@
             'damage': 
             {
                 id: 3,
-                name: 'Damage Boost',
+                name: 'Gun Oil',
                 description: 'Increase Damage by 25%.',
                 icon: 'damageicon',
                 effect: (gameManager) => 
@@ -3000,7 +3000,7 @@
             'block': 
             {
                 id: 4,
-                name: 'Block Upgrade',
+                name: 'Refrain',
                 description: 'Succesful blocks reset block duration.',
                 icon: 'shieldicon',
                 effect: (gameManager) => 
@@ -3012,7 +3012,7 @@
             'health': 
             {
                 id: 5,
-                name: 'Extra Life',
+                name: 'Conditioning',
                 description: 'Survive an extra hit.',
                 icon: 'healthicon',
                 effect: (gameManager) => 
