@@ -633,6 +633,36 @@
             }
         );
 
+        this.pistolCasing = this.scene.add.particles
+        (
+            0, 0, 
+            'pistolcasing',
+            {
+                angle: 
+                {
+                    onEmit: () => 
+                    {
+                        if(this.flip === true)
+                        {
+                            return Phaser.Math.Between(-20, -45);
+                        }
+                        else
+                        {
+                            return  Phaser.Math.Between(200, 225);
+                        }
+                    }
+                }, 
+                speed: { min: 100, max: 200 },
+                gravityY: 300,
+                lifespan: { min: 1000, max: 1000 },
+                quantity: 1,
+                scale: { start: 1, end: 1 },
+                alpha: { start: 1, end: 1 },
+                blendMode: 'NORMAL',
+                frequency: -1
+            }
+        );
+
         this.fireModeConfig = 
         {
             'buckshot': 
@@ -737,6 +767,8 @@
                         {
                           bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(180), pistolDamage);
                         }
+                        
+                        this.pistolCasing.emitParticleAt(this.x, this.y);
                     }  
                 }
             });
@@ -1268,6 +1300,7 @@
         this.load.image('damageicon', 'assets/damageicon.png');
         this.load.image('cultenergyicon', 'assets/cultenergyicon.png');
         this.load.image('hollowpointsicon', 'assets/hollowpointsicon.png');
+        this.load.image('pistolcasing', 'assets/pistolcasing.png');
 
         this.load.audio('shotgunshot', 
         [
