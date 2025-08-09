@@ -32,13 +32,14 @@
       this.scene = scene;
     }
 
-    fire(x, y, angle)
+    fire(x, y, angle, damage)
     {
         this.originX = x;
         this.body.reset(x, y);
         this.setActive(true);
         this.setVisible(true);
         this.setRotation(angle);
+        this.damage = damage;
      
         this.scene.physics.velocityFromRotation(angle, this.speed, this.body.velocity);
        
@@ -448,8 +449,10 @@
         this.baseDamage = 1;
         this.initialDamage = this.baseDamage;
         this.fireMode = 'buckshot';
-        this.fireModeSwitchRate = 200;
-        this.lastFireModeSwitch = 0;
+        //this.fireModeSwitchRate = 200;
+        //this.lastFireModeSwitch = 0;
+        this.pistolMoveFireRate = 1500;
+        this.lastPistolMove = 0;
 
         this.wasd =
         {
@@ -458,7 +461,8 @@
           s: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
           a: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
           d: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
-          v: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.V),
+          q: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q),
+          e: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
           shift: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT)
         };
 
@@ -486,6 +490,25 @@
                             { key: 'player', frame: 0 }
                         ],
                 frameRate: 2,
+                repeat: 0
+            });
+        }
+        
+        if(!scene.anims.get('pistolmove'))
+        {
+            scene.anims.create
+            ({
+                key: 'pistolmove',
+                frames: [
+                            { key: 'player', frame: 5 },
+                            { key: 'player', frame: 3 },
+                            { key: 'player', frame: 3 },
+                            { key: 'player', frame: 4 },
+                            { key: 'player', frame: 3 },
+                            { key: 'player', frame: 5 },
+                            { key: 'player', frame: 0 }
+                        ],
+                frameRate: 7,
                 repeat: 0
             });
         }
@@ -671,10 +694,55 @@
             this.checkMovement(); 
             this.checkFireMode(time);
             this.checkShooting(time);
+            this.checkPistolMove(time);
             this.scene.input.activePointer.updateWorldPoint(this.scene.cameras.main);
             this.checkFlip(this.scene.input.activePointer);
             this.updateAimAngle(this.scene.input.activePointer);
         } 
+    }
+    
+    checkPistolMove(time)
+    {
+        if((this.wasd.e.isDown || this.wasd.q.isDown) && time > this.lastPistolMove + this.pistolMoveFireRate)
+        {
+            this.play("pistolmove", true);
+            
+            this.playedPistolShootingSound = false;
+            
+            this.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
+            {
+                if(frame.index === 4 && !this.playedPistolShootingSound) 
+                {
+                    this.playedPistolShootingSound = true;
+                    this.scene.sound.play('pistolsound');
+                    
+                    const bullet = this.bullets.get(this.x, this.y, 'slug');
+
+                    if(bullet)
+                    {
+                        let pistolDamage = 5;
+                        
+                        const gameManager = this.scene.gameManager;
+                         
+                        if(gameManager.pistolUpgrade)
+                        {
+                            pistolDamage = 10;
+                        }
+                        
+                        if(this.flip === false)
+                        {
+                          bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(0), pistolDamage);
+                        }
+                        else
+                        {
+                          bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(180), pistolDamage);
+                        }
+                    }  
+                }
+            });
+            
+            this.lastPistolMove = time;
+        }
     }
     
     checkFireMode(time)
@@ -708,7 +776,7 @@
             }
             else if(this.fireMode === 'birdshot')
             {
-                this.damagePerShot = this.baseDamage * 0.55;
+                this.damagePerShot = this.baseDamage * 0.6;
             }
         //}
     }
@@ -744,11 +812,11 @@
             {
                 if(this.flip === false)
                 {
-                  bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
+                  bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot);
                 }
                 else
                 {
-                  bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset));
+                  bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot);
                 }
 
                 offset += fireConfig.spreadIncrement;
@@ -1199,6 +1267,7 @@
         this.load.image('shieldicon', 'assets/shieldicon.png');
         this.load.image('damageicon', 'assets/damageicon.png');
         this.load.image('cultenergyicon', 'assets/cultenergyicon.png');
+        this.load.image('hollowpointsicon', 'assets/hollowpointsicon.png');
 
         this.load.audio('shotgunshot', 
         [
@@ -1248,6 +1317,11 @@
         this.load.audio('switchfiremode', 
         [
             'assets/switchfiremode.wav'
+        ]);
+        
+        this.load.audio('pistolsound', 
+        [
+            'assets/pistolsound.wav'
         ]);
     }
 
@@ -1439,6 +1513,7 @@
                     this.jumpControls.destroy();
                     this.leftClickControls.destroy();
                     this.rightClickControls.destroy();
+                    this.pistolControls.destroy();
                 }
             });
         
@@ -1491,10 +1566,11 @@
         
         this.controls = createText(this, worldWidthX / 2, 10, 'Controls:', 16, '#fff');
         
-        this.strafeControls = createText(this, worldWidthX / 2, 0 + this.controls.height + 20, 'A/D, ←/→: Strafe', 12, '#fff');
-        this.jumpControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + 25, 'W, Space, ↑: Jump', 12, '#fff');
-        this.rightClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 30, 'Right-Click, L-Shift: Block', 12, '#ff0000');
-        this.leftClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 35, 'Left-Click: Shoot (Hold)', 12, '#fff');
+        this.strafeControls = createText(this, worldWidthX / 2, 0 + this.controls.height + 20, 'A/D: Walk', 12, '#fff');
+        this.jumpControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + 25, 'Space: Jump', 12, '#fff');
+        this.rightClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 30, 'Right-Click: Block', 12, '#fff');
+        this.leftClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 35, 'Left-Click: Use Shotgun (Hold)', 12, '#fff');
+        this.pistolControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + 40, 'Q/E: Use Pistol', 12, '#fff');
         
         this.start = createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Start', 16, '#fff').setOrigin(0.5, 0.5);
         this.start.setInteractive({cursor: 'pointer'});
@@ -1722,7 +1798,7 @@
         scene.physics.add.collider(scene.cults, scene.cults);
         scene.physics.add.overlap(scene.cults, scene.playerBulletsHolder, (cult, bullet) =>
         {
-          cult.health -= scene.player.damagePerShot;
+          cult.health -= bullet.damage;
           bullet.destroy();
           if(!cult.anims.isPlaying)
           {
@@ -1758,7 +1834,7 @@
         
         scene.physics.add.overlap(scene.cultKnifes, scene.playerBulletsHolder, (cult, bullet) =>
         {
-          cult.health -= scene.player.damagePerShot;
+          cult.health -= bullet.damage;
           bullet.destroy();
           cult.bloodEmitter.setQuantity(4);
           cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
@@ -1821,7 +1897,7 @@
         
         scene.physics.add.overlap(scene.eyes, scene.playerBulletsHolder, (eye, bullet) =>
         {
-          eye.health -= scene.player.damagePerShot;
+          eye.health -= bullet.damage;
           bullet.destroy();
         });
         
@@ -2884,7 +2960,7 @@
     {
         super({key: 'UpgradeRoom'});
         
-        this.cardAmount = 6;
+        this.cardAmount = 7;
         
         this.upgradeCardData = 
         {
@@ -2953,6 +3029,17 @@
                 effect: (gameManager) => 
                 {
                     gameManager.doubleFireUpgrade = true;
+                }
+            },
+            'pistolDamage': 
+            {
+                id: 7,
+                name: 'Hollow Points',
+                description: 'Double handgun damage.',
+                icon: 'hollowpointsicon',
+                effect: (gameManager) => 
+                {
+                    gameManager.pistolUpgrade = true;
                 }
             }
         };
@@ -3094,6 +3181,7 @@
         this.blockUpgrade = false;
         this.healthUpgrade = false;
         this.doubleFireUpgrade = false;
+        this.pistolUpgrade = false;
         
         this.level1Data = null;
         this.level2Data = null;
