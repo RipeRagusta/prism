@@ -449,10 +449,9 @@
         this.baseDamage = 1;
         this.initialDamage = this.baseDamage;
         this.fireMode = 'buckshot';
-        //this.fireModeSwitchRate = 200;
-        //this.lastFireModeSwitch = 0;
         this.pistolMoveFireRate = 1500;
         this.lastPistolMove = 0;
+        this.lastShellCycle = 0;
 
         this.wasd =
         {
@@ -779,38 +778,45 @@
     
     checkFireMode(time)
     {
-        /*if(this.wasd.v.isDown && time > this.lastFireModeSwitch + this.fireModeSwitchRate)
+        const gameManager = this.scene.gameManager;
+                         
+        if(gameManager.multiAmmoUpgrade)
         {
-            if(this.fireMode === 'buckshot')
+            if(time > this.lastShellCycle + 50)
             {
-                this.fireMode = 'slug';
+                let randomShell = Math.floor(Math.random() * (3 - 1 + 1)) + 1;
+                
+                switch(randomShell)
+                {
+                    case 1:
+                        this.fireMode = 'buckshot';
+                        break;
+                        
+                    case 2:
+                        this.fireMode = 'slug';
+                        break;
+                        
+                    case 3:
+                        this.fireMode = 'birdshot';
+                        break;
+                }
+                
+                this.lastShellCycle = time;
             }
-            else if(this.fireMode === 'slug')
-            {
-                this.fireMode = 'birdshot';
-            }
-            else
-            {
-                this.fireMode = 'buckshot';
-            }
+        }
             
-            this.scene.sound.play('switchfiremode');
-            
-            this.lastFireModeSwitch = time;*/
-            
-            if(this.fireMode === 'buckshot')
-            {
-                this.damagePerShot = this.baseDamage;
-            }
-            else if(this.fireMode === 'slug')
-            {
-                this.damagePerShot = this.baseDamage * 5;
-            }
-            else if(this.fireMode === 'birdshot')
-            {
-                this.damagePerShot = this.baseDamage * 0.6;
-            }
-        //}
+        if(this.fireMode === 'buckshot')
+        {
+            this.damagePerShot = this.baseDamage;
+        }
+        else if(this.fireMode === 'slug')
+        {
+            this.damagePerShot = this.baseDamage * 5;
+        }
+        else if(this.fireMode === 'birdshot')
+        {
+            this.damagePerShot = this.baseDamage * 0.6;
+        }
     }
     
     checkShooting(time)
@@ -1301,6 +1307,7 @@
         this.load.image('cultenergyicon', 'assets/cultenergyicon.png');
         this.load.image('hollowpointsicon', 'assets/hollowpointsicon.png');
         this.load.image('pistolcasing', 'assets/pistolcasing.png');
+        this.load.image('multiammoicon', 'assets/multiammoicon.png');
 
         this.load.audio('shotgunshot', 
         [
@@ -2993,7 +3000,7 @@
     {
         super({key: 'UpgradeRoom'});
         
-        this.cardAmount = 7;
+        this.cardAmount = 8;
         
         this.upgradeCardData = 
         {
@@ -3006,6 +3013,7 @@
                 effect: (gameManager) => 
                 {
                     gameManager.fireModeUpgrade = 'birdshot';
+                    gameManager.multiAmmoUpgrade = false;
                 }
             },
             'slugs': 
@@ -3017,6 +3025,7 @@
                 effect: (gameManager) => 
                 {
                     gameManager.fireModeUpgrade = 'slug';
+                    gameManager.multiAmmoUpgrade = false;
                 }
             },
             'damage': 
@@ -3053,7 +3062,7 @@
                     gameManager.healthUpgrade = true;
                 }
             },
-            'doublefire': 
+            'doubleFire': 
             {
                 id: 6,
                 name: 'Cult Energy',
@@ -3074,10 +3083,21 @@
                 {
                     gameManager.pistolUpgrade = true;
                 }
+            },
+            'multiAmmo': 
+            {
+                id: 8,
+                name: 'Random Shells',
+                description: 'Replace shells with random ones.',
+                icon: 'multiammoicon',
+                effect: (gameManager) => 
+                {
+                    gameManager.multiAmmoUpgrade = true;
+                }
             }
         };
         
-        this.ammoUpgrades = new Set([1, 2]);
+        this.ammoUpgrades = new Set([1, 2, 8]);
     }
 
     create()
@@ -3215,6 +3235,7 @@
         this.healthUpgrade = false;
         this.doubleFireUpgrade = false;
         this.pistolUpgrade = false;
+        this.multiAmmoUpgrade = false;
         
         this.level1Data = null;
         this.level2Data = null;
@@ -3264,6 +3285,7 @@
         this.healthUpgrade = false;
         this.doubleFireUpgrade = false;
         this.pistolUpgrade = false;
+        this.multiAmmoUpgrade = false;
         
         this.level1Data = null;
         this.level2Data = null;
