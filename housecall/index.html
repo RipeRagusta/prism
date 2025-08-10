@@ -427,6 +427,7 @@
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
+        this.setSize(6, 16);
         this.setActive(true);
         this.setVisible(true);
         this.flip = false;
@@ -911,14 +912,37 @@
             this.play("block", false);
             this.lastPlayerBlock = time;
         }
-      
+        
+        let xOffset;
+        
         if(this.anims.isPlaying && this.anims.currentAnim.key === 'block' && this.anims.currentFrame.index === 1)
         {
             this.block = true;
+            this.setSize(8, 16);
+            if(this.flip === false)
+            {
+                xOffset = 6;
+            }
+            else
+            {
+                xOffset = 3;
+            }
+            
+            this.body.setOffset(xOffset, 0);
         }
         else
         {
             this.block = false;
+            this.setSize(6, 16);
+            if(this.flip === false)
+            {
+                xOffset = 3;
+            }
+            else
+            {
+                xOffset = 8;
+            }
+            this.body.setOffset(xOffset, 0);
         }
     }
 
@@ -1801,7 +1825,7 @@
           maxSize: 30,
           runChildUpdate: true
         });
-        scene.physics.add.collider(scene.player, scene.cultOrbHolder, (player, orb) =>
+        scene.physics.add.overlap(scene.player, scene.cultOrbHolder, (player, orb) =>
         {
             if(!player.block)
             {
@@ -1896,7 +1920,7 @@
           maxSize: 30,
           runChildUpdate: true
         });
-        scene.physics.add.collider(scene.player, scene.eyeOrbHolder, (player, orb) =>
+        scene.physics.add.overlap(scene.player, scene.eyeOrbHolder, (player, orb) =>
         {
           if(!player.block)
           {
@@ -2183,8 +2207,6 @@
             }
         }
         
-        //console.log(enemyData);
-        
         return enemyData;
     }
     
@@ -2230,8 +2252,17 @@
         this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
         this.stars.setScrollFactor(0.1);
         
-        //preset was at 600 x for scarecrow
-        this.scarecrow = this.add.image(getRandomXAnywhere(worldWidthX), this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        if(!this.gameManager.scarecrowPos1)
+        {
+            let scarePos = getRandomXAnywhere(worldWidthX);
+            this.scarecrow = this.add.image(scarePos, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+            this.gameManager.scarecrowPos1 = scarePos;
+        }
+        else
+        {
+            this.scarecrow = this.add.image(this.gameManager.scarecrowPos1, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        }
+        
         this.scarecrow.setScrollFactor(0.4);
         
         this.wheat = this.add.tileSprite
@@ -2269,8 +2300,6 @@
 
         
         createPlayer(this, 32, this.sys.game.config.height - 24, this.gameManager);
-       
-       
         //this.player.buddha();
 
 
@@ -2278,6 +2307,7 @@
       
       
         //START ENEMY SETUP Level1Game
+        
         
         if(this.gameManager.level1Data === null)
         {
@@ -2314,42 +2344,11 @@
         }
         
         
-
-        
-        /*const cultPositions = 
-        [
-            { x: 750, y: 100 },
-            { x: 1050, y: 100 },
-            { x: 1100, y: 100 }
-        ];
-        
-        cultCreator(this, cultPositions, this.gameManager);
-        
-        const cultKnifePositions = 
-        [
-            { x: 500, y: 100 },
-            { x: 625, y: 100 },
-            { x: 650, y: 100 },
-            { x: 1000, y: 100 }
-        ];
-        
-        cultKnifeCreator(this, cultKnifePositions, this.gameManager);
-        
-        const eyePositions = 
-        [
-            //{ x: 200, y: 100 },
-            //{ x: 200, y: 100 }
-        ];
-        
-        eyeCreator(this, eyePositions, this.gameManager);*/ //OLD PRESET LEVEL
-        
-        //this.eyes = new eye(this, 200, this.sys.game.config.height - 24);
-
-
         //END ENEMY SETUP Level1Game
       
         
         //START PROPS AFTER PLAYER Level1Game
+        
         
         const thisLevel = 1;
         this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - this.ground.height, 'Level2Game', thisLevel, this.gameManager);
@@ -2437,8 +2436,17 @@
         this.sky.setScrollFactor(0.1);
         this.sky.postFX.addColorMatrix().grayscale(1);
         
-        //preset was at 750 x for scarecrow
-        this.scarecrow = this.add.image(getRandomXAnywhere(worldWidthX), this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        if(!this.gameManager.scarecrowPos2)
+        {
+            let scarePos = getRandomXAnywhere(worldWidthX);
+            this.scarecrow = this.add.image(scarePos, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+            this.gameManager.scarecrowPos2 = scarePos;
+        }
+        else
+        {
+            this.scarecrow = this.add.image(this.gameManager.scarecrowPos2, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        }
+        
         this.scarecrow.setScrollFactor(0.4);
         
         this.wheat = this.add.tileSprite
@@ -2632,8 +2640,17 @@
         this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'redskyrain').setOrigin(0, 0);
         this.sky.setScrollFactor(0.1);
         
-        //preset was at 633 for x for scarecrow
-        this.scarecrow = this.add.image(getRandomXAnywhere(worldWidthX), this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        if(!this.gameManager.scarecrowPos3)
+        {
+            let scarePos = getRandomXAnywhere(worldWidthX);
+            this.scarecrow = this.add.image(scarePos, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+            this.gameManager.scarecrowPos3 = scarePos;
+        }
+        else
+        {
+            this.scarecrow = this.add.image(this.gameManager.scarecrowPos3, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        }
+        
         this.scarecrow.setScrollFactor(0.4);
 
         this.wheat = this.add.tileSprite
@@ -2803,8 +2820,17 @@
         this.sky = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'redsky').setOrigin(0, 0);
         this.sky.setScrollFactor(0.1);
         
-        //preset was at 750 x for scarecrow
-        this.scarecrow = this.add.image(getRandomXAnywhere(worldWidthX), this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        if(!this.gameManager.scarecrowPos4)
+        {
+            let scarePos = getRandomXAnywhere(worldWidthX);
+            this.scarecrow = this.add.image(scarePos, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+            this.gameManager.scarecrowPos4 = scarePos;
+        }
+        else
+        {
+            this.scarecrow = this.add.image(this.gameManager.scarecrowPos4, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+        }
+        
         this.scarecrow.setScrollFactor(0.4);
 
         this.wheat = this.add.tileSprite
@@ -3242,6 +3268,11 @@
         this.level3Data = null;
         this.level4Data = null;
         
+        this.scarecrowPos1 = null;
+        this.scarecrowPos2 = null;
+        this.scarecrowPos3 = null;
+        this.scarecrowPos4 = null;
+        
         this.alwaysBuddha = false;
     }
 
@@ -3291,6 +3322,11 @@
         this.level2Data = null;
         this.level3Data = null;
         this.level4Data = null;
+        
+        this.scarecrowPos1 = null;
+        this.scarecrowPos2 = null;
+        this.scarecrowPos3 = null;
+        this.scarecrowPos4 = null;
     }
   }
   
