@@ -2215,6 +2215,11 @@
         return (Math.floor(Math.random() * (worldWidthX - 0 + 1)) + 0);
     }
     
+    function getRandMinMax(min, max)
+    {
+        return (Math.floor(Math.random() * (max - min + 1)) + min);
+    }
+    
   class Level1Game extends Phaser.Scene
   {
     constructor()
@@ -2313,31 +2318,26 @@
         {
             this.spawnList = 
             [
-                { type: 'cult', amount: 3 },
-                { type: 'cultKnife', amount: 5 }
+                { type: 'cult', amount: getRandMinMax(2, 3) },
+                { type: 'cultKnife', amount: getRandMinMax(4, 5) }
             ];
 
             this.gameManager.level1Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
         }
         else
         {
-            //console.log(this.gameManager.level1Data);
-            
             for(const enemy of this.gameManager.level1Data.keys()) 
             {
-                //console.log(enemy);
                 if(enemy === 'cult')
                 {
                     let enemyData = this.gameManager.level1Data.get(enemy);
                     let enemyPositionArray = enemyData.positions;
-                    //console.log("enemy positions: " + enemyPositionArray);
                     cultCreator(this, enemyPositionArray, this.gameManager);
                 }
                 else if(enemy === 'cultKnife')
                 {
                     let enemyData = this.gameManager.level1Data.get(enemy);
                     let enemyPositionArray = enemyData.positions;
-                    //console.log("enemy positions: " + enemyPositionArray);
                     cultKnifeCreator(this, enemyPositionArray, this.gameManager);
                 }
             }
@@ -2502,8 +2502,8 @@
         {
             this.spawnList = 
             [
-                { type: 'cult', amount: 10 },
-                { type: 'cultKnife', amount: 1 }
+                { type: 'cult', amount: getRandMinMax(8, 12) },
+                { type: 'cultKnife', amount: getRandMinMax(1, 1) }
             ];
 
             this.gameManager.level2Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
@@ -2703,9 +2703,9 @@
         {
             this.spawnList = 
             [
-                { type: 'cult', amount: 2 },
-                { type: 'cultKnife', amount: 10 },
-                { type: 'eye', amount: 2 }
+                { type: 'cult', amount: getRandMinMax(1, 2) },
+                { type: 'cultKnife', amount: getRandMinMax(8, 10) },
+                { type: 'eye', amount: getRandMinMax(2, 4) }
             ];
 
             this.gameManager.level3Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
@@ -2906,9 +2906,9 @@
         {
             this.spawnList = 
             [
-                { type: 'cult', amount: 21 },
-                { type: 'cultKnife', amount: 5 },
-                { type: 'eye', amount: 7 }
+                { type: 'cult', amount: getRandMinMax(19, 21) },
+                { type: 'cultKnife', amount: getRandMinMax(4, 5) },
+                { type: 'eye', amount: getRandMinMax(6, 8) }
             ];
 
             this.gameManager.level4Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
