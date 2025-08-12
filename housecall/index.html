@@ -1242,11 +1242,13 @@
             if(gameManager.visitedUpgradeRoom1 === true)
             {
                 scene.scene.start('Level2Game');
+                scene.scene.launch('HUD');
             }
             else
             {
                 gameManager.visitedUpgradeRoom1 = true;
                 scene.scene.start('UpgradeRoom');
+                scene.scene.stop('HUD');
             }
         }
         else if(gameManager.currentLevel === 2)
@@ -1254,11 +1256,13 @@
             if(gameManager.visitedUpgradeRoom2 === true)
             {
                 scene.scene.start('Level3Game');
+                scene.scene.launch('HUD');
             }
             else
             {
                 gameManager.visitedUpgradeRoom2 = true;
                 scene.scene.start('UpgradeRoom');
+                scene.scene.stop('HUD');
             }
         }
         else if(gameManager.currentLevel === 3)
@@ -1266,16 +1270,19 @@
             if(gameManager.visitedUpgradeRoom3 === true)
             {
                 scene.scene.start('Level4Game');
+                scene.scene.launch('HUD');
             }
             else
             {
                 gameManager.visitedUpgradeRoom3 = true;
                 scene.scene.start('UpgradeRoom');
+                scene.scene.stop('HUD');
             }
         }
         else if(gameManager.currentLevel === 4)
         {
             scene.scene.start('MainMenu');
+            scene.scene.stop('HUD');
         }
   }
 
@@ -1419,6 +1426,7 @@
         //START BASIC SETUP MainMenu
 
 
+        this.input.setDefaultCursor('');
         const worldWidthX = this.sys.game.config.width * 3;
         this.physics.world.setBounds(0, 0, worldWidthX / 3, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -2236,14 +2244,15 @@
     {
         //START BASIC SETUP Level1Game
 
-
+        
+        this.input.setDefaultCursor('');
         const worldWidthX = 1800;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
         this.gameManager = this.scene.get('GameManager');
         this.gameManager.updateHighestLevel(1);
         this.gameManager.updateCurrentLevel(1);
-        
+         
 
         //END BASIC SETUP Level1Game
 
@@ -2417,7 +2426,8 @@
     {
         //START BASIC SETUP Level2Game
 
-
+        
+        this.input.setDefaultCursor('');
         const worldWidthX = 2250;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -2622,7 +2632,8 @@
     {
         //START BASIC SETUP Level3Game
 
-
+        
+        this.input.setDefaultCursor('');
         const worldWidthX = 1325;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -2802,7 +2813,8 @@
     {
         //START BASIC SETUP Level4Game
 
-
+        
+        this.input.setDefaultCursor('');
         const worldWidthX = 2400;
         this.physics.world.setBounds(0, 0, worldWidthX, 176);
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -3028,113 +3040,17 @@
         
         this.cardAmount = 8;
         
-        this.upgradeCardData = 
-        {
-            'birdshot': 
-            {
-                id: 1,
-                name: 'Birdshot',
-                description: 'Replace shells with Birdshot.',
-                icon: 'birdshoticon',
-                effect: (gameManager) => 
-                {
-                    gameManager.fireModeUpgrade = 'birdshot';
-                    gameManager.multiAmmoUpgrade = false;
-                }
-            },
-            'slugs': 
-            {
-                id: 2,
-                name: 'Slugs',
-                description: 'Replace shells with Slugs.',
-                icon: 'slugicon',
-                effect: (gameManager) => 
-                {
-                    gameManager.fireModeUpgrade = 'slug';
-                    gameManager.multiAmmoUpgrade = false;
-                }
-            },
-            'damage': 
-            {
-                id: 3,
-                name: 'Gun Oil',
-                description: 'Increase Damage by 25%.',
-                icon: 'damageicon',
-                effect: (gameManager) => 
-                {
-                    gameManager.damageUpgrade = true;
-                }
-            },
-            'block': 
-            {
-                id: 4,
-                name: 'Refrain',
-                description: 'Succesful blocks reset block duration.',
-                icon: 'shieldicon',
-                effect: (gameManager) => 
-                {
-                    gameManager.blockUpgrade = true;
-                }
-                
-            },
-            'health': 
-            {
-                id: 5,
-                name: 'Conditioning',
-                description: 'Survive an extra hit.',
-                icon: 'healthicon',
-                effect: (gameManager) => 
-                {
-                    gameManager.healthUpgrade = true;
-                }
-            },
-            'doubleFire': 
-            {
-                id: 6,
-                name: 'Cult Energy',
-                description: 'Succesful kills trigger double fire rate.',
-                icon: 'cultenergyicon',
-                effect: (gameManager) => 
-                {
-                    gameManager.doubleFireUpgrade = true;
-                }
-            },
-            'pistolDamage': 
-            {
-                id: 7,
-                name: 'Hollow Points',
-                description: 'Double handgun damage.',
-                icon: 'hollowpointsicon',
-                effect: (gameManager) => 
-                {
-                    gameManager.pistolUpgrade = true;
-                }
-            },
-            'multiAmmo': 
-            {
-                id: 8,
-                name: 'Random Shells',
-                description: 'Replace shells with random ones.',
-                icon: 'multiammoicon',
-                effect: (gameManager) => 
-                {
-                    gameManager.multiAmmoUpgrade = true;
-                }
-            }
-        };
-        
-        this.ammoUpgrades = new Set([1, 2, 8]);
+        this.gameManager = game.scene.getScene('GameManager');
+        this.upgradeCardData = this.gameManager.upgradeCardData;
     }
 
     create()
     {
-        this.game.canvas.style.cursor = 'pointer';
+        this.input.setDefaultCursor('pointer');
         
         
         //START CARD SETUP
         
-        
-        this.gameManager = this.scene.get('GameManager');
         
         let card1;
         let card2;
@@ -3149,7 +3065,7 @@
         {
             card2 = this.getRandomCardId();
         }
-        while(card2 === card1 || this.gameManager.ownedCards.has(card2) || (this.ammoUpgrades.has(card1) && this.ammoUpgrades.has(card2)))
+        while(card2 === card1 || this.gameManager.ownedCards.has(card2) || (this.gameManager.ammoUpgrades.has(card1) && this.gameManager.ammoUpgrades.has(card2)))
     
         this.cardDisplay1 = this.displayCard(card1, 'left');
         this.cardDisplay1.on('pointerdown', () =>
@@ -3244,7 +3160,107 @@
   {
     constructor()
     {
-        super({key: 'GameManager'});
+        super({ key: 'GameManager' });
+        
+        this.upgradeCardData = 
+        {
+            'birdshot': 
+            {
+                id: 1,
+                name: 'Birdshot',
+                description: 'Replace shells with Birdshot.',
+                icon: 'birdshoticon',
+                effect: (gameManager) => 
+                {
+                    this.clearAmmoOwned();
+                    gameManager.fireModeUpgrade = 'birdshot';
+                    gameManager.multiAmmoUpgrade = false;
+                }
+            },
+            'slugs': 
+            {
+                id: 2,
+                name: 'Slugs',
+                description: 'Replace shells with Slugs.',
+                icon: 'slugicon',
+                effect: (gameManager) => 
+                {
+                    this.clearAmmoOwned();
+                    gameManager.fireModeUpgrade = 'slug';
+                    gameManager.multiAmmoUpgrade = false;
+                }
+            },
+            'damage': 
+            {
+                id: 3,
+                name: 'Gun Oil',
+                description: 'Increase Damage by 25%.',
+                icon: 'damageicon',
+                effect: (gameManager) => 
+                {
+                    gameManager.damageUpgrade = true;
+                }
+            },
+            'block': 
+            {
+                id: 4,
+                name: 'Refrain',
+                description: 'Succesful blocks reset block duration.',
+                icon: 'shieldicon',
+                effect: (gameManager) => 
+                {
+                    gameManager.blockUpgrade = true;
+                }
+                
+            },
+            'health': 
+            {
+                id: 5,
+                name: 'Conditioning',
+                description: 'Survive an extra hit.',
+                icon: 'healthicon',
+                effect: (gameManager) => 
+                {
+                    gameManager.healthUpgrade = true;
+                }
+            },
+            'doubleFire': 
+            {
+                id: 6,
+                name: 'Cult Energy',
+                description: 'Succesful kills trigger double fire rate.',
+                icon: 'cultenergyicon',
+                effect: (gameManager) => 
+                {
+                    gameManager.doubleFireUpgrade = true;
+                }
+            },
+            'pistolDamage': 
+            {
+                id: 7,
+                name: 'Hollow Points',
+                description: 'Double handgun damage.',
+                icon: 'hollowpointsicon',
+                effect: (gameManager) => 
+                {
+                    gameManager.pistolUpgrade = true;
+                }
+            },
+            'multiAmmo': 
+            {
+                id: 8,
+                name: 'Random Shells',
+                description: 'Replace shells with random ones.',
+                icon: 'multiammoicon',
+                effect: (gameManager) => 
+                {
+                    this.clearAmmoOwned();
+                    gameManager.multiAmmoUpgrade = true;
+                }
+            }
+        };
+        
+        this.ammoUpgrades = new Set([1, 2, 8]);
         
         this.highestLevel = 0;
         this.initialHighestLevel = this.highestLevel;
@@ -3284,6 +3300,23 @@
     update(time, delta)
     {
         
+    }
+    
+    clearAmmoOwned()
+    {
+        for(const ownedCard of this.ownedCards)
+        {
+            if(this.ammoUpgrades.has(ownedCard))
+            {
+                this.ownedCards.delete(ownedCard);
+            }
+        }
+    }
+    
+    returnCardNameFromId(id)
+    {
+        const card = Object.values(this.upgradeCardData).find(c => c.id === id);
+        return card.name;
     }
     
     updateHighestLevel(newHigh)
@@ -3330,6 +3363,32 @@
     }
   }
   
+  class HUD extends Phaser.Scene
+  {
+    constructor()
+    {
+        super({ key: 'HUD' });
+    }
+    
+    create()
+    {
+        this.gameManager = this.scene.get('GameManager');
+        
+        let gap = 0;
+        
+        for(const ownedCard of this.gameManager.ownedCards)
+        {
+            createText(this, 6, 6 + gap, this.gameManager.returnCardNameFromId(ownedCard), 14, '#f00').setOrigin(0, 0).setDepth(1232300);
+            gap += 20;
+        }
+    }
+    
+    update()
+    {
+        console.log('working hud');
+    }
+  }
+  
   const config =
   {
     type: Phaser.AUTO,
@@ -3367,7 +3426,8 @@
       Level1Game,
       Level2Game,
       Level3Game,
-      Level4Game
+      Level4Game,
+      HUD
     ]
   };
 
