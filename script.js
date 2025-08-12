@@ -27,7 +27,7 @@ function initialize()
 					 "cyberclicker",
 					 "flesh",
 					 "fp2rbpr",
-					 "hcdemo",
+					 "housecall",
 					 "vp1"
 					];
 	selectPast = false;
@@ -387,8 +387,8 @@ function evaluateCommand(commandEntered)
 			window.location.href = "./jumpgame/index.html";
 			break;
 
-		case "launchhcdemo":
-		case "hcdemo":
+		case "launchhousecall":
+		case "housecall":
 			window.location.href = "./housecall/index.html";
 			break;
 
