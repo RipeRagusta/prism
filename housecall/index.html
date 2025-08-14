@@ -43,19 +43,20 @@
      
         this.scene.physics.velocityFromRotation(angle, this.speed, this.body.velocity);
        
-        const isFollowingX = Math.abs(this.scene.cameras.main.midPoint.x - this.scene.player.x) < 1;
-        if(isFollowingX)
-        {
-            this.body.velocity.x += this.scene.player.body.velocity.x;
-        }
-      
+        this.initialVelocity = this.body.velocity.x;
+ 
         this.body.allowGravity = false;
     }
 
     preUpdate(time, delta)
     {
       super.preUpdate(time, delta);
-
+      
+      if(this.isFollowingX())
+        {
+          this.body.velocity.x = this.initialVelocity + this.scene.player.body.velocity.x;
+        }
+          
       if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x > this.originX + 200 || this.x < this.originX - 200)
       {
         this.setActive(false);
@@ -63,12 +64,17 @@
         this.destroy();
       }
     }
-
-    collided()
+    
+    isFollowingX()
     {
-      this.setActive(false);
-      this.setVisible(false);
-      this.destroy();
+        if(this.scene.player.body)
+        {
+            return Math.abs(this.scene.cameras.main.midPoint.x - this.scene.player.x) < 1;
+        }
+        else
+        {
+            return false;
+        }
     }
   }
 
