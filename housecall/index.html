@@ -1522,7 +1522,7 @@
         //START ENEMY SETUP MainMenu
         
       
-        /*const cultPositions = 
+        const cultPositions = 
         [
             { x: worldWidthX / 2 + 7, y: 100 }
         ];
@@ -1532,7 +1532,7 @@
         this.cults.children.entries.forEach(cult => 
         {
             cult.buddha();
-        });*/
+        });
         
         
         //END ENEMY SETUP MainMenu
@@ -1581,10 +1581,10 @@
                 {
                     this.sound.play('stab');
                     
-                    /*this.cults.children.entries.forEach(cult => 
+                    this.cults.children.entries.forEach(cult => 
                     {
                         cult.health = -100;
-                    });*/
+                    });
                     
                     this.controls.destroy();
                     this.strafeControls.destroy();
