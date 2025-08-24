@@ -146,7 +146,12 @@
             scene.anims.create
             ({
               key: 'orbThrow',
-              frames: scene.anims.generateFrameNumbers('cult', { start: 2, end: 0 }),
+              frames: [
+                     { key: 'cult', frame: 1 },
+                     { key: 'cult', frame: 2 },
+                     { key: 'cult', frame: 1 },
+                     { key: 'cult', frame: 0 }
+                 ],
               frameRate: 6,
               repeat: 0
             });
@@ -258,21 +263,29 @@
     
     shoot()
     {
-        const orb = this.orbs.get(this.x, this.y, 'cultorb');
-
-        if(orb)
+        
+        this.play('orbThrow', false); 
+        let shotOnce = false;
+        this.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
         {
-            if(this.flip === false)
+            if(frame.index === 2 && !shotOnce)
             {
-              orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(180));
-            }
-            else
-            {
-              orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(0));
-            }
+                shotOnce = true;
+                const orb = this.orbs.get(this.x, this.y, 'cultorb');
 
-            this.play('orbThrow', false);
-        }
+                if(orb)
+                {
+                    if(this.flip === false)
+                    {
+                      orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(180));
+                    }
+                    else
+                    {
+                      orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(0));
+                    }
+                }
+            }
+        });   
     }
     
     buddha()
@@ -1811,6 +1824,7 @@
   function cultSynchro(scene, cults)
   {
         let aCultAcvite = false;
+        let cultSoundPlayed = false;
         
         cults.children.entries.forEach(cult => 
         {
@@ -1822,15 +1836,19 @@
                 {
                     aCultAcvite = !aCultAcvite;
                 }
+                
+                cult.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
+                {
+                    if(frame.index === 2 && !cultSoundPlayed)
+                    {
+                        cultSoundPlayed = true;
+                        scene.sound.play('orbthrow');
+                    }
+                });
             }
         });
-        
-        if(aCultAcvite)
-        {
-            scene.sound.play('orbthrow');
-        }
-  }
-  
+    }
+    
   function cultCreator(scene, cultPositions, gameManager)
   {
         scene.cultOrbHolder = scene.physics.add.group
