@@ -3397,28 +3397,36 @@
     create()
     {
         this.gameManager = this.scene.get('GameManager');
-        
-        let gap = 0;
+
         let anUpgradeToDisplay = false;
-        let upgradeLabelDisplayed = false;
+        let upgradeString = "Upgrades: ";
+        let firstNewComma = true;
         
         for(const ownedCard of this.gameManager.ownedCards)
         {
-            if(!upgradeLabelDisplayed)
+            if(firstNewComma)
             {
-                upgradeLabelDisplayed = true;
-                createText(this, 6, 6 + gap, 'Upgrades: ', 14, '#f00').setOrigin(0, 0).setDepth(1232300);
-                gap += 20;
+                upgradeString += this.gameManager.returnCardNameFromId(ownedCard);
+                firstNewComma = false;
             }
- 
-            createText(this, 6, 6 + gap, this.gameManager.returnCardNameFromId(ownedCard), 14, '#f00').setOrigin(0, 0).setDepth(1232300);
-            
-            gap += 20;
+            else
+            {
+                upgradeString += ", " + this.gameManager.returnCardNameFromId(ownedCard);
+            }
             
             if(!anUpgradeToDisplay)
             {
                 anUpgradeToDisplay = true;
             }
+        }
+        
+        if(anUpgradeToDisplay)
+        {
+            this.finalUpgradeString = createText(this, 5, 5, upgradeString, 14, '#f00').setOrigin(0, 0).setDepth(1232300);
+            this.finalUpgradeString.setStyle
+            ({
+                wordWrap: { width: this.sys.game.config.width - 10, use:'true' }
+            });
         }
     }
     
