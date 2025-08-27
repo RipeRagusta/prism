@@ -3399,11 +3399,26 @@
         this.gameManager = this.scene.get('GameManager');
         
         let gap = 0;
+        let anUpgradeToDisplay = false;
+        let upgradeLabelDisplayed = false;
         
         for(const ownedCard of this.gameManager.ownedCards)
         {
+            if(!upgradeLabelDisplayed)
+            {
+                upgradeLabelDisplayed = true;
+                createText(this, 6, 6 + gap, 'Upgrades: ', 14, '#f00').setOrigin(0, 0).setDepth(1232300);
+                gap += 20;
+            }
+ 
             createText(this, 6, 6 + gap, this.gameManager.returnCardNameFromId(ownedCard), 14, '#f00').setOrigin(0, 0).setDepth(1232300);
+            
             gap += 20;
+            
+            if(!anUpgradeToDisplay)
+            {
+                anUpgradeToDisplay = true;
+            }
         }
     }
     
