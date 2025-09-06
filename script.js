@@ -24,7 +24,6 @@ function initialize()
 				  "tbor"
 				 ];
 	launchOptions = [
-					 "cyberclicker",
 					 "flesh",
 					 "fp2rbpr",
 					 "housecall",
