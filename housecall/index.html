@@ -472,6 +472,7 @@
         this.pistolMoveFireRate = 1500;
         this.lastPistolMove = 0;
         this.lastShellCycle = 0;
+        this.canMove = true;
 
         this.wasd =
         {
@@ -887,22 +888,25 @@
     
     checkMovement()
     {
-        if((this.wasd.a.isDown || this.scene.cursors.left.isDown))
+        if(this.canMove)
         {
-            this.setVelocityX(-120);
-        }
-        else if((this.wasd.d.isDown || this.scene.cursors.right.isDown))
-        {
-            this.setVelocityX(120);
-        }
-        else
-        {
-            this.setVelocityX(0);
-        }
+            if((this.wasd.a.isDown || this.scene.cursors.left.isDown))
+            {
+                this.setVelocityX(-120);
+            }
+            else if((this.wasd.d.isDown || this.scene.cursors.right.isDown))
+            {
+                this.setVelocityX(120);
+            }
+            else
+            {
+                this.setVelocityX(0);
+            }
 
-        if((this.wasd.space.isDown || this.wasd.w.isDown || this.scene.cursors.up.isDown) && this.body.touching.down)
-        {
-            this.setVelocityY(-120);
+            if((this.wasd.space.isDown || this.wasd.w.isDown || this.scene.cursors.up.isDown) && this.body.touching.down)
+            {
+                this.setVelocityY(-120);
+            }
         }
     }
     
@@ -1639,6 +1643,7 @@
             this.time.delayedCall(2000, () =>
             {
                 this.player.x = worldWidthX / 3 - this.player.width / 2;
+                this.player.canMove = false;
                 this.tweens.add
                 ({
                     targets: this.player, 
@@ -1649,6 +1654,7 @@
                     onComplete: () => 
                     {
                         this.physics.world.setBounds(this.sys.game.config.width, 0, this.sys.game.config.width, 176);
+                        this.player.canMove = true;
                     }
                 });
             }, [], this);
