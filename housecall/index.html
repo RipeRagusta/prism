@@ -57,7 +57,7 @@
           this.body.velocity.x = this.initialVelocity + this.scene.player.body.velocity.x;
         }
           
-      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x > this.originX + 200 || this.x < this.originX - 200)
+      if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x > this.originX + 300 || this.x < this.originX - 300)
       {
         this.setActive(false);
         this.setVisible(false);
@@ -69,7 +69,7 @@
     {
         if(this.scene.player.body)
         {
-            return Math.abs(this.scene.cameras.main.midPoint.x - this.scene.player.x) < 1;
+            return Math.abs((this.scene.cameras.main.midPoint.x - (this.scene.sys.game.config.width / 4)) - this.scene.player.x) < 1;
         }
         else
         {
@@ -255,7 +255,7 @@
 
     checkInRange()
     {
-        if(this.alert === false && Math.abs(this.player.x - this.x) <= 200)
+        if(this.alert === false && Math.abs(this.player.x - this.x) <= 308)
         {
             this.alert = true;
         }
@@ -414,7 +414,7 @@
 
     checkInRange()
     {
-      if(this.alert === false && Math.abs(this.player.x - this.x) <= 200)
+      if(this.alert === false && Math.abs(this.player.x - this.x) <= 308)
       {
         this.alert = true;
       }
@@ -1144,7 +1144,7 @@
     
     checkInRange()
     {
-        if(this.alert === false && Math.abs(this.player.x - this.x) <= 200)
+        if(this.alert === false && Math.abs(this.player.x - this.x) <= 308)
         {
             this.alert = true;
         }
@@ -1529,7 +1529,7 @@
         //START PLAYER SETUP MainMenu
 
 
-        createPlayer(this, Math.min(94, this.sys.game.config.width / 2), this.sys.game.config.height - 24, this.gameManager);
+        createPlayer(this, Math.min(this.sys.game.config.width / 4, this.sys.game.config.width / 2), this.sys.game.config.height - 24, this.gameManager);
         this.player.buddha();
 
 
@@ -2419,7 +2419,7 @@
         
         
         this.cameras.main.setBounds(0, 0, worldWidthX, 176);
-        this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
+        this.cameras.main.startFollow(this.player, true, 1, 1, -(this.sys.game.config.width / 4), (this.sys.game.config.height / 2));
         this.cameras.main.setZoom(1);
         this.cameras.scrollX = 0;
         this.cameras.scrollY = 0;
@@ -2604,7 +2604,7 @@
 
 
         this.cameras.main.setBounds(0, 0, worldWidthX, 176);
-        this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
+        this.cameras.main.startFollow(this.player, true, 1, 1, -(this.sys.game.config.width / 4), (this.sys.game.config.height / 2));
         this.cameras.main.setZoom(1);
         this.cameras.scrollX = 0;
         this.cameras.scrollY = 0;
@@ -2815,7 +2815,7 @@
 
 
         this.cameras.main.setBounds(0, 0, worldWidthX, 176);
-        this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
+        this.cameras.main.startFollow(this.player, true, 1, 1, -(this.sys.game.config.width / 4), (this.sys.game.config.height / 2));
         this.cameras.main.setZoom(1);
         this.cameras.scrollX = 0;
         this.cameras.scrollY = 0;
@@ -3019,7 +3019,7 @@
 
 
         this.cameras.main.setBounds(0, 0, worldWidthX, 176);
-        this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
+        this.cameras.main.startFollow(this.player, true, 1, 1, -(this.sys.game.config.width / 4), (this.sys.game.config.height / 2));
         this.cameras.main.setZoom(1);
         this.cameras.scrollX = 0;
         this.cameras.scrollY = 0;
@@ -3519,7 +3519,7 @@
   {
     type: Phaser.AUTO,
     pixelArt: true,
-    width: Math.max(385, Math.min(389, (window.innerWidth / window.innerHeight) * 176)),
+    width: Math.max(400, Math.min(400, (window.innerWidth / window.innerHeight) * 176)),
     height: 176,
     
     audio:
