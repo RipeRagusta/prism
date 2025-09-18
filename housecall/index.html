@@ -692,8 +692,8 @@
                 sound: 'shotgunshot',
                 shellEmitter: this.shellEmitter,
                 pelletCount: 10,
-                spread: 25,
-                spreadIncrement: 2.5
+                spread: 15,
+                spreadIncrement: 1.5
             },
             'slug': 
             {
@@ -711,9 +711,9 @@
                 doublePelletType: 'bulletcult',
                 sound: 'birdshot',
                 shellEmitter: this.birdShotShellEmitter,
-                pelletCount: 20,
+                pelletCount: 40,
                 spread: 40,
-                spreadIncrement: 2
+                spreadIncrement: 1
             }
         };
 
@@ -1875,10 +1875,7 @@
                 scene.sound.play('block');
                 player.defenceParticles();
                 player.activateDoubleFire();
-                if(gameManager.blockUpgrade)
-                {
-                    player.play("block", false);
-                }
+                player.play("block", false);
             }
             orb.destroy();
         });
@@ -1970,10 +1967,8 @@
               scene.sound.play('block');
               player.defenceParticles();
               player.activateDoubleFire();
-              if(gameManager.blockUpgrade)
-                {
-                    player.play("block", false);
-                }
+              player.play("block", false);
+ 
           }
           orb.destroy();
         });
@@ -2344,7 +2339,7 @@
         //START PLAYER SETUP Level1Game
 
         
-        createPlayer(this, 32, this.sys.game.config.height - 24, this.gameManager);
+        createPlayer(this, 100, this.sys.game.config.height - 24, this.gameManager);
         //this.player.buddha();
 
 
@@ -2531,7 +2526,7 @@
         //START PLAYER SETUP Level2Game
 
 
-        createPlayer(this, 32, this.sys.game.config.height - 24, this.gameManager);
+        createPlayer(this, 100, this.sys.game.config.height - 24, this.gameManager);
         //this.player.buddha();
         
 
@@ -2735,7 +2730,7 @@
         //START PLAYER SETUP Level3Game
 
 
-        createPlayer(this, 32, this.sys.game.config.height - 24, this.gameManager);
+        createPlayer(this, 100, this.sys.game.config.height - 24, this.gameManager);
         //this.player.buddha();
         
 
@@ -2941,7 +2936,7 @@
         //START PLAYER SETUP Level4Game
 
 
-        createPlayer(this, 32, this.sys.game.config.height - 24, this.gameManager);
+        createPlayer(this, 100, this.sys.game.config.height - 24, this.gameManager);
         //this.player.buddha();
         
 
@@ -3077,7 +3072,7 @@
     {
         super({key: 'UpgradeRoom'});
         
-        this.cardAmount = 8;
+        this.cardAmount = 7;
         
         this.gameManager = game.scene.getScene('GameManager');
         this.upgradeCardData = this.gameManager.upgradeCardData;
@@ -3240,7 +3235,7 @@
                     gameManager.damageUpgrade = true;
                 }
             },
-            'block': 
+            /*'block': 
             {
                 id: 4,
                 name: 'Refrain',
@@ -3251,10 +3246,10 @@
                     gameManager.blockUpgrade = true;
                 }
                 
-            },
+            },*/
             'health': 
             {
-                id: 5,
+                id: 4,
                 name: 'Conditioning',
                 description: 'Survive an extra hit.',
                 icon: 'healthicon',
@@ -3265,7 +3260,7 @@
             },
             'doubleFire': 
             {
-                id: 6,
+                id: 5,
                 name: 'Veneration',
                 description: 'Succesful kills trigger double fire rate.',
                 icon: 'cultenergyicon',
@@ -3276,7 +3271,7 @@
             },
             'pistolDamage': 
             {
-                id: 7,
+                id: 6,
                 name: 'Hollow Points',
                 description: 'Double handgun damage.',
                 icon: 'hollowpointsicon',
@@ -3287,7 +3282,7 @@
             },
             'multiAmmo': 
             {
-                id: 8,
+                id: 7,
                 name: 'Random Shells',
                 description: 'Replace shells with random ones.',
                 icon: 'multiammoicon',
@@ -3299,7 +3294,7 @@
             }
         };
         
-        this.ammoUpgrades = new Set([1, 2, 8]);
+        this.ammoUpgrades = new Set([1, 2, 7]);
         
         this.highestLevel = 0;
         this.initialHighestLevel = this.highestLevel;
