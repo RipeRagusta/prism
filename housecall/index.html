@@ -137,7 +137,7 @@
         this.orbs = cultOrbHolder;
         this.distancePref = 100;
         this.initalDistancePref = this.distancePref;
-        this.distanceOffset = 5;
+        this.distanceOffset = 1;
         this.flip = false;
         this.scene = scene;
       
@@ -1057,7 +1057,7 @@
         this.player = this.scene.player;
         this.distancePref = 100;
         this.initalDistancePref = this.distancePref;
-        this.distanceOffset = 5;
+        this.distanceOffset = 1;
         this.orbs = eyeOrbHolder;
 
         this.explode = this.scene.add.particles
@@ -2231,7 +2231,7 @@
                     }
                     while(positionTaken(xCoord, chosenPositions, range));
                      
-                    const newEye = { x: xCoord, y: 100 };
+                    const newEye = { x: xCoord, y: 88 };
                     chosenPositions.add(xCoord);
                     positions.push(newEye);
                 }
