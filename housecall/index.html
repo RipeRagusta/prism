@@ -2231,7 +2231,7 @@
                     }
                     while(positionTaken(xCoord, chosenPositions, range));
                      
-                    const newEye = { x: xCoord, y: 80 };
+                    const newEye = { x: xCoord, y: 88 };
                     chosenPositions.add(xCoord);
                     positions.push(newEye);
                 }
@@ -2902,13 +2902,13 @@
         this.ground.body.setImmovable(true);
         this.ground.body.allowGravity = false;
         
-        this.shed = this.add.image(1557, this.sys.game.config.height - this.ground.height, 'shed');
+        this.shed = this.add.image(1561, this.sys.game.config.height - this.ground.height, 'shed');
         this.shed.setOrigin(0, 1);
         this.shed.setScrollFactor(0.65);
 
         this.fence = this.add.tileSprite
         (
-          1748,
+          1751,
           this.sys.game.config.height - this.ground.height,
           200,
           16,
@@ -2917,11 +2917,11 @@
         this.fence.setScrollFactor(0.75);
         this.fence.setOrigin(0, 1);
 
-        this.couch = this.add.image(1921, this.sys.game.config.height - this.ground.height, 'couch');
+        this.couch = this.add.image(1923, this.sys.game.config.height - this.ground.height, 'couch');
         this.couch.setScrollFactor(0.8);
         this.couch.setOrigin(0, 1);
         
-        this.grill = this.add.image(1967, this.sys.game.config.height - this.ground.height, 'grill');
+        this.grill = this.add.image(1969, this.sys.game.config.height - this.ground.height, 'grill');
         this.grill.setScrollFactor(0.8);
         this.grill.setOrigin(0, 1);
         
@@ -2990,7 +2990,7 @@
         
         
         const thisLevel = 4;
-        this.pipe = new pipeNext(this, 2225, this.sys.game.config.height - this.ground.height, 'MainMenu', 4, this.gameManager);
+        this.pipe = new pipeNext(this, 2106, this.sys.game.config.height - this.ground.height, 'MainMenu', 4, this.gameManager);
 
         this.grasstop = this.add.tileSprite
         (
