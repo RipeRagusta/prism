@@ -23,2033 +23,2009 @@
     <script type="text/javascript" src="./cult.js"></script>
     <script type="text/javascript" src="./cultKnife.js"></script>
     <script type="text/javascript" src="./eye.js"></script>
-<script type="text/javascript">
-  
-
-  
-
-  
-
-  
-
-  
-
-  class pipeNext extends Phaser.Physics.Arcade.Sprite
-  {
-      constructor(scene, x, y, key, fromLevel, gameManager) 
-      {
-        super(scene, x, y, 'pipe');
-        
-        this.pipe = scene.physics.add.sprite(x, y, 'pipe');
-        this.pipe.setOrigin(0, 1);
-        this.pipe.body.allowGravity = false;
-        this.pipe.body.setImmovable(true);
-        scene.physics.add.collider(this.pipe, this.ground);
-        
-        if(!scene.anims.get('stabAnim'))
+    <script type="text/javascript">
+        class pipeNext extends Phaser.Physics.Arcade.Sprite
         {
-            scene.anims.create
-            ({
-                key: "stabAnim",
-                frames: this.anims.generateFrameNumbers('stab', {start: 0, end: 2 }),
-                frameRate: 2,
-                repeat: 0
-            });
-        }
-        scene.stab = scene.add.sprite(this.pipe.x + 1, this.pipe.y, "stab").setOrigin(0, 1);
-        scene.stab.setActive(false);
-        scene.stab.setVisible(false);
-        
-        scene.physics.add.collider(this.pipe, scene.player, (pipe, player) =>
-        {
-          player.destroy();
-          scene.stab.setActive(true);
-          scene.stab.setVisible(true);
-          scene.sound.play('powerup');
-          
-          scene.stab.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
+            constructor(scene, x, y, key, fromLevel, gameManager) 
             {
-                if(frame.index === 2) 
+                super(scene, x, y, 'pipe');
+
+                this.pipe = scene.physics.add.sprite(x, y, 'pipe');
+                this.pipe.setOrigin(0, 1);
+                this.pipe.body.allowGravity = false;
+                this.pipe.body.setImmovable(true);
+                scene.physics.add.collider(this.pipe, this.ground);
+
+                if(!scene.anims.get('stabAnim'))
                 {
-                    let aCultActive = false;
-                    scene.sound.play('stab');
-                    
-                    if(scene.cults && scene.cults.children.entries)
-                    {
-                        const cultsArray = scene.cults.children.entries; 
-                        
-                        for(let i = cultsArray.length - 1; i >= 0; i--) 
-                        {
-                            const cult = cultsArray[i];
-                            aCultActive = true;
-                            cult.kill();  
-                        }
-                    }
-                    
-                    if(scene.cultKnifes && scene.cultKnifes.children.entries)
-                    {
-                        const cultKnifesArray = scene.cultKnifes.children.entries; 
-                        
-                        for(let i = cultKnifesArray.length - 1; i >= 0; i--) 
-                        {
-                            const cultKnife = cultKnifesArray[i];
-                            aCultActive = true;
-                            cultKnife.kill();  
-                        }
-                    }
-                    
-                    if(scene.eyes && scene.eyes.children.entries)
-                    {
-                        const eyesArray = scene.eyes.children.entries; 
-                        
-                        for(let i = eyesArray.length - 1; i >= 0; i--) 
-                        {
-                            const eye = eyesArray[i];
-                            aCultActive = true;
-                            eye.kill();  
-                        }
-                    }
-                    
-                    if(aCultActive)
-                    {
-                        scene.sound.play('hurt');
-                    }
+                    scene.anims.create
+                    ({
+                        key: "stabAnim",
+                        frames: this.anims.generateFrameNumbers('stab', {start: 0, end: 2 }),
+                        frameRate: 2,
+                        repeat: 0
+                    });
                 }
-            });
-        
-          scene.stab.play("stabAnim", true);
-        });
-        
-        scene.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => 
-        {
-            transitionLevels(scene, gameManager);
-        });
-      }
-  }
-  
-  function transitionLevels(scene, gameManager)
-  {
-        if(gameManager.currentLevel === 1)
-        {
-            if(gameManager.visitedUpgradeRoom1 === true)
-            {
-                scene.scene.start('Level2Game');
-                scene.scene.launch('HUD');
-            }
-            else
-            {
-                gameManager.visitedUpgradeRoom1 = true;
-                scene.scene.start('UpgradeRoom');
-                scene.scene.stop('HUD');
-            }
-        }
-        else if(gameManager.currentLevel === 2)
-        {
-            if(gameManager.visitedUpgradeRoom2 === true)
-            {
-                scene.scene.start('Level3Game');
-                scene.scene.launch('HUD');
-            }
-            else
-            {
-                gameManager.visitedUpgradeRoom2 = true;
-                scene.scene.start('UpgradeRoom');
-                scene.scene.stop('HUD');
-            }
-        }
-        else if(gameManager.currentLevel === 3)
-        {
-            if(gameManager.visitedUpgradeRoom3 === true)
-            {
-                scene.scene.start('Level4Game');
-                scene.scene.launch('HUD');
-            }
-            else
-            {
-                gameManager.visitedUpgradeRoom3 = true;
-                scene.scene.start('UpgradeRoom');
-                scene.scene.stop('HUD');
-            }
-        }
-        else if(gameManager.currentLevel === 4)
-        {
-            scene.scene.start('MainMenu');
-            scene.scene.stop('HUD');
-        }
-  }
+                scene.stab = scene.add.sprite(this.pipe.x + 1, this.pipe.y, "stab").setOrigin(0, 1);
+                scene.stab.setActive(false);
+                scene.stab.setVisible(false);
 
-  class Loading extends Phaser.Scene
-  {
-    constructor()
-    {
-      super({key: 'Loading'});
-    }
-
-    preload()
-    {
-        this.load.image('sky', 'assets/sky.png');
-        this.load.spritesheet('player', 'assets/player.png', {frameWidth: 16, frameHeight: 16});
-        this.load.image('ground', 'assets/grass.png');
-        this.load.image('bullet', 'assets/bullet.png');
-        this.load.image('barn', 'assets/barn.png');
-        this.load.image('fence', 'assets/fence.png');
-        this.load.image('stars', 'assets/stars.png');
-        this.load.image('cross', 'assets/cross.png');
-        this.load.spritesheet('cult', './assets/cult.png', {frameWidth: 16, frameHeight: 16});
-        this.load.image('couch', './assets/couch.png');
-        this.load.image('tractor', './assets/tractor.png');
-        this.load.image('grasstop', './assets/grasstop.png');
-        this.load.image('grill', './assets/grill.png');
-        this.load.spritesheet('cultknife', './assets/cultknife.png', {frameWidth: 16, frameHeight: 16});
-        this.load.image('copcar', './assets/copcar.png');
-        this.load.image('cultorb', './assets/cultorb.png');
-        this.load.image('wheat', './assets/wheat.png');
-        this.load.image('shed', './assets/shed.png');
-        this.load.image('silo', './assets/silo.png');
-        this.load.image('scarecrow', './assets/scarecrow.png');
-        this.load.image('pipe', './assets/pipe.png');
-        this.load.image('eye', './assets/eye.png');
-        this.load.spritesheet('stab', './assets/stab.png', {frameWidth: 12, frameHeight: 18});
-        this.load.image('blood', 'assets/bloodparticle.png');
-        this.load.image('eyechunk', 'assets/eyechunk.png');
-        this.load.image('shell', 'assets/shell.png');
-        this.load.image('raindrop', 'assets/raindrop.png');
-        this.load.image('bloodrain', 'assets/bloodrain.png');
-        this.load.image('redsky', 'assets/redsky.png');
-        this.load.image('redskyrain', 'assets/redskyrain.png');
-        this.load.image('bulletcult', 'assets/bulletcult.png');
-        this.load.image('slug', 'assets/slug.png');
-        this.load.image('slugcult', 'assets/slugcult.png');
-        this.load.image('slugshell', 'assets/slugshell.png');
-        this.load.image('slugicon', 'assets/slugicon.png');
-        this.load.image('birdshotshell', 'assets/birdshotshell.png');
-        this.load.image('birdshoticon', 'assets/birdshoticon.png');
-        this.load.image('healthicon', 'assets/healthicon.png');
-        this.load.image('shieldicon', 'assets/shieldicon.png');
-        this.load.image('damageicon', 'assets/damageicon.png');
-        this.load.image('cultenergyicon', 'assets/cultenergyicon.png');
-        this.load.image('hollowpointsicon', 'assets/hollowpointsicon.png');
-        this.load.image('pistolcasing', 'assets/pistolcasing.png');
-        this.load.image('multiammoicon', 'assets/multiammoicon.png');
-
-        this.load.audio('shotgunshot', 
-        [
-            'assets/shotgunshot.wav'
-        ]);
-        
-        this.load.audio('slug', 
-        [
-            'assets/slug.wav'
-        ]);
-        
-        this.load.audio('orbthrow', 
-        [
-            'assets/orbthrow.wav'
-        ]);
-        
-        this.load.audio('hurt', 
-        [
-            'assets/hurt.wav'
-        ]);
-        
-        this.load.audio('powerup', 
-        [
-            'assets/powerup.wav'
-        ]);
-        
-        this.load.audio('block', 
-        [
-            'assets/block.wav'
-        ]);
-        
-        this.load.audio('stab', 
-        [
-            'assets/stab.wav'
-        ]);
-        
-        this.load.audio('eyeorb', 
-        [
-            'assets/eyeorb.wav'
-        ]);
-        
-        this.load.audio('birdshot', 
-        [
-            'assets/birdshot.wav'
-        ]);
-        
-        this.load.audio('switchfiremode', 
-        [
-            'assets/switchfiremode.wav'
-        ]);
-        
-        this.load.audio('pistolsound', 
-        [
-            'assets/pistolsound.wav'
-        ]);
-    }
-
-    create()
-    {
-      this.loading = this.add.text((this.sys.game.config.width / 2), this.sys.game.config.height / 2, 'Loading', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
-    }
-
-    update()
-    {
-        this.scene.stop('Loading');
-        this.scene.start('GameManager');
-        this.scene.start('MainMenu');
-    }
-  }
-
-  class MainMenu extends Phaser.Scene
-  {
-    constructor()
-    {
-      super({key: 'MainMenu'});
-    }
-
-    preload()
-    {
-
-    }
-
-    create ()
-    {
-        //START BASIC SETUP MainMenu
-
-
-        this.input.setDefaultCursor('');
-        const worldWidthX = this.sys.game.config.width * 3;
-        this.physics.world.setBounds(0, 0, worldWidthX / 3, 176);
-        this.cursors = this.input.keyboard.createCursorKeys();
-        this.gameManager = this.scene.get('GameManager');
-        this.gameManager.reset();
-
-
-        //END BASIC SETUP MainMenu
-
-
-        //START PROPS BEFORE PLAYER MainMenu
-        
-
-        this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'sky').setOrigin(0, 0);
-        this.sky.setScrollFactor(0.1);
-
-        this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
-        this.stars.setScrollFactor(0.1);
-        
-        this.ground = this.add.tileSprite
-        (
-          0,
-          this.sys.game.config.height,
-          worldWidthX * 2,
-          16,
-          'ground'
-        );
-
-        this.ground.setOrigin(0, 1);
-        this.physics.add.existing(this.ground);
-        this.ground.body.setImmovable(true);
-        this.ground.body.allowGravity = false;
-        
-        this.barn = this.add.image
-        (
-          (worldWidthX / 3) / 30,
-          this.sys.game.config.height - this.ground.height,
-          'barn'
-        ).setOrigin(0, 1);
-        this.barn.setTint(0x999999);
-        this.barn.setScrollFactor(0.25);
-        
-        this.silo = this.add.image
-        (
-          this.barn.width + (worldWidthX / 3) / 30,
-          this.sys.game.config.height - this.ground.height,
-          'silo'
-        );
-        this.silo.setOrigin(0, 1);
-        this.silo.setScrollFactor(0.225);
-        
-        this.cross = this.add.image
-        (
-          (worldWidthX / 3) + ((worldWidthX / 3) / 30),
-          this.sys.game.config.height - this.ground.height,
-          'cross'
-        );
-        this.cross.setOrigin(0, 1);
-        this.cross.setScrollFactor(0.25);
-        this.cross.setTint(0x999999);
-
-        this.fence = this.add.tileSprite
-        (
-                this.sys.game.config.width / 2,
-                this.sys.game.config.height - this.ground.height,
-                worldWidthX,
-                16,
-                'fence'
-        );
-        this.fence.setScrollFactor(0.75);
-        this.fence.setOrigin(0.25, 1);
-
-
-        //END PROPS BEFORE PLAYER MainMenu
-      
-      
-        //START PLAYER SETUP MainMenu
-
-
-        createPlayer(this, Math.min(this.sys.game.config.width / 4, this.sys.game.config.width / 2), this.sys.game.config.height - 24, this.gameManager);
-        this.player.buddha();
-
-
-        //END PLAYER SETUP MainMenu
-      
-      
-        //START ENEMY SETUP MainMenu
-        
-      
-        /*const cultPositions = 
-        [
-            { x: worldWidthX / 2 + 7, y: 100 }
-        ];
-        
-        cultCreator(this, cultPositions, this.gameManager);
-        
-        this.cults.children.entries.forEach(cult => 
-        {
-            cult.buddha();
-        });*/
-        
-        
-        //END ENEMY SETUP MainMenu
-      
-        
-        //START PROPS AFTER PLAYER MainMenu
-        
-        
-        this.copcar = this.add.image
-        (
-          worldWidthX / 4 + this.sys.game.config.width / 4 - this.sys.game.config.width / 8,
-          this.sys.game.config.height - this.ground.height,
-          'copcar'
-        ).setOrigin(1, 1);
-        
-        this.pipe = this.physics.add.sprite(worldWidthX / 2 + this.sys.game.config.width / 4 - 8, this.sys.game.config.height - this.ground.height, 'pipe');
-        this.pipe.setOrigin(0, 1);
-        this.pipe.body.allowGravity = false;
-        this.pipe.body.setImmovable(true);
-        this.physics.add.collider(this.pipe, this.ground);
-        
-        if(!this.anims.get('stabAnim'))
-        {
-            this.anims.create
-            ({
-                key: "stabAnim",
-                frames: this.anims.generateFrameNumbers('stab', {start: 0, end: 2 }),
-                frameRate: 2,
-                repeat: 0
-            });
-        }
-        this.stab = this.add.sprite(this.pipe.x + 1, this.pipe.y, "stab").setOrigin(0, 1);
-        this.stab.setActive(false);
-        this.stab.setVisible(false);
-        
-        this.physics.add.collider(this.pipe, this.player, (pipe, player) =>
-        {
-          player.destroy();
-          this.stab.setActive(true);
-          this.stab.setVisible(true);
-          this.sound.play('powerup');
-          
-          this.stab.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
-            {
-                if(frame.index === 2) 
+                scene.physics.add.collider(this.pipe, scene.player, (pipe, player) =>
                 {
-                    this.sound.play('stab');
-                    
-                    /*this.cults.children.entries.forEach(cult => 
+                    player.destroy();
+                    scene.stab.setActive(true);
+                    scene.stab.setVisible(true);
+                    scene.sound.play('powerup');
+
+                    scene.stab.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
                     {
-                        cult.health = -100;
-                    });*/
-                    
-                    this.controls.destroy();
-                    this.strafeControls.destroy();
-                    this.jumpControls.destroy();
-                    this.leftClickControls.destroy();
-                    this.rightClickControls.destroy();
-                    this.pistolControls.destroy();
-                }
-            });
-        
-            this.stab.play("stabAnim", true);
-        });
-        
-        this.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => 
-        {
-          this.cameras.main.pan(worldWidthX, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
-        });
-        
-        this.grasstop = this.add.tileSprite
-        (
-          0,
-          this.sys.game.config.height - this.ground.height,
-          worldWidthX,
-          16,
-          'grasstop'
-        );
-        this.grasstop.setOrigin(0, 1);
-     
-        this.logo = createText(this, worldWidthX / 6, this.sys.game.config.height / 2, 'House Call', 16, '#fff').setOrigin(0.5, 0.5);
-        this.logo.setInteractive({cursor: 'pointer'});
-      
-        this.physics.add.existing(this.logo, true);
-        this.physics.add.collider(this.logo, this.playerBulletsHolder, (logo, bullet) =>
-        {
-          bullet.destroy();
-          logo.destroy();
-          this.cameras.main.pan(worldWidthX / 2, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
-          
-            this.time.delayedCall(2000, () =>
-            {
-                this.player.x = worldWidthX / 3 - this.player.width / 2;
-                this.player.canMove = false;
-                this.tweens.add
-                ({
-                    targets: this.player, 
-                    x: worldWidthX / 3 + this.player.width / 2,               
-                    y: this.sys.game.config.height - 24,               
-                    duration: 250,       
-                    ease: 'linear',       
-                    onComplete: () => 
-                    {
-                        this.physics.world.setBounds(this.sys.game.config.width, 0, this.sys.game.config.width, 176);
-                        this.player.canMove = true;
-                    }
+                        if(frame.index === 2) 
+                        {
+                            let aCultActive = false;
+                            scene.sound.play('stab');
+
+                            if(scene.cults && scene.cults.children.entries)
+                            {
+                                const cultsArray = scene.cults.children.entries; 
+
+                                for(let i = cultsArray.length - 1; i >= 0; i--) 
+                                {
+                                    const cult = cultsArray[i];
+                                    aCultActive = true;
+                                    cult.kill();  
+                                }
+                            }
+
+                            if(scene.cultKnifes && scene.cultKnifes.children.entries)
+                            {
+                                const cultKnifesArray = scene.cultKnifes.children.entries; 
+
+                                for(let i = cultKnifesArray.length - 1; i >= 0; i--) 
+                                {
+                                    const cultKnife = cultKnifesArray[i];
+                                    aCultActive = true;
+                                    cultKnife.kill();  
+                                }
+                            }
+
+                            if(scene.eyes && scene.eyes.children.entries)
+                            {
+                                const eyesArray = scene.eyes.children.entries; 
+
+                                for(let i = eyesArray.length - 1; i >= 0; i--) 
+                                {
+                                    const eye = eyesArray[i];
+                                    aCultActive = true;
+                                    eye.kill();  
+                                }
+                            }
+
+                            if(aCultActive)
+                            {
+                                scene.sound.play('hurt');
+                            }
+                        }
+                    });
+                    scene.stab.play("stabAnim", true);
                 });
-            }, [], this);
-            
-        });
-        
-        this.controls = createText(this, worldWidthX / 2, 10, 'Controls:', 16, '#fff');
-        
-        this.strafeControls = createText(this, worldWidthX / 2, 0 + this.controls.height + 20, 'A/D: Walk', 12, '#fff');
-        this.jumpControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + 25, 'Space: Jump', 12, '#fff');
-        this.rightClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 30, 'Right-Click: Block', 12, '#fff');
-        this.leftClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 35, 'Left-Click: Use Shotgun (Hold)', 12, '#fff');
-        this.pistolControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + 40, 'Q/E: Use Pistol', 12, '#fff');
-        
-        this.start = createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Start', 16, '#fff').setOrigin(0.5, 0.5);
-        this.start.setInteractive({cursor: 'pointer'});
-        this.start.on('pointerdown', () =>
-        {
-          this.scene.stop('MainMenu');
-          event.stopPropagation();
-          this.scene.start('Level1Game');
-          this.scene.launch('HUD');
-        });
-        
-        
-        //END PROPS AFTER PLAYER MainMenu
-        
-        
-        //START CAMERA SETUP MainMenu
-        
-        
-        this.cameras.main.setBounds(0, 0, worldWidthX, 176);
-        this.cameras.scrollX = 0;
-        this.cameras.scrollY = 0;
-        //this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
-        this.cameras.main.setZoom(1);
-        
-        
-        //END CAMERA SETUP MainMenu
-    }
 
-    update(time)
-    {
-        if(this.player.health < 1000)
-        {
-            this.player.buddha();
-        }
-    }
-    
-    
-  }
-  
-    function createText(scene, x, y, words, size, color)
-    {
-        let newText = scene.add.text(x, y, words, { fontSize: size, fill: color}).setOrigin(0.5, 0);
-        return newText;
-    }
-  
-  function createLevelProps(scene)
-  {
-    scene.shed = scene.add.image(75, scene.sys.game.config.height - scene.ground.height, 'shed');
-    scene.shed.setOrigin(0, 1);
-    scene.shed.setScrollFactor(0.65);
-
-    scene.fence = scene.add.tileSprite
-    (
-      0,
-      scene.sys.game.config.height - scene.ground.height,
-      148,
-      16,
-      'fence'
-    );
-    scene.fence.setScrollFactor(0.75);
-    scene.fence.setOrigin(0, 1);
-
-    scene.couch = scene.add.image(45, scene.sys.game.config.height - scene.ground.height, 'couch');
-    scene.couch.setScrollFactor(0.8);
-    scene.couch.setOrigin(0, 1);
-
-    scene.grill = scene.add.image(15, scene.sys.game.config.height - scene.ground.height, 'grill');
-    scene.grill.setScrollFactor(0.8);
-    scene.grill.setOrigin(0, 1);
-  }
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  function makeRain(scene, texture)
-  {
-        scene.rain = scene.add.particles
-        (
-            0, 0, 
-            texture,
-            {
-                x: { min: 0, max: scene.sys.game.config.width + (scene.sys.game.config.width / 5) },
-                y: { min: -15, max:-7 },
-                angle: { min: 90, max: 180 }, 
-                speed: { min: 100, max: 300 },
-                gravityY: 100,
-                lifespan: { min: 1500, max: 1500 },
-                quantity: 15,
-                scale: { start: 0.35, end: 0.25 },
-                alpha: { start: 1, end: 0 },
-                blendMode: 'NORMAL',
-                frequency: 50
-            }
-        );
-
-        scene.rain.start();
-        scene.rain.setScrollFactor(0);
-  }
-  
-  function filterColors(scene, color)
-  {
-        if(scene.shed)
-        {
-            scene.shed.setTint(color);
-        }
-        if(scene.fence)
-        {
-            scene.fence.setTint(color);
-        }
-        if(scene.couch)
-        {
-            scene.couch.setTint(color);
-        }
-        if(scene.grill)
-        {
-            scene.grill.setTint(color);
-        }
-        if(scene.ground)
-        {
-            scene.ground.setTint(color);
-        }
-        if(scene.grasstop)
-        {
-            scene.grasstop.setTint(color);
-        }
-        if(scene.wheat)
-        {
-            scene.wheat.setTint(color);
-        }
-  }
-  
-    function createRandomEnemies(scene, spawnList, worldWidthX, gameManager)
-    {
-        function getRandomCoords(worldWidthX) 
-        {
-            let min = 600;
-            return Math.floor(Math.random() * (worldWidthX - min + 1)) + min;
-        }
-        
-        function positionTaken(xCoord, chosenPositions, range)
-        {
-            for(const position of chosenPositions) 
-            {
-                if(Math.abs(position - xCoord) <= range) 
+                scene.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => 
                 {
-                    return true;
+                    transitionLevels(scene, gameManager);
+                });
+            }
+        }
+  
+        function transitionLevels(scene, gameManager)
+        {
+            if(gameManager.currentLevel === 1)
+            {
+                if(gameManager.visitedUpgradeRoom1 === true)
+                {
+                    scene.scene.start('Level2Game');
+                    scene.scene.launch('HUD');
+                }
+                else
+                {
+                    gameManager.visitedUpgradeRoom1 = true;
+                    scene.scene.start('UpgradeRoom');
+                    scene.scene.stop('HUD');
                 }
             }
-            
-            return false;
-        }
-        
-        const enemyData = new Map();
-        
-        for (const enemy of spawnList) 
-        {
-            const currentEnemy = enemy.type;
-            const enemyAmount = enemy.amount;
-            
-            let positions = new Array();
-            
-            if(currentEnemy === 'cult')
+            else if(gameManager.currentLevel === 2)
             {
-                const chosenPositions = new Set();
-                
-                for(let i = 0; i < enemyAmount; i++)
+                if(gameManager.visitedUpgradeRoom2 === true)
                 {
-                    let range = 8;
-                    let xCoord;
-                    
-                    do
+                    scene.scene.start('Level3Game');
+                    scene.scene.launch('HUD');
+                }
+                else
+                {
+                    gameManager.visitedUpgradeRoom2 = true;
+                    scene.scene.start('UpgradeRoom');
+                    scene.scene.stop('HUD');
+                }
+            }
+            else if(gameManager.currentLevel === 3)
+            {
+                if(gameManager.visitedUpgradeRoom3 === true)
+                {
+                    scene.scene.start('Level4Game');
+                    scene.scene.launch('HUD');
+                }
+                else
+                {
+                    gameManager.visitedUpgradeRoom3 = true;
+                    scene.scene.start('UpgradeRoom');
+                    scene.scene.stop('HUD');
+                }
+            }
+            else if(gameManager.currentLevel === 4)
+            {
+                scene.scene.start('MainMenu');
+                scene.scene.stop('HUD');
+            }
+        }
+
+        class Loading extends Phaser.Scene
+        {
+            constructor()
+            {
+              super({key: 'Loading'});
+            }
+
+            preload()
+            {
+                this.load.image('sky', 'assets/sky.png');
+                this.load.spritesheet('player', 'assets/player.png', {frameWidth: 16, frameHeight: 16});
+                this.load.image('ground', 'assets/grass.png');
+                this.load.image('bullet', 'assets/bullet.png');
+                this.load.image('barn', 'assets/barn.png');
+                this.load.image('fence', 'assets/fence.png');
+                this.load.image('stars', 'assets/stars.png');
+                this.load.image('cross', 'assets/cross.png');
+                this.load.spritesheet('cult', './assets/cult.png', {frameWidth: 16, frameHeight: 16});
+                this.load.image('couch', './assets/couch.png');
+                this.load.image('tractor', './assets/tractor.png');
+                this.load.image('grasstop', './assets/grasstop.png');
+                this.load.image('grill', './assets/grill.png');
+                this.load.spritesheet('cultknife', './assets/cultknife.png', {frameWidth: 16, frameHeight: 16});
+                this.load.image('copcar', './assets/copcar.png');
+                this.load.image('cultorb', './assets/cultorb.png');
+                this.load.image('wheat', './assets/wheat.png');
+                this.load.image('shed', './assets/shed.png');
+                this.load.image('silo', './assets/silo.png');
+                this.load.image('scarecrow', './assets/scarecrow.png');
+                this.load.image('pipe', './assets/pipe.png');
+                this.load.image('eye', './assets/eye.png');
+                this.load.spritesheet('stab', './assets/stab.png', {frameWidth: 12, frameHeight: 18});
+                this.load.image('blood', 'assets/bloodparticle.png');
+                this.load.image('eyechunk', 'assets/eyechunk.png');
+                this.load.image('shell', 'assets/shell.png');
+                this.load.image('raindrop', 'assets/raindrop.png');
+                this.load.image('bloodrain', 'assets/bloodrain.png');
+                this.load.image('redsky', 'assets/redsky.png');
+                this.load.image('redskyrain', 'assets/redskyrain.png');
+                this.load.image('bulletcult', 'assets/bulletcult.png');
+                this.load.image('slug', 'assets/slug.png');
+                this.load.image('slugcult', 'assets/slugcult.png');
+                this.load.image('slugshell', 'assets/slugshell.png');
+                this.load.image('slugicon', 'assets/slugicon.png');
+                this.load.image('birdshotshell', 'assets/birdshotshell.png');
+                this.load.image('birdshoticon', 'assets/birdshoticon.png');
+                this.load.image('healthicon', 'assets/healthicon.png');
+                this.load.image('shieldicon', 'assets/shieldicon.png');
+                this.load.image('damageicon', 'assets/damageicon.png');
+                this.load.image('cultenergyicon', 'assets/cultenergyicon.png');
+                this.load.image('hollowpointsicon', 'assets/hollowpointsicon.png');
+                this.load.image('pistolcasing', 'assets/pistolcasing.png');
+                this.load.image('multiammoicon', 'assets/multiammoicon.png');
+
+                this.load.audio('shotgunshot', 
+                [
+                    'assets/shotgunshot.wav'
+                ]);
+
+                this.load.audio('slug', 
+                [
+                    'assets/slug.wav'
+                ]);
+
+                this.load.audio('orbthrow', 
+                [
+                    'assets/orbthrow.wav'
+                ]);
+
+                this.load.audio('hurt', 
+                [
+                    'assets/hurt.wav'
+                ]);
+
+                this.load.audio('powerup', 
+                [
+                    'assets/powerup.wav'
+                ]);
+
+                this.load.audio('block', 
+                [
+                    'assets/block.wav'
+                ]);
+
+                this.load.audio('stab', 
+                [
+                    'assets/stab.wav'
+                ]);
+
+                this.load.audio('eyeorb', 
+                [
+                    'assets/eyeorb.wav'
+                ]);
+
+                this.load.audio('birdshot', 
+                [
+                    'assets/birdshot.wav'
+                ]);
+
+                this.load.audio('switchfiremode', 
+                [
+                    'assets/switchfiremode.wav'
+                ]);
+
+                this.load.audio('pistolsound', 
+                [
+                    'assets/pistolsound.wav'
+                ]);
+            }
+
+            create()
+            {
+                this.loading = this.add.text((this.sys.game.config.width / 2), this.sys.game.config.height / 2, 'Loading', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+            }
+
+            update()
+            {
+                this.scene.stop('Loading');
+                this.scene.start('GameManager');
+                this.scene.start('MainMenu');
+            }
+        }
+
+        class MainMenu extends Phaser.Scene
+        {
+            constructor()
+            {
+              super({key: 'MainMenu'});
+            }
+
+            preload()
+            {
+
+            }
+
+            create ()
+            {
+                //START BASIC SETUP MainMenu
+
+
+                this.input.setDefaultCursor('');
+                const worldWidthX = this.sys.game.config.width * 3;
+                this.physics.world.setBounds(0, 0, worldWidthX / 3, 176);
+                this.cursors = this.input.keyboard.createCursorKeys();
+                this.gameManager = this.scene.get('GameManager');
+                this.gameManager.reset();
+
+
+                //END BASIC SETUP MainMenu
+
+
+                //START PROPS BEFORE PLAYER MainMenu
+
+
+                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'sky').setOrigin(0, 0);
+                this.sky.setScrollFactor(0.1);
+
+                this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
+                this.stars.setScrollFactor(0.1);
+
+                this.ground = this.add.tileSprite
+                (
+                  0,
+                  this.sys.game.config.height,
+                  worldWidthX * 2,
+                  16,
+                  'ground'
+                );
+
+                this.ground.setOrigin(0, 1);
+                this.physics.add.existing(this.ground);
+                this.ground.body.setImmovable(true);
+                this.ground.body.allowGravity = false;
+
+                this.barn = this.add.image
+                (
+                    (worldWidthX / 3) / 30,
+                    this.sys.game.config.height - this.ground.height,
+                    'barn'
+                ).setOrigin(0, 1);
+                this.barn.setTint(0x999999);
+                this.barn.setScrollFactor(0.25);
+
+                this.silo = this.add.image
+                (
+                    this.barn.width + (worldWidthX / 3) / 30,
+                    this.sys.game.config.height - this.ground.height,
+                    'silo'
+                );
+                this.silo.setOrigin(0, 1);
+                this.silo.setScrollFactor(0.225);
+
+                this.cross = this.add.image
+                (
+                    (worldWidthX / 3) + ((worldWidthX / 3) / 30),
+                    this.sys.game.config.height - this.ground.height,
+                    'cross'
+                );
+                this.cross.setOrigin(0, 1);
+                this.cross.setScrollFactor(0.25);
+                this.cross.setTint(0x999999);
+
+                this.fence = this.add.tileSprite
+                (
+                    this.sys.game.config.width / 2,
+                    this.sys.game.config.height - this.ground.height,
+                    worldWidthX,
+                    16,
+                    'fence'
+                );
+                this.fence.setScrollFactor(0.75);
+                this.fence.setOrigin(0.25, 1);
+
+
+                //END PROPS BEFORE PLAYER MainMenu
+
+
+                //START PLAYER SETUP MainMenu
+
+
+                createPlayer(this, Math.min(this.sys.game.config.width / 4, this.sys.game.config.width / 2), this.sys.game.config.height - 24, this.gameManager);
+                this.player.buddha();
+
+
+                //END PLAYER SETUP MainMenu
+
+
+                //START ENEMY SETUP MainMenu
+
+
+                /*const cultPositions = 
+                [
+                    { x: worldWidthX / 2 + 7, y: 100 }
+                ];
+
+                cultCreator(this, cultPositions, this.gameManager);
+
+                this.cults.children.entries.forEach(cult => 
+                {
+                    cult.buddha();
+                });*/
+
+
+                //END ENEMY SETUP MainMenu
+
+
+                //START PROPS AFTER PLAYER MainMenu
+
+
+                this.copcar = this.add.image
+                (
+                    worldWidthX / 4 + this.sys.game.config.width / 4 - this.sys.game.config.width / 8,
+                    this.sys.game.config.height - this.ground.height,
+                    'copcar'
+                ).setOrigin(1, 1);
+
+                this.pipe = this.physics.add.sprite(worldWidthX / 2 + this.sys.game.config.width / 4 - 8, this.sys.game.config.height - this.ground.height, 'pipe');
+                this.pipe.setOrigin(0, 1);
+                this.pipe.body.allowGravity = false;
+                this.pipe.body.setImmovable(true);
+                this.physics.add.collider(this.pipe, this.ground);
+
+                if(!this.anims.get('stabAnim'))
+                {
+                    this.anims.create
+                    ({
+                        key: "stabAnim",
+                        frames: this.anims.generateFrameNumbers('stab', {start: 0, end: 2 }),
+                        frameRate: 2,
+                        repeat: 0
+                    });
+                }
+                this.stab = this.add.sprite(this.pipe.x + 1, this.pipe.y, "stab").setOrigin(0, 1);
+                this.stab.setActive(false);
+                this.stab.setVisible(false);
+
+                this.physics.add.collider(this.pipe, this.player, (pipe, player) =>
+                {
+                    player.destroy();
+                    this.stab.setActive(true);
+                    this.stab.setVisible(true);
+                    this.sound.play('powerup');
+
+                    this.stab.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
                     {
-                        xCoord = getRandomCoords(worldWidthX);
-                    }
-                    while(positionTaken(xCoord, chosenPositions, range));
-                     
-                    const newCult = { x: xCoord, y: 100 };
-                    chosenPositions.add(xCoord);
-                    positions.push(newCult);
-                }
-                
-                enemyData.set('cult', { positions: positions });
-                cultCreator(scene, positions, gameManager);
-            }    
-            else if(currentEnemy === 'cultKnife')
-            {
-                const chosenPositions = new Set();
-                
-                for(let i = 0; i < enemyAmount; i++)
+                        if(frame.index === 2) 
+                        {
+                            this.sound.play('stab');
+
+                            /*this.cults.children.entries.forEach(cult => 
+                            {
+                                cult.health = -100;
+                            });*/
+
+                            this.controls.destroy();
+                            this.strafeControls.destroy();
+                            this.jumpControls.destroy();
+                            this.leftClickControls.destroy();
+                            this.rightClickControls.destroy();
+                            this.pistolControls.destroy();
+                        }
+                    });
+
+                    this.stab.play("stabAnim", true);
+                });
+
+                this.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => 
                 {
-                    let range = 8;
-                    let xCoord;
-                    
-                    do
+                    this.cameras.main.pan(worldWidthX, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
+                });
+
+                this.grasstop = this.add.tileSprite
+                (
+                    0,
+                    this.sys.game.config.height - this.ground.height,
+                    worldWidthX,
+                    16,
+                    'grasstop'
+                );
+                this.grasstop.setOrigin(0, 1);
+
+                this.logo = createText(this, worldWidthX / 6, this.sys.game.config.height / 2, 'House Call', 16, '#fff').setOrigin(0.5, 0.5);
+                this.logo.setInteractive({cursor: 'pointer'});
+
+                this.physics.add.existing(this.logo, true);
+                this.physics.add.collider(this.logo, this.playerBulletsHolder, (logo, bullet) =>
+                {
+                    bullet.destroy();
+                    logo.destroy();
+                    this.cameras.main.pan(worldWidthX / 2, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
+
+                    this.time.delayedCall(2000, () =>
                     {
-                        xCoord = getRandomCoords(worldWidthX);
-                    }
-                    while(positionTaken(xCoord, chosenPositions, range));
-                     
-                    const newCultKnife = { x: xCoord, y: 100 };
-                    chosenPositions.add(xCoord);
-                    positions.push(newCultKnife);
-                }
-                
-                enemyData.set('cultKnife', { positions: positions });
-                cultKnifeCreator(scene, positions, gameManager);
-            }
-            else if(currentEnemy === 'eye')
-            {
-                const chosenPositions = new Set();
-                
-                for(let i = 0; i < enemyAmount; i++)
+                        this.player.x = worldWidthX / 3 - this.player.width / 2;
+                        this.player.canMove = false;
+                        this.tweens.add
+                        ({
+                            targets: this.player, 
+                            x: worldWidthX / 3 + this.player.width / 2,               
+                            y: this.sys.game.config.height - 24,               
+                            duration: 250,       
+                            ease: 'linear',       
+                            onComplete: () => 
+                            {
+                                this.physics.world.setBounds(this.sys.game.config.width, 0, this.sys.game.config.width, 176);
+                                this.player.canMove = true;
+                            }
+                        });
+                    }, [], this);
+
+                });
+
+                this.controls = createText(this, worldWidthX / 2, 10, 'Controls:', 16, '#fff');
+
+                this.strafeControls = createText(this, worldWidthX / 2, 0 + this.controls.height + 20, 'A/D: Walk', 12, '#fff');
+                this.jumpControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + 25, 'Space: Jump', 12, '#fff');
+                this.rightClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 30, 'Right-Click: Block', 12, '#fff');
+                this.leftClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 35, 'Left-Click: Use Shotgun (Hold)', 12, '#fff');
+                this.pistolControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + 40, 'Q/E: Use Pistol', 12, '#fff');
+
+                this.start = createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Start', 16, '#fff').setOrigin(0.5, 0.5);
+                this.start.setInteractive({cursor: 'pointer'});
+                this.start.on('pointerdown', () =>
                 {
-                    let range = 16;
-                    let xCoord;
-                    
-                    do
+                    this.scene.stop('MainMenu');
+                    event.stopPropagation();
+                    this.scene.start('Level1Game');
+                    this.scene.launch('HUD');
+                });
+
+
+                //END PROPS AFTER PLAYER MainMenu
+
+
+                //START CAMERA SETUP MainMenu
+
+
+                this.cameras.main.setBounds(0, 0, worldWidthX, 176);
+                this.cameras.scrollX = 0;
+                this.cameras.scrollY = 0;
+                //this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
+                this.cameras.main.setZoom(1);
+
+
+                //END CAMERA SETUP MainMenu
+            }
+
+            update(time)
+            {
+                if(this.player.health < 1000)
+                {
+                    this.player.buddha();
+                }
+            }
+        }
+  
+        function createText(scene, x, y, words, size, color)
+        {
+            let newText = scene.add.text(x, y, words, { fontSize: size, fill: color}).setOrigin(0.5, 0);
+            return newText;
+        }
+  
+        function createLevelProps(scene)
+        {
+            scene.shed = scene.add.image(75, scene.sys.game.config.height - scene.ground.height, 'shed');
+            scene.shed.setOrigin(0, 1);
+            scene.shed.setScrollFactor(0.65);
+
+            scene.fence = scene.add.tileSprite
+            (
+              0,
+              scene.sys.game.config.height - scene.ground.height,
+              148,
+              16,
+              'fence'
+            );
+            scene.fence.setScrollFactor(0.75);
+            scene.fence.setOrigin(0, 1);
+
+            scene.couch = scene.add.image(45, scene.sys.game.config.height - scene.ground.height, 'couch');
+            scene.couch.setScrollFactor(0.8);
+            scene.couch.setOrigin(0, 1);
+
+            scene.grill = scene.add.image(15, scene.sys.game.config.height - scene.ground.height, 'grill');
+            scene.grill.setScrollFactor(0.8);
+            scene.grill.setOrigin(0, 1);
+        }
+  
+        function makeRain(scene, texture)
+        {
+            scene.rain = scene.add.particles
+            (
+                0, 0, 
+                texture,
+                {
+                    x: { min: 0, max: scene.sys.game.config.width + (scene.sys.game.config.width / 5) },
+                    y: { min: -15, max:-7 },
+                    angle: { min: 90, max: 180 }, 
+                    speed: { min: 100, max: 300 },
+                    gravityY: 100,
+                    lifespan: { min: 1500, max: 1500 },
+                    quantity: 15,
+                    scale: { start: 0.35, end: 0.25 },
+                    alpha: { start: 1, end: 0 },
+                    blendMode: 'NORMAL',
+                    frequency: 50
+                }
+            );
+
+            scene.rain.start();
+            scene.rain.setScrollFactor(0);
+        }
+  
+        function filterColors(scene, color)
+        {
+            if(scene.shed)
+            {
+                scene.shed.setTint(color);
+            }
+            if(scene.fence)
+            {
+                scene.fence.setTint(color);
+            }
+            if(scene.couch)
+            {
+                scene.couch.setTint(color);
+            }
+            if(scene.grill)
+            {
+                scene.grill.setTint(color);
+            }
+            if(scene.ground)
+            {
+                scene.ground.setTint(color);
+            }
+            if(scene.grasstop)
+            {
+                scene.grasstop.setTint(color);
+            }
+            if(scene.wheat)
+            {
+                scene.wheat.setTint(color);
+            }
+        }
+  
+        function createRandomEnemies(scene, spawnList, worldWidthX, gameManager)
+        {
+            function getRandomCoords(worldWidthX) 
+            {
+                let min = 600;
+                return Math.floor(Math.random() * (worldWidthX - min + 1)) + min;
+            }
+
+            function positionTaken(xCoord, chosenPositions, range)
+            {
+                for(const position of chosenPositions) 
+                {
+                    if(Math.abs(position - xCoord) <= range) 
                     {
-                        xCoord = getRandomCoords(worldWidthX);
+                        return true;
                     }
-                    while(positionTaken(xCoord, chosenPositions, range));
-                     
-                    const newEye = { x: xCoord, y: 88 };
-                    chosenPositions.add(xCoord);
-                    positions.push(newEye);
                 }
-                
-                enemyData.set('eye', { positions: positions });
-                eyeCreator(scene, positions, gameManager);
+
+                return false;
             }
-        }
-        
-        return enemyData;
-    }
-    
-    function getRandomXAnywhere(worldWidthX)
-    {
-        return (Math.floor(Math.random() * (worldWidthX - 0 + 1)) + 0);
-    }
-    
-    function getRandMinMax(min, max)
-    {
-        return (Math.floor(Math.random() * (max - min + 1)) + min);
-    }
-    
-  class Level1Game extends Phaser.Scene
-  {
-    constructor()
-    {
-      super({ key: 'Level1Game' });
-    }
 
-    preload()
-    {
+            const enemyData = new Map();
 
-    }
-
-    create()
-    {
-        //START BASIC SETUP Level1Game
-
-        
-        this.input.setDefaultCursor('');
-        const worldWidthX = 1800;
-        this.physics.world.setBounds(0, 0, worldWidthX, 176);
-        this.cursors = this.input.keyboard.createCursorKeys();
-        this.gameManager = this.scene.get('GameManager');
-        this.gameManager.updateHighestLevel(1);
-        this.gameManager.updateCurrentLevel(1);
-         
-
-        //END BASIC SETUP Level1Game
-
-
-        //START PROPS BEFORE PLAYER Level1Game
-        
-
-        this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'sky').setOrigin(0, 0);
-        this.sky.setScrollFactor(0.1);
-
-        this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
-        this.stars.setScrollFactor(0.1);
-        
-        if(!this.gameManager.scarecrowPos1)
-        {
-            let scarePos = getRandomXAnywhere(worldWidthX);
-            this.scarecrow = this.add.image(scarePos, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-            this.gameManager.scarecrowPos1 = scarePos;
-        }
-        else
-        {
-            this.scarecrow = this.add.image(this.gameManager.scarecrowPos1, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-        }
-        
-        this.scarecrow.setScrollFactor(0.4);
-        
-        this.wheat = this.add.tileSprite
-        (
-            0,
-            176 - 16,
-            worldWidthX,
-            16,
-            'wheat'
-        );
-        this.wheat.setOrigin(0, 1);
-        this.wheat.setScrollFactor(0.575);
-
-        this.ground = this.add.tileSprite
-        (
-          0,
-          this.sys.game.config.height,
-          worldWidthX * 2,
-          16,
-          'ground'
-        );
-
-        this.ground.setOrigin(0, 1);
-        this.physics.add.existing(this.ground);
-        this.ground.body.setImmovable(true);
-        this.ground.body.allowGravity = false;
-
-        createLevelProps(this);
-
-
-        //END PROPS BEFORE PLAYER Level1Game
-      
-      
-        //START PLAYER SETUP Level1Game
-
-        
-        createPlayer(this, 100, this.sys.game.config.height - 24, this.gameManager);
-        //this.player.buddha();
-
-
-        //END PLAYER SETUP Level1Game
-      
-      
-        //START ENEMY SETUP Level1Game
-        
-        
-        if(this.gameManager.level1Data === null)
-        {
-            this.spawnList = 
-            [
-                { type: 'cult', amount: getRandMinMax(2, 3) },
-                { type: 'cultKnife', amount: getRandMinMax(4, 5) }
-            ];
-
-            this.gameManager.level1Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
-        }
-        else
-        {
-            for(const enemy of this.gameManager.level1Data.keys()) 
+            for (const enemy of spawnList) 
             {
-                if(enemy === 'cult')
+                const currentEnemy = enemy.type;
+                const enemyAmount = enemy.amount;
+
+                let positions = new Array();
+
+                if(currentEnemy === 'cult')
                 {
-                    let enemyData = this.gameManager.level1Data.get(enemy);
-                    let enemyPositionArray = enemyData.positions;
-                    cultCreator(this, enemyPositionArray, this.gameManager);
+                    const chosenPositions = new Set();
+
+                    for(let i = 0; i < enemyAmount; i++)
+                    {
+                        let range = 8;
+                        let xCoord;
+
+                        do
+                        {
+                            xCoord = getRandomCoords(worldWidthX);
+                        }
+                        while(positionTaken(xCoord, chosenPositions, range));
+
+                        const newCult = { x: xCoord, y: 100 };
+                        chosenPositions.add(xCoord);
+                        positions.push(newCult);
+                    }
+
+                    enemyData.set('cult', { positions: positions });
+                    cultCreator(scene, positions, gameManager);
+                }    
+                else if(currentEnemy === 'cultKnife')
+                {
+                    const chosenPositions = new Set();
+
+                    for(let i = 0; i < enemyAmount; i++)
+                    {
+                        let range = 8;
+                        let xCoord;
+
+                        do
+                        {
+                            xCoord = getRandomCoords(worldWidthX);
+                        }
+                        while(positionTaken(xCoord, chosenPositions, range));
+
+                        const newCultKnife = { x: xCoord, y: 100 };
+                        chosenPositions.add(xCoord);
+                        positions.push(newCultKnife);
+                    }
+
+                    enemyData.set('cultKnife', { positions: positions });
+                    cultKnifeCreator(scene, positions, gameManager);
                 }
-                else if(enemy === 'cultKnife')
+                else if(currentEnemy === 'eye')
                 {
-                    let enemyData = this.gameManager.level1Data.get(enemy);
-                    let enemyPositionArray = enemyData.positions;
-                    cultKnifeCreator(this, enemyPositionArray, this.gameManager);
+                    const chosenPositions = new Set();
+
+                    for(let i = 0; i < enemyAmount; i++)
+                    {
+                        let range = 16;
+                        let xCoord;
+
+                        do
+                        {
+                            xCoord = getRandomCoords(worldWidthX);
+                        }
+                        while(positionTaken(xCoord, chosenPositions, range));
+
+                        const newEye = { x: xCoord, y: 88 };
+                        chosenPositions.add(xCoord);
+                        positions.push(newEye);
+                    }
+
+                    enemyData.set('eye', { positions: positions });
+                    eyeCreator(scene, positions, gameManager);
                 }
             }
+
+            return enemyData;
         }
-        
-        
-        //END ENEMY SETUP Level1Game
-      
-        
-        //START PROPS AFTER PLAYER Level1Game
-        
-        
-        const thisLevel = 1;
-        this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - this.ground.height, 'Level2Game', thisLevel, this.gameManager);
 
-        this.grasstop = this.add.tileSprite
-        (
-          0,
-          this.sys.game.config.height - this.ground.height,
-          worldWidthX,
-          16,
-          'grasstop'
-        );
-        this.grasstop.setOrigin(0, 1);
-        
-        this.tractor = this.physics.add.sprite(200, this.sys.game.config.height - this.ground.height, 'tractor');
-        this.tractor.setOrigin(0, 1);
-        this.tractor.body.allowGravity = false;
-        this.tractor.body.setImmovable(true);
-
-        this.physics.add.collider(this.tractor, this.ground);
-        this.physics.add.collider(this.tractor, this.player);
-        
-        
-        //END PROPS AFTER PLAYER Level1Game
-        
-        
-        //START CAMERA SETUP Level1Game
-        
-        
-        this.cameras.main.setBounds(0, 0, worldWidthX, 176);
-        this.cameras.main.startFollow(this.player, true, 1, 1, -(this.sys.game.config.width / 4), (this.sys.game.config.height / 2));
-        this.cameras.main.setZoom(1);
-        this.cameras.scrollX = 0;
-        this.cameras.scrollY = 0;
-        
-        
-        //END CAMERA SETUP Level1Game
-    }
-
-    update(time, delta)
-    {
-      if(this.player.health < 1)
-      {
-        this.scene.stop('Level1Game');
-        this.scene.stop('HUD');
-        this.scene.start('Level1Game');
-        this.scene.launch('HUD');
-      }
-      
-      cultSeparation(this.cults, this.player);
-      //eyeSeparation(this.eyes, this.player);
-    }
-  }
-
-  class Level2Game extends Phaser.Scene
-  {
-    constructor()
-    {
-      super({ key: 'Level2Game' });
-    }
-
-    preload()
-    {
-
-    }
-
-    create()
-    {
-        //START BASIC SETUP Level2Game
-
-        
-        this.input.setDefaultCursor('');
-        const worldWidthX = 2250;
-        this.physics.world.setBounds(0, 0, worldWidthX, 176);
-        this.cursors = this.input.keyboard.createCursorKeys();
-        this.gameManager = this.scene.get('GameManager');
-        this.gameManager.updateHighestLevel(2);
-        this.gameManager.updateCurrentLevel(2);
-
-
-        //END BASIC SETUP Level2Game
-
-
-        //START PROPS BEFORE PLAYER Level2Game
-
-
-        this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'sky').setOrigin(0, 0);
-        this.sky.setScrollFactor(0.1);
-        this.sky.postFX.addColorMatrix().grayscale(1);
-        
-        if(!this.gameManager.scarecrowPos2)
+        function getRandomXAnywhere(worldWidthX)
         {
-            let scarePos = getRandomXAnywhere(worldWidthX);
-            this.scarecrow = this.add.image(scarePos, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-            this.gameManager.scarecrowPos2 = scarePos;
+            return (Math.floor(Math.random() * (worldWidthX - 0 + 1)) + 0);
         }
-        else
+
+        function getRandMinMax(min, max)
         {
-            this.scarecrow = this.add.image(this.gameManager.scarecrowPos2, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+            return (Math.floor(Math.random() * (max - min + 1)) + min);
         }
-        
-        this.scarecrow.setScrollFactor(0.4);
-        
-        this.wheat = this.add.tileSprite
-        (
-            0,
-            176 - 16,
-            worldWidthX,
-            16,
-            'wheat'
-        );
-        this.wheat.setOrigin(0, 1);
-        this.wheat.setScrollFactor(0.575);
-
-        this.ground = this.add.tileSprite
-        (
-            -worldWidthX,
-            this.sys.game.config.height,
-            worldWidthX * 3,
-            16,
-            'ground'
-        );
-
-        this.ground.setOrigin(0, 1);
-        this.physics.add.existing(this.ground);
-        this.ground.body.setImmovable(true);
-        this.ground.body.allowGravity = false;
-        this.ground.setTint(0xd1e0e0);
-
-        //createLevelProps(this);
-        
-        this.pipe = this.add.image(15, this.sys.game.config.height - this.ground.height, 'pipe');
-        this.pipe.setScrollFactor(0.8);
-        this.pipe.setOrigin(0, 1);
-       
-        
-        //END PROPS BEFORE PLAYER Level2Game
-
-
-        //START PLAYER SETUP Level2Game
-
-
-        createPlayer(this, 100, this.sys.game.config.height - 24, this.gameManager);
-        //this.player.buddha();
-        
-
-        //END PLAYER SETUP Level2Game
-
-
-        //START ENEMY SETUP Level2Game
-
-
-        if(this.gameManager.level2Data === null)
+    
+        class Level1Game extends Phaser.Scene
         {
-            this.spawnList = 
-            [
-                { type: 'cult', amount: getRandMinMax(8, 12) },
-                { type: 'cultKnife', amount: getRandMinMax(1, 1) }
-            ];
-
-            this.gameManager.level2Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
-        }
-        else
-        { 
-            for(const enemy of this.gameManager.level2Data.keys()) 
+            constructor()
             {
-                if(enemy === 'cult')
+                super({ key: 'Level1Game' });
+            }
+
+            preload()
+            {
+
+            }
+
+            create()
+            {
+                //START BASIC SETUP Level1Game
+
+
+                this.input.setDefaultCursor('');
+                const worldWidthX = 1800;
+                this.physics.world.setBounds(0, 0, worldWidthX, 176);
+                this.cursors = this.input.keyboard.createCursorKeys();
+                this.gameManager = this.scene.get('GameManager');
+                this.gameManager.updateHighestLevel(1);
+                this.gameManager.updateCurrentLevel(1);
+
+
+                //END BASIC SETUP Level1Game
+
+
+                //START PROPS BEFORE PLAYER Level1Game
+
+
+                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'sky').setOrigin(0, 0);
+                this.sky.setScrollFactor(0.1);
+
+                this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
+                this.stars.setScrollFactor(0.1);
+
+                if(!this.gameManager.scarecrowPos1)
                 {
-                    let enemyData = this.gameManager.level2Data.get(enemy);
-                    let enemyPositionArray = enemyData.positions;
-                    cultCreator(this, enemyPositionArray, this.gameManager);
+                    let scarePos = getRandomXAnywhere(worldWidthX);
+                    this.scarecrow = this.add.image(scarePos, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+                    this.gameManager.scarecrowPos1 = scarePos;
                 }
-                else if(enemy === 'cultKnife')
+                else
                 {
-                    let enemyData = this.gameManager.level2Data.get(enemy);
-                    let enemyPositionArray = enemyData.positions;
-                    cultKnifeCreator(this, enemyPositionArray, this.gameManager);
+                    this.scarecrow = this.add.image(this.gameManager.scarecrowPos1, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
                 }
+
+                this.scarecrow.setScrollFactor(0.4);
+
+                this.wheat = this.add.tileSprite
+                (
+                    0,
+                    176 - 16,
+                    worldWidthX,
+                    16,
+                    'wheat'
+                );
+                this.wheat.setOrigin(0, 1);
+                this.wheat.setScrollFactor(0.575);
+
+                this.ground = this.add.tileSprite
+                (
+                    0,
+                    this.sys.game.config.height,
+                    worldWidthX * 2,
+                    16,
+                    'ground'
+                );
+
+                this.ground.setOrigin(0, 1);
+                this.physics.add.existing(this.ground);
+                this.ground.body.setImmovable(true);
+                this.ground.body.allowGravity = false;
+
+                createLevelProps(this);
+
+
+                //END PROPS BEFORE PLAYER Level1Game
+
+
+                //START PLAYER SETUP Level1Game
+
+
+                createPlayer(this, 100, this.sys.game.config.height - 24, this.gameManager);
+                //this.player.buddha();
+
+
+                //END PLAYER SETUP Level1Game
+
+
+                //START ENEMY SETUP Level1Game
+
+
+                if(this.gameManager.level1Data === null)
+                {
+                    this.spawnList = 
+                    [
+                        { type: 'cult', amount: getRandMinMax(2, 3) },
+                        { type: 'cultKnife', amount: getRandMinMax(4, 5) }
+                    ];
+
+                    this.gameManager.level1Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
+                }
+                else
+                {
+                    for(const enemy of this.gameManager.level1Data.keys()) 
+                    {
+                        if(enemy === 'cult')
+                        {
+                            let enemyData = this.gameManager.level1Data.get(enemy);
+                            let enemyPositionArray = enemyData.positions;
+                            cultCreator(this, enemyPositionArray, this.gameManager);
+                        }
+                        else if(enemy === 'cultKnife')
+                        {
+                            let enemyData = this.gameManager.level1Data.get(enemy);
+                            let enemyPositionArray = enemyData.positions;
+                            cultKnifeCreator(this, enemyPositionArray, this.gameManager);
+                        }
+                    }
+                }
+
+
+                //END ENEMY SETUP Level1Game
+
+
+                //START PROPS AFTER PLAYER Level1Game
+
+
+                const thisLevel = 1;
+                this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - this.ground.height, 'Level2Game', thisLevel, this.gameManager);
+
+                this.grasstop = this.add.tileSprite
+                (
+                    0,
+                    this.sys.game.config.height - this.ground.height,
+                    worldWidthX,
+                    16,
+                    'grasstop'
+                );
+                this.grasstop.setOrigin(0, 1);
+
+                this.tractor = this.physics.add.sprite(200, this.sys.game.config.height - this.ground.height, 'tractor');
+                this.tractor.setOrigin(0, 1);
+                this.tractor.body.allowGravity = false;
+                this.tractor.body.setImmovable(true);
+
+                this.physics.add.collider(this.tractor, this.ground);
+                this.physics.add.collider(this.tractor, this.player);
+
+
+                //END PROPS AFTER PLAYER Level1Game
+
+
+                //START CAMERA SETUP Level1Game
+
+
+                this.cameras.main.setBounds(0, 0, worldWidthX, 176);
+                this.cameras.main.startFollow(this.player, true, 1, 1, -(this.sys.game.config.width / 4), (this.sys.game.config.height / 2));
+                this.cameras.main.setZoom(1);
+                this.cameras.scrollX = 0;
+                this.cameras.scrollY = 0;
+
+
+                //END CAMERA SETUP Level1Game
+            }
+
+            update(time, delta)
+            {
+                if(this.player.health < 1)
+                {
+                    this.scene.stop('Level1Game');
+                    this.scene.stop('HUD');
+                    this.scene.start('Level1Game');
+                    this.scene.launch('HUD');
+                }
+
+                cultSeparation(this.cults, this.player);
+                //eyeSeparation(this.eyes, this.player);
             }
         }
 
-
-        //END ENEMY SETUP Level2Game
-        
-
-        //START PROPS AFTER PLAYER Level2Game
-        
-        
-        const thisLevel = 2;
-        this.pipe = new pipeNext(this, 2050, this.sys.game.config.height - this.ground.height, 'Level3Game', 2, this.gameManager);
-
-        this.grasstop = this.add.tileSprite
-        (
-            0,
-            this.sys.game.config.height - this.ground.height,
-            worldWidthX,
-            16,
-            'grasstop'
-        );
-        this.grasstop.setOrigin(0, 1);
-
-        this.physics.add.collider(this.player, this.ground);
-        
-        makeRain(this, 'raindrop');
-        
-        filterColors(this, 0xd1e0e0);
-        
-        
-        //END PROPS AFTER PLAYER Level2Game
-
-
-        //START CAMERA SETUP Level2Game
-
-
-        this.cameras.main.setBounds(0, 0, worldWidthX, 176);
-        this.cameras.main.startFollow(this.player, true, 1, 1, -(this.sys.game.config.width / 4), (this.sys.game.config.height / 2));
-        this.cameras.main.setZoom(1);
-        this.cameras.scrollX = 0;
-        this.cameras.scrollY = 0;
-
-
-        //END CAMERA SETUP Level2Game
-    }
-
-    update(time, delta)
-    {
-        if(this.player.health < 1)
+        class Level2Game extends Phaser.Scene
         {
-            this.scene.stop('Level2Game');
-            this.scene.stop('HUD');
-            this.scene.start('Level1Game');
-            this.scene.launch('HUD');
-        }
+            constructor()
+            {
+                super({ key: 'Level2Game' });
+            }
 
-        cultSeparation(this.cults, this.player);
-        //eyeSeparation(this.eyes, this.player);
-        
-        //activateCultGroups(this, this.cultGroup1); //OLD PRESET
-        //activateCultGroups(this, this.cultGroup2);
-        //activateCultGroups(this, this.cultGroup3);
-    }
-  }
+            preload()
+            {
+
+            }
+
+            create()
+            {
+                //START BASIC SETUP Level2Game
+
+
+                this.input.setDefaultCursor('');
+                const worldWidthX = 2250;
+                this.physics.world.setBounds(0, 0, worldWidthX, 176);
+                this.cursors = this.input.keyboard.createCursorKeys();
+                this.gameManager = this.scene.get('GameManager');
+                this.gameManager.updateHighestLevel(2);
+                this.gameManager.updateCurrentLevel(2);
+
+
+                //END BASIC SETUP Level2Game
+
+
+                //START PROPS BEFORE PLAYER Level2Game
+
+
+                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'sky').setOrigin(0, 0);
+                this.sky.setScrollFactor(0.1);
+                this.sky.postFX.addColorMatrix().grayscale(1);
+
+                if(!this.gameManager.scarecrowPos2)
+                {
+                    let scarePos = getRandomXAnywhere(worldWidthX);
+                    this.scarecrow = this.add.image(scarePos, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+                    this.gameManager.scarecrowPos2 = scarePos;
+                }
+                else
+                {
+                    this.scarecrow = this.add.image(this.gameManager.scarecrowPos2, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+                }
+
+                this.scarecrow.setScrollFactor(0.4);
+
+                this.wheat = this.add.tileSprite
+                (
+                    0,
+                    176 - 16,
+                    worldWidthX,
+                    16,
+                    'wheat'
+                );
+                this.wheat.setOrigin(0, 1);
+                this.wheat.setScrollFactor(0.575);
+
+                this.ground = this.add.tileSprite
+                (
+                    -worldWidthX,
+                    this.sys.game.config.height,
+                    worldWidthX * 3,
+                    16,
+                    'ground'
+                );
+
+                this.ground.setOrigin(0, 1);
+                this.physics.add.existing(this.ground);
+                this.ground.body.setImmovable(true);
+                this.ground.body.allowGravity = false;
+                this.ground.setTint(0xd1e0e0);
+
+                //createLevelProps(this);
+
+                this.pipe = this.add.image(15, this.sys.game.config.height - this.ground.height, 'pipe');
+                this.pipe.setScrollFactor(0.8);
+                this.pipe.setOrigin(0, 1);
+
+
+                //END PROPS BEFORE PLAYER Level2Game
+
+
+                //START PLAYER SETUP Level2Game
+
+
+                createPlayer(this, 100, this.sys.game.config.height - 24, this.gameManager);
+                //this.player.buddha();
+
+
+                //END PLAYER SETUP Level2Game
+
+
+                //START ENEMY SETUP Level2Game
+
+
+                if(this.gameManager.level2Data === null)
+                {
+                    this.spawnList = 
+                    [
+                        { type: 'cult', amount: getRandMinMax(8, 12) },
+                        { type: 'cultKnife', amount: getRandMinMax(1, 1) }
+                    ];
+
+                    this.gameManager.level2Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
+                }
+                else
+                { 
+                    for(const enemy of this.gameManager.level2Data.keys()) 
+                    {
+                        if(enemy === 'cult')
+                        {
+                            let enemyData = this.gameManager.level2Data.get(enemy);
+                            let enemyPositionArray = enemyData.positions;
+                            cultCreator(this, enemyPositionArray, this.gameManager);
+                        }
+                        else if(enemy === 'cultKnife')
+                        {
+                            let enemyData = this.gameManager.level2Data.get(enemy);
+                            let enemyPositionArray = enemyData.positions;
+                            cultKnifeCreator(this, enemyPositionArray, this.gameManager);
+                        }
+                    }
+                }
+
+
+                //END ENEMY SETUP Level2Game
+
+
+                //START PROPS AFTER PLAYER Level2Game
+
+
+                const thisLevel = 2;
+                this.pipe = new pipeNext(this, 2050, this.sys.game.config.height - this.ground.height, 'Level3Game', 2, this.gameManager);
+
+                this.grasstop = this.add.tileSprite
+                (
+                    0,
+                    this.sys.game.config.height - this.ground.height,
+                    worldWidthX,
+                    16,
+                    'grasstop'
+                );
+                this.grasstop.setOrigin(0, 1);
+
+                this.physics.add.collider(this.player, this.ground);
+
+                makeRain(this, 'raindrop');
+
+                filterColors(this, 0xd1e0e0);
+
+
+                //END PROPS AFTER PLAYER Level2Game
+
+
+                //START CAMERA SETUP Level2Game
+
+
+                this.cameras.main.setBounds(0, 0, worldWidthX, 176);
+                this.cameras.main.startFollow(this.player, true, 1, 1, -(this.sys.game.config.width / 4), (this.sys.game.config.height / 2));
+                this.cameras.main.setZoom(1);
+                this.cameras.scrollX = 0;
+                this.cameras.scrollY = 0;
+
+
+                //END CAMERA SETUP Level2Game
+            }
+
+            update(time, delta)
+            {
+                if(this.player.health < 1)
+                {
+                    this.scene.stop('Level2Game');
+                    this.scene.stop('HUD');
+                    this.scene.start('Level1Game');
+                    this.scene.launch('HUD');
+                }
+
+                cultSeparation(this.cults, this.player);
+                //eyeSeparation(this.eyes, this.player);
+
+                //activateCultGroups(this, this.cultGroup1); //OLD PRESET
+                //activateCultGroups(this, this.cultGroup2);
+                //activateCultGroups(this, this.cultGroup3);
+            }
+        }
   
   
   
  
 
-  class Level3Game extends Phaser.Scene
-  {
-    constructor()
-    {
-      super({key: 'Level3Game'});
-    }
-
-    create()
-    {
-        //START BASIC SETUP Level3Game
-
-        
-        this.input.setDefaultCursor('');
-        const worldWidthX = 1325;
-        this.physics.world.setBounds(0, 0, worldWidthX, 176);
-        this.cursors = this.input.keyboard.createCursorKeys();
-        this.gameManager = this.scene.get('GameManager');
-        this.gameManager.updateHighestLevel(3);
-        this.gameManager.updateCurrentLevel(3);
-        
-
-        //END BASIC SETUP Level3Game
-
-
-        //START PROPS BEFORE PLAYER Level3Game
-
-
-        this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'redskyrain').setOrigin(0, 0);
-        this.sky.setScrollFactor(0.1);
-        
-        if(!this.gameManager.scarecrowPos3)
+        class Level3Game extends Phaser.Scene
         {
-            let scarePos = getRandomXAnywhere(worldWidthX);
-            this.scarecrow = this.add.image(scarePos, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-            this.gameManager.scarecrowPos3 = scarePos;
-        }
-        else
-        {
-            this.scarecrow = this.add.image(this.gameManager.scarecrowPos3, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-        }
-        
-        this.scarecrow.setScrollFactor(0.4);
-
-        this.wheat = this.add.tileSprite
-        (
-            0,
-            176 - 16,
-            worldWidthX,
-            16,
-            'wheat'
-        );
-        this.wheat.setOrigin(0, 1);
-        this.wheat.setScrollFactor(0.575);
-
-        this.ground = this.add.tileSprite
-        (
-            -worldWidthX,
-            this.sys.game.config.height,
-            worldWidthX * 3,
-            16,
-            'ground'
-        );
-
-        this.ground.setOrigin(0, 1);
-        this.physics.add.existing(this.ground);
-        this.ground.body.setImmovable(true);
-        this.ground.body.allowGravity = false;
-
-        this.pipe = this.add.image(15, this.sys.game.config.height - this.ground.height, 'pipe');
-        this.pipe.setScrollFactor(0.8);
-        this.pipe.setOrigin(0, 1);
-     
-
-        //END PROPS BEFORE PLAYER Level3Game
-
-
-        //START PLAYER SETUP Level3Game
-
-
-        createPlayer(this, 100, this.sys.game.config.height - 24, this.gameManager);
-        //this.player.buddha();
-        
-
-        //END PLAYER SETUP Level3Game
-
-
-        //START ENEMY SETUP Level3Game
-        
-
-        if(this.gameManager.level3Data === null)
-        {
-            this.spawnList = 
-            [
-                { type: 'cult', amount: getRandMinMax(1, 2) },
-                { type: 'cultKnife', amount: getRandMinMax(8, 10) },
-                { type: 'eye', amount: getRandMinMax(2, 4) }
-            ];
-
-            this.gameManager.level3Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
-        }
-        else
-        { 
-            for(const enemy of this.gameManager.level3Data.keys()) 
+            constructor()
             {
-                if(enemy === 'cult')
-                {
-                    let enemyData = this.gameManager.level3Data.get(enemy);
-                    let enemyPositionArray = enemyData.positions;
-                    cultCreator(this, enemyPositionArray, this.gameManager);
-                }
-                else if(enemy === 'cultKnife')
-                {
-                    let enemyData = this.gameManager.level3Data.get(enemy);
-                    let enemyPositionArray = enemyData.positions;
-                    cultKnifeCreator(this, enemyPositionArray, this.gameManager);
-                }
-                else if(enemy === 'eye')
-                {
-                    let enemyData = this.gameManager.level3Data.get(enemy);
-                    let enemyPositionArray = enemyData.positions;
-                    eyeCreator(this, enemyPositionArray, this.gameManager);
-                }
+              super({key: 'Level3Game'});
             }
-        }
-        
-        
-        //END ENEMY SETUP Level3Game
-        
-        
-        //START PROPS AFTER PLAYER Level3Game
-        
-        
-        const thisLevel = 3;
-        this.pipe = new pipeNext(this, 1300, this.sys.game.config.height - this.ground.height, 'Level4Game', thisLevel, this.gameManager);
 
-        this.grasstop = this.add.tileSprite
-        (
-                0,
-                this.sys.game.config.height - this.ground.height,
-                worldWidthX,
-                16,
-                'grasstop'
-        );
-        this.grasstop.setOrigin(0, 1);
-        
-        this.physics.add.collider(this.player, this.ground);
-        
-        makeRain(this, 'bloodrain');
-        
-        filterColors(this, 0xffcccc);
-        
-        
-        //END PROPS AFTER PLAYER Level3Game
-
-
-        //START CAMERA SETUP Level3Game
-
-
-        this.cameras.main.setBounds(0, 0, worldWidthX, 176);
-        this.cameras.main.startFollow(this.player, true, 1, 1, -(this.sys.game.config.width / 4), (this.sys.game.config.height / 2));
-        this.cameras.main.setZoom(1);
-        this.cameras.scrollX = 0;
-        this.cameras.scrollY = 0;
-
-
-        //END CAMERA SETUP Level3Game
-    }
-    
-    update(time, delta)
-    {
-      if(this.player.health < 1)
-      {
-        this.scene.stop('Level3Game');
-        this.scene.stop('HUD');
-        this.scene.start('Level2Game');
-        this.scene.launch('HUD');
-      }
-      
-      cultSeparation(this.cults, this.player);
-      eyeSeparation(this.eyes, this.player);
-    }
-  }
-  
-  class Level4Game extends Phaser.Scene
-  {
-    constructor()
-    {
-      super({key: 'Level4Game'});
-    }
-
-    create()
-    {
-        //START BASIC SETUP Level4Game
-
-        
-        this.input.setDefaultCursor('');
-        const worldWidthX = 2400;
-        this.physics.world.setBounds(0, 0, worldWidthX, 176);
-        this.cursors = this.input.keyboard.createCursorKeys();
-        this.gameManager = this.scene.get('GameManager');
-        this.gameManager.updateHighestLevel(4);
-        this.gameManager.updateCurrentLevel(4);
-        
-
-        //END BASIC SETUP Level4Game
-
-
-        //START PROPS BEFORE PLAYER Level4Game
-
-
-        this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'redsky').setOrigin(0, 0);
-        this.sky.setScrollFactor(0.1);
-        
-        if(!this.gameManager.scarecrowPos4)
-        {
-            let scarePos = getRandomXAnywhere(worldWidthX);
-            this.scarecrow = this.add.image(scarePos, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-            this.gameManager.scarecrowPos4 = scarePos;
-        }
-        else
-        {
-            this.scarecrow = this.add.image(this.gameManager.scarecrowPos4, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-        }
-        
-        this.scarecrow.setScrollFactor(0.4);
-
-        this.wheat = this.add.tileSprite
-        (
-            0,
-            176 - 16,
-            worldWidthX,
-            16,
-            'wheat'
-        );
-        this.wheat.setOrigin(0, 1);
-        this.wheat.setScrollFactor(0.575);
-
-        this.ground = this.add.tileSprite
-        (
-                -worldWidthX,
-                this.sys.game.config.height,
-                worldWidthX * 3,
-                16,
-                'ground'
-        );
-
-        this.ground.setOrigin(0, 1);
-        this.physics.add.existing(this.ground);
-        this.ground.body.setImmovable(true);
-        this.ground.body.allowGravity = false;
-        
-        this.shed = this.add.image(1561, this.sys.game.config.height - this.ground.height, 'shed');
-        this.shed.setOrigin(0, 1);
-        this.shed.setScrollFactor(0.65);
-
-        this.fence = this.add.tileSprite
-        (
-          1751,
-          this.sys.game.config.height - this.ground.height,
-          200,
-          16,
-          'fence'
-        );
-        this.fence.setScrollFactor(0.75);
-        this.fence.setOrigin(0, 1);
-
-        this.couch = this.add.image(1923, this.sys.game.config.height - this.ground.height, 'couch');
-        this.couch.setScrollFactor(0.8);
-        this.couch.setOrigin(0, 1);
-        
-        this.grill = this.add.image(1969, this.sys.game.config.height - this.ground.height, 'grill');
-        this.grill.setScrollFactor(0.8);
-        this.grill.setOrigin(0, 1);
-        
-        this.pipe = this.add.image(15, this.sys.game.config.height - this.ground.height, 'pipe');
-        this.pipe.setScrollFactor(0.8);
-        this.pipe.setOrigin(0, 1);
-     
-
-        //END PROPS BEFORE PLAYER Level4Game
-
-
-        //START PLAYER SETUP Level4Game
-
-
-        createPlayer(this, 100, this.sys.game.config.height - 24, this.gameManager);
-        //this.player.buddha();
-        
-
-        //END PLAYER SETUP Level4Game
-
-
-        //START ENEMY SETUP Level4Game
-
-
-        if(this.gameManager.level4Data === null)
-        {
-            this.spawnList = 
-            [
-                { type: 'cult', amount: getRandMinMax(19, 21) },
-                { type: 'cultKnife', amount: getRandMinMax(4, 5) },
-                { type: 'eye', amount: getRandMinMax(6, 8) }
-            ];
-
-            this.gameManager.level4Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
-        }
-        else
-        { 
-            for(const enemy of this.gameManager.level4Data.keys()) 
+            create()
             {
-                if(enemy === 'cult')
+                //START BASIC SETUP Level3Game
+
+
+                this.input.setDefaultCursor('');
+                const worldWidthX = 1325;
+                this.physics.world.setBounds(0, 0, worldWidthX, 176);
+                this.cursors = this.input.keyboard.createCursorKeys();
+                this.gameManager = this.scene.get('GameManager');
+                this.gameManager.updateHighestLevel(3);
+                this.gameManager.updateCurrentLevel(3);
+
+
+                //END BASIC SETUP Level3Game
+
+
+                //START PROPS BEFORE PLAYER Level3Game
+
+
+                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'redskyrain').setOrigin(0, 0);
+                this.sky.setScrollFactor(0.1);
+
+                if(!this.gameManager.scarecrowPos3)
                 {
-                    let enemyData = this.gameManager.level4Data.get(enemy);
-                    let enemyPositionArray = enemyData.positions;
-                    cultCreator(this, enemyPositionArray, this.gameManager);
-                }
-                else if(enemy === 'cultKnife')
-                {
-                    let enemyData = this.gameManager.level4Data.get(enemy);
-                    let enemyPositionArray = enemyData.positions;
-                    cultKnifeCreator(this, enemyPositionArray, this.gameManager);
-                }
-                else if(enemy === 'eye')
-                {
-                    let enemyData = this.gameManager.level4Data.get(enemy);
-                    let enemyPositionArray = enemyData.positions;
-                    eyeCreator(this, enemyPositionArray, this.gameManager);
-                }
-            }
-        }
-        
-        
-        //END ENEMY SETUP Level4Game
-
-     
-        //START PROPS AFTER PLAYER Level4Game
-        
-        
-        const thisLevel = 4;
-        this.pipe = new pipeNext(this, 2106, this.sys.game.config.height - this.ground.height, 'MainMenu', 4, this.gameManager);
-
-        this.grasstop = this.add.tileSprite
-        (
-                0,
-                this.sys.game.config.height - this.ground.height,
-                worldWidthX,
-                16,
-                'grasstop'
-        );
-        this.grasstop.setOrigin(0, 1);
-        
-        this.physics.add.collider(this.player, this.ground);
-        
-        filterColors(this, 0xff9999);
-        
-        
-        //END PROPS AFTER PLAYER Level4Game
-
-
-        //START CAMERA SETUP Level4Game
-
-
-        this.cameras.main.setBounds(0, 0, worldWidthX, 176);
-        this.cameras.main.startFollow(this.player, true, 1, 1, -(this.sys.game.config.width / 4), (this.sys.game.config.height / 2));
-        this.cameras.main.setZoom(1);
-        this.cameras.scrollX = 0;
-        this.cameras.scrollY = 0;
-
-
-        //END CAMERA SETUP Level4Game
-    }
-    
-    update(time, delta)
-    {
-      if(this.player.health < 1)
-      {
-        this.scene.stop('Level4Game');
-        this.scene.stop('HUD');
-        this.scene.start('Level3Game');
-        this.scene.launch('HUD');
-      }
-      
-      cultSeparation(this.cults, this.player);
-      eyeSeparation(this.eyes, this.player);
-      
-     // activateCultGroups(this, this.cultGroup1);
-      //activateCultGroups(this, this.cultGroup2);
-      
-      //activateEyeGroups(this, this.eyeGroup1); OLD PRESET UPDATE
-      //activateEyeGroups(this, this.eyeGroup2);
-    }
-  }
-  
-  
-  
-  class UpgradeRoom extends Phaser.Scene
-  {
-    constructor()
-    {
-        super({key: 'UpgradeRoom'});
-        
-        this.cardAmount = 7;
-        
-        this.gameManager = game.scene.getScene('GameManager');
-        this.upgradeCardData = this.gameManager.upgradeCardData;
-    }
-
-    create()
-    {
-        this.input.setDefaultCursor('pointer');
-        
-        
-        //START CARD SETUP
-        
-        
-        let card1;
-        let card2;
-        
-        do
-        {
-            card1 = this.getRandomCardId();
-        }
-        while(this.gameManager.ownedCards.has(card1))
-        
-        do
-        {
-            card2 = this.getRandomCardId();
-        }
-        while(card2 === card1 || this.gameManager.ownedCards.has(card2) || (this.gameManager.ammoUpgrades.has(card1) && this.gameManager.ammoUpgrades.has(card2)))
-    
-        this.cardDisplay1 = this.displayCard(card1, 'left');
-        this.cardDisplay1.on('pointerdown', () =>
-        {
-            this.acceptCard(card1);
-        });
-        
-        this.cardDisplay2 = this.displayCard(card2, 'right');
-        this.cardDisplay2.on('pointerdown', () =>
-        {
-            this.acceptCard(card2);
-        }); 
-        
-        
-        //END CARD SETUP
-    }
-    
-    update(time, delta)
-    {
-        
-    }
-    
-    acceptCard(id)
-    {
-        const card = Object.values(this.upgradeCardData).find(c => c.id === id);
-        card.effect(this.gameManager);
-        this.gameManager.ownedCards.add(id); 
-        transitionLevels(this, this.gameManager);
-    }
-    
-    getRandomCardId()
-    {
-        return Math.floor(Math.random() * (this.cardAmount - 1 + 1)) + 1;
-    }
-    
-    displayCard(id, position)
-    {
-        const card = Object.values(this.upgradeCardData).find(c => c.id === id);
-        let titleText;
-        let descriptionText;
-        let icon;
-        let xPos;
-        const yCenter = this.sys.game.config.height / 2;
-
-        if(position === 'left')
-        {
-            xPos = this.sys.game.config.width / 4;
-        }
-        else
-        {
-            xPos = (this.sys.game.config.width / 4) * 3;
-        }
-        
-        const cardContainer = this.add.container(xPos, yCenter);
-        titleText = createText(this, 0, 50, card.name, 20, '#f00').setOrigin(0.5, 0);
-        descriptionText = createText(this, 0, -50, card.description, 12, '#f00').setOrigin(0.5, 1);
-        descriptionText.setStyle
-        ({
-            wordWrap: { width: this.sys.game.config.width / 2, use:'true' }
-        });
-        
-        if(card.icon)
-        {
-            icon = this.add.image
-            (
-              xPos,
-              yCenter,
-              card.icon
-            ).setOrigin(0.5, 0.5);
-        }
-        
-        cardContainer.add([titleText, descriptionText]);
-        
-        const hitAreaWidth = this.sys.game.config.width / 2;
-        const hitAreaHeight = this.sys.game.config.height;
-
-        const hitArea = new Phaser.Geom.Rectangle
-        (
-            -hitAreaWidth / 2,
-            -hitAreaHeight / 2,
-            hitAreaWidth,
-            hitAreaHeight
-        );
-
-        cardContainer.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
-        
-        return cardContainer;
-    }
-  }
-  
-  class GameManager extends Phaser.Scene
-  {
-    constructor()
-    {
-        super({ key: 'GameManager' });
-        
-        this.upgradeCardData = 
-        {
-            'birdshot': 
-            {
-                id: 1,
-                name: 'Birdshot',
-                description: 'Replace shells with Birdshot.',
-                icon: 'birdshoticon',
-                effect: (gameManager) => 
-                {
-                    this.clearAmmoOwned();
-                    gameManager.multiAmmoUpgrade = false;
-                    gameManager.fireModeUpgrade = 'birdshot';
-                }
-            },
-            'slugs': 
-            {
-                id: 2,
-                name: 'Slugs',
-                description: 'Replace shells with Slugs.',
-                icon: 'slugicon',
-                effect: (gameManager) => 
-                {
-                    this.clearAmmoOwned();
-                    gameManager.multiAmmoUpgrade = false;
-                    gameManager.fireModeUpgrade = 'slug';
-                }
-            },
-            'damage': 
-            {
-                id: 3,
-                name: 'Gun Oil',
-                description: 'Increase Damage by 25%.',
-                icon: 'damageicon',
-                effect: (gameManager) => 
-                {
-                    gameManager.damageUpgrade = true;
-                }
-            },
-            /*'block': 
-            {
-                id: 4,
-                name: 'Refrain',
-                description: 'Succesful blocks reset block duration.',
-                icon: 'shieldicon',
-                effect: (gameManager) => 
-                {
-                    gameManager.blockUpgrade = true;
-                }
-                
-            },*/
-            'health': 
-            {
-                id: 4,
-                name: 'Conditioning',
-                description: 'Survive an extra hit.',
-                icon: 'healthicon',
-                effect: (gameManager) => 
-                {
-                    gameManager.healthUpgrade = true;
-                }
-            },
-            'doubleFire': 
-            {
-                id: 5,
-                name: 'Veneration',
-                description: 'Succesful kills trigger double fire rate.',
-                icon: 'cultenergyicon',
-                effect: (gameManager) => 
-                {
-                    gameManager.doubleFireUpgrade = true;
-                }
-            },
-            'pistolDamage': 
-            {
-                id: 6,
-                name: 'Hollow Points',
-                description: 'Double handgun damage.',
-                icon: 'hollowpointsicon',
-                effect: (gameManager) => 
-                {
-                    gameManager.pistolUpgrade = true;
-                }
-            },
-            'multiAmmo': 
-            {
-                id: 7,
-                name: 'Random Shells',
-                description: 'Replace shells with random ones.',
-                icon: 'multiammoicon',
-                effect: (gameManager) => 
-                {
-                    this.clearAmmoOwned();
-                    gameManager.multiAmmoUpgrade = true;
-                }
-            }
-        };
-        
-        this.ammoUpgrades = new Set([1, 2, 7]);
-        
-        this.highestLevel = 0;
-        this.initialHighestLevel = this.highestLevel;
-        this.currentLevel = 0;
-        this.visitedUpgradeRoom1 = false;
-        this.visitedUpgradeRoom2 = false;
-        this.visitedUpgradeRoom3 = false;
-        
-        this.ownedCards = new Set();
-        
-        this.fireModeUpgrade = 'buckshot';
-        this.damageUpgrade = false;
-        this.blockUpgrade = false;
-        this.healthUpgrade = false;
-        this.doubleFireUpgrade = false;
-        this.pistolUpgrade = false;
-        this.multiAmmoUpgrade = false;
-        
-        this.level1Data = null;
-        this.level2Data = null;
-        this.level3Data = null;
-        this.level4Data = null;
-        
-        this.scarecrowPos1 = null;
-        this.scarecrowPos2 = null;
-        this.scarecrowPos3 = null;
-        this.scarecrowPos4 = null;
-        
-        this.alwaysBuddha = false;
-        
-        this.alwaysDisplayUpgrades = false;
-        this.allowScreenShake = true;
-    }
-
-    create()
-    {
-        
-    }
-    
-    update(time, delta)
-    {
-        
-    }
-    
-    clearAmmoOwned()
-    {
-        for(const ownedCard of this.ownedCards)
-        {
-            if(this.ammoUpgrades.has(ownedCard))
-            {
-                this.ownedCards.delete(ownedCard);
-            }
-        }
-    }
-    
-    returnCardNameFromId(id)
-    {
-        const card = Object.values(this.upgradeCardData).find(c => c.id === id);
-        return card.name;
-    }
-    
-    updateHighestLevel(newHigh)
-    {
-        if(newHigh > this.highestLevel)
-        {
-            this.highestLevel = newHigh;
-        }
-    }
-    
-    updateCurrentLevel(newCurrent)
-    {
-        this.currentLevel = newCurrent;
-    }
-    
-    reset()
-    {
-        this.highestLevel = 0;
-        this.initialHighestLevel = this.highestLevel;
-        this.currentLevel = 0;
-        this.visitedUpgradeRoom1 = false;
-        this.visitedUpgradeRoom2 = false;
-        this.visitedUpgradeRoom3 = false;
-        
-        this.ownedCards = new Set();
-        
-        this.fireModeUpgrade = 'buckshot';
-        this.damageUpgrade = false;
-        this.blockUpgrade = false;
-        this.healthUpgrade = false;
-        this.doubleFireUpgrade = false;
-        this.pistolUpgrade = false;
-        this.multiAmmoUpgrade = false;
-        
-        this.level1Data = null;
-        this.level2Data = null;
-        this.level3Data = null;
-        this.level4Data = null;
-        
-        this.scarecrowPos1 = null;
-        this.scarecrowPos2 = null;
-        this.scarecrowPos3 = null;
-        this.scarecrowPos4 = null;
-    }
-  }
-  
-  class HUD extends Phaser.Scene
-  {
-    constructor()
-    {
-        super({ key: 'HUD' });
-    }
-    
-    create()
-    {
-        
-        this.wasd =
-        {
-          u: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U)
-        };
-        
-        this.gameManager = this.scene.get('GameManager');
-        this.displayedMessage = false;
-        
-        if(this.gameManager.alwaysDisplayUpgrades === true)
-        {
-            this.displayUpgradeMessage(this.generateUpgradeMessage());
-            this.displayedMessage = true;
-        }
-        else
-        {
-            this.destroyUpgradeMessage();
-            this.displayedMessage = false;
-        }
-    }
-    
-    anUpgradeToDisplay()
-    {
-        if(this.gameManager.ownedCards.size === 0)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-    
-    generateUpgradeMessage()
-    {
-        if(this.anUpgradeToDisplay())
-        {
-            let upgradeString = "Upgrades: ";
-            let firstNewComma = true;
-
-            for(const ownedCard of this.gameManager.ownedCards)
-            {
-                if(firstNewComma)
-                {
-                    upgradeString += this.gameManager.returnCardNameFromId(ownedCard);
-                    firstNewComma = false;
+                    let scarePos = getRandomXAnywhere(worldWidthX);
+                    this.scarecrow = this.add.image(scarePos, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+                    this.gameManager.scarecrowPos3 = scarePos;
                 }
                 else
                 {
-                    upgradeString += ", " + this.gameManager.returnCardNameFromId(ownedCard);
-                } 
+                    this.scarecrow = this.add.image(this.gameManager.scarecrowPos3, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+                }
+
+                this.scarecrow.setScrollFactor(0.4);
+
+                this.wheat = this.add.tileSprite
+                (
+                    0,
+                    176 - 16,
+                    worldWidthX,
+                    16,
+                    'wheat'
+                );
+                this.wheat.setOrigin(0, 1);
+                this.wheat.setScrollFactor(0.575);
+
+                this.ground = this.add.tileSprite
+                (
+                    -worldWidthX,
+                    this.sys.game.config.height,
+                    worldWidthX * 3,
+                    16,
+                    'ground'
+                );
+
+                this.ground.setOrigin(0, 1);
+                this.physics.add.existing(this.ground);
+                this.ground.body.setImmovable(true);
+                this.ground.body.allowGravity = false;
+
+                this.pipe = this.add.image(15, this.sys.game.config.height - this.ground.height, 'pipe');
+                this.pipe.setScrollFactor(0.8);
+                this.pipe.setOrigin(0, 1);
+
+
+                //END PROPS BEFORE PLAYER Level3Game
+
+
+                //START PLAYER SETUP Level3Game
+
+
+                createPlayer(this, 100, this.sys.game.config.height - 24, this.gameManager);
+                //this.player.buddha();
+
+
+                //END PLAYER SETUP Level3Game
+
+
+                //START ENEMY SETUP Level3Game
+
+
+                if(this.gameManager.level3Data === null)
+                {
+                    this.spawnList = 
+                    [
+                        { type: 'cult', amount: getRandMinMax(1, 2) },
+                        { type: 'cultKnife', amount: getRandMinMax(8, 10) },
+                        { type: 'eye', amount: getRandMinMax(2, 4) }
+                    ];
+
+                    this.gameManager.level3Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
+                }
+                else
+                { 
+                    for(const enemy of this.gameManager.level3Data.keys()) 
+                    {
+                        if(enemy === 'cult')
+                        {
+                            let enemyData = this.gameManager.level3Data.get(enemy);
+                            let enemyPositionArray = enemyData.positions;
+                            cultCreator(this, enemyPositionArray, this.gameManager);
+                        }
+                        else if(enemy === 'cultKnife')
+                        {
+                            let enemyData = this.gameManager.level3Data.get(enemy);
+                            let enemyPositionArray = enemyData.positions;
+                            cultKnifeCreator(this, enemyPositionArray, this.gameManager);
+                        }
+                        else if(enemy === 'eye')
+                        {
+                            let enemyData = this.gameManager.level3Data.get(enemy);
+                            let enemyPositionArray = enemyData.positions;
+                            eyeCreator(this, enemyPositionArray, this.gameManager);
+                        }
+                    }
+                }
+
+
+                //END ENEMY SETUP Level3Game
+
+
+                //START PROPS AFTER PLAYER Level3Game
+
+
+                const thisLevel = 3;
+                this.pipe = new pipeNext(this, 1300, this.sys.game.config.height - this.ground.height, 'Level4Game', thisLevel, this.gameManager);
+
+                this.grasstop = this.add.tileSprite
+                (
+                        0,
+                        this.sys.game.config.height - this.ground.height,
+                        worldWidthX,
+                        16,
+                        'grasstop'
+                );
+                this.grasstop.setOrigin(0, 1);
+
+                this.physics.add.collider(this.player, this.ground);
+
+                makeRain(this, 'bloodrain');
+
+                filterColors(this, 0xffcccc);
+
+
+                //END PROPS AFTER PLAYER Level3Game
+
+
+                //START CAMERA SETUP Level3Game
+
+
+                this.cameras.main.setBounds(0, 0, worldWidthX, 176);
+                this.cameras.main.startFollow(this.player, true, 1, 1, -(this.sys.game.config.width / 4), (this.sys.game.config.height / 2));
+                this.cameras.main.setZoom(1);
+                this.cameras.scrollX = 0;
+                this.cameras.scrollY = 0;
+
+
+                //END CAMERA SETUP Level3Game
             }
-            
-            return upgradeString;
-        }
-        else
-        {
-            return null;
-        }
-    }
-    
-    displayUpgradeMessage(upgradeString)
-    {
-        if(this.anUpgradeToDisplay())
-        {
-            this.finalUpgradeString = createText(this, 4, 4, upgradeString, 8, '#f00').setOrigin(0, 0).setDepth(1232300);
-            this.finalUpgradeString.setStyle
-            ({
-                wordWrap: { width: this.sys.game.config.width - 8, use:'true' }
-            });
-        }
-    }
-    
-    destroyUpgradeMessage()
-    {
-        if(this.finalUpgradeString)
-        {
-            this.finalUpgradeString.destroy();
-            this.finalUpgradeString = null;
-        }
-    }
-    
-    update(time)
-    {
-        if(Phaser.Input.Keyboard.JustDown(this.wasd.u))
-        {
-            if(this.displayedMessage)
+
+            update(time, delta)
             {
-                this.destroyUpgradeMessage();
-                this.gameManager.alwaysDisplayUpgrades = false;
+                if(this.player.health < 1)
+                {
+                    this.scene.stop('Level3Game');
+                    this.scene.stop('HUD');
+                    this.scene.start('Level2Game');
+                    this.scene.launch('HUD');
+                }
+
+                cultSeparation(this.cults, this.player);
+                eyeSeparation(this.eyes, this.player);
             }
-            else
-            {
-                this.displayUpgradeMessage(this.generateUpgradeMessage());
-                this.gameManager.alwaysDisplayUpgrades = true;
-            }
-            
-            this.displayedMessage = !this.displayedMessage;
         }
-    }
-  }
   
-  const config =
-  {
-    type: Phaser.AUTO,
-    pixelArt: true,
-    width: Math.max(400, Math.min(400, (window.innerWidth / window.innerHeight) * 176)),
-    height: 176,
-    
-    audio:
-    {
-        pauseOnBlur: true
-    },
+        class Level4Game extends Phaser.Scene
+        {
+            constructor()
+            {
+              super({key: 'Level4Game'});
+            }
 
-    scale:
-    {
-      mode: Phaser.Scale.FIT,
-      autoCenter: Phaser.Scale.CENTER_BOTH
-    },
+            create()
+            {
+                //START BASIC SETUP Level4Game
 
-    physics:
-    {
-      default: 'arcade',
-      arcade:
-      {
-        gravity: { y: 300 },
-        debug: false
-      }
-    },
 
-    scene:
-    [
-      Loading,
-      MainMenu,
-      GameManager,
-      UpgradeRoom,
-      Level1Game,
-      Level2Game,
-      Level3Game,
-      Level4Game,
-      HUD
-    ]
-  };
+                this.input.setDefaultCursor('');
+                const worldWidthX = 2400;
+                this.physics.world.setBounds(0, 0, worldWidthX, 176);
+                this.cursors = this.input.keyboard.createCursorKeys();
+                this.gameManager = this.scene.get('GameManager');
+                this.gameManager.updateHighestLevel(4);
+                this.gameManager.updateCurrentLevel(4);
 
-  const game = new Phaser.Game(config);
 
-</script>
+                //END BASIC SETUP Level4Game
+
+
+                //START PROPS BEFORE PLAYER Level4Game
+
+
+                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'redsky').setOrigin(0, 0);
+                this.sky.setScrollFactor(0.1);
+
+                if(!this.gameManager.scarecrowPos4)
+                {
+                    let scarePos = getRandomXAnywhere(worldWidthX);
+                    this.scarecrow = this.add.image(scarePos, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+                    this.gameManager.scarecrowPos4 = scarePos;
+                }
+                else
+                {
+                    this.scarecrow = this.add.image(this.gameManager.scarecrowPos4, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+                }
+
+                this.scarecrow.setScrollFactor(0.4);
+
+                this.wheat = this.add.tileSprite
+                (
+                    0,
+                    176 - 16,
+                    worldWidthX,
+                    16,
+                    'wheat'
+                );
+                this.wheat.setOrigin(0, 1);
+                this.wheat.setScrollFactor(0.575);
+
+                this.ground = this.add.tileSprite
+                (
+                        -worldWidthX,
+                        this.sys.game.config.height,
+                        worldWidthX * 3,
+                        16,
+                        'ground'
+                );
+
+                this.ground.setOrigin(0, 1);
+                this.physics.add.existing(this.ground);
+                this.ground.body.setImmovable(true);
+                this.ground.body.allowGravity = false;
+
+                this.shed = this.add.image(1561, this.sys.game.config.height - this.ground.height, 'shed');
+                this.shed.setOrigin(0, 1);
+                this.shed.setScrollFactor(0.65);
+
+                this.fence = this.add.tileSprite
+                (
+                  1751,
+                  this.sys.game.config.height - this.ground.height,
+                  200,
+                  16,
+                  'fence'
+                );
+                this.fence.setScrollFactor(0.75);
+                this.fence.setOrigin(0, 1);
+
+                this.couch = this.add.image(1923, this.sys.game.config.height - this.ground.height, 'couch');
+                this.couch.setScrollFactor(0.8);
+                this.couch.setOrigin(0, 1);
+
+                this.grill = this.add.image(1969, this.sys.game.config.height - this.ground.height, 'grill');
+                this.grill.setScrollFactor(0.8);
+                this.grill.setOrigin(0, 1);
+
+                this.pipe = this.add.image(15, this.sys.game.config.height - this.ground.height, 'pipe');
+                this.pipe.setScrollFactor(0.8);
+                this.pipe.setOrigin(0, 1);
+
+
+                //END PROPS BEFORE PLAYER Level4Game
+
+
+                //START PLAYER SETUP Level4Game
+
+
+                createPlayer(this, 100, this.sys.game.config.height - 24, this.gameManager);
+                //this.player.buddha();
+
+
+                //END PLAYER SETUP Level4Game
+
+
+                //START ENEMY SETUP Level4Game
+
+
+                if(this.gameManager.level4Data === null)
+                {
+                    this.spawnList = 
+                    [
+                        { type: 'cult', amount: getRandMinMax(19, 21) },
+                        { type: 'cultKnife', amount: getRandMinMax(4, 5) },
+                        { type: 'eye', amount: getRandMinMax(6, 8) }
+                    ];
+
+                    this.gameManager.level4Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
+                }
+                else
+                { 
+                    for(const enemy of this.gameManager.level4Data.keys()) 
+                    {
+                        if(enemy === 'cult')
+                        {
+                            let enemyData = this.gameManager.level4Data.get(enemy);
+                            let enemyPositionArray = enemyData.positions;
+                            cultCreator(this, enemyPositionArray, this.gameManager);
+                        }
+                        else if(enemy === 'cultKnife')
+                        {
+                            let enemyData = this.gameManager.level4Data.get(enemy);
+                            let enemyPositionArray = enemyData.positions;
+                            cultKnifeCreator(this, enemyPositionArray, this.gameManager);
+                        }
+                        else if(enemy === 'eye')
+                        {
+                            let enemyData = this.gameManager.level4Data.get(enemy);
+                            let enemyPositionArray = enemyData.positions;
+                            eyeCreator(this, enemyPositionArray, this.gameManager);
+                        }
+                    }
+                }
+
+
+                //END ENEMY SETUP Level4Game
+
+
+                //START PROPS AFTER PLAYER Level4Game
+
+
+                const thisLevel = 4;
+                this.pipe = new pipeNext(this, 2106, this.sys.game.config.height - this.ground.height, 'MainMenu', 4, this.gameManager);
+
+                this.grasstop = this.add.tileSprite
+                (
+                        0,
+                        this.sys.game.config.height - this.ground.height,
+                        worldWidthX,
+                        16,
+                        'grasstop'
+                );
+                this.grasstop.setOrigin(0, 1);
+
+                this.physics.add.collider(this.player, this.ground);
+
+                filterColors(this, 0xff9999);
+
+
+                //END PROPS AFTER PLAYER Level4Game
+
+
+                //START CAMERA SETUP Level4Game
+
+
+                this.cameras.main.setBounds(0, 0, worldWidthX, 176);
+                this.cameras.main.startFollow(this.player, true, 1, 1, -(this.sys.game.config.width / 4), (this.sys.game.config.height / 2));
+                this.cameras.main.setZoom(1);
+                this.cameras.scrollX = 0;
+                this.cameras.scrollY = 0;
+
+
+                //END CAMERA SETUP Level4Game
+            }
+
+            update(time, delta)
+            {
+                if(this.player.health < 1)
+                {
+                    this.scene.stop('Level4Game');
+                    this.scene.stop('HUD');
+                    this.scene.start('Level3Game');
+                    this.scene.launch('HUD');
+                }
+
+                cultSeparation(this.cults, this.player);
+                eyeSeparation(this.eyes, this.player);
+
+                // activateCultGroups(this, this.cultGroup1);
+                //activateCultGroups(this, this.cultGroup2);
+
+                //activateEyeGroups(this, this.eyeGroup1); OLD PRESET UPDATE
+                //activateEyeGroups(this, this.eyeGroup2);
+            }
+        }
+  
+  
+  
+        class UpgradeRoom extends Phaser.Scene
+        {
+            constructor()
+            {
+                super({key: 'UpgradeRoom'});
+
+                this.cardAmount = 7;
+
+                this.gameManager = game.scene.getScene('GameManager');
+                this.upgradeCardData = this.gameManager.upgradeCardData;
+            }
+
+            create()
+            {
+                this.input.setDefaultCursor('pointer');
+
+
+                //START CARD SETUP
+
+
+                let card1;
+                let card2;
+
+                do
+                {
+                    card1 = this.getRandomCardId();
+                }
+                while(this.gameManager.ownedCards.has(card1))
+
+                do
+                {
+                    card2 = this.getRandomCardId();
+                }
+                while(card2 === card1 || this.gameManager.ownedCards.has(card2) || (this.gameManager.ammoUpgrades.has(card1) && this.gameManager.ammoUpgrades.has(card2)))
+
+                this.cardDisplay1 = this.displayCard(card1, 'left');
+                this.cardDisplay1.on('pointerdown', () =>
+                {
+                    this.acceptCard(card1);
+                });
+
+                this.cardDisplay2 = this.displayCard(card2, 'right');
+                this.cardDisplay2.on('pointerdown', () =>
+                {
+                    this.acceptCard(card2);
+                }); 
+
+
+                //END CARD SETUP
+            }
+
+            update(time, delta)
+            {
+
+            }
+
+            acceptCard(id)
+            {
+                const card = Object.values(this.upgradeCardData).find(c => c.id === id);
+                card.effect(this.gameManager);
+                this.gameManager.ownedCards.add(id); 
+                transitionLevels(this, this.gameManager);
+            }
+
+            getRandomCardId()
+            {
+                return Math.floor(Math.random() * (this.cardAmount - 1 + 1)) + 1;
+            }
+
+            displayCard(id, position)
+            {
+                const card = Object.values(this.upgradeCardData).find(c => c.id === id);
+                let titleText;
+                let descriptionText;
+                let icon;
+                let xPos;
+                const yCenter = this.sys.game.config.height / 2;
+
+                if(position === 'left')
+                {
+                    xPos = this.sys.game.config.width / 4;
+                }
+                else
+                {
+                    xPos = (this.sys.game.config.width / 4) * 3;
+                }
+
+                const cardContainer = this.add.container(xPos, yCenter);
+                titleText = createText(this, 0, 50, card.name, 20, '#f00').setOrigin(0.5, 0);
+                descriptionText = createText(this, 0, -50, card.description, 12, '#f00').setOrigin(0.5, 1);
+                descriptionText.setStyle
+                ({
+                    wordWrap: { width: this.sys.game.config.width / 2, use:'true' }
+                });
+
+                if(card.icon)
+                {
+                    icon = this.add.image
+                    (
+                      xPos,
+                      yCenter,
+                      card.icon
+                    ).setOrigin(0.5, 0.5);
+                }
+
+                cardContainer.add([titleText, descriptionText]);
+
+                const hitAreaWidth = this.sys.game.config.width / 2;
+                const hitAreaHeight = this.sys.game.config.height;
+
+                const hitArea = new Phaser.Geom.Rectangle
+                (
+                    -hitAreaWidth / 2,
+                    -hitAreaHeight / 2,
+                    hitAreaWidth,
+                    hitAreaHeight
+                );
+
+                cardContainer.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+
+                return cardContainer;
+            }
+        }
+  
+        class GameManager extends Phaser.Scene
+        {
+            constructor()
+            {
+                super({ key: 'GameManager' });
+
+                this.upgradeCardData = 
+                {
+                    'birdshot': 
+                    {
+                        id: 1,
+                        name: 'Birdshot',
+                        description: 'Replace shells with Birdshot.',
+                        icon: 'birdshoticon',
+                        effect: (gameManager) => 
+                        {
+                            this.clearAmmoOwned();
+                            gameManager.multiAmmoUpgrade = false;
+                            gameManager.fireModeUpgrade = 'birdshot';
+                        }
+                    },
+                    'slugs': 
+                    {
+                        id: 2,
+                        name: 'Slugs',
+                        description: 'Replace shells with Slugs.',
+                        icon: 'slugicon',
+                        effect: (gameManager) => 
+                        {
+                            this.clearAmmoOwned();
+                            gameManager.multiAmmoUpgrade = false;
+                            gameManager.fireModeUpgrade = 'slug';
+                        }
+                    },
+                    'damage': 
+                    {
+                        id: 3,
+                        name: 'Gun Oil',
+                        description: 'Increase Damage by 25%.',
+                        icon: 'damageicon',
+                        effect: (gameManager) => 
+                        {
+                            gameManager.damageUpgrade = true;
+                        }
+                    },
+                    /*'block': 
+                    {
+                        id: 4,
+                        name: 'Refrain',
+                        description: 'Succesful blocks reset block duration.',
+                        icon: 'shieldicon',
+                        effect: (gameManager) => 
+                        {
+                            gameManager.blockUpgrade = true;
+                        }
+
+                    },*/
+                    'health': 
+                    {
+                        id: 4,
+                        name: 'Conditioning',
+                        description: 'Survive an extra hit.',
+                        icon: 'healthicon',
+                        effect: (gameManager) => 
+                        {
+                            gameManager.healthUpgrade = true;
+                        }
+                    },
+                    'doubleFire': 
+                    {
+                        id: 5,
+                        name: 'Veneration',
+                        description: 'Succesful kills trigger double fire rate.',
+                        icon: 'cultenergyicon',
+                        effect: (gameManager) => 
+                        {
+                            gameManager.doubleFireUpgrade = true;
+                        }
+                    },
+                    'pistolDamage': 
+                    {
+                        id: 6,
+                        name: 'Hollow Points',
+                        description: 'Double handgun damage.',
+                        icon: 'hollowpointsicon',
+                        effect: (gameManager) => 
+                        {
+                            gameManager.pistolUpgrade = true;
+                        }
+                    },
+                    'multiAmmo': 
+                    {
+                        id: 7,
+                        name: 'Random Shells',
+                        description: 'Replace shells with random ones.',
+                        icon: 'multiammoicon',
+                        effect: (gameManager) => 
+                        {
+                            this.clearAmmoOwned();
+                            gameManager.multiAmmoUpgrade = true;
+                        }
+                    }
+                };
+
+                this.ammoUpgrades = new Set([1, 2, 7]);
+
+                this.highestLevel = 0;
+                this.initialHighestLevel = this.highestLevel;
+                this.currentLevel = 0;
+                this.visitedUpgradeRoom1 = false;
+                this.visitedUpgradeRoom2 = false;
+                this.visitedUpgradeRoom3 = false;
+
+                this.ownedCards = new Set();
+
+                this.fireModeUpgrade = 'buckshot';
+                this.damageUpgrade = false;
+                this.blockUpgrade = false;
+                this.healthUpgrade = false;
+                this.doubleFireUpgrade = false;
+                this.pistolUpgrade = false;
+                this.multiAmmoUpgrade = false;
+
+                this.level1Data = null;
+                this.level2Data = null;
+                this.level3Data = null;
+                this.level4Data = null;
+
+                this.scarecrowPos1 = null;
+                this.scarecrowPos2 = null;
+                this.scarecrowPos3 = null;
+                this.scarecrowPos4 = null;
+
+                this.alwaysBuddha = false;
+
+                this.alwaysDisplayUpgrades = false;
+                this.allowScreenShake = true;
+            }
+
+            create()
+            {
+
+            }
+
+            update(time, delta)
+            {
+
+            }
+
+            clearAmmoOwned()
+            {
+                for(const ownedCard of this.ownedCards)
+                {
+                    if(this.ammoUpgrades.has(ownedCard))
+                    {
+                        this.ownedCards.delete(ownedCard);
+                    }
+                }
+            }
+
+            returnCardNameFromId(id)
+            {
+                const card = Object.values(this.upgradeCardData).find(c => c.id === id);
+                return card.name;
+            }
+
+            updateHighestLevel(newHigh)
+            {
+                if(newHigh > this.highestLevel)
+                {
+                    this.highestLevel = newHigh;
+                }
+            }
+
+            updateCurrentLevel(newCurrent)
+            {
+                this.currentLevel = newCurrent;
+            }
+
+            reset()
+            {
+                this.highestLevel = 0;
+                this.initialHighestLevel = this.highestLevel;
+                this.currentLevel = 0;
+                this.visitedUpgradeRoom1 = false;
+                this.visitedUpgradeRoom2 = false;
+                this.visitedUpgradeRoom3 = false;
+
+                this.ownedCards = new Set();
+
+                this.fireModeUpgrade = 'buckshot';
+                this.damageUpgrade = false;
+                this.blockUpgrade = false;
+                this.healthUpgrade = false;
+                this.doubleFireUpgrade = false;
+                this.pistolUpgrade = false;
+                this.multiAmmoUpgrade = false;
+
+                this.level1Data = null;
+                this.level2Data = null;
+                this.level3Data = null;
+                this.level4Data = null;
+
+                this.scarecrowPos1 = null;
+                this.scarecrowPos2 = null;
+                this.scarecrowPos3 = null;
+                this.scarecrowPos4 = null;
+            }
+        }
+  
+        class HUD extends Phaser.Scene
+        {
+            constructor()
+            {
+                super({ key: 'HUD' });
+            }
+
+            create()
+            {
+
+                this.wasd =
+                {
+                  u: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U)
+                };
+
+                this.gameManager = this.scene.get('GameManager');
+                this.displayedMessage = false;
+
+                if(this.gameManager.alwaysDisplayUpgrades === true)
+                {
+                    this.displayUpgradeMessage(this.generateUpgradeMessage());
+                    this.displayedMessage = true;
+                }
+                else
+                {
+                    this.destroyUpgradeMessage();
+                    this.displayedMessage = false;
+                }
+            }
+
+            anUpgradeToDisplay()
+            {
+                if(this.gameManager.ownedCards.size === 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            generateUpgradeMessage()
+            {
+                if(this.anUpgradeToDisplay())
+                {
+                    let upgradeString = "Upgrades: ";
+                    let firstNewComma = true;
+
+                    for(const ownedCard of this.gameManager.ownedCards)
+                    {
+                        if(firstNewComma)
+                        {
+                            upgradeString += this.gameManager.returnCardNameFromId(ownedCard);
+                            firstNewComma = false;
+                        }
+                        else
+                        {
+                            upgradeString += ", " + this.gameManager.returnCardNameFromId(ownedCard);
+                        } 
+                    }
+
+                    return upgradeString;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            displayUpgradeMessage(upgradeString)
+            {
+                if(this.anUpgradeToDisplay())
+                {
+                    this.finalUpgradeString = createText(this, 4, 4, upgradeString, 8, '#f00').setOrigin(0, 0).setDepth(1232300);
+                    this.finalUpgradeString.setStyle
+                    ({
+                        wordWrap: { width: this.sys.game.config.width - 8, use:'true' }
+                    });
+                }
+            }
+
+            destroyUpgradeMessage()
+            {
+                if(this.finalUpgradeString)
+                {
+                    this.finalUpgradeString.destroy();
+                    this.finalUpgradeString = null;
+                }
+            }
+
+            update(time)
+            {
+                if(Phaser.Input.Keyboard.JustDown(this.wasd.u))
+                {
+                    if(this.displayedMessage)
+                    {
+                        this.destroyUpgradeMessage();
+                        this.gameManager.alwaysDisplayUpgrades = false;
+                    }
+                    else
+                    {
+                        this.displayUpgradeMessage(this.generateUpgradeMessage());
+                        this.gameManager.alwaysDisplayUpgrades = true;
+                    }
+
+                    this.displayedMessage = !this.displayedMessage;
+                }
+            }
+        }
+  
+        const config =
+        {
+            type: Phaser.AUTO,
+            pixelArt: true,
+            width: Math.max(400, Math.min(400, (window.innerWidth / window.innerHeight) * 176)),
+            height: 176,
+
+            audio:
+            {
+                pauseOnBlur: true
+            },
+
+            scale:
+            {
+              mode: Phaser.Scale.FIT,
+              autoCenter: Phaser.Scale.CENTER_BOTH
+            },
+
+            physics:
+            {
+              default: 'arcade',
+              arcade:
+              {
+                gravity: { y: 300 },
+                debug: false
+              }
+            },
+
+            scene:
+            [
+              Loading,
+              MainMenu,
+              GameManager,
+              UpgradeRoom,
+              Level1Game,
+              Level2Game,
+              Level3Game,
+              Level4Game,
+              HUD
+            ]
+        };
+
+        const game = new Phaser.Game(config);
+    </script>
 </body>
 </html>
