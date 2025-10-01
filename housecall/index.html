@@ -330,9 +330,9 @@
                 this.ground = this.add.tileSprite
                 (
                   0,
-                  this.sys.game.config.height,
+                  this.sys.game.config.height + 16,
                   worldWidthX * 2,
-                  16,
+                  32,
                   'ground'
                 );
 
@@ -344,7 +344,7 @@
                 this.barn = this.add.image
                 (
                     (worldWidthX / 3) / 30,
-                    this.sys.game.config.height - this.ground.height,
+                    this.sys.game.config.height - 16,
                     'barn'
                 ).setOrigin(0, 1);
                 this.barn.setTint(0x999999);
@@ -353,7 +353,7 @@
                 this.silo = this.add.image
                 (
                     this.barn.width + (worldWidthX / 3) / 30,
-                    this.sys.game.config.height - this.ground.height,
+                    this.sys.game.config.height - 16,
                     'silo'
                 );
                 this.silo.setOrigin(0, 1);
@@ -362,7 +362,7 @@
                 this.cross = this.add.image
                 (
                     (worldWidthX / 3) + ((worldWidthX / 3) / 30),
-                    this.sys.game.config.height - this.ground.height,
+                    this.sys.game.config.height - 16,
                     'cross'
                 );
                 this.cross.setOrigin(0, 1);
@@ -372,7 +372,7 @@
                 this.fence = this.add.tileSprite
                 (
                     this.sys.game.config.width / 2,
-                    this.sys.game.config.height - this.ground.height,
+                    this.sys.game.config.height - 16,
                     worldWidthX,
                     16,
                     'fence'
@@ -419,11 +419,11 @@
                 this.copcar = this.add.image
                 (
                     worldWidthX / 4 + this.sys.game.config.width / 4 - this.sys.game.config.width / 8,
-                    this.sys.game.config.height - this.ground.height,
+                    this.sys.game.config.height - 16,
                     'copcar'
                 ).setOrigin(1, 1);
 
-                this.pipe = this.physics.add.sprite(worldWidthX / 2 + this.sys.game.config.width / 4 - 8, this.sys.game.config.height - this.ground.height, 'pipe');
+                this.pipe = this.physics.add.sprite(worldWidthX / 2 + this.sys.game.config.width / 4 - 8, this.sys.game.config.height - 16, 'pipe');
                 this.pipe.setOrigin(0, 1);
                 this.pipe.body.allowGravity = false;
                 this.pipe.body.setImmovable(true);
@@ -481,7 +481,7 @@
                 this.grasstop = this.add.tileSprite
                 (
                     0,
-                    this.sys.game.config.height - this.ground.height,
+                    this.sys.game.config.height - 16,
                     worldWidthX,
                     16,
                     'grasstop'
@@ -571,14 +571,14 @@
   
         function createLevelProps(scene)
         {
-            scene.shed = scene.add.image(75, scene.sys.game.config.height - scene.ground.height, 'shed');
+            scene.shed = scene.add.image(75, scene.sys.game.config.height - 16, 'shed');
             scene.shed.setOrigin(0, 1);
             scene.shed.setScrollFactor(0.65);
 
             scene.fence = scene.add.tileSprite
             (
               0,
-              scene.sys.game.config.height - scene.ground.height,
+              scene.sys.game.config.height - 16,
               148,
               16,
               'fence'
@@ -586,11 +586,11 @@
             scene.fence.setScrollFactor(0.75);
             scene.fence.setOrigin(0, 1);
 
-            scene.couch = scene.add.image(45, scene.sys.game.config.height - scene.ground.height, 'couch');
+            scene.couch = scene.add.image(45, scene.sys.game.config.height - 16, 'couch');
             scene.couch.setScrollFactor(0.8);
             scene.couch.setOrigin(0, 1);
 
-            scene.grill = scene.add.image(15, scene.sys.game.config.height - scene.ground.height, 'grill');
+            scene.grill = scene.add.image(15, scene.sys.game.config.height - 16, 'grill');
             scene.grill.setScrollFactor(0.8);
             scene.grill.setOrigin(0, 1);
         }
@@ -831,9 +831,9 @@
                 this.ground = this.add.tileSprite
                 (
                     0,
-                    this.sys.game.config.height,
+                    this.sys.game.config.height + 16,
                     worldWidthX * 2,
-                    16,
+                    32,
                     'ground'
                 );
 
@@ -898,19 +898,19 @@
 
 
                 const thisLevel = 1;
-                this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - this.ground.height, 'Level2Game', thisLevel, this.gameManager);
+                this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - 16, 'Level2Game', thisLevel, this.gameManager);
 
                 this.grasstop = this.add.tileSprite
                 (
                     0,
-                    this.sys.game.config.height - this.ground.height,
+                    this.sys.game.config.height - 16,
                     worldWidthX,
                     16,
                     'grasstop'
                 );
                 this.grasstop.setOrigin(0, 1);
 
-                this.tractor = this.physics.add.sprite(200, this.sys.game.config.height - this.ground.height, 'tractor');
+                this.tractor = this.physics.add.sprite(200, this.sys.game.config.height - 16, 'tractor');
                 this.tractor.setOrigin(0, 1);
                 this.tractor.body.allowGravity = false;
                 this.tractor.body.setImmovable(true);
@@ -1013,9 +1013,9 @@
                 this.ground = this.add.tileSprite
                 (
                     -worldWidthX,
-                    this.sys.game.config.height,
+                    this.sys.game.config.height + 16,
                     worldWidthX * 3,
-                    16,
+                    32,
                     'ground'
                 );
 
@@ -1027,7 +1027,7 @@
 
                 //createLevelProps(this);
 
-                this.pipe = this.add.image(15, this.sys.game.config.height - this.ground.height, 'pipe');
+                this.pipe = this.add.image(15, this.sys.game.config.height - 16, 'pipe');
                 this.pipe.setScrollFactor(0.8);
                 this.pipe.setOrigin(0, 1);
 
@@ -1085,12 +1085,12 @@
 
 
                 const thisLevel = 2;
-                this.pipe = new pipeNext(this, 2050, this.sys.game.config.height - this.ground.height, 'Level3Game', 2, this.gameManager);
+                this.pipe = new pipeNext(this, 2050, this.sys.game.config.height - 16, 'Level3Game', 2, this.gameManager);
 
                 this.grasstop = this.add.tileSprite
                 (
                     0,
-                    this.sys.game.config.height - this.ground.height,
+                    this.sys.game.config.height - 16,
                     worldWidthX,
                     16,
                     'grasstop'
@@ -1200,9 +1200,9 @@
                 this.ground = this.add.tileSprite
                 (
                     -worldWidthX,
-                    this.sys.game.config.height,
+                    this.sys.game.config.height + 16,
                     worldWidthX * 3,
-                    16,
+                    32,
                     'ground'
                 );
 
@@ -1211,7 +1211,7 @@
                 this.ground.body.setImmovable(true);
                 this.ground.body.allowGravity = false;
 
-                this.pipe = this.add.image(15, this.sys.game.config.height - this.ground.height, 'pipe');
+                this.pipe = this.add.image(15, this.sys.game.config.height - 16, 'pipe');
                 this.pipe.setScrollFactor(0.8);
                 this.pipe.setOrigin(0, 1);
 
@@ -1276,12 +1276,12 @@
 
 
                 const thisLevel = 3;
-                this.pipe = new pipeNext(this, 1300, this.sys.game.config.height - this.ground.height, 'Level4Game', thisLevel, this.gameManager);
+                this.pipe = new pipeNext(this, 1300, this.sys.game.config.height - 16, 'Level4Game', thisLevel, this.gameManager);
 
                 this.grasstop = this.add.tileSprite
                 (
                         0,
-                        this.sys.game.config.height - this.ground.height,
+                        this.sys.game.config.height - 16,
                         worldWidthX,
                         16,
                         'grasstop'
@@ -1383,9 +1383,9 @@
                 this.ground = this.add.tileSprite
                 (
                         -worldWidthX,
-                        this.sys.game.config.height,
+                        this.sys.game.config.height + 16,
                         worldWidthX * 3,
-                        16,
+                        32,
                         'ground'
                 );
 
@@ -1394,14 +1394,14 @@
                 this.ground.body.setImmovable(true);
                 this.ground.body.allowGravity = false;
 
-                this.shed = this.add.image(1561, this.sys.game.config.height - this.ground.height, 'shed');
+                this.shed = this.add.image(1561, this.sys.game.config.height - 16, 'shed');
                 this.shed.setOrigin(0, 1);
                 this.shed.setScrollFactor(0.65);
 
                 this.fence = this.add.tileSprite
                 (
                   1751,
-                  this.sys.game.config.height - this.ground.height,
+                  this.sys.game.config.height - 16,
                   200,
                   16,
                   'fence'
@@ -1409,15 +1409,15 @@
                 this.fence.setScrollFactor(0.75);
                 this.fence.setOrigin(0, 1);
 
-                this.couch = this.add.image(1923, this.sys.game.config.height - this.ground.height, 'couch');
+                this.couch = this.add.image(1923, this.sys.game.config.height - 16, 'couch');
                 this.couch.setScrollFactor(0.8);
                 this.couch.setOrigin(0, 1);
 
-                this.grill = this.add.image(1969, this.sys.game.config.height - this.ground.height, 'grill');
+                this.grill = this.add.image(1969, this.sys.game.config.height - 16, 'grill');
                 this.grill.setScrollFactor(0.8);
                 this.grill.setOrigin(0, 1);
 
-                this.pipe = this.add.image(15, this.sys.game.config.height - this.ground.height, 'pipe');
+                this.pipe = this.add.image(15, this.sys.game.config.height - 16, 'pipe');
                 this.pipe.setScrollFactor(0.8);
                 this.pipe.setOrigin(0, 1);
 
@@ -1482,12 +1482,12 @@
 
 
                 const thisLevel = 4;
-                this.pipe = new pipeNext(this, 2106, this.sys.game.config.height - this.ground.height, 'MainMenu', 4, this.gameManager);
+                this.pipe = new pipeNext(this, 2106, this.sys.game.config.height - 16, 'MainMenu', 4, this.gameManager);
 
                 this.grasstop = this.add.tileSprite
                 (
                         0,
-                        this.sys.game.config.height - this.ground.height,
+                        this.sys.game.config.height - 16,
                         worldWidthX,
                         16,
                         'grasstop'

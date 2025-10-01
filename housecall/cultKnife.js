@@ -90,7 +90,7 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
             this.scene.sound.play('hurt');
             if(this.scene.gameManager.allowScreenShake)
             {
-                this.scene.cameras.main.shake(50, 0.005);
+                this.scene.cameras.main.shake(50, 0.004);
             }
             this.kill();
         }
