@@ -162,8 +162,8 @@
             }
             else if(gameManager.currentLevel === 4)
             {
-                scene.scene.start('MainMenu');
                 scene.scene.stop('HUD');
+                scene.scene.start('MainMenu');
             }
         }
 
@@ -467,6 +467,8 @@
                             this.leftClickControls.destroy();
                             this.rightClickControls.destroy();
                             this.pistolControls.destroy();
+                            this.screenShake.destroy();
+                            //this.hudControls.destroy();
                         }
                     });
 
@@ -518,7 +520,7 @@
                     }, [], this);
 
                 });
-
+                
                 this.controls = createText(this, worldWidthX / 2, 10, 'Controls:', 16, '#fff');
 
                 this.strafeControls = createText(this, worldWidthX / 2, 0 + this.controls.height + 20, 'A/D: Walk', 12, '#fff');
@@ -526,12 +528,23 @@
                 this.rightClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 30, 'Right-Click: Block', 12, '#fff');
                 this.leftClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 35, 'Left-Click: Use Shotgun (Hold)', 12, '#fff');
                 this.pistolControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + 40, 'Q/E: Use Pistol', 12, '#fff');
-
+                
+                this.screenShake = createText(this, this.game.config.width * 2 - 4, 4, 'Screen Shake: ' + this.gameManager.allowScreenShakeOnBlock, 8, '#ff0000').setOrigin(1, 0).setDepth(1232300);
+                this.screenShake.setInteractive({cursor: 'pointer'});
+                this.screenShake.on('pointerdown', () =>
+                {
+                    this.gameManager.allowScreenShakeOnBlock = !this.gameManager.allowScreenShakeOnBlock;
+                    this.gameManager.allowScreenShakeOnKill = !this.gameManager.allowScreenShakeOnKill;
+                    this.screenShake.setText('Screen Shake: ' + this.gameManager.allowScreenShakeOnBlock);
+                });
+                //this.hudControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + this.pistolControls.height + 45, 'U: Info and Settings', 12, '#fff');
+                
                 this.start = createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Start', 16, '#fff').setOrigin(0.5, 0.5);
                 this.start.setInteractive({cursor: 'pointer'});
                 this.start.on('pointerdown', () =>
                 {
                     this.scene.stop('MainMenu');
+                    this.scene.stop('HUD');
                     event.stopPropagation();
                     this.scene.start('Level1Game');
                     this.scene.launch('HUD');
@@ -1797,8 +1810,9 @@
 
                 this.alwaysBuddha = false;
 
-                this.alwaysDisplayUpgrades = false;
-                this.allowScreenShake = true;
+                this.alwaysDisplayUpgrades = true;
+                this.allowScreenShakeOnBlock = true;
+                this.allowScreenShakeOnKill = true;
             }
 
             create()
@@ -1893,12 +1907,78 @@
                 if(this.gameManager.alwaysDisplayUpgrades === true)
                 {
                     this.displayUpgradeMessage(this.generateUpgradeMessage());
+                    this.displayCurrentLevel();
+                    //this.displayScreenShake();
+                    //this.displayUToggle();
                     this.displayedMessage = true;
                 }
                 else
                 {
                     this.destroyUpgradeMessage();
+                    this.destroyCurrentLevel();
+                    //this.destroyScreenShake();
+                    //this.destroyUToggle();
                     this.displayedMessage = false;
+                }
+            }
+            
+            displayCurrentLevel()
+            {
+                this.currentLevel = createText(this, this.game.config.width - 4, 4, 'Level: ' + this.gameManager.currentLevel, 8, '#ff0000').setOrigin(1, 0).setDepth(1232300);
+            }
+            
+            destroyCurrentLevel()
+            {
+                if(this.currentLevel)
+                {
+                    this.currentLevel.destroy();
+                    this.currentLevel = null;
+                }
+            }
+            
+            displayUToggle()
+            {
+                let offsetY;
+                
+                if(this.finalUpgradeString)
+                {
+                    offsetY = 8 + this.finalUpgradeString.height;
+                }
+                else
+                {
+                    offsetY = 4;
+                }
+                
+                this.uText = createText(this, 4, offsetY, 'U: Toggle HUD', 8, '#ff0000').setOrigin(0, 0).setDepth(1232300);
+            }
+            
+            destroyUToggle()
+            {
+                if(this.uText)
+                {
+                    this.uText.destroy();
+                    this.uText = null;
+                }
+            }
+            
+            displayScreenShake()
+            {
+                this.screenShake = createText(this, this.game.config.width - 4, 4, 'Screen Shake: ' + this.gameManager.allowScreenShakeOnBlock, 8, '#ff0000').setOrigin(1, 0).setDepth(1232300);
+                this.screenShake.setInteractive({cursor: 'pointer'});
+                this.screenShake.on('pointerdown', () =>
+                {
+                    this.gameManager.allowScreenShakeOnBlock = !this.gameManager.allowScreenShakeOnBlock;
+                    this.gameManager.allowScreenShakeOnKill = !this.gameManager.allowScreenShakeOnKill;
+                    this.screenShake.setText('Screen Shake: ' + this.gameManager.allowScreenShakeOnBlock);
+                });
+            }
+            
+            destroyScreenShake()
+            {
+                if(this.screenShake)
+                {
+                    this.screenShake.destroy();
+                    this.screenShake = null;
                 }
             }
 
@@ -1938,20 +2018,20 @@
                 }
                 else
                 {
-                    return null;
+                    return "Upgrades: none";
                 }
             }
 
             displayUpgradeMessage(upgradeString)
             {
-                if(this.anUpgradeToDisplay())
-                {
+                /*if(this.anUpgradeToDisplay())
+                {*/
                     this.finalUpgradeString = createText(this, 4, 4, upgradeString, 8, '#f00').setOrigin(0, 0).setDepth(1232300);
                     this.finalUpgradeString.setStyle
                     ({
                         wordWrap: { width: this.sys.game.config.width - 8, use:'true' }
                     });
-                }
+                //}
             }
 
             destroyUpgradeMessage()
@@ -1970,11 +2050,17 @@
                     if(this.displayedMessage)
                     {
                         this.destroyUpgradeMessage();
+                        this.destroyCurrentLevel();
+                        //this.destroyScreenShake();
+                        //this.destroyUToggle();
                         this.gameManager.alwaysDisplayUpgrades = false;
                     }
                     else
                     {
                         this.displayUpgradeMessage(this.generateUpgradeMessage());
+                        this.displayCurrentLevel();
+                        //this.displayScreenShake();
+                        //this.displayUToggle();
                         this.gameManager.alwaysDisplayUpgrades = true;
                     }
 

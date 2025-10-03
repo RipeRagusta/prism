@@ -59,7 +59,7 @@ function cultCreator(scene, cultPositions, gameManager)
                 player.defenceParticles();
                 player.activateDoubleFire();
                 player.play("block", false);
-                if(scene.gameManager.allowScreenShake)
+                if(scene.gameManager.allowScreenShakeOnBlock)
                 {
                     scene.cameras.main.shake(100, 0.005);
                 }
@@ -261,7 +261,7 @@ function cultSeparation(cults, player)
         if(this.health < 1)
         {
             this.scene.sound.play('hurt');
-            if(this.scene.gameManager.allowScreenShake)
+            if(this.scene.gameManager.allowScreenShakeOnKill)
             {
                 this.scene.cameras.main.shake(50, 0.004);
             }
