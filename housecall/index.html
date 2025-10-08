@@ -528,8 +528,9 @@
                 this.rightClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 30, 'Right-Click: Block', 12, '#fff');
                 this.leftClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 35, 'Left-Click: Use Shotgun (Hold)', 12, '#fff');
                 this.pistolControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + 40, 'Q/E: Use Pistol', 12, '#fff');
+                //this.hudControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + this.pistolControls.height + 45, 'U: Toggle HUD', 12, '#fff');
                 
-                this.screenShake = createText(this, this.game.config.width * 2 - 4, 4, 'Screen Shake: ' + this.gameManager.allowScreenShakeOnBlock, 8, '#ff0000').setOrigin(1, 0).setDepth(1232300);
+                this.screenShake = createText(this, this.game.config.width * 2, 0, 'Screen Shake: ' + this.gameManager.allowScreenShakeOnBlock, 10, '#ff0000').setOrigin(1, 0).setDepth(1232300);
                 this.screenShake.setInteractive({cursor: 'pointer'});
                 this.screenShake.on('pointerdown', () =>
                 {
@@ -537,6 +538,9 @@
                     this.gameManager.allowScreenShakeOnKill = !this.gameManager.allowScreenShakeOnKill;
                     this.screenShake.setText('Screen Shake: ' + this.gameManager.allowScreenShakeOnBlock);
                 });
+                
+                this.screenShake.setBackgroundColor('#000000');
+                
                 //this.hudControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + this.pistolControls.height + 45, 'U: Info and Settings', 12, '#fff');
                 
                 this.start = createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Start', 16, '#fff').setOrigin(0.5, 0.5);
@@ -1639,8 +1643,8 @@
                 }
 
                 const cardContainer = this.add.container(xPos, yCenter);
-                titleText = createText(this, 0, 50, card.name, 20, '#f00').setOrigin(0.5, 0);
-                descriptionText = createText(this, 0, -50, card.description, 12, '#f00').setOrigin(0.5, 1);
+                titleText = createText(this, 0, -50, card.name, 20, '#f00').setOrigin(0.5, 1);
+                descriptionText = createText(this, 0, 50, card.description, 12, '#f00').setOrigin(0.5, 0);
                 descriptionText.setStyle
                 ({
                     wordWrap: { width: this.sys.game.config.width / 2, use:'true' }
@@ -1810,7 +1814,7 @@
 
                 this.alwaysBuddha = false;
 
-                this.alwaysDisplayUpgrades = true;
+                this.alwaysDisplayUpgrades = false;
                 this.allowScreenShakeOnBlock = true;
                 this.allowScreenShakeOnKill = true;
             }
@@ -1924,7 +1928,8 @@
             
             displayCurrentLevel()
             {
-                this.currentLevel = createText(this, this.game.config.width - 4, 4, 'Level: ' + this.gameManager.currentLevel, 8, '#ff0000').setOrigin(1, 0).setDepth(1232300);
+                this.currentLevel = createText(this, this.game.config.width - 0, 0, 'Level: ' + this.gameManager.currentLevel, 10, '#ff0000').setOrigin(1, 0).setDepth(1232300);
+                this.currentLevel.setBackgroundColor('#000000');
             }
             
             destroyCurrentLevel()
@@ -1963,7 +1968,7 @@
             
             displayScreenShake()
             {
-                this.screenShake = createText(this, this.game.config.width - 4, 4, 'Screen Shake: ' + this.gameManager.allowScreenShakeOnBlock, 8, '#ff0000').setOrigin(1, 0).setDepth(1232300);
+                this.screenShake = createText(this, this.game.config.width - 0, 0, 'Screen Shake: ' + this.gameManager.allowScreenShakeOnBlock, 8, '#ff0000').setOrigin(1, 0).setDepth(1232300);
                 this.screenShake.setInteractive({cursor: 'pointer'});
                 this.screenShake.on('pointerdown', () =>
                 {
@@ -2026,11 +2031,12 @@
             {
                 /*if(this.anUpgradeToDisplay())
                 {*/
-                    this.finalUpgradeString = createText(this, 4, 4, upgradeString, 8, '#f00').setOrigin(0, 0).setDepth(1232300);
+                    this.finalUpgradeString = createText(this, 0, 0, upgradeString, 10, '#f00').setOrigin(0, 0).setDepth(1232300);
                     this.finalUpgradeString.setStyle
                     ({
                         wordWrap: { width: this.sys.game.config.width - 8, use:'true' }
                     });
+                    this.finalUpgradeString.setBackgroundColor('#000000');
                 //}
             }
 
