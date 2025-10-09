@@ -349,7 +349,7 @@ function cultSeparation(cults, player)
                     }
                     else
                     {
-                        orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(0));
+                        orb.fire(this.x + (this.width / 2), this.y, Phaser.Math.DegToRad(0));
                     }
                 }
             }

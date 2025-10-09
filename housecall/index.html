@@ -468,6 +468,7 @@
                             this.rightClickControls.destroy();
                             this.pistolControls.destroy();
                             this.screenShake.destroy();
+                            this.toggleHUD.destroy();
                             //this.hudControls.destroy();
                         }
                     });
@@ -538,6 +539,8 @@
                     this.gameManager.allowScreenShakeOnKill = !this.gameManager.allowScreenShakeOnKill;
                     this.screenShake.setText('Screen Shake: ' + this.gameManager.allowScreenShakeOnBlock);
                 });
+                
+                this.toggleHUD = createText(this, this.game.config.width + 3, 3, 'U: Toggle HUD', 10, '#ff0000').setOrigin(0, 0).setDepth(1232300);
                 
                 //this.screenShake.setBackgroundColor('#000000');
                 
