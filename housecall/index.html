@@ -531,13 +531,32 @@
                 this.pistolControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + 40, 'Q/E: Use Pistol', 12, '#fff');
                 //this.hudControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + this.pistolControls.height + 45, 'U: Toggle HUD', 12, '#fff');
                 
-                this.screenShake = createText(this, this.game.config.width * 2 - 3, 3, 'Screen Shake: ' + this.gameManager.allowScreenShakeOnBlock, 10, '#ff0000').setOrigin(1, 0).setDepth(1232300);
+                if(this.gameManager.allowScreenShakeOnBlock)
+                {
+                    this.screenShakeWords = "On";
+                }
+                else
+                {
+                    this.screenShakeWords = "Off";
+                }
+                
+                this.screenShake = createText(this, this.game.config.width * 2 - 3, 3, 'Screen Shake: ' + this.screenShakeWords, 10, '#ff0000').setOrigin(1, 0).setDepth(1232300);
                 this.screenShake.setInteractive({cursor: 'pointer'});
                 this.screenShake.on('pointerdown', () =>
                 {
                     this.gameManager.allowScreenShakeOnBlock = !this.gameManager.allowScreenShakeOnBlock;
                     this.gameManager.allowScreenShakeOnKill = !this.gameManager.allowScreenShakeOnKill;
-                    this.screenShake.setText('Screen Shake: ' + this.gameManager.allowScreenShakeOnBlock);
+                    
+                    if(this.gameManager.allowScreenShakeOnBlock)
+                    {
+                        this.screenShakeWords = "On";
+                    }
+                    else
+                    {
+                        this.screenShakeWords = "Off";
+                    }
+                    
+                    this.screenShake.setText('Screen Shake: ' + this.screenShakeWords);
                 });
                 
                 this.toggleHUD = createText(this, this.game.config.width + 3, 3, 'U: Toggle HUD', 10, '#ff0000').setOrigin(0, 0).setDepth(1232300);
