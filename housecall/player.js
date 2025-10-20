@@ -514,7 +514,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             {
                 this.shoot(time);
                 this.lastPlayerShot = time;
-                this.play("pump", true);
+                this.play("pump", false);
             }
         }
     }
