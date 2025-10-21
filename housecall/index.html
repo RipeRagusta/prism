@@ -423,7 +423,7 @@
                     'copcar'
                 ).setOrigin(1, 1);
 
-                this.pipe = this.physics.add.sprite(worldWidthX / 2 + this.sys.game.config.width / 4 - 8, this.sys.game.config.height - 16, 'pipe');
+                this.pipe = this.physics.add.sprite(worldWidthX / 2 + this.sys.game.config.width / 4 - 6, this.sys.game.config.height - 16, 'pipe');
                 this.pipe.setOrigin(0, 1);
                 this.pipe.body.allowGravity = false;
                 this.pipe.body.setImmovable(true);
@@ -937,7 +937,7 @@
 
 
                 const thisLevel = 1;
-                this.pipe = new pipeNext(this, 1600, this.sys.game.config.height - 16, 'Level2Game', thisLevel, this.gameManager);
+                this.pipe = new pipeNext(this, 1594, this.sys.game.config.height - 16, 'Level2Game', thisLevel, this.gameManager);
 
                 this.grasstop = this.add.tileSprite
                 (
@@ -1124,7 +1124,7 @@
 
 
                 const thisLevel = 2;
-                this.pipe = new pipeNext(this, 2050, this.sys.game.config.height - 16, 'Level3Game', 2, this.gameManager);
+                this.pipe = new pipeNext(this, 2044, this.sys.game.config.height - 16, 'Level3Game', 2, this.gameManager);
 
                 this.grasstop = this.add.tileSprite
                 (
@@ -1315,7 +1315,7 @@
 
 
                 const thisLevel = 3;
-                this.pipe = new pipeNext(this, 1300, this.sys.game.config.height - 16, 'Level4Game', thisLevel, this.gameManager);
+                this.pipe = new pipeNext(this, 1219, this.sys.game.config.height - 16, 'Level4Game', thisLevel, this.gameManager);
 
                 this.grasstop = this.add.tileSprite
                 (
