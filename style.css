@@ -33,6 +33,17 @@ body{
   	background-color: #ffffff;
 	background-image: radial-gradient(#000000 calc(var(--sizer) * 0.05), #ffffff calc(var(--sizer) * 0.05));
     background-size: var(--sizer) var(--sizer);
+    animation: rightleft 2s linear infinite;
+}
+
+@keyframes rightleft{
+    from{
+        background-position: 0% 0%;
+    }
+
+    to{
+        background-position: calc(var(--sizer) * 1) calc(var(--sizer) * -1);
+    }
 }
 
 main{
@@ -108,7 +119,7 @@ header{
 }
 
 header img{
-	width: clamp(50%, 500px, 90%);
+	width: clamp(50%, 500px, calc(100% - (var(--sizer) * 2)));
 	margin: 0px auto;
 	display: block;
 	padding: var(--sizer);
