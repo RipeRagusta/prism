@@ -135,9 +135,15 @@ header img{
 	overflow-x: visible;
 }
 
+.thumbnailcontainer{
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--sizer) * 2);
+}
+
 .crossedout{
 	background-color: #ffffff;
-	background: repeating-linear-gradient(-45deg, #000000, #000000 calc(var(--sizer) * 0.5), #ffffff calc(var(--sizer) * 0.5), #ffffff calc(var(--sizer) * 2));
+	background: repeating-linear-gradient(-45deg, #000000, #000000 calc(var(--sizer) * 0.25), #ffffff calc(var(--sizer) * 0.25), #ffffff calc(var(--sizer) * 2));
 }
 
 footer{
@@ -152,12 +158,9 @@ footer{
 }
 
 #gamecontainer p{
-	margin-top: calc(var(--sizer) / 2);
-	margin-bottom: calc(var(--sizer) * 2);
 }
 
 #gamecontainer h1{
-	margin-top: calc(var(--sizer) / 2);
 	display: none;
 }
 
@@ -166,11 +169,22 @@ footer{
 	display: block;
 	margin: 0px auto;
 	border-radius: 0px var(--sizer);
+	border: calc(var(--sizer) / 2) solid black;
+	box-sizing: border-box;
+}
+
+.descriptionbox{
+	padding: calc(var(--sizer) / 2);
+	border-radius: 0px calc(var(--sizer) / 2);
+	margin-top: var(--sizer);
+	background-color: #000000;
+	color: #ffffff;
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--sizer) / 2);
 }
 
 .pagenav{
-	position: sticky;
-	top: var(--sizer);
 	color: #ffffff;
 	padding: 0px;
 	margin: 0px;
@@ -190,6 +204,7 @@ footer{
 	padding: calc(var(--sizer) / 2);
 	box-sizing: border-box;
 	background-color: black;
+	border-radius: 0px calc(var(--sizer) / 2);
 }
 
 @media only screen and (max-width: 500px)
