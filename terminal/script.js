@@ -397,7 +397,7 @@ function evaluateCommand(commandEntered)
 			break;
 
 		case "reload":
-			window.location.href = "../index.html";
+			window.location.href = "./index.html";
 			break;
 
 		case "":
