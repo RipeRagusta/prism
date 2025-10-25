@@ -227,7 +227,7 @@ footer{
 	margin-bottom: calc(var(--sizer));
 }
 
-@media only screen and (max-width: 500px)
+@media only screen and (max-width: 600px)
 {
 	main{
 		grid-template-columns: minmax(0, 1fr);
@@ -255,5 +255,6 @@ footer{
 
 	.pagenav h1{
 		font-size: 1rem;
+		font-weight: normal;
 	}
 }
