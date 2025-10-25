@@ -7,6 +7,14 @@ p, h1, small{
 	display: block;
 }
 
+h1{
+	font-size: 2rem;
+}
+
+p{
+	font-size: 1rem;
+}
+
 html{
 	height: 100vh;
 	height: 100dvh;
@@ -226,10 +234,15 @@ footer{
 		grid-template-rows: auto minmax(0, 1fr);
 	}
 
+	.quicknavigation{
+		margin-bottom: calc(var(--sizer) / 2);
+	}
+
 	.pagenav ul{
 		white-space: nowrap;
 		flex-direction: row;
 		overflow-x: scroll;
+		gap: calc(var(--sizer) / 2);
 	}
 
 	.thumbnailcontainer{
@@ -238,5 +251,9 @@ footer{
 
 	.crossedout{
 		order: 1;
+	}
+
+	.pagenav h1{
+		font-size: 1rem;
 	}
 }
