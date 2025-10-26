@@ -41,7 +41,6 @@ body{
   	background-color: #ffffff;
 	background-image: radial-gradient(#000000 calc(var(--sizer) * 0.05), #ffffff calc(var(--sizer) * 0.05));
     background-size: var(--sizer) var(--sizer);
-    animation: rightleft 2s linear infinite;
 }
 
 @keyframes rightleft{
@@ -111,8 +110,8 @@ a:hover, a:active{
 	color: #808080;
 }
 
-.fleshtext:hover, .fleshtext:active{
-	color: yellow;
+.terminaltext:hover, .terminaltext:active{
+	color: cyan;
 }
 
 .hctext:hover, .hctext:active{
@@ -143,7 +142,7 @@ header img{
 	max-width: 100%;
 }
 
-.thumbnailcontainer{
+.gallerycontainer{
 	display: flex;
 	flex-direction: column;
 	gap: calc(var(--sizer) + (var(--sizer) / 2));
@@ -152,7 +151,7 @@ header img{
 
 .crossedout{
 	background-color: #ffffff;
-	background: repeating-linear-gradient(-45deg, #000000, #000000 calc(var(--sizer) * 0.25), #ffffff calc(var(--sizer) * 0.25), #ffffff calc(var(--sizer) * 2));
+	background: repeating-linear-gradient(-45deg, #000000, #000000 1px, #ffffff 1px, #ffffff calc(var(--sizer) + (var(--sizer) / 2)));
 	order: 2;
 }
 
@@ -163,18 +162,18 @@ footer{
 	padding: calc(var(--sizer) / 2);
 }
 
-#gamecontainer{
+.thumbnailcontainer{
 	width: 100%;
 }
 
-#gamecontainer p{
+.thumbnailcontainer p{
 }
 
-#gamecontainer h1{
+.thumbnailcontainer h1{
 	display: block;
 }
 
-.gamethumbnail{
+.thumbnail{
 	width: 100%;
 	height: auto;
 	display: block;
@@ -245,7 +244,7 @@ footer{
 		gap: calc(var(--sizer) / 2);
 	}
 
-	.thumbnailcontainer{
+	.gallerycontainer{
 		order: 2;
 	}
 
