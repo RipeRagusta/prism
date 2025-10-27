@@ -2,6 +2,7 @@ var pastCommands;
 var pastCommandsIncrement;
 var pastCommandsPointer;
 var commands;
+var launchTargets;
 var selectPast;
 var clickedConsoleFirst;
 var bannerToggle;
@@ -22,6 +23,35 @@ function initialize()
 	pastCommandsPointer = 0;
 	selectPast = false;
 	clickedConsoleFirst = false;
+
+	const sortAlphabetically = (a, b) => 
+	{
+	    const nameA = a.name.toLowerCase();
+	    const nameB = b.name.toLowerCase();
+
+	    if (nameA < nameB) 
+	    {
+	        return -1;
+	    }
+	    if (nameA > nameB) 
+	    {
+	        return 1;
+	    }
+
+	    return 0;
+	};
+
+	launchTargets = 
+	[
+		{ name: "cyberclicker", url: "./cyberclicker/index.html", display: true},
+		{ name: "flesh", url: "https://flesh.enterprises/index.html", display: false},
+		{ name: "fp2rbpr", url: "./fp/index.html", display: false},
+		{ name: "housecall", url: "./housecall/index.html", display: true},
+		{ name: "jumpgame", url: "./jumpgame/index.html", display: false},
+		{ name: "vp1", url: "https://ragusta.com/index.html", display: false},
+	];
+
+	launchTargets.sort(sortAlphabetically);
 
 	commands = 
 	[
@@ -158,15 +188,6 @@ function initialize()
 			argumentsNeeded: 1,
 			function: (splitCommand) => 
 	        {
-	        	const launchTargets = [
-					{ name: "cyberclicker", url: "./cyberclicker/index.html", display: true},
-					{ name: "flesh", url: "https://flesh.enterprises/index.html", display: false},
-					{ name: "fp2rbpr", url: "./fp/index.html", display: false},
-					{ name: "housecall", url: "./housecall/index.html", display: true},
-					{ name: "jumpgame", url: "./jumpgame/index.html", display: false},
-					{ name: "vp1", url: "https://ragusta.com/index.html", display: false},
-				];
-
 				if(splitCommand.length > 1)
 				{
 					launchTarget = launchTargets.find(target => target.name === splitCommand[1].toLowerCase());
@@ -217,6 +238,7 @@ function initialize()
 		}
 	];
 
+	commands.sort(sortAlphabetically);
 
 	if(checkStorage() == true)
 	{
