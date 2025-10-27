@@ -170,7 +170,7 @@ function initialize()
 				if(splitCommand.length > 1)
 				{
 					launchTarget = launchTargets.find(target => target.name === splitCommand[1].toLowerCase());
-					
+
 					if(launchTarget)
 					{
 						window.location.href = launchTarget.url;
@@ -506,7 +506,7 @@ function commandEnter(commandEntered)
 		else
 		{
 			let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-			consoleString.innerHTML += parseExtraSpaces(commandEntered) + " is not a valid input";
+			consoleString.innerHTML += "invalid input: " + parseExtraSpaces(commandEntered);
 			printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 		}
 	}
