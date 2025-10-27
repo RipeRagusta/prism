@@ -24,7 +24,6 @@ function initialize()
 				  "tbor"
 				 ];
 	launchOptions = [
-					 "cyberclicker",
 					 "housecall"
 					];
 	selectPast = false;
