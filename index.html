@@ -6,27 +6,33 @@
 	<title>Total Prism</title>
 	<meta name="description" content="total prism is a website">
 	<link rel="stylesheet" href="./style.css">
+	<link rel="shortcut icon" type="image" href="./termicon.png">
+	<script src="./script.js"></script>
 </head>
-<body>
-	<header>
-		<img src="./MAINPAGEASSETS/logo.png" alt="Total prism text logo">
+<body onload="initialize()" onresize="adjustConsoleWindow()">
+	<header id="toplogo"> 
+<pre id="tplogo" role="presentation">
+________     _____       _____________       _____                   
+___  __/_______  /______ ___  /__  __ \_________(_)_____________ ___ 
+__  /  _  __ \  __/  __ `/_  /__  /_/ /_  ___/_  /__  ___/_  __ `__ \
+_  /   / /_/ / /_ / /_/ /_  / _  ____/_  /   _  / _(__  )_  / / / / /
+/_/    \____/\__/ \__,_/ /_/  /_/     /_/    /_/  /____/ /_/ /_/ /_/ 
+</pre>
 	</header>
-	<nav class="mainnav">
-		<ul>
-			<li><a href="./index.html"><p>Home</p></a></li>
-			<li><a href="./projects.html"><p>Projects</p></a></li>
-		</ul>
-	</nav>
 	<main>
-		<div class="halfpage">
-			<p>Total Prism is a website.</p>
-		</div>
-		<div class="halfpage crossedout">
-			
+		<div class="page" id="pagefull">
+			<div class="section" id="left">
+				<p>Total Prism</p>
+				<p>Ver. 1.0.0</p>
+				<a href="./index.html" id="buttonforother"><p>click - reload</p></a>
+			</div>
+			<div class="section" id="right">
+				<div id="consolehistory"></div>
+				<div id="textareaholder">
+					<textarea value="" rows="1" id="consolewindow" aria-label="Enter your input"></textarea>
+				</div>
+			</div>
 		</div>
 	</main>
-	<footer>
-		<small>© Total Prism, All rights reserved.</small>
-	</footer>
 </body>
 </html>
