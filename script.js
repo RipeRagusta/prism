@@ -1,33 +1,222 @@
 var pastCommands;
 var pastCommandsIncrement;
 var pastCommandsPointer;
-var helpValues;
-var launchOptions;
+var commands;
 var selectPast;
 var clickedConsoleFirst;
 var bannerToggle;
 var borderToggle;
+var ALLOW_WRAP;
+var PREVENT_WRAP;
+var PRINT_MESSAGE_WITH_SPACE;
+var PRINT_MESSAGE_WITHOUT_SPACE;
 
 function initialize()
 {
+	ALLOW_WRAP = true;
+	PREVENT_WRAP = false;
+	PRINT_MESSAGE_WITH_SPACE = true;
+	PRINT_MESSAGE_WITHOUT_SPACE = false;
 	pastCommands = new Array();
 	pastCommandsIncrement = 0;
 	pastCommandsPointer = 0;
-	helpValues = [
-				  "about",
-				  "clear",
-				  "dinfo",
-				  "help",
-				  "launch",
-				  "reload",
-				  "tban",
-				  "tbor"
-				 ];
-	launchOptions = [
-					 "housecall"
-					];
 	selectPast = false;
 	clickedConsoleFirst = false;
+
+	commands = 
+	[
+		{
+			name: "about",
+			display: true,
+			argumentsNeeded: 0,
+			function: () => 
+	        {
+	        	let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+	        	consoleString.innerHTML += "total prism is a website";
+				printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+	        }
+
+		},
+		{
+			name: "help",
+			display: true,
+			argumentsNeeded: 0,
+			function: () => 
+	        {
+	        	let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+				consoleString.innerHTML += "input options:" + "\n";
+				consoleString.appendChild(consoleDecorSeperatorElement(14, false));
+	        	commands.forEach((command) => 
+	        	{
+	        		if(command.display === true)
+	        		{
+	        			consoleString.innerHTML += "\n     " + command.name;
+	        		}
+	        	});
+
+	            printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+	        }
+
+		},
+		{
+			name: "dinfo",
+			display: true,
+			argumentsNeeded: 0,
+			function: () => 
+	        {
+	        	let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+	        	consoleString.innerHTML = "_______________   " + "user agent: " + navigator.userAgent + "\n"; 
+				consoleString.innerHTML += "___  __/__  __ " + "\\" + "  ";
+				consoleString.appendChild(consoleDecorSeperatorElement(11, true));
+				consoleString.innerHTML += "\n";
+				consoleString.innerHTML += "__  /  __  /_/ /  " + "platform: " + navigator.platform + "\n";
+				consoleString.innerHTML += "_  /   _  ____/   ";
+				consoleString.appendChild(consoleDecorSeperatorElement(9, true));
+				consoleString.innerHTML += "\n";
+				consoleString.innerHTML += "/_/    /_/        " + "language: " + navigator.language;
+	            printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+	        }
+		},
+		{
+			name: "clear",
+			display: true,
+			argumentsNeeded: 0,
+			function: () => 
+	        {
+	        	let textContent = document.getElementById("consolehistory").querySelectorAll("div");
+				textContent.forEach(div =>
+				{
+					div.remove();
+				});
+
+				textContent = document.getElementById("consolehistory").querySelectorAll("pre");
+				textContent.forEach(pre =>
+				{
+					pre.remove();
+				});
+	        }
+		},
+		{
+			name: "tban",
+			display: true,
+			argumentsNeeded: 0,
+			function: () => 
+	        {
+	        	if(bannerToggle == true)
+				{
+					bannerToggle = false;
+				}
+				else
+				{
+					bannerToggle = true;
+				}
+
+				displayBanner();
+				synchro();
+
+				if(checkStorage() == true)
+				{
+					localStorage.setItem("userBannerPreference", bannerToggle);
+				}
+	        }
+		},
+		{
+			name: "tbor",
+			display: true,
+			argumentsNeeded: 0,
+			function: () => 
+	        {
+	        	if(borderToggle == true)
+				{
+					borderToggle = false;
+				}
+				else
+				{
+					borderToggle = true;
+				}
+
+				displayBorder();
+
+				if(checkStorage() == true)
+				{
+					localStorage.setItem("userBorderPreference", borderToggle);
+				}
+	        }
+		},
+		{
+			name: "reload",
+			display: true,
+			argumentsNeeded: 0,
+			function: () => 
+	        {
+	        	window.location.href = "./index.html";
+	        }
+		},
+		{
+			name: "launch",
+			display: true,
+			argumentsNeeded: 1,
+			function: (splitCommand) => 
+	        {
+	        	const launchTargets = [
+					{ name: "cyberclicker", url: "./cyberclicker/index.html", display: true},
+					{ name: "flesh", url: "https://flesh.enterprises/index.html", display: false},
+					{ name: "fp2rbpr", url: "./fp/index.html", display: false},
+					{ name: "housecall", url: "./housecall/index.html", display: true},
+					{ name: "jumpgame", url: "./jumpgame/index.html", display: false},
+					{ name: "vp1", url: "https://ragusta.com/index.html", display: false},
+				];
+
+				if(splitCommand.length > 1)
+				{
+					launchTarget = launchTargets.find(target => target.name === splitCommand[1].toLowerCase());
+					
+					if(launchTarget)
+					{
+						window.location.href = launchTarget.url;
+					}
+					else
+					{
+						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+						consoleString.innerHTML += "invalid launch target: " + splitCommand[1];
+						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+					}
+				}
+				else
+				{
+					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+					consoleString.innerHTML += "can launch:" + "\n";
+					consoleString.appendChild(consoleDecorSeperatorElement(11, false));
+
+					launchTargets.forEach((target) => 
+		        	{
+		        		if(target.display === true)
+		        		{
+		        			consoleString.innerHTML += "\n     " + target.name;
+		        		}
+		        	});	
+
+					consoleString.innerHTML += "\n";
+					consoleString.appendChild(consoleDecorSeperatorElement(11, false))
+					consoleString.innerHTML += "\n";
+
+					let exampleTarget = [];
+
+					launchTargets.forEach((target) => 
+		        	{
+		        		if(target.display === true)
+		        		{
+		        			exampleTarget.push(target.name);
+		        		}
+		        	});
+
+					consoleString.innerHTML += "     ex: launch " + exampleTarget[(Math.floor(Math.random() * exampleTarget.length))];
+					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+				}
+	        }
+		}
+	];
+
 
 	if(checkStorage() == true)
 	{
@@ -64,10 +253,6 @@ function initialize()
 	}
 
 	displayBorder();
-
-	document.getElementById("consolewindow").value = "help";
-	commandEnter(document.getElementById("consolewindow").value);
-	document.getElementById("consolewindow").value = "";
 			
 	document.getElementById("consolewindow").focus();
 
@@ -84,13 +269,13 @@ function initialize()
     	else if(event.key === "ArrowUp") 
     	{
     		event.preventDefault();
-       		displayPastValues(true);
+       		displayPastValues("up");
        		adjustConsoleWindow();
     	}
     	else if(event.key === "ArrowDown") 
     	{
     		event.preventDefault();
-       		displayPastValues(false);
+       		displayPastValues("down");
        		adjustConsoleWindow();
     	}
 	});
@@ -146,110 +331,10 @@ function initialize()
 	{
 		synchro();
 	});
-}
 
-function adjustConsoleWindow()
-{
-	document.getElementById("consolewindow").style.height = "auto"; 
- 	document.getElementById("consolewindow").style.height = document.getElementById("consolewindow").scrollHeight - 0.5 + "px";
-  	document.getElementById("right").scrollTo(0, document.getElementById("right").scrollHeight);
-}
-
-function displayPastValues(trueMeansUp)
-{
-	if(pastCommands.length > 0)
-	{
-		if(trueMeansUp == true)
-		{
-			pastCommandsPointer += 1;
-
-			if(pastCommandsPointer >= pastCommands.length)
-			{
-				pastCommandsPointer = pastCommands.length - 1;
-			}
-					
-			document.getElementById("consolewindow").value = pastCommands[pastCommands.length - 1 - pastCommandsPointer];
-		}
-		else
-		{
-			pastCommandsPointer -= 1;
-
-			if(pastCommandsPointer <= 0)
-			{
-				pastCommandsPointer = 0;
-			}
-
-			document.getElementById("consolewindow").value = pastCommands[pastCommands.length - 1 - pastCommandsPointer];
-		}
-	}
-}
-
-function parseCommandSpaces(commandEntered)
-{
-	let parsed = commandEntered.replace(/\s/g, "");
-	return parsed;
-}
-
-function parseExtraSpaces(commandEntered)
-{
-	let parsed = commandEntered.replace(/\s+/g, " ").trim();
-	return parsed;
-}
-
-function checkIfNothing(commandEntered)
-{
-	if(commandEntered !== "")
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
-}
-
-function commandEnter(commandEntered) 
-{
-	if(checkIfNothing(parseCommandSpaces(commandEntered)) == false)
-	{
-		saveCommand(commandEntered);
-		evaluateCommand(commandEntered);
-	}
-	else
-	{
-		let consoleHistory = document.getElementById("consolehistory");
-		let decorString = document.createElement("pre");
-		decorString.textContent = "--";
-		decorString.style.color = "#00ff00";
-		consoleHistory.appendChild(decorString);
-	}
-}
-
-function saveCommand(commandEntered)
-{
-	let consoleHistory = document.getElementById("consolehistory");
-	let userString = document.createElement("pre");
-	userString.style.whiteSpace = "pre-wrap";
-	userString.style.wordBreak = "break-word";
-	userString.appendChild(userDecorStringElement());
-	userString.innerHTML += parseExtraSpaces(commandEntered);
-	consoleHistory.appendChild(userString);
-
-	if((pastCommands[pastCommandsIncrement - 1] !== commandEntered) && (commandEntered.replace(/\s/g, "") !== ""))
-	{
-		pastCommands[pastCommandsIncrement] = commandEntered;
-		pastCommandsIncrement += 1;
-		pastCommands[pastCommands.length] = "";
-	}
-}
-
-function userDecorStringElement()
-{
-	let decorString = document.createElement("pre");
-	decorString.textContent = "--\u00A0";
-	decorString.style.color = "#00ff00";
-	decorString.style.display = "inline";
-	return decorString;
+	document.getElementById("consolewindow").value = "help";
+	commandEnter(document.getElementById("consolewindow").value);
+	document.getElementById("consolewindow").value = "";
 }
 
 function consoleDecorStringElement()
@@ -288,179 +373,203 @@ function consoleDecorSeperatorElement(length, trueMeansNoSpace)
 	return decorString;
 }
 
-function evaluateCommand(commandEntered) 
+function userDecorStringElement()
+{
+	let decorString = document.createElement("pre");
+	decorString.textContent = "--\u00A0";
+	decorString.style.color = "#00ff00";
+	decorString.style.display = "inline";
+	return decorString;
+}
+
+function adjustConsoleWindow()
+{
+	document.getElementById("consolewindow").style.height = "auto"; 
+ 	document.getElementById("consolewindow").style.height = document.getElementById("consolewindow").scrollHeight - 0.5 + "px";
+  	document.getElementById("right").scrollTo(0, document.getElementById("right").scrollHeight);
+}
+
+function parseCommandSpaces(commandEntered)
+{
+	let parsed = commandEntered.replace(/\s/g, "");
+	return parsed;
+}
+
+function parseExtraSpaces(commandEntered)
+{
+	let parsed = commandEntered.replace(/\s+/g, " ").trim();
+	return parsed;
+}
+
+function checkIfNothing(commandEntered)
+{
+	if(commandEntered !== "")
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+function saveCommand(commandEntered)
 {
 	let consoleHistory = document.getElementById("consolehistory");
 
-	let consoleFormatBoxBox = document.createElement("div");
-	consoleFormatBoxBox.style.display = "flex";
+	if((pastCommands[pastCommandsIncrement - 1] !== commandEntered) && (commandEntered.replace(/\s/g, "") !== ""))
+	{
+		pastCommands[pastCommandsIncrement] = commandEntered;
+		pastCommandsIncrement += 1;
+		pastCommands[pastCommands.length] = "";
+	}
+}
 
-	let consoleFormatBox = document.createElement("div");
-	consoleFormatBox.style.paddingRight = "calc(var(--sizer) + 1px)";
+function displayPastValues(direction)
+{
+	if(pastCommands.length > 0)
+	{
+		if(direction === "up")
+		{
+			pastCommandsPointer += 1;
+
+			if(pastCommandsPointer >= pastCommands.length)
+			{
+				pastCommandsPointer = pastCommands.length - 1;
+			}
+					
+			document.getElementById("consolewindow").value = pastCommands[pastCommands.length - 1 - pastCommandsPointer];
+		}
+		else
+		{
+			pastCommandsPointer -= 1;
+
+			if(pastCommandsPointer <= 0)
+			{
+				pastCommandsPointer = 0;
+			}
+
+			document.getElementById("consolewindow").value = pastCommands[pastCommands.length - 1 - pastCommandsPointer];
+		}
+	}
+}
+
+function commandEnter(commandEntered) 
+{
+	if(checkIfNothing(commandEntered) === true)
+	{
+		let consoleString = createHistoryMessage("user", ALLOW_WRAP);
+		printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+	}
+	else
+	{
+		saveCommand(commandEntered);
+		splitCommand = parseExtraSpaces(commandEntered).split(" ");
+
+		let consoleString = createHistoryMessage("user", ALLOW_WRAP);
+		consoleString.innerHTML += parseExtraSpaces(commandEntered);
+
+		printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+
+		targetCommand = commands.find(command => command.name === splitCommand[0].toLowerCase());
+		
+		if(targetCommand)
+		{
+			if(splitCommand.length - 1 > targetCommand.argumentsNeeded)
+			{
+				let argumentsAdded = "";
+				let argumentWarningMessage = "";
+
+				if(splitCommand.length - 1 == targetCommand.argumentsNeeded + 1)
+				{
+					argumentWarningMessage = "excess argument encountered:";
+				}
+				else
+				{
+					argumentWarningMessage = "excess arguments encountered:";
+				}
+
+				for(let i = targetCommand.argumentsNeeded + 1; i < splitCommand.length; i++)
+				{
+					argumentsAdded += " " + splitCommand[i];
+				}
+
+				let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+				consoleString.innerHTML += argumentWarningMessage + argumentsAdded;
+				printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+			}
+			else
+			{
+				targetCommand.function(splitCommand);
+			}			
+		}
+		else
+		{
+			let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+			consoleString.innerHTML += parseExtraSpaces(commandEntered) + " is not a valid input";
+			printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+		}
+	}
+}
+
+function createHistoryMessage(source, makeWrap = true)
+{
+	let consoleString = document.createElement("pre");
+
+	if(makeWrap == true)
+	{
+		consoleString.style.whiteSpace = "pre-wrap";
+		consoleString.style.wordBreak = "break-word";
+	}
+
+	if(source === "console")
+	{
+		consoleString.appendChild(consoleDecorStringElement());
+	}
+	else
+	{
+		consoleString.appendChild(userDecorStringElement());
+	}
+
+	return consoleString;	
+}
+
+function printMessage(content, printMessageWithSpace = false, makeStringInputWrap = true)
+{
+	let consoleHistory = document.getElementById("consolehistory");
 
 	let consoleString;
-	consoleString = document.createElement("pre");
 
-	switch(parseCommandSpaces(commandEntered).toLowerCase())
+	if(content instanceof HTMLElement) 
 	{
-		case "about":
+		consoleString = content;
+	}
+	else
+	{
+		consoleString = document.createElement("pre");
+
+		if(makeStringInputWrap)
+		{
 			consoleString.style.whiteSpace = "pre-wrap";
 			consoleString.style.wordBreak = "break-word";
-			consoleString.appendChild(consoleDecorStringElement());
-			consoleString.innerHTML += "total prism is a website";
-			consoleHistory.appendChild(consoleString);
-			break;
+		}
 
-		case "help":
-			consoleString.appendChild(consoleDecorStringElement());
-			consoleString.innerHTML += "input options:" + "\n";
-			consoleString.appendChild(consoleDecorSeperatorElement(14, false));
+		consoleString.innerHTML += content;
+	}
 
-			for(let i = 0; i < helpValues.length; i++)
-			{
-				consoleString.innerHTML += "\n     " + helpValues[i];
-			}
-
-			consoleFormatBox.appendChild(consoleString);
-			consoleFormatBoxBox.appendChild(consoleFormatBox);
-			consoleHistory.appendChild(consoleFormatBoxBox);
-			break;
-
-		case "clear":
-			let textContent = document.getElementById("consolehistory").querySelectorAll("div");
-			textContent.forEach(div =>
-			{
-				div.remove();
-			});
-
-			textContent = document.getElementById("consolehistory").querySelectorAll("pre");
-			textContent.forEach(pre =>
-			{
-				pre.remove();
-			});
-
-			break;
-
-		case "launch":
-			consoleString.appendChild(consoleDecorStringElement());
-			consoleString.innerHTML += "can launch:" + "\n";
-			consoleString.appendChild(consoleDecorSeperatorElement(11, false));
-
-			for(let i = 0; i < launchOptions.length; i++)
-			{
-				consoleString.innerHTML += "\n     " + launchOptions[i];
-			}
-
-			consoleString.innerHTML += "\n";
-			consoleString.appendChild(consoleDecorSeperatorElement(11, false))
-			consoleString.innerHTML += "\n";
-			consoleString.innerHTML += "     ex: launch " + launchOptions[(Math.floor(Math.random() * launchOptions.length))];
-
-			consoleFormatBox.appendChild(consoleString);
-			consoleFormatBoxBox.appendChild(consoleFormatBox);
-			consoleHistory.appendChild(consoleFormatBoxBox);
-			break;
-
-		case "launchytp":
-		case "launchvp1":
-		case "ytp":
-		case "vp1":
-			window.location.href = "https://ragusta.com/index.html";
-			break;
-
-		case "launchflesh":
-		case "flesh":
-			window.location.href = "https://flesh.enterprises/index.html";
-			break;
-
-		case "launchcyberclicker":
-		case "cyberclicker":
-			window.location.href = "./cyberclicker/index.html";
-			break;
-
-		case "launchjumpgame":
-		case "jumpgame":
-			window.location.href = "./jumpgame/index.html";
-			break;
-
-		case "launchhousecall":
-		case "housecall":
-			window.location.href = "./housecall/index.html";
-			break;
-
-		case "launchfp2rbpr":
-		case "fp2rbpr":
-			window.location.href = "./fp/index.html";
-			break;
-
-		case "reload":
-			window.location.href = "./index.html";
-			break;
-
-		case "":
-			break;
-
-		case "dinfo":
-			consoleString.innerHTML = "_______________   " + "user agent: " + navigator.userAgent + "\n"; 
-			consoleString.innerHTML += "___  __/__  __ " + "\\" + "  ";
-			consoleString.appendChild(consoleDecorSeperatorElement(11, true));
-			consoleString.innerHTML += "\n";
-			consoleString.innerHTML += "__  /  __  /_/ /  " + "platform: " + navigator.platform + "\n";
-			consoleString.innerHTML += "_  /   _  ____/   ";
-			consoleString.appendChild(consoleDecorSeperatorElement(9, true));
-			consoleString.innerHTML += "\n";
-			consoleString.innerHTML += "/_/    /_/        " + "language: " + navigator.language;
-			consoleFormatBox.appendChild(consoleString);
-			consoleFormatBoxBox.appendChild(consoleFormatBox);
-			consoleHistory.appendChild(consoleFormatBoxBox);
-			break;
-
-		case "tban":
-			if(bannerToggle == true)
-			{
-				bannerToggle = false;
-			}
-			else
-			{
-				bannerToggle = true;
-			}
-
-			displayBanner();
-			synchro();
-
-			if(checkStorage() == true)
-			{
-				localStorage.setItem("userBannerPreference", bannerToggle);
-			}
-
-			break;
-
-		case "tbor":
-			if(borderToggle == true)
-			{
-				borderToggle = false;
-			}
-			else
-			{
-				borderToggle = true;
-			}
-
-			displayBorder();
-
-			if(checkStorage() == true)
-			{
-				localStorage.setItem("userBorderPreference", borderToggle);
-			}
-
-			break;
-
-		default:
-			consoleString.style.whiteSpace = "pre-wrap";
-			consoleString.style.wordBreak = "break-word";
-			consoleString.appendChild(consoleDecorStringElement());
-			consoleString.innerHTML += parseExtraSpaces(commandEntered) + " is not a valid input";
-			consoleHistory.appendChild(consoleString);
-			break;
+	if(printMessageWithSpace)
+	{
+		let consoleFormatBoxBox = document.createElement("div");
+		consoleFormatBoxBox.style.display = "flex";
+		let consoleFormatBox = document.createElement("div");
+		consoleFormatBox.style.paddingRight = "calc(var(--sizer) + 1px)";
+		consoleFormatBox.appendChild(consoleString);
+		consoleFormatBoxBox.appendChild(consoleFormatBox);
+		consoleHistory.appendChild(consoleFormatBoxBox);
+	}
+	else
+	{
+		consoleHistory.appendChild(consoleString);
 	}
 }
 
