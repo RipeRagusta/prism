@@ -199,7 +199,7 @@ function initialize()
 					else
 					{
 						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-						consoleString.innerHTML += "invalid launch target: " + splitCommand[1];
+						consoleString.innerHTML += "invalid launch argument: " + splitCommand[1];
 						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 					}
 				}
