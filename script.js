@@ -480,8 +480,10 @@ function commandEnter(commandEntered)
 {
 	if(checkIfNothing(commandEntered) === true)
 	{
-		let consoleString = createHistoryMessage("user", ALLOW_WRAP);
-		printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+		let consoleString = document.createElement("pre");
+		consoleString.textContent = "--";
+		consoleString.style.color = "#00ff00";
+		printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 	}
 	else
 	{
