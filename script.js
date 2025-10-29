@@ -583,6 +583,7 @@ function initialize()
 	document.getElementById("consolewindow").value = "help";
 	commandEnter(document.getElementById("consolewindow").value);
 	document.getElementById("consolewindow").value = "";
+	adjustConsoleWindow();
 }
 
 function changeThemeFromName(name)
