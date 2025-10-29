@@ -53,6 +53,57 @@ function initialize()
 
 	launchTargets.sort(sortAlphabetically);
 
+	customizeTargets = 
+	[
+		{
+			name: "tban",
+			display: true,
+			function: () => 
+	        {
+	        	if(bannerToggle == true)
+				{
+					bannerToggle = false;
+				}
+				else
+				{
+					bannerToggle = true;
+				}
+
+				displayBanner();
+				synchro();
+
+				if(checkStorage() == true)
+				{
+					localStorage.setItem("userBannerPreference", bannerToggle);
+				}
+	        }
+		},
+		{
+			name: "tbor",
+			display: false,
+			function: () => 
+	        {
+	        	if(borderToggle == true)
+				{
+					borderToggle = false;
+				}
+				else
+				{
+					borderToggle = true;
+				}
+
+				displayBorder();
+
+				if(checkStorage() == true)
+				{
+					localStorage.setItem("userBorderPreference", borderToggle);
+				}
+	        }
+		},
+	]
+
+	customizeTargets.sort(sortAlphabetically);
+
 	commands = 
 	[
 		{
@@ -127,59 +178,66 @@ function initialize()
 	        }
 		},
 		{
-			name: "tban",
-			display: true,
-			argumentsNeeded: 0,
-			function: () => 
-	        {
-	        	if(bannerToggle == true)
-				{
-					bannerToggle = false;
-				}
-				else
-				{
-					bannerToggle = true;
-				}
-
-				displayBanner();
-				synchro();
-
-				if(checkStorage() == true)
-				{
-					localStorage.setItem("userBannerPreference", bannerToggle);
-				}
-	        }
-		},
-		{
-			name: "tbor",
-			display: true,
-			argumentsNeeded: 0,
-			function: () => 
-	        {
-	        	if(borderToggle == true)
-				{
-					borderToggle = false;
-				}
-				else
-				{
-					borderToggle = true;
-				}
-
-				displayBorder();
-
-				if(checkStorage() == true)
-				{
-					localStorage.setItem("userBorderPreference", borderToggle);
-				}
-	        }
-		},
-		{
 			name: "reload",
 			display: true,
 			argumentsNeeded: 0,
 			function: () => 
 	        {
 	        	window.location.href = "./index.html";
+	        }
+		},
+		{
+			name: "cstm",
+			display: true,
+			argumentsNeeded: 1,
+			function: (splitCommand) => 
+	        {
+	        	if(splitCommand.length > 1)
+	        	{
+	        		customizeTarget = customizeTargets.find(target => target.name === splitCommand[1].toLowerCase());
+
+					if(customizeTarget)
+					{
+						customizeTarget.function();
+					}
+					else
+					{
+						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+						consoleString.innerHTML += "invalid cstm argument: " + splitCommand[1];
+						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+					}
+	        	}
+	        	else
+	        	{
+	        		let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+					consoleString.innerHTML += "cstm options:" + "\n";
+					consoleString.appendChild(consoleDecorSeperatorElement(13, false));
+
+					customizeTargets.forEach((target) => 
+		        	{
+		        		if(target.display === true)
+		        		{
+		        			consoleString.innerHTML += "\n     " + target.name;
+		        		}
+		        	});	
+
+					consoleString.innerHTML += "\n";
+					consoleString.appendChild(consoleDecorSeperatorElement(13, false))
+					consoleString.innerHTML += "\n";
+
+					let exampleTarget = [];
+
+					customizeTargets.forEach((target) => 
+		        	{
+		        		if(target.display === true)
+		        		{
+		        			exampleTarget.push(target.name);
+		        		}
+		        	});
+
+					consoleString.innerHTML += "     ex: cstm " + exampleTarget[(Math.floor(Math.random() * exampleTarget.length))];
+					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+	        	}
 	        }
 		},
 		{
@@ -206,8 +264,8 @@ function initialize()
 				else
 				{
 					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-					consoleString.innerHTML += "can launch:" + "\n";
-					consoleString.appendChild(consoleDecorSeperatorElement(11, false));
+					consoleString.innerHTML += "launch options:" + "\n";
+					consoleString.appendChild(consoleDecorSeperatorElement(15, false));
 
 					launchTargets.forEach((target) => 
 		        	{
@@ -218,7 +276,7 @@ function initialize()
 		        	});	
 
 					consoleString.innerHTML += "\n";
-					consoleString.appendChild(consoleDecorSeperatorElement(11, false))
+					consoleString.appendChild(consoleDecorSeperatorElement(15, false))
 					consoleString.innerHTML += "\n";
 
 					let exampleTarget = [];
