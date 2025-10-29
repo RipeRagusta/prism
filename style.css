@@ -1,5 +1,9 @@
 :root{
 	--sizer: 15px;
+	--backgroundcolor: #000d1a;
+	--color: #00ffff;
+	--consolecolor: #ff0000;
+	--usercolor: #00ff00;
 }
 
 html{
@@ -12,17 +16,17 @@ html{
 
 body{
 	font-size: 1rem;
-	background-color: #000d1a;
+	background-color: var(--backgroundcolor);
 	font-family: monospace, arial, sans-serif, serif;
 	display: flex;
 	flex-direction: column;
-	border: 1px solid #00ffff;
+	border: 1px solid var(--color);
 	border: 0px;
 	height: 100%;
 	padding: 0px;
   	margin: 0px;
   	width: 100%;
-  	color: #00ffff;
+  	color: var(--color);
   	box-sizing: border-box;
 }
 
@@ -38,11 +42,11 @@ main{
 a{
 	text-decoration: none;
 	display: inline-block;
-	color: #00ffff;
+	color: var(--color);
 }
 
 a:visited, a:hover, a:active{
-	color: #00ffff;
+	color: var(--color);
 }
 
 pre{
@@ -64,7 +68,7 @@ span{
 header{
 	margin: 0px;
 	overflow: hidden;
-	border-bottom: 1px solid #00ffff;
+	border-bottom: 1px solid var(--color);
 	width: 100%;
 	box-sizing: border-box;
 }
@@ -74,7 +78,7 @@ header{
 }
 
 nav{
-	color: #00ffff;
+	color: var(--color);
 	margin: 0px;
 }
 
@@ -98,7 +102,7 @@ ul{
 }
 
 .section{
-	outline: 1px solid #00ffff;
+	outline: 1px solid var(--color);
 	outline-offset: -1px;
 }
 
@@ -133,18 +137,18 @@ p{
 #buttonforother{
 	margin-top: auto;
 	box-sizing: border-box;
-	border: 1px solid #00ffff;
+	border: 1px solid var(--color);
 	padding: calc(var(--sizer) / 3);
 }
 
 #buttonforother:hover{
-	color: #00ff00;
-	border: 1px solid #00ff00;
+	color: var(--usercolor);
+	border: 1px solid var(--usercolor);
 }
 
 #buttonforother:active{
-	color: #ff0000;
-	border: 1px solid #ff0000;
+	color: var(--consolecolor);
+	border: 1px solid var(--consolecolor);
 }
 
 #consolehistory{
@@ -165,8 +169,8 @@ p{
 	width: 100%;
 	margin: 0px;
 	padding: 0px;
-	background-color: #000d1a;
-	color: #00ffff;
+	background-color: var(--backgroundcolor);
+	color: var(--color);
 	outline: none;
 	border: none;
 	overflow: hidden;

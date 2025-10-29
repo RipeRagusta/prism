@@ -100,6 +100,72 @@ function initialize()
 				}
 	        }
 		},
+		{
+			name: "gtheme",
+			display: true,
+			function: () => 
+	        {
+				document.documentElement.style.setProperty('--backgroundcolor', "#000000");
+				document.documentElement.style.setProperty('--color', "#00ff00");
+				document.documentElement.style.setProperty('--consolecolor', "#ff0000");
+				document.documentElement.style.setProperty('--usercolor', "#0000ff");
+	        }
+		},
+		{
+			name: "dtheme",
+			display: true,
+			function: () => 
+	        {
+				document.documentElement.style.setProperty('--backgroundcolor', "#000d1a");
+				document.documentElement.style.setProperty('--color', "#00ffff");
+				document.documentElement.style.setProperty('--consolecolor', "#ff0000");
+				document.documentElement.style.setProperty('--usercolor', "#00ff00");
+	        }
+		},
+		{
+			name: "rtheme",
+			display: true,
+			function: () => 
+	        {
+				document.documentElement.style.setProperty('--backgroundcolor', "#000000");
+				document.documentElement.style.setProperty('--color', "#ff0000");
+				document.documentElement.style.setProperty('--consolecolor', "#0000ff");
+				document.documentElement.style.setProperty('--usercolor', "#00ff00");
+	        }
+		},
+		{
+			name: "ptheme",
+			display: true,
+			function: () => 
+	        {
+				document.documentElement.style.setProperty('--backgroundcolor', "#000000");
+				document.documentElement.style.setProperty('--color', "#cc00cc");
+				document.documentElement.style.setProperty('--consolecolor', "#ff0000");
+				document.documentElement.style.setProperty('--usercolor', "#00ff00");
+	        }
+		},
+		{
+			name: "btheme",
+			display: true,
+			function: () => 
+	        {
+				document.documentElement.style.setProperty('--backgroundcolor', "#000000");
+				document.documentElement.style.setProperty('--color', "#0000ff");
+				document.documentElement.style.setProperty('--consolecolor', "#ff0000");
+				document.documentElement.style.setProperty('--usercolor', "#00ff00");
+	        }
+		},
+		{
+			name: "bwtheme",
+			display: true,
+			function: () => 
+	        {
+				document.documentElement.style.setProperty('--backgroundcolor', "#000000");
+				document.documentElement.style.setProperty('--color', "#ffffff");
+				document.documentElement.style.setProperty('--consolecolor', "#ff0000");
+				document.documentElement.style.setProperty('--usercolor', "#00ff00");
+	        }
+		}
 	]
 
 	customizeTargets.sort(sortAlphabetically);
@@ -421,7 +487,7 @@ function consoleDecorStringElement()
 {
 	let decorString = document.createElement("pre");
 	decorString.textContent = "::::\u00A0";
-	decorString.style.color = "#ff0000";
+	decorString.style.color = "var(--consolecolor)";
 	decorString.style.display = "inline";
 	return decorString;
 }
@@ -457,7 +523,7 @@ function userDecorStringElement()
 {
 	let decorString = document.createElement("pre");
 	decorString.textContent = "--\u00A0";
-	decorString.style.color = "#00ff00";
+	decorString.style.color = "var(--usercolor)";
 	decorString.style.display = "inline";
 	return decorString;
 }
@@ -540,7 +606,7 @@ function commandEnter(commandEntered)
 	{
 		let consoleString = document.createElement("pre");
 		consoleString.textContent = "--";
-		consoleString.style.color = "#00ff00";
+		consoleString.style.color = "var(--usercolor)";
 		printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 	}
 	else
@@ -671,7 +737,7 @@ function displayBorder()
 {
 	if(borderToggle == true)
 	{
-		document.body.style.border = "1px solid #00ffff";
+		document.body.style.border = "1px solid var(--color)";
 	}
 	else
 	{
