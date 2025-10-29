@@ -3,6 +3,7 @@ var pastCommandsIncrement;
 var pastCommandsPointer;
 var commands;
 var launchTargets;
+var themeVariations;
 var selectPast;
 var clickedConsoleFirst;
 var bannerToggle;
@@ -11,6 +12,7 @@ var ALLOW_WRAP;
 var PREVENT_WRAP;
 var PRINT_MESSAGE_WITH_SPACE;
 var PRINT_MESSAGE_WITHOUT_SPACE;
+var currentTheme;
 
 function initialize()
 {
@@ -52,6 +54,52 @@ function initialize()
 	];
 
 	launchTargets.sort(sortAlphabetically);
+
+	themeVariations = 
+	[
+		{
+			name: "dtheme",
+			backgroundColor: "#000d1a",
+			color: "#00ffff",
+			consoleColor: "#ff0000",
+			userColor: "#00ff00"
+		},
+		{
+			name: "btheme",
+			backgroundColor: "#000000",
+			color: "#0000ff",
+			consoleColor: "#ff0000",
+			userColor: "#00ff00"
+		},
+		{
+			name: "ptheme",
+			backgroundColor: "#000000",
+			color: "#cc00cc",
+			consoleColor: "#ff0000",
+			userColor: "#00ff00"
+		},
+		{
+			name: "rtheme",
+			backgroundColor: "#000000",
+			color: "#ff0000",
+			consoleColor: "#0000ff",
+			userColor: "#00ff00"
+		},
+		{
+			name: "gtheme",
+			backgroundColor: "#000000",
+			color: "#00ff00",
+			consoleColor: "#ff0000",
+			userColor: "#0000ff"
+		},
+		{
+			name: "bwtheme",
+			backgroundColor: "#000000",
+			color: "#ffffff",
+			consoleColor: "#ff0000",
+			userColor: "#00ff00"
+		}
+	];
 
 	customizeTargets = 
 	[
@@ -105,10 +153,8 @@ function initialize()
 			display: true,
 			function: () => 
 	        {
-				document.documentElement.style.setProperty('--backgroundcolor', "#000000");
-				document.documentElement.style.setProperty('--color', "#00ff00");
-				document.documentElement.style.setProperty('--consolecolor', "#ff0000");
-				document.documentElement.style.setProperty('--usercolor', "#0000ff");
+	        	currentTheme = "gtheme";
+	        	changeThemeFromName(currentTheme);
 	        }
 		},
 		{
@@ -116,43 +162,35 @@ function initialize()
 			display: true,
 			function: () => 
 	        {
-				document.documentElement.style.setProperty('--backgroundcolor', "#000d1a");
-				document.documentElement.style.setProperty('--color', "#00ffff");
-				document.documentElement.style.setProperty('--consolecolor', "#ff0000");
-				document.documentElement.style.setProperty('--usercolor', "#00ff00");
+				currentTheme = "dtheme";
+	        	changeThemeFromName(currentTheme);
 	        }
 		},
 		{
 			name: "rtheme",
-			display: true,
+			display: false,
 			function: () => 
 	        {
-				document.documentElement.style.setProperty('--backgroundcolor', "#000000");
-				document.documentElement.style.setProperty('--color', "#ff0000");
-				document.documentElement.style.setProperty('--consolecolor', "#0000ff");
-				document.documentElement.style.setProperty('--usercolor', "#00ff00");
+				currentTheme = "rtheme";
+	        	changeThemeFromName(currentTheme);
 	        }
 		},
 		{
 			name: "ptheme",
-			display: true,
+			display: false,
 			function: () => 
 	        {
-				document.documentElement.style.setProperty('--backgroundcolor', "#000000");
-				document.documentElement.style.setProperty('--color', "#cc00cc");
-				document.documentElement.style.setProperty('--consolecolor', "#ff0000");
-				document.documentElement.style.setProperty('--usercolor', "#00ff00");
+				currentTheme = "ptheme";
+	        	changeThemeFromName(currentTheme);
 	        }
 		},
 		{
 			name: "btheme",
-			display: true,
+			display: false,
 			function: () => 
 	        {
-				document.documentElement.style.setProperty('--backgroundcolor', "#000000");
-				document.documentElement.style.setProperty('--color', "#0000ff");
-				document.documentElement.style.setProperty('--consolecolor', "#ff0000");
-				document.documentElement.style.setProperty('--usercolor', "#00ff00");
+				currentTheme = "btheme";
+	        	changeThemeFromName(currentTheme);
 	        }
 		},
 		{
@@ -160,10 +198,8 @@ function initialize()
 			display: true,
 			function: () => 
 	        {
-				document.documentElement.style.setProperty('--backgroundcolor', "#000000");
-				document.documentElement.style.setProperty('--color', "#ffffff");
-				document.documentElement.style.setProperty('--consolecolor', "#ff0000");
-				document.documentElement.style.setProperty('--usercolor', "#00ff00");
+				currentTheme = "bwtheme";
+	        	changeThemeFromName(currentTheme);
 	        }
 		}
 	]
@@ -399,6 +435,24 @@ function initialize()
 	}
 
 	displayBorder();
+
+	if(checkStorage() == true)
+	{
+		if((localStorage.getItem("userThemePreference")) === null)
+		{
+			currentTheme = "dtheme";
+		}
+		else
+		{
+			currentTheme = localStorage.getItem("userThemePreference");
+		}
+	}
+	else
+	{
+		currentTheme = "dtheme";
+	}
+
+	changeThemeFromName(currentTheme);
 			
 	document.getElementById("consolewindow").focus();
 
@@ -481,6 +535,28 @@ function initialize()
 	document.getElementById("consolewindow").value = "help";
 	commandEnter(document.getElementById("consolewindow").value);
 	document.getElementById("consolewindow").value = "";
+}
+
+function changeThemeFromName(name)
+{
+	let selectedTheme = themeVariations.find(theme => theme.name === name);
+
+	if(checkStorage() == true)
+	{
+		{
+			localStorage.setItem("userThemePreference", name);
+		}
+	}
+
+	changetheme(selectedTheme.backgroundColor, selectedTheme.color, selectedTheme.consoleColor, selectedTheme.userColor);
+}
+
+function changetheme(backgroundColor, color, consoleColor, userColor)
+{
+	document.documentElement.style.setProperty('--backgroundcolor', backgroundColor);
+	document.documentElement.style.setProperty('--color', color);
+	document.documentElement.style.setProperty('--consolecolor', consoleColor);
+	document.documentElement.style.setProperty('--usercolor', userColor);
 }
 
 function consoleDecorStringElement()
