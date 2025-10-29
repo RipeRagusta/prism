@@ -66,36 +66,36 @@ function initialize()
 		},
 		{
 			name: "btheme",
-			backgroundColor: "#000000",
-			color: "#0000ff",
+			backgroundColor: "#0d0d0d",
+			color: "#0000e6",
 			consoleColor: "#ff0000",
 			userColor: "#00ff00"
 		},
 		{
 			name: "ptheme",
-			backgroundColor: "#000000",
-			color: "#cc00cc",
+			backgroundColor: "#0d0d0d",
+			color: "#e600e6",
 			consoleColor: "#ff0000",
 			userColor: "#00ff00"
 		},
 		{
 			name: "rtheme",
-			backgroundColor: "#000000",
-			color: "#ff0000",
+			backgroundColor: "#0d0d0d",
+			color: "#e60000",
 			consoleColor: "#0000ff",
 			userColor: "#00ff00"
 		},
 		{
 			name: "gtheme",
-			backgroundColor: "#000000",
-			color: "#00ff00",
+			backgroundColor: "#0d0d0d",
+			color: "#00e600",
 			consoleColor: "#ff0000",
-			userColor: "#0000ff"
+			userColor: "#0000e6"
 		},
 		{
 			name: "bwtheme",
-			backgroundColor: "#000000",
-			color: "#ffffff",
+			backgroundColor: "#0d0d0d",
+			color: "#f2f2f2",
 			consoleColor: "#ff0000",
 			userColor: "#00ff00"
 		}
