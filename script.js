@@ -65,6 +65,13 @@ function initialize()
 			userColor: "#00ff00"
 		},
 		{
+			name: "otheme",
+			backgroundColor: "#0d0d0d",
+			color: "#e65c00",
+			consoleColor: "#ff0000",
+			userColor: "#00ff00"
+		},
+		{
 			name: "btheme",
 			backgroundColor: "#0d0d0d",
 			color: "#0000e6",
@@ -72,9 +79,23 @@ function initialize()
 			userColor: "#00ff00"
 		},
 		{
-			name: "ptheme",
+			name: "ytheme",
+			backgroundColor: "#0d0d0d",
+			color: "#e6e600",
+			consoleColor: "#ff0000",
+			userColor: "#00ff00"
+		},
+		{
+			name: "putheme",
 			backgroundColor: "#0d0d0d",
 			color: "#e600e6",
+			consoleColor: "#ff0000",
+			userColor: "#00ff00"
+		},
+		{
+			name: "pitheme",
+			backgroundColor: "#0d0d0d",
+			color: "#ff80ff",
 			consoleColor: "#ff0000",
 			userColor: "#00ff00"
 		},
@@ -176,11 +197,20 @@ function initialize()
 	        }
 		},
 		{
-			name: "ptheme",
+			name: "putheme",
 			display: false,
 			function: () => 
 	        {
-				currentTheme = "ptheme";
+				currentTheme = "putheme";
+	        	changeThemeFromName(currentTheme);
+	        }
+		},
+		{
+			name: "pitheme",
+			display: false,
+			function: () => 
+	        {
+				currentTheme = "pitheme";
 	        	changeThemeFromName(currentTheme);
 	        }
 		},
@@ -190,6 +220,24 @@ function initialize()
 			function: () => 
 	        {
 				currentTheme = "btheme";
+	        	changeThemeFromName(currentTheme);
+	        }
+		},
+		{
+			name: "otheme",
+			display: false,
+			function: () => 
+	        {
+				currentTheme = "otheme";
+	        	changeThemeFromName(currentTheme);
+	        }
+		},
+		{
+			name: "ytheme",
+			display: false,
+			function: () => 
+	        {
+				currentTheme = "ytheme";
 	        	changeThemeFromName(currentTheme);
 	        }
 		},
@@ -543,9 +591,7 @@ function changeThemeFromName(name)
 
 	if(checkStorage() == true)
 	{
-		{
-			localStorage.setItem("userThemePreference", name);
-		}
+		localStorage.setItem("userThemePreference", name);
 	}
 
 	changetheme(selectedTheme.backgroundColor, selectedTheme.color, selectedTheme.consoleColor, selectedTheme.userColor);
