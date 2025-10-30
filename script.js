@@ -202,10 +202,9 @@ function initialize()
 		{
 			name: "theme",
 			display: true,
-			argumentsNeeded: 1,
+			argumentsNeeded: -1,
 			function: (commandEntered, splitCommand, commandList) => 
 	        {
-	        	console.log("splitCommand" + splitCommand);
 	        	if(splitCommand.length > 2)
 	        	{
 	        		executeCommand(commandEntered, splitCommand, 2, themeCommands, "cstm theme argument");
@@ -215,8 +214,7 @@ function initialize()
 	        		printCommandListOptions(themeCommands, "cstm theme");
 	        	}
 	        }
-		},
-
+		}
 	];
 
 	cstmCommands.sort(sortAlphabetically);
@@ -306,7 +304,7 @@ function initialize()
 		{
 			name: "cstm",
 			display: true,
-			argumentsNeeded: 5,
+			argumentsNeeded: -1,
 			function: (commandEntered, splitCommand, commandList) => 
 	        {
 	        	if(splitCommand.length > 1)
@@ -322,7 +320,7 @@ function initialize()
 		{
 			name: "launch",
 			display: true,
-			argumentsNeeded: 1,
+			argumentsNeeded: -1,
 			function: (commandEntered, splitCommand, commandList) => 
 	        {
 				if(splitCommand.length > 1)
@@ -487,12 +485,9 @@ function updateLaunchCommands()
 
 function updateThemeCommands()
 {
-	console.log("updating theme commands");
 	for(let i = 0; i < themeTargets.length; i++)
 	{
-		console.log("pass: " + i);
 		themeCommands.push({name: themeTargets[i].name, display: themeTargets[i].display, argumentsNeeded: 0, function: () => {currentTheme = themeTargets[i].name; changeThemeFromName(currentTheme);}});
-		console.log(themeTargets[i].name);
 	}
 }
 
@@ -709,33 +704,40 @@ function commandEnter(commandEntered)
 
 function executeCommand(commandEntered, splitCommand, startingPoint = 0, commandList, errorReason = "input")
 {
-	console.log("executing on: ", "commandEntered: " + commandEntered, "splitCommand: ", splitCommand, "startingPoint: " + startingPoint, "commandList: ", commandList)
 	targetCommand = commandList.find(command => command.name === splitCommand[startingPoint].toLowerCase());
 
-		if(targetCommand)
+	if(targetCommand)
+	{
+		if(!excessArguments(splitCommand, startingPoint, targetCommand))
 		{
-			if(!excessArguments(splitCommand, startingPoint))
-			{
-				targetCommand.function(commandEntered, splitCommand, startingPoint, commandList);
-			}
+			targetCommand.function(commandEntered, splitCommand, startingPoint, commandList);
 		}
-		else
-		{
-			let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-			consoleString.innerHTML += "invalid " + errorReason + ": " + parseExtraSpaces(commandEntered);
-			printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
-			return false;
-		}
+	}
+	else
+	{
+		let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+		consoleString.innerHTML += "invalid " + errorReason + ": " + parseExtraSpaces(commandEntered);
+		printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+		return false;
+	}
 }
 
-function excessArguments(splitCommand, startingPoint)
+function excessArguments(splitCommand, startingPoint, targetCommand)
 {
-	if(splitCommand.length - (startingPoint + 1) > targetCommand.argumentsNeeded)
+	if(targetCommand.argumentsNeeded === -1)
+	{
+		argumentAmountCheck = Number.MAX_SAFE_INTEGER - 1;
+	}
+	else
+	{
+		argumentAmountCheck = targetCommand.argumentsNeeded;
+	}
+	if(splitCommand.length - (startingPoint + 1) > argumentAmountCheck)
 	{
 		let argumentsAdded = "";
 		let argumentWarningMessage = "";
 
-		if(splitCommand.length - (startingPoint + 1) == targetCommand.argumentsNeeded + 1)
+		if(splitCommand.length - (startingPoint + 1) == argumentAmountCheck + 1)
 		{
 			argumentWarningMessage = "excess argument encountered:";
 		}
@@ -744,7 +746,7 @@ function excessArguments(splitCommand, startingPoint)
 			argumentWarningMessage = "excess arguments encountered:";
 		}
 
-		for(let i = targetCommand.argumentsNeeded + (startingPoint + 1); i < splitCommand.length; i++)
+		for(let i = argumentAmountCheck + (startingPoint + 1); i < splitCommand.length; i++)
 		{
 			argumentsAdded += " " + splitCommand[i];
 		}
