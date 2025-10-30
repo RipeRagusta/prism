@@ -726,7 +726,7 @@ function excessArguments(splitCommand, startingPoint, targetCommand)
 {
 	if(targetCommand.argumentsNeeded === -1)
 	{
-		argumentAmountCheck = Number.MAX_SAFE_INTEGER - 1;
+		argumentAmountCheck = Number.MAX_SAFE_INTEGER - 9999;
 	}
 	else
 	{
