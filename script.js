@@ -716,7 +716,7 @@ function executeCommand(commandEntered, splitCommand, startingPoint = 0, command
 	else
 	{
 		let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-		consoleString.innerHTML += "invalid " + errorReason + ": " + parseExtraSpaces(commandEntered);
+		consoleString.innerHTML += "invalid " + errorReason + ": " + splitCommand[startingPoint];
 		printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 		return false;
 	}
