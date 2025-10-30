@@ -710,7 +710,7 @@ function commandEnter(commandEntered)
 function executeCommand(commandEntered, splitCommand, startingPoint = 0, commandList, errorReason = "input")
 {
 	console.log("executing on: ", "commandEntered: " + commandEntered, "splitCommand: ", splitCommand, "startingPoint: " + startingPoint, "commandList: ", commandList)
-	targetCommand = commandList.find(command => command.name === splitCommand[startingPoint]);
+	targetCommand = commandList.find(command => command.name === splitCommand[startingPoint].toLowerCase());
 
 		if(targetCommand)
 		{
