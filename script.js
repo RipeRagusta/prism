@@ -4,7 +4,7 @@ var pastCommandsPointer;
 var commands;
 var launchTargets;
 var themeCommands;
-var themeVariations;
+var themeTargets;
 var selectPast;
 var clickedConsoleFirst;
 var bannerToggle;
@@ -14,6 +14,7 @@ var PREVENT_WRAP;
 var PRINT_MESSAGE_WITH_SPACE;
 var PRINT_MESSAGE_WITHOUT_SPACE;
 var currentTheme;
+var LAUNCHTARGETSINNEWWINDOW;
 
 function initialize()
 {
@@ -26,6 +27,22 @@ function initialize()
 	pastCommandsPointer = 0;
 	selectPast = false;
 	clickedConsoleFirst = false;
+
+	if(checkStorage() == true)
+	{
+		if((localStorage.getItem("userLaunchPreference")) === null)
+		{
+			LAUNCHTARGETSINNEWWINDOW = false;
+		}
+		else
+		{
+			LAUNCHTARGETSINNEWWINDOW = localStorage.getItem("userLaunchPreference");
+		}
+	}
+	else
+	{
+		LAUNCHTARGETSINNEWWINDOW = false;
+	}
 
 	const sortAlphabetically = (a, b) => 
 	{
@@ -56,66 +73,84 @@ function initialize()
 
 	launchTargets.sort(sortAlphabetically);
 
-	themeVariations = 
+	launchCommands = 
+	[
+
+	];
+
+	updateLaunchCommands();
+
+	launchCommands.sort(sortAlphabetically);
+
+	themeTargets = 
 	[
 		{
-			name: "dtheme",
+			name: "default",
+			display: true,
 			backgroundColor: "#000d1a",
 			color: "#00ffff",
 			consoleColor: "#ff0000",
 			userColor: "#00ff00"
 		},
 		{
-			name: "otheme",
+			name: "orng",
+			display: true,
 			backgroundColor: "#0d0d0d",
-			color: "#e65c00",
+			color: "#ff6600",
 			consoleColor: "#ff0000",
 			userColor: "#00ff00"
 		},
 		{
-			name: "btheme",
+			name: "blue",
+			display: true,
 			backgroundColor: "#0d0d0d",
-			color: "#0000e6",
+			color: "#1a1aff",
 			consoleColor: "#ff0000",
 			userColor: "#00ff00"
 		},
 		{
-			name: "ytheme",
+			name: "yllw",
+			display: true,
 			backgroundColor: "#0d0d0d",
-			color: "#e6e600",
+			color: "#ffff00",
 			consoleColor: "#ff0000",
 			userColor: "#00ff00"
 		},
 		{
-			name: "putheme",
+			name: "prpl",
+			display: true,
 			backgroundColor: "#0d0d0d",
 			color: "#e600e6",
 			consoleColor: "#ff0000",
 			userColor: "#00ff00"
 		},
 		{
-			name: "pitheme",
+			name: "pink",
+			display: true,
 			backgroundColor: "#0d0d0d",
 			color: "#ff80ff",
 			consoleColor: "#ff0000",
 			userColor: "#00ff00"
 		},
 		{
-			name: "rtheme",
+			name: "red",
+			display: true,
 			backgroundColor: "#0d0d0d",
-			color: "#e60000",
+			color: "#ff0000",
 			consoleColor: "#0000ff",
 			userColor: "#00ff00"
 		},
 		{
-			name: "gtheme",
+			name: "grn",
+			display: true,
 			backgroundColor: "#0d0d0d",
 			color: "#00e600",
 			consoleColor: "#ff0000",
 			userColor: "#0000e6"
 		},
 		{
-			name: "bwtheme",
+			name: "bw",
+			display: true,
 			backgroundColor: "#0d0d0d",
 			color: "#f2f2f2",
 			consoleColor: "#ff0000",
@@ -125,97 +160,10 @@ function initialize()
 
 	themeCommands = 
 	[
-		{
-			name: "g",
-			display: true,
-			argumentsNeeded: 0,
-			function: () =>
-			{
-				currentTheme = "gtheme";
-	        	changeThemeFromName(currentTheme);
-			}
-		},
-		{
-			name: "bw",
-			display: true,
-			argumentsNeeded: 0,
-			function: () =>
-			{
-				currentTheme = "bwtheme";
-	        	changeThemeFromName(currentTheme);
-			}
-		},
-		{
-			name: "default",
-			display: true,
-			argumentsNeeded: 0,
-			function: () =>
-			{
-				currentTheme = "dtheme";
-	        	changeThemeFromName(currentTheme);
-			}
-		},
-		{
-			name: "y",
-			display: true,
-			argumentsNeeded: 0,
-			function: () =>
-			{
-				currentTheme = "ytheme";
-	        	changeThemeFromName(currentTheme);
-			}
-		},
-		{
-			name: "r",
-			display: true,
-			argumentsNeeded: 0,
-			function: () =>
-			{
-				currentTheme = "rtheme";
-	        	changeThemeFromName(currentTheme);
-			}
-		},
-		{
-			name: "o",
-			display: true,
-			argumentsNeeded: 0,
-			function: () =>
-			{
-				currentTheme = "otheme";
-	        	changeThemeFromName(currentTheme);
-			}
-		},
-		{
-			name: "b",
-			display: true,
-			argumentsNeeded: 0,
-			function: () =>
-			{
-				currentTheme = "btheme";
-	        	changeThemeFromName(currentTheme);
-			}
-		},
-		{
-			name: "pi",
-			display: true,
-			argumentsNeeded: 0,
-			function: () =>
-			{
-				currentTheme = "pitheme";
-	        	changeThemeFromName(currentTheme);
-			}
-		},
-		{
-			name: "pu",
-			display: true,
-			argumentsNeeded: 0,
-			function: () =>
-			{
-				currentTheme = "putheme";
-	        	changeThemeFromName(currentTheme);
-			}
-		}
+		
 	];
+
+	updateThemeCommands();
 
 	themeCommands.sort(sortAlphabetically);
 
@@ -396,22 +344,11 @@ function initialize()
 	        {
 				if(splitCommand.length > 1)
 				{
-					launchTarget = launchTargets.find(target => target.name === splitCommand[1].toLowerCase());
-
-					if(launchTarget)
-					{
-						window.location.href = launchTarget.url;
-					}
-					else
-					{
-						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-						consoleString.innerHTML += "invalid launch argument: " + splitCommand[1];
-						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
-					}
+					executeCommand(commandEntered, splitCommand, 1, launchCommands, "launch argument");
 				}
 				else
 				{
-					printCommandListOptions(launchTargets, "launch");
+					printCommandListOptions(launchCommands, "launch");
 				}
 	        }
 		}
@@ -459,7 +396,7 @@ function initialize()
 	{
 		if((localStorage.getItem("userThemePreference")) === null)
 		{
-			currentTheme = "dtheme";
+			currentTheme = "default";
 		}
 		else
 		{
@@ -468,7 +405,7 @@ function initialize()
 	}
 	else
 	{
-		currentTheme = "dtheme";
+		currentTheme = "default";
 	}
 
 	changeThemeFromName(currentTheme);
@@ -557,6 +494,41 @@ function initialize()
 	adjustConsoleWindow();
 }
 
+function updateLaunchCommands()
+{
+	for(let i = 0; i < launchTargets.length; i++)
+	{
+		launchCommands.push({name: launchTargets[i].name, display: launchTargets[i].display, argumentsNeeded: 0, function: () => {launchATarget(launchTargets[i].name);}});
+	}
+}
+
+function updateThemeCommands()
+{
+	console.log("updating theme commands");
+	for(let i = 0; i < themeTargets.length; i++)
+	{
+		console.log("pass: " + i);
+		themeCommands.push({name: themeTargets[i].name, display: themeTargets[i].display, argumentsNeeded: 0, function: () => {currentTheme = themeTargets[i].name; changeThemeFromName(currentTheme);}});
+		console.log(themeTargets[i].name);
+	}
+}
+
+function launchATarget(targetName)
+{
+	launchTarget = launchTargets.find(target => target.name === targetName);
+
+	if(launchTarget)
+	{
+		window.location.href = launchTarget.url;
+	}
+	else
+	{
+		let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+		consoleString.innerHTML += "invalid launch argument: " + splitCommand[1];
+		printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+	}
+}
+
 function printCommandListOptions(commandList, commandName)
 {
 	let consoleString = createHistoryMessage("console", PREVENT_WRAP);
@@ -592,7 +564,7 @@ function printCommandListOptions(commandList, commandName)
 
 function changeThemeFromName(name)
 {
-	let selectedTheme = themeVariations.find(theme => theme.name === name);
+	let selectedTheme = themeTargets.find(theme => theme.name === name);
 
 	if(checkStorage() == true)
 	{
