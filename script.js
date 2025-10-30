@@ -14,7 +14,6 @@ var PREVENT_WRAP;
 var PRINT_MESSAGE_WITH_SPACE;
 var PRINT_MESSAGE_WITHOUT_SPACE;
 var currentTheme;
-var LAUNCHTARGETSINNEWWINDOW;
 
 function initialize()
 {
@@ -27,22 +26,6 @@ function initialize()
 	pastCommandsPointer = 0;
 	selectPast = false;
 	clickedConsoleFirst = false;
-
-	if(checkStorage() == true)
-	{
-		if((localStorage.getItem("userLaunchPreference")) === null)
-		{
-			LAUNCHTARGETSINNEWWINDOW = false;
-		}
-		else
-		{
-			LAUNCHTARGETSINNEWWINDOW = localStorage.getItem("userLaunchPreference");
-		}
-	}
-	else
-	{
-		LAUNCHTARGETSINNEWWINDOW = false;
-	}
 
 	const sortAlphabetically = (a, b) => 
 	{
