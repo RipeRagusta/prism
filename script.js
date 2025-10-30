@@ -3,6 +3,7 @@ var pastCommandsIncrement;
 var pastCommandsPointer;
 var commands;
 var launchTargets;
+var themeCommands;
 var themeVariations;
 var selectPast;
 var clickedConsoleFirst;
@@ -50,7 +51,7 @@ function initialize()
 		{ name: "fp2rbpr", url: "./fp/index.html", display: false},
 		{ name: "housecall", url: "./housecall/index.html", display: true},
 		{ name: "jumpgame", url: "./jumpgame/index.html", display: false},
-		{ name: "vp1", url: "https://ragusta.com/index.html", display: false},
+		{ name: "vp1", url: "https://ragusta.com/index.html", display: false}
 	];
 
 	launchTargets.sort(sortAlphabetically);
@@ -122,11 +123,108 @@ function initialize()
 		}
 	];
 
-	customizeTargets = 
+	themeCommands = 
+	[
+		{
+			name: "g",
+			display: true,
+			argumentsNeeded: 0,
+			function: () =>
+			{
+				currentTheme = "gtheme";
+	        	changeThemeFromName(currentTheme);
+			}
+		},
+		{
+			name: "bw",
+			display: true,
+			argumentsNeeded: 0,
+			function: () =>
+			{
+				currentTheme = "bwtheme";
+	        	changeThemeFromName(currentTheme);
+			}
+		},
+		{
+			name: "default",
+			display: true,
+			argumentsNeeded: 0,
+			function: () =>
+			{
+				currentTheme = "dtheme";
+	        	changeThemeFromName(currentTheme);
+			}
+		},
+		{
+			name: "y",
+			display: true,
+			argumentsNeeded: 0,
+			function: () =>
+			{
+				currentTheme = "ytheme";
+	        	changeThemeFromName(currentTheme);
+			}
+		},
+		{
+			name: "r",
+			display: true,
+			argumentsNeeded: 0,
+			function: () =>
+			{
+				currentTheme = "rtheme";
+	        	changeThemeFromName(currentTheme);
+			}
+		},
+		{
+			name: "o",
+			display: true,
+			argumentsNeeded: 0,
+			function: () =>
+			{
+				currentTheme = "otheme";
+	        	changeThemeFromName(currentTheme);
+			}
+		},
+		{
+			name: "b",
+			display: true,
+			argumentsNeeded: 0,
+			function: () =>
+			{
+				currentTheme = "btheme";
+	        	changeThemeFromName(currentTheme);
+			}
+		},
+		{
+			name: "pi",
+			display: true,
+			argumentsNeeded: 0,
+			function: () =>
+			{
+				currentTheme = "pitheme";
+	        	changeThemeFromName(currentTheme);
+			}
+		},
+		{
+			name: "pu",
+			display: true,
+			argumentsNeeded: 0,
+			function: () =>
+			{
+				currentTheme = "putheme";
+	        	changeThemeFromName(currentTheme);
+			}
+		}
+	];
+
+	themeCommands.sort(sortAlphabetically);
+
+	cstmCommands = 
 	[
 		{
 			name: "tban",
 			display: true,
+			argumentsNeeded: 0,
 			function: () => 
 	        {
 	        	if(bannerToggle == true)
@@ -150,6 +248,7 @@ function initialize()
 		{
 			name: "tbor",
 			display: false,
+			argumentsNeeded: 0,
 			function: () => 
 	        {
 	        	if(borderToggle == true)
@@ -170,89 +269,26 @@ function initialize()
 	        }
 		},
 		{
-			name: "gtheme",
+			name: "theme",
 			display: true,
-			function: () => 
+			argumentsNeeded: 1,
+			function: (commandEntered, splitCommand, commandList) => 
 	        {
-	        	currentTheme = "gtheme";
-	        	changeThemeFromName(currentTheme);
+	        	console.log("splitCommand" + splitCommand);
+	        	if(splitCommand.length > 2)
+	        	{
+	        		executeCommand(commandEntered, splitCommand, 2, themeCommands, "cstm theme argument");
+	        	}
+	        	else
+	        	{
+	        		printCommandListOptions(themeCommands, "cstm theme");
+	        	}
 	        }
 		},
-		{
-			name: "dtheme",
-			display: true,
-			function: () => 
-	        {
-				currentTheme = "dtheme";
-	        	changeThemeFromName(currentTheme);
-	        }
-		},
-		{
-			name: "rtheme",
-			display: false,
-			function: () => 
-	        {
-				currentTheme = "rtheme";
-	        	changeThemeFromName(currentTheme);
-	        }
-		},
-		{
-			name: "putheme",
-			display: false,
-			function: () => 
-	        {
-				currentTheme = "putheme";
-	        	changeThemeFromName(currentTheme);
-	        }
-		},
-		{
-			name: "pitheme",
-			display: false,
-			function: () => 
-	        {
-				currentTheme = "pitheme";
-	        	changeThemeFromName(currentTheme);
-	        }
-		},
-		{
-			name: "btheme",
-			display: false,
-			function: () => 
-	        {
-				currentTheme = "btheme";
-	        	changeThemeFromName(currentTheme);
-	        }
-		},
-		{
-			name: "otheme",
-			display: false,
-			function: () => 
-	        {
-				currentTheme = "otheme";
-	        	changeThemeFromName(currentTheme);
-	        }
-		},
-		{
-			name: "ytheme",
-			display: false,
-			function: () => 
-	        {
-				currentTheme = "ytheme";
-	        	changeThemeFromName(currentTheme);
-	        }
-		},
-		{
-			name: "bwtheme",
-			display: true,
-			function: () => 
-	        {
-				currentTheme = "bwtheme";
-	        	changeThemeFromName(currentTheme);
-	        }
-		}
-	]
 
-	customizeTargets.sort(sortAlphabetically);
+	];
+
+	cstmCommands.sort(sortAlphabetically);
 
 	commands = 
 	[
@@ -339,54 +375,16 @@ function initialize()
 		{
 			name: "cstm",
 			display: true,
-			argumentsNeeded: 1,
-			function: (splitCommand) => 
+			argumentsNeeded: 5,
+			function: (commandEntered, splitCommand, commandList) => 
 	        {
 	        	if(splitCommand.length > 1)
 	        	{
-	        		customizeTarget = customizeTargets.find(target => target.name === splitCommand[1].toLowerCase());
-
-					if(customizeTarget)
-					{
-						customizeTarget.function();
-					}
-					else
-					{
-						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-						consoleString.innerHTML += "invalid cstm argument: " + splitCommand[1];
-						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
-					}
+	        		executeCommand(commandEntered, splitCommand, 1, cstmCommands, "cstm argument");
 	        	}
 	        	else
 	        	{
-	        		let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-					consoleString.innerHTML += "cstm options:" + "\n";
-					consoleString.appendChild(consoleDecorSeperatorElement(13, false));
-
-					customizeTargets.forEach((target) => 
-		        	{
-		        		if(target.display === true)
-		        		{
-		        			consoleString.innerHTML += "\n     " + target.name;
-		        		}
-		        	});	
-
-					consoleString.innerHTML += "\n";
-					consoleString.appendChild(consoleDecorSeperatorElement(13, false))
-					consoleString.innerHTML += "\n";
-
-					let exampleTarget = [];
-
-					customizeTargets.forEach((target) => 
-		        	{
-		        		if(target.display === true)
-		        		{
-		        			exampleTarget.push(target.name);
-		        		}
-		        	});
-
-					consoleString.innerHTML += "     ex: cstm " + exampleTarget[(Math.floor(Math.random() * exampleTarget.length))];
-					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+	        		printCommandListOptions(cstmCommands, "cstm");
 	        	}
 	        }
 		},
@@ -394,7 +392,7 @@ function initialize()
 			name: "launch",
 			display: true,
 			argumentsNeeded: 1,
-			function: (splitCommand) => 
+			function: (commandEntered, splitCommand, commandList) => 
 	        {
 				if(splitCommand.length > 1)
 				{
@@ -413,34 +411,7 @@ function initialize()
 				}
 				else
 				{
-					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-					consoleString.innerHTML += "launch options:" + "\n";
-					consoleString.appendChild(consoleDecorSeperatorElement(15, false));
-
-					launchTargets.forEach((target) => 
-		        	{
-		        		if(target.display === true)
-		        		{
-		        			consoleString.innerHTML += "\n     " + target.name;
-		        		}
-		        	});	
-
-					consoleString.innerHTML += "\n";
-					consoleString.appendChild(consoleDecorSeperatorElement(15, false))
-					consoleString.innerHTML += "\n";
-
-					let exampleTarget = [];
-
-					launchTargets.forEach((target) => 
-		        	{
-		        		if(target.display === true)
-		        		{
-		        			exampleTarget.push(target.name);
-		        		}
-		        	});
-
-					consoleString.innerHTML += "     ex: launch " + exampleTarget[(Math.floor(Math.random() * exampleTarget.length))];
-					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+					printCommandListOptions(launchTargets, "launch");
 				}
 	        }
 		}
@@ -584,6 +555,39 @@ function initialize()
 	commandEnter(document.getElementById("consolewindow").value);
 	document.getElementById("consolewindow").value = "";
 	adjustConsoleWindow();
+}
+
+function printCommandListOptions(commandList, commandName)
+{
+	let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+	let consoleOptionsMessage = commandName + " options:";
+	consoleString.innerHTML += consoleOptionsMessage + "\n";
+	consoleString.appendChild(consoleDecorSeperatorElement(consoleOptionsMessage.length, false));
+
+	commandList.forEach((target) => 
+	{
+		if(target.display === true)
+		{
+			consoleString.innerHTML += "\n     " + target.name;
+		}
+	});	
+
+	consoleString.innerHTML += "\n";
+	consoleString.appendChild(consoleDecorSeperatorElement(consoleOptionsMessage.length, false))
+	consoleString.innerHTML += "\n";
+
+	let exampleTarget = [];
+
+	commandList.forEach((target) => 
+	{
+		if(target.display === true)
+		{
+			exampleTarget.push(target.name);
+		}
+	});
+
+	consoleString.innerHTML += "     ex: " + commandName + " " + exampleTarget[(Math.floor(Math.random() * exampleTarget.length))];
+	printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 }
 
 function changeThemeFromName(name)
@@ -742,44 +746,58 @@ function commandEnter(commandEntered)
 
 		printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 
-		targetCommand = commands.find(command => command.name === splitCommand[0].toLowerCase());
+		executeCommand(commandEntered, splitCommand, 0, commands, "input");
 		
+		
+	}
+}
+
+function executeCommand(commandEntered, splitCommand, startingPoint = 0, commandList, errorReason = "input")
+{
+	console.log("executing on: ", "commandEntered: " + commandEntered, "splitCommand: ", splitCommand, "startingPoint: " + startingPoint, "commandList: ", commandList)
+	targetCommand = commandList.find(command => command.name === splitCommand[startingPoint]);
+
 		if(targetCommand)
 		{
-			if(splitCommand.length - 1 > targetCommand.argumentsNeeded)
+			if(!excessArguments(splitCommand, startingPoint))
 			{
-				let argumentsAdded = "";
-				let argumentWarningMessage = "";
-
-				if(splitCommand.length - 1 == targetCommand.argumentsNeeded + 1)
-				{
-					argumentWarningMessage = "excess argument encountered:";
-				}
-				else
-				{
-					argumentWarningMessage = "excess arguments encountered:";
-				}
-
-				for(let i = targetCommand.argumentsNeeded + 1; i < splitCommand.length; i++)
-				{
-					argumentsAdded += " " + splitCommand[i];
-				}
-
-				let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-				consoleString.innerHTML += argumentWarningMessage + argumentsAdded;
-				printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+				targetCommand.function(commandEntered, splitCommand, startingPoint, commandList);
 			}
-			else
-			{
-				targetCommand.function(splitCommand);
-			}			
 		}
 		else
 		{
 			let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-			consoleString.innerHTML += "invalid input: " + parseExtraSpaces(commandEntered);
+			consoleString.innerHTML += "invalid " + errorReason + ": " + parseExtraSpaces(commandEntered);
 			printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+			return false;
 		}
+}
+
+function excessArguments(splitCommand, startingPoint)
+{
+	if(splitCommand.length - (startingPoint + 1) > targetCommand.argumentsNeeded)
+	{
+		let argumentsAdded = "";
+		let argumentWarningMessage = "";
+
+		if(splitCommand.length - (startingPoint + 1) == targetCommand.argumentsNeeded + 1)
+		{
+			argumentWarningMessage = "excess argument encountered:";
+		}
+		else
+		{
+			argumentWarningMessage = "excess arguments encountered:";
+		}
+
+		for(let i = targetCommand.argumentsNeeded + (startingPoint + 1); i < splitCommand.length; i++)
+		{
+			argumentsAdded += " " + splitCommand[i];
+		}
+
+		let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+		consoleString.innerHTML += argumentWarningMessage + argumentsAdded;
+		printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+		return true;
 	}
 }
 
