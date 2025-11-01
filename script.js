@@ -392,16 +392,16 @@ function initialize()
 
 						launchCommands.sort(sortAlphabetically);
 
-						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+						let consoleString = createHistoryMessage("console", PREVENT_WRAP);
 						consoleString.innerHTML += "successfully set: " + splitCommand[1] + " " + splitCommand[2];
-						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+						printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 					}
 	        	}
 				else
 				{
-					let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
 					consoleString.innerHTML += "ex: setlaunch totalprism https://totalprism.com";
-					printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 				}
 	        }
 		},
@@ -442,16 +442,16 @@ function initialize()
 
 						launchCommands.sort(sortAlphabetically);
 
-						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+						let consoleString = createHistoryMessage("console", PREVENT_WRAP);
 						consoleString.innerHTML += "successfully removed: " + splitCommand[1];
-						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+						printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 					}
 				}
 				else
 				{
-					let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
 					consoleString.innerHTML += "ex: removelaunch totalprism";
-					printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 				}
 	        }
 		},
@@ -490,9 +490,9 @@ function initialize()
 					launchCommands.sort(sortAlphabetically);
 				}
 
-				let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+				let consoleString = createHistoryMessage("console", PREVENT_WRAP);
 				consoleString.innerHTML += "successfully reset";
-				printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+				printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 	        }
 		}
 	];
