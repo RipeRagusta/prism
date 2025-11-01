@@ -168,7 +168,7 @@ function initialize()
 			name: "brwn",
 			display: true,
 			backgroundColor: "#0d0d0d",
-			color: "#994d00",
+			color: "#804000",
 			consoleColor: "#ff0000",
 			userColor: "#00ff00"
 		}
