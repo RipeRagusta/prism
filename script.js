@@ -163,6 +163,14 @@ function initialize()
 			color: "#f2f2f2",
 			consoleColor: "#ff0000",
 			userColor: "#00ff00"
+		},
+		{
+			name: "brwn",
+			display: true,
+			backgroundColor: "#0d0d0d",
+			color: "#994d00",
+			consoleColor: "#ff0000",
+			userColor: "#00ff00"
 		}
 	];
 
