@@ -393,7 +393,7 @@ function initialize()
 						launchCommands.sort(sortAlphabetically);
 
 						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-						consoleString.innerHTML += "succesfully added: " + splitCommand[1] + " " + splitCommand[2];
+						consoleString.innerHTML += "successfully set: " + splitCommand[1] + " " + splitCommand[2];
 						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 					}
 	        	}
@@ -443,7 +443,7 @@ function initialize()
 						launchCommands.sort(sortAlphabetically);
 
 						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-						consoleString.innerHTML += "succesfully removed: " + splitCommand[1];
+						consoleString.innerHTML += "successfully removed: " + splitCommand[1];
 						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 					}
 				}
@@ -458,7 +458,7 @@ function initialize()
 		{
 			name: "resetlaunch",
 			display: true,
-			argumentsNeeded: 1,
+			argumentsNeeded: 0,
 			function: (commandEntered, splitCommand, commandList) => 
 	        {
 				launchTargets = 
@@ -491,7 +491,7 @@ function initialize()
 				}
 
 				let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-				consoleString.innerHTML += "succesfully reset";
+				consoleString.innerHTML += "successfully reset";
 				printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 	        }
 		}
