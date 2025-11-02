@@ -2,10 +2,13 @@ var pastCommands;
 var pastCommandsIncrement;
 var pastCommandsPointer;
 var commands;
+var defaultLaunchTargets;
 var launchTargets;
 var launchCommands;
+var editLaunchCommands;
 var themeCommands;
 var themeTargets;
+var cstmCommands;
 var selectPast;
 var clickedConsoleFirst;
 var bannerToggle;
@@ -15,6 +18,7 @@ var PREVENT_WRAP;
 var PRINT_MESSAGE_WITH_SPACE;
 var PRINT_MESSAGE_WITHOUT_SPACE;
 var currentTheme;
+var sortAlphabetically;
 
 function initialize()
 {
@@ -28,7 +32,7 @@ function initialize()
 	selectPast = false;
 	clickedConsoleFirst = false;
 
-	const sortAlphabetically = (a, b) => 
+	sortAlphabetically = (a, b) => 
 	{
 	    const nameA = a.name.toLowerCase();
 	    const nameB = b.name.toLowerCase();
@@ -45,39 +49,25 @@ function initialize()
 	    return 0;
 	};
 
+	defaultLaunchTargets = 
+	[
+		{ name: "cyberclicker", url: "./cyberclicker/index.html", display: true},
+		{ name: "flesh", url: "https://flesh.enterprises/index.html", display: false},
+		{ name: "fp2rbpr", url: "./fp/index.html", display: false},
+		{ name: "housecall", url: "./housecall/index.html", display: true},
+		{ name: "jumpgame", url: "./jumpgame/index.html", display: false},
+		{ name: "vp1", url: "https://ragusta.com/index.html", display: false}
+	]
+
+	launchTargets = JSON.parse(JSON.stringify(defaultLaunchTargets));
+
 	if(checkStorage() == true)
 	{
-		if((localStorage.getItem("userLaunchTargetPreference")) === null)
-		{
-			launchTargets = 
-			[
-				{ name: "cyberclicker", url: "./cyberclicker/index.html", display: true},
-				{ name: "flesh", url: "https://flesh.enterprises/index.html", display: false},
-				{ name: "fp2rbpr", url: "./fp/index.html", display: false},
-				{ name: "housecall", url: "./housecall/index.html", display: true},
-				{ name: "jumpgame", url: "./jumpgame/index.html", display: false},
-				{ name: "vp1", url: "https://ragusta.com/index.html", display: false}
-			];
-		}
-		else
+		if((localStorage.getItem("userLaunchTargetPreference")) !== null)
 		{
 			launchTargets = JSON.parse(localStorage.getItem("userLaunchTargetPreference"));
 		}
 	}
-	else
-	{
-		launchTargets = 
-		[
-			{ name: "cyberclicker", url: "./cyberclicker/index.html", display: true},
-			{ name: "flesh", url: "https://flesh.enterprises/index.html", display: false},
-			{ name: "fp2rbpr", url: "./fp/index.html", display: false},
-			{ name: "housecall", url: "./housecall/index.html", display: true},
-			{ name: "jumpgame", url: "./jumpgame/index.html", display: false},
-			{ name: "vp1", url: "https://ragusta.com/index.html", display: false}
-		];
-	}
-
-	
 
 	launchTargets.sort(sortAlphabetically);
 
@@ -252,6 +242,139 @@ function initialize()
 
 	cstmCommands.sort(sortAlphabetically);
 
+	editLaunchCommands = 
+	[
+		{
+			name: "set",
+			display: true,
+			argumentsNeeded: 2,
+			function: (commandEntered, splitCommand, commandList) => 
+	        {
+	        	if(splitCommand.length > 3)
+	        	{
+	        		if(launchTargets.find(target => target.name === splitCommand[2]))
+					{
+						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+						consoleString.innerHTML += "invalid name: " + splitCommand[2] + ", it is already in use";
+						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+					}
+					else
+					{
+						launchTargets.push({ name: splitCommand[2], url: splitCommand[3], display: true});
+
+						launchTargets.sort(sortAlphabetically);
+
+						if(checkStorage() == true)
+						{
+							localStorage.setItem("userLaunchTargetPreference", JSON.stringify(launchTargets));
+						}
+
+						launchCommands = 
+						[
+
+						];
+
+						updateLaunchCommands();
+
+						launchCommands.sort(sortAlphabetically);
+
+						let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+						consoleString.innerHTML += "successfully set: " + splitCommand[2] + " " + splitCommand[3];
+						printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+					}
+	        	}
+				else
+				{
+					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+					consoleString.innerHTML += "ex: editlaunch set totalprism https://totalprism.com";
+					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+				}
+	        }
+		},
+		{
+			name: "remove",
+			display: true,
+			argumentsNeeded: 1,
+			function: (commandEntered, splitCommand, commandList) => 
+	        {
+				if(splitCommand.length > 2)
+				{
+					let currentLaunchTarget = launchTargets.find(launchTarget => launchTarget.name === splitCommand[2]);
+
+					if(!currentLaunchTarget)
+					{
+						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+						consoleString.innerHTML += "invalid name: " + splitCommand[2] + ", not found";
+						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+					}
+					else
+					{
+						let launchTargetIndex = launchTargets.findIndex(launchTarget => launchTarget.name === currentLaunchTarget.name);
+						launchTargets.splice(launchTargetIndex, 1);
+
+						launchTargets.sort(sortAlphabetically);
+
+						if(checkStorage() == true)
+						{
+							localStorage.setItem("userLaunchTargetPreference", JSON.stringify(launchTargets));
+						}
+
+						launchCommands = 
+						[
+
+						];
+
+						updateLaunchCommands();
+
+						launchCommands.sort(sortAlphabetically);
+
+						let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+						consoleString.innerHTML += "successfully removed: " + splitCommand[2];
+						printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+					}
+				}
+				else
+				{
+					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+					consoleString.innerHTML += "ex: editlaunch remove totalprism";
+					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+				}
+	        }
+		},
+		{
+			name: "reset",
+			display: true,
+			argumentsNeeded: 0,
+			function: (commandEntered, splitCommand, commandList) => 
+	        {
+				launchTargets = launchTargets = JSON.parse(JSON.stringify(defaultLaunchTargets));
+
+				if(checkStorage() == true)
+				{
+					launchTargets.sort(sortAlphabetically);
+
+					if(checkStorage() == true)
+					{
+						localStorage.setItem("userLaunchTargetPreference", JSON.stringify(launchTargets));
+					}
+
+					launchCommands = 
+					[
+
+					];
+
+					updateLaunchCommands();
+
+					launchCommands.sort(sortAlphabetically);
+				}
+
+				let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+				consoleString.innerHTML += "successfully reset";
+				printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+	        }
+		}
+	];
+
 	commands = 
 	[
 		{
@@ -367,142 +490,21 @@ function initialize()
 	        }
 		},
 		{
-			name: "setlaunch",
+			name: "editlaunch",
 			display: true,
-			argumentsNeeded: 2,
-			function: (commandEntered, splitCommand, commandList) => 
-	        {
-	        	if(splitCommand.length > 2)
-	        	{
-	        		if(launchTargets.find(target => target.name === splitCommand[1]))
-					{
-						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-						consoleString.innerHTML += "invalid name: " + splitCommand[1] + ", it is already in use";
-						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
-					}
-					else
-					{
-						launchTargets.push({ name: splitCommand[1], url: splitCommand[2], display: true});
-
-						launchTargets.sort(sortAlphabetically);
-
-						if(checkStorage() == true)
-						{
-							localStorage.setItem("userLaunchTargetPreference", JSON.stringify(launchTargets));
-						}
-
-						launchCommands = 
-						[
-
-						];
-
-						updateLaunchCommands();
-
-						launchCommands.sort(sortAlphabetically);
-
-						let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-						consoleString.innerHTML += "successfully set: " + splitCommand[1] + " " + splitCommand[2];
-						printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
-					}
-	        	}
-				else
-				{
-					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-					consoleString.innerHTML += "ex: setlaunch totalprism https://totalprism.com";
-					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
-				}
-	        }
-		},
-		{
-			name: "removelaunch",
-			display: true,
-			argumentsNeeded: 1,
+			argumentsNeeded: -1,
 			function: (commandEntered, splitCommand, commandList) => 
 	        {
 				if(splitCommand.length > 1)
 				{
-					let currentLaunchTarget = launchTargets.find(launchTarget => launchTarget.name === splitCommand[1]);
-
-					if(!currentLaunchTarget)
-					{
-						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-						consoleString.innerHTML += "invalid name: " + splitCommand[1] + ", not found";
-						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
-					}
-					else
-					{
-						let launchTargetIndex = launchTargets.findIndex(launchTarget => launchTarget.name === currentLaunchTarget.name);
-						launchTargets.splice(launchTargetIndex, 1);
-
-						launchTargets.sort(sortAlphabetically);
-
-						if(checkStorage() == true)
-						{
-							localStorage.setItem("userLaunchTargetPreference", JSON.stringify(launchTargets));
-						}
-
-						launchCommands = 
-						[
-
-						];
-
-						updateLaunchCommands();
-
-						launchCommands.sort(sortAlphabetically);
-
-						let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-						consoleString.innerHTML += "successfully removed: " + splitCommand[1];
-						printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
-					}
+					executeCommand(commandEntered, splitCommand, 1, editLaunchCommands, "editlaunch argument");
 				}
 				else
 				{
-					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-					consoleString.innerHTML += "ex: removelaunch totalprism";
-					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+					printCommandListOptions(editLaunchCommands, "editlaunch");
 				}
 	        }
 		},
-		{
-			name: "resetlaunch",
-			display: true,
-			argumentsNeeded: 0,
-			function: (commandEntered, splitCommand, commandList) => 
-	        {
-				launchTargets = 
-				[
-					{ name: "cyberclicker", url: "./cyberclicker/index.html", display: true},
-					{ name: "flesh", url: "https://flesh.enterprises/index.html", display: false},
-					{ name: "fp2rbpr", url: "./fp/index.html", display: false},
-					{ name: "housecall", url: "./housecall/index.html", display: true},
-					{ name: "jumpgame", url: "./jumpgame/index.html", display: false},
-					{ name: "vp1", url: "https://ragusta.com/index.html", display: false}
-				];
-
-				if(checkStorage() == true)
-				{
-					launchTargets.sort(sortAlphabetically);
-
-					if(checkStorage() == true)
-					{
-						localStorage.setItem("userLaunchTargetPreference", JSON.stringify(launchTargets));
-					}
-
-					launchCommands = 
-					[
-
-					];
-
-					updateLaunchCommands();
-
-					launchCommands.sort(sortAlphabetically);
-				}
-
-				let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-				consoleString.innerHTML += "successfully reset";
-				printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
-	        }
-		}
 	];
 
 	commands.sort(sortAlphabetically);
