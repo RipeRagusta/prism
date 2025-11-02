@@ -349,24 +349,21 @@ function initialize()
 	        {
 				launchTargets = launchTargets = JSON.parse(JSON.stringify(defaultLaunchTargets));
 
+				launchTargets.sort(sortAlphabetically);
+
 				if(checkStorage() == true)
 				{
-					launchTargets.sort(sortAlphabetically);
-
-					if(checkStorage() == true)
-					{
-						localStorage.setItem("userLaunchTargetPreference", JSON.stringify(launchTargets));
-					}
-
-					launchCommands = 
-					[
-
-					];
-
-					updateLaunchCommands();
-
-					launchCommands.sort(sortAlphabetically);
+					localStorage.setItem("userLaunchTargetPreference", JSON.stringify(launchTargets));
 				}
+
+				launchCommands = 
+				[
+
+				];
+
+				updateLaunchCommands();
+
+				launchCommands.sort(sortAlphabetically);
 
 				let consoleString = createHistoryMessage("console", PREVENT_WRAP);
 				consoleString.innerHTML += "successfully reset";
