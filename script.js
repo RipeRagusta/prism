@@ -258,6 +258,12 @@ function initialize()
 						consoleString.innerHTML += "invalid name: " + splitCommand[2] + ", it is already in use";
 						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 					}
+					else if(!isSafeURL( splitCommand[3]))
+					{
+						let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+						consoleString.innerHTML += "invalid url: " + splitCommand[3] + ", incorrect format";
+						printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+					}
 					else
 					{
 						launchTargets.push({ name: splitCommand[2], url: splitCommand[3], display: true});
@@ -644,6 +650,26 @@ function initialize()
 	adjustConsoleWindow();
 }
 
+function isSafeURL(urlString)
+{
+	let safeProtocols = ['http:', 'https:'];
+
+	if(urlString.substring(0, 2) === "./")
+	{
+		return true;
+	}
+
+	try
+	{
+		let url = new URL(urlString);
+		return safeProtocols.includes(url.protocol.toLowerCase());
+	}
+	catch(e)
+	{
+		return false;
+	}
+}
+
 function updateLaunchCommands()
 {
 	for(let i = 0; i < launchTargets.length; i++)
@@ -666,7 +692,16 @@ function launchATarget(targetName)
 
 	if(launchTarget)
 	{
-		window.location.href = launchTarget.url;
+		if(isSafeURL(launchTarget.url))
+		{
+			window.location.href = launchTarget.url;
+		}
+		else
+		{
+			let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+			consoleString.innerHTML += "launch aborted, incorrect url format";
+			printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+		}
 	}
 	else
 	{
