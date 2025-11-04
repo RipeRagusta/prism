@@ -359,7 +359,7 @@ function initialize()
 
 				if(checkStorage() == true)
 				{
-					localStorage.setItem("userLaunchTargetPreference", JSON.stringify(launchTargets));
+					localStorage.removeItem("userLaunchTargetPreference");
 				}
 
 				launchCommands = 
