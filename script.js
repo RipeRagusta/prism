@@ -160,10 +160,19 @@ function initialize()
 			name: "bw",
 			display: true,
 			backgroundColor: "#0d0d0d",
-			color: "#f2f2f2",
+			color: "#ffffff",
 			consoleColor: "#ff0000",
 			userColor: "#00ff00",
 			separatorColor: "#ffffff"
+		},
+		{
+			name: "altbw",
+			display: true,
+			backgroundColor: "#0d0d0d",
+			color: "#ffffff",
+			consoleColor: "#ff0000",
+			userColor: "#0000ff",
+			separatorColor: "#ffff00"
 		},
 		{
 			name: "brwn",
