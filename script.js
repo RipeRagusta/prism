@@ -7,7 +7,9 @@ var launchTargets;
 var launchCommands;
 var editLaunchCommands;
 var themeCommands;
+var defaultThemeTargets;
 var themeTargets;
+var editThemeCommands;
 var cstmCommands;
 var selectPast;
 var clickedConsoleFirst;
@@ -80,7 +82,7 @@ function initialize()
 
 	launchCommands.sort(sortAlphabetically);
 
-	themeTargets = 
+	defaultThemeTargets = 
 	[
 		{
 			name: "default",
@@ -164,6 +166,16 @@ function initialize()
 		}
 	];
 
+	themeTargets = JSON.parse(JSON.stringify(defaultThemeTargets));
+
+	if(checkStorage() == true)
+	{
+		if((localStorage.getItem("userThemeTargetPreference")) !== null)
+		{
+			themeTargets = JSON.parse(localStorage.getItem("userThemeTargetPreference"));
+		}
+	}
+
 	themeCommands = 
 	[
 		
@@ -172,6 +184,140 @@ function initialize()
 	updateThemeCommands();
 
 	themeCommands.sort(sortAlphabetically);
+
+	editThemeCommands = 
+	[
+		{
+			name: "set",
+			display: true,
+			argumentsNeeded: 6,
+			function: (commandEntered, splitCommand, commandList) => 
+	        {
+	        	if(splitCommand.length > 8)
+	        	{
+	        		if(themeTargets.find(target => target.name === splitCommand[3]))
+					{
+						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+						consoleString.innerHTML += "invalid name: " + splitCommand[3] + ", it is already in use";
+						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+					}
+					else
+					{
+						themeTargets.push({ name: splitCommand[3], display: true, backgroundColor: splitCommand[4], color: splitCommand[5], consoleColor: splitCommand[6], userColor: splitCommand[7], separatorColor: splitCommand[8]});
+
+						themeTargets.sort(sortAlphabetically);
+
+						if(checkStorage() == true)
+						{
+							localStorage.setItem("userThemeTargetPreference", JSON.stringify(themeTargets));
+						}
+
+						themeCommands = 
+						[
+
+						];
+
+						updateThemeCommands();
+
+						themeCommands.sort(sortAlphabetically);
+
+						let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+						consoleString.innerHTML += "successfully set: " + splitCommand[2] + " " + splitCommand[3] + " " + splitCommand[4] + " " + splitCommand[5] + " " + splitCommand[6] + " " + splitCommand[7] + " " + splitCommand[8];
+						printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+					}
+	        	}
+				else
+				{
+					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+					consoleString.innerHTML += "ex: cstm edittheme set cyan #0d0d0d #00ffff #ff0000 #00ff00 #ffffff";
+					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+				}
+	        }
+		},
+		{
+			name: "remove",
+			display: true,
+			argumentsNeeded: 1,
+			function: () => 
+	        {
+	        	if(splitCommand.length > 3)
+				{
+					let currentThemeTarget = themeTargets.find(themeTarget => themeTarget.name === splitCommand[3]);
+
+					if(!currentThemeTarget)
+					{
+						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+						consoleString.innerHTML += "invalid name: " + splitCommand[3] + ", not found";
+						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+					}
+					else
+					{
+						let themeTargetIndex = themeTargets.findIndex(themeTarget => themeTarget.name === currentThemeTarget.name);
+						themeTargets.splice(themeTargetIndex, 1);
+
+						themeTargets.sort(sortAlphabetically);
+
+						if(checkStorage() == true)
+						{
+							localStorage.setItem("userThemeTargetPreference", JSON.stringify(themeTargets));
+						}
+
+						themeCommands = 
+						[
+
+						];
+
+						updateThemeCommands();
+
+						themeCommands.sort(sortAlphabetically);
+
+						let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+						consoleString.innerHTML += "successfully removed: " + splitCommand[3];
+						printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+
+						changeThemeFromName(currentTheme);
+					}
+				}
+				else
+				{
+					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+					consoleString.innerHTML += "ex: cstm edittheme remove cyan";
+					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+				}
+	        }
+		},
+		{
+			name: "reset",
+			display: true,
+			argumentsNeeded: 0,
+			function: () => 
+	        {
+	        	themeTargets = JSON.parse(JSON.stringify(defaultThemeTargets));
+
+				themeTargets.sort(sortAlphabetically);
+
+				if(checkStorage() == true)
+				{
+					localStorage.removeItem("userThemeTargetPreference");
+				}
+
+				themeCommands = 
+				[
+
+				];
+
+				updateThemeCommands();
+
+				themeCommands.sort(sortAlphabetically);
+
+				let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+				consoleString.innerHTML += "successfully reset";
+				printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+
+				changeThemeFromName(currentTheme);
+	        }
+		}
+	];
 
 	cstmCommands = 
 	[
@@ -235,6 +381,22 @@ function initialize()
 	        	else
 	        	{
 	        		printCommandListOptions(themeCommands, "cstm theme");
+	        	}
+	        }
+		},
+		{
+			name: "edittheme",
+			display: true,
+			argumentsNeeded: -1,
+			function: (commandEntered, splitCommand, commandList) => 
+	        {
+	        	if(splitCommand.length > 2)
+	        	{
+	        		executeCommand(commandEntered, splitCommand, 2, editThemeCommands, "cstm edittheme argument");
+	        	}
+	        	else
+	        	{
+	        		printCommandListOptions(editThemeCommands, "cstm edittheme");
 	        	}
 	        }
 		}
@@ -552,7 +714,7 @@ function initialize()
 	{
 		if((localStorage.getItem("userThemePreference")) === null)
 		{
-			currentTheme = "default";
+			currentTheme = null;
 		}
 		else
 		{
@@ -561,7 +723,7 @@ function initialize()
 	}
 	else
 	{
-		currentTheme = "default";
+		currentTheme = null;
 	}
 
 	changeThemeFromName(currentTheme);
@@ -753,15 +915,29 @@ function changeThemeFromName(name)
 		localStorage.setItem("userThemePreference", name);
 	}
 
-	changetheme(selectedTheme.backgroundColor, selectedTheme.color, selectedTheme.consoleColor, selectedTheme.userColor);
+	if(selectedTheme)
+	{
+		changetheme(selectedTheme.backgroundColor, selectedTheme.color, selectedTheme.consoleColor, selectedTheme.userColor, selectedTheme.separatorColor);
+	}
+	else
+	{
+		if(checkStorage() == true)
+		{
+			localStorage.removeItem("userThemePreference");
+		}
+
+		currentTheme = null;
+		changetheme("#000d1a", "#00ffff", "#ff0000", "#00ff00", "#ffffff");
+	}
 }
 
-function changetheme(backgroundColor, color, consoleColor, userColor)
+function changetheme(backgroundColor, color, consoleColor, userColor, separatorColor)
 {
 	document.documentElement.style.setProperty('--backgroundcolor', backgroundColor);
 	document.documentElement.style.setProperty('--color', color);
 	document.documentElement.style.setProperty('--consolecolor', consoleColor);
 	document.documentElement.style.setProperty('--usercolor', userColor);
+	document.documentElement.style.setProperty('--separator', separatorColor);
 }
 
 function consoleDecorStringElement()
@@ -793,7 +969,7 @@ function consoleDecorSeperatorElement(length, trueMeansNoSpace)
 	}
 
 	decorString.textContent = stringHolder;
-	decorString.style.color = "white";
+	decorString.style.color = "var(--separator)";
 	decorString.style.userSelect = "none";
 	decorString.style.display = "inline";
 
