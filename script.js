@@ -90,7 +90,8 @@ function initialize()
 			backgroundColor: "#000d1a",
 			color: "#00ffff",
 			consoleColor: "#ff0000",
-			userColor: "#00ff00"
+			userColor: "#00ff00",
+			separatorColor: "#ffffff"
 		},
 		{
 			name: "orng",
@@ -98,7 +99,8 @@ function initialize()
 			backgroundColor: "#0d0d0d",
 			color: "#ff6600",
 			consoleColor: "#ff0000",
-			userColor: "#00ff00"
+			userColor: "#00ff00",
+			separatorColor: "#ffffff"
 		},
 		{
 			name: "blue",
@@ -106,7 +108,8 @@ function initialize()
 			backgroundColor: "#0d0d0d",
 			color: "#1a1aff",
 			consoleColor: "#ff0000",
-			userColor: "#00ff00"
+			userColor: "#00ff00",
+			separatorColor: "#ffffff"
 		},
 		{
 			name: "yllw",
@@ -114,7 +117,8 @@ function initialize()
 			backgroundColor: "#0d0d0d",
 			color: "#ffff00",
 			consoleColor: "#ff0000",
-			userColor: "#00ff00"
+			userColor: "#00ff00",
+			separatorColor: "#ffffff"
 		},
 		{
 			name: "prpl",
@@ -122,7 +126,8 @@ function initialize()
 			backgroundColor: "#0d0d0d",
 			color: "#e600e6",
 			consoleColor: "#ff0000",
-			userColor: "#00ff00"
+			userColor: "#00ff00",
+			separatorColor: "#ffffff"
 		},
 		{
 			name: "pink",
@@ -130,7 +135,8 @@ function initialize()
 			backgroundColor: "#0d0d0d",
 			color: "#ff80ff",
 			consoleColor: "#ff0000",
-			userColor: "#00ff00"
+			userColor: "#00ff00",
+			separatorColor: "#ffffff"
 		},
 		{
 			name: "red",
@@ -138,7 +144,8 @@ function initialize()
 			backgroundColor: "#0d0d0d",
 			color: "#ff0000",
 			consoleColor: "#0000ff",
-			userColor: "#00ff00"
+			userColor: "#00ff00",
+			separatorColor: "#ffffff"
 		},
 		{
 			name: "grn",
@@ -146,7 +153,8 @@ function initialize()
 			backgroundColor: "#0d0d0d",
 			color: "#00e600",
 			consoleColor: "#ff0000",
-			userColor: "#0000e6"
+			userColor: "#0000e6",
+			separatorColor: "#ffffff"
 		},
 		{
 			name: "bw",
@@ -154,7 +162,8 @@ function initialize()
 			backgroundColor: "#0d0d0d",
 			color: "#f2f2f2",
 			consoleColor: "#ff0000",
-			userColor: "#00ff00"
+			userColor: "#00ff00",
+			separatorColor: "#ffffff"
 		},
 		{
 			name: "brwn",
@@ -162,7 +171,8 @@ function initialize()
 			backgroundColor: "#0d0d0d",
 			color: "#804000",
 			consoleColor: "#ff0000",
-			userColor: "#00ff00"
+			userColor: "#00ff00",
+			separatorColor: "#ffffff"
 		}
 	];
 
