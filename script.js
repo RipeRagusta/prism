@@ -525,7 +525,7 @@ function initialize()
 			argumentsNeeded: 0,
 			function: (commandEntered, splitCommand, commandList) => 
 	        {
-				launchTargets = launchTargets = JSON.parse(JSON.stringify(defaultLaunchTargets));
+				launchTargets = JSON.parse(JSON.stringify(defaultLaunchTargets));
 
 				launchTargets.sort(sortAlphabetically);
 
