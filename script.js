@@ -214,7 +214,7 @@ function initialize()
 	        {
 	        	if(splitCommand.length > 8)
 	        	{
-	        		if(themeTargets.find(target => target.name === splitCommand[3]))
+	        		if(themeTargets.find(target => target.name.toLowerCase() === splitCommand[3].toLowerCase()))
 					{
 						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
 						consoleString.innerHTML += "invalid name: " + splitCommand[3] + ", it is already in use";
@@ -261,7 +261,7 @@ function initialize()
 	        {
 	        	if(splitCommand.length > 3)
 				{
-					let currentThemeTarget = themeTargets.find(themeTarget => themeTarget.name === splitCommand[3]);
+					let currentThemeTarget = themeTargets.find(themeTarget => themeTarget.name.toLowerCase() === splitCommand[3].toLowerCase());
 
 					if(!currentThemeTarget)
 					{
@@ -271,7 +271,7 @@ function initialize()
 					}
 					else
 					{
-						let themeTargetIndex = themeTargets.findIndex(themeTarget => themeTarget.name === currentThemeTarget.name);
+						let themeTargetIndex = themeTargets.findIndex(themeTarget => themeTarget.name.toLowerCase() === currentThemeTarget.name.toLowerCase());
 						themeTargets.splice(themeTargetIndex, 1);
 
 						themeTargets.sort(sortAlphabetically);
@@ -433,7 +433,7 @@ function initialize()
 	        {
 	        	if(splitCommand.length > 3)
 	        	{
-	        		if(launchTargets.find(target => target.name === splitCommand[2]))
+	        		if(launchTargets.find(target => target.name.toLowerCase() === splitCommand[2].toLowerCase()))
 					{
 						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
 						consoleString.innerHTML += "invalid name: " + splitCommand[2] + ", it is already in use";
@@ -486,7 +486,7 @@ function initialize()
 	        {
 				if(splitCommand.length > 2)
 				{
-					let currentLaunchTarget = launchTargets.find(launchTarget => launchTarget.name === splitCommand[2]);
+					let currentLaunchTarget = launchTargets.find(launchTarget => launchTarget.name.toLowerCase() === splitCommand[2].toLowerCase());
 
 					if(!currentLaunchTarget)
 					{
@@ -496,7 +496,7 @@ function initialize()
 					}
 					else
 					{
-						let launchTargetIndex = launchTargets.findIndex(launchTarget => launchTarget.name === currentLaunchTarget.name);
+						let launchTargetIndex = launchTargets.findIndex(launchTarget => launchTarget.name.toLowerCase() === currentLaunchTarget.name.toLowerCase());
 						launchTargets.splice(launchTargetIndex, 1);
 
 						launchTargets.sort(sortAlphabetically);
@@ -877,7 +877,7 @@ function updateThemeCommands()
 
 function launchATarget(targetName)
 {
-	launchTarget = launchTargets.find(target => target.name === targetName);
+	launchTarget = launchTargets.find(target => target.name.toLowerCase() === targetName.toLowerCase());
 
 	if(launchTarget)
 	{
@@ -935,7 +935,7 @@ function printCommandListOptions(commandList, commandName)
 
 function changeThemeFromName(name)
 {
-	let selectedTheme = themeTargets.find(theme => theme.name === name);
+	let selectedTheme = themeTargets.find(theme => theme.name.toLowerCase() === (name || "").toLowerCase());
 
 	if(checkStorage() == true)
 	{
@@ -1096,7 +1096,7 @@ function commandEnter(commandEntered)
 	else
 	{
 		saveCommand(commandEntered);
-		splitCommand = parseExtraSpaces(commandEntered.toLowerCase()).split(" ");
+		splitCommand = parseExtraSpaces(commandEntered).split(" ");
 
 		let consoleString = createHistoryMessage("user", ALLOW_WRAP);
 		consoleString.innerHTML += parseExtraSpaces(commandEntered);
@@ -1104,14 +1104,12 @@ function commandEnter(commandEntered)
 		printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 
 		executeCommand(commandEntered, splitCommand, 0, commands, "command");
-		
-		
 	}
 }
 
 function executeCommand(commandEntered, splitCommand, startingPoint = 0, commandList, errorReason = "command")
 {
-	targetCommand = commandList.find(command => command.name === splitCommand[startingPoint].toLowerCase());
+	targetCommand = commandList.find(command => command.name.toLowerCase() === splitCommand[startingPoint].toLowerCase());
 
 	if(targetCommand)
 	{
