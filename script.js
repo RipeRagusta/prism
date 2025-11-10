@@ -290,9 +290,9 @@ function initialize()
 
 						themeCommands.sort(sortAlphabetically);
 
-						let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
 						consoleString.innerHTML += "successfully removed: " + splitCommand[3];
-						printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 
 						changeThemeFromName(currentTheme);
 					}
@@ -329,9 +329,9 @@ function initialize()
 
 				themeCommands.sort(sortAlphabetically);
 
-				let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+				let consoleString = createHistoryMessage("console", ALLOW_WRAP);
 				consoleString.innerHTML += "successfully reset";
-				printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+				printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 
 				changeThemeFromName(currentTheme);
 	        }
@@ -515,9 +515,9 @@ function initialize()
 
 						launchCommands.sort(sortAlphabetically);
 
-						let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
 						consoleString.innerHTML += "successfully removed: " + splitCommand[2];
-						printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 					}
 				}
 				else
@@ -552,9 +552,9 @@ function initialize()
 
 				launchCommands.sort(sortAlphabetically);
 
-				let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+				let consoleString = createHistoryMessage("console", ALLOW_WRAP);
 				consoleString.innerHTML += "successfully reset";
-				printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+				printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 	        }
 		}
 	];
@@ -754,7 +754,9 @@ function initialize()
     	if(event.key === "Enter") 
     	{
        		event.preventDefault();
-       		commandEnter(document.getElementById("consolewindow").value);
+       		rawUserValue = document.getElementById("consolewindow").value;
+       		safeUserValue = DOMPurify.sanitize(rawUserValue);
+       		commandEnter(safeUserValue);
        		document.getElementById("consolewindow").value = "";
        		pastCommandsPointer = 0;
        		adjustConsoleWindow();
@@ -833,22 +835,28 @@ function initialize()
 
 function isSafeURL(urlString)
 {
-	let safeProtocols = ['http:', 'https:'];
+	const urlAnchor = `<a href="${urlString}"></a>`; 
+    const sanitizedHTML = DOMPurify.sanitize(urlAnchor);
+    const container = document.createElement("div");
+    container.innerHTML = sanitizedHTML;
+    const cleanAnchor = container.querySelector("a");
 
-	if(urlString.substring(0, 2) === "./")
-	{
-		return true;
-	}
+    if(!cleanAnchor) 
+    {
+        return false;
+    }
 
-	try
-	{
-		let url = new URL(urlString);
-		return safeProtocols.includes(url.protocol.toLowerCase());
-	}
-	catch(e)
-	{
-		return false;
-	}
+    const urlSanitized = cleanAnchor.href;
+    const link = document.createElement("a");
+    link.href = urlString;
+    const urlUnsanitized = link.href;
+
+    if(urlSanitized !== urlUnsanitized) 
+    {
+        return false;
+    }
+
+    return true;
 }
 
 function updateLaunchCommands()
