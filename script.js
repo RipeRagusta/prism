@@ -251,7 +251,7 @@ function initialize()
 				else
 				{
 					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-					consoleString.innerHTML += "ex: cstm edittheme set cyan #0d0d0d #00ffff #ff0000 #00ff00 #ffffff";
+					consoleString.innerHTML += "ex: cstm edtheme set cyan #0d0d0d #00ffff #ff0000 #00ff00 #ffffff";
 					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 				}
 	        }
@@ -303,7 +303,7 @@ function initialize()
 				else
 				{
 					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-					consoleString.innerHTML += "ex: cstm edittheme remove cyan";
+					consoleString.innerHTML += "ex: cstm edtheme remove cyan";
 					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 				}
 	        }
@@ -472,18 +472,18 @@ function initialize()
 	        }
 		},
 		{
-			name: "edittheme",
+			name: "edtheme",
 			display: true,
 			argumentsNeeded: -1,
 			function: (commandEntered, splitCommand) => 
 	        {
 	        	if(splitCommand.length > 2)
 	        	{
-	        		executeCommand(commandEntered, splitCommand, 2, editThemeCommands, "cstm edittheme argument");
+	        		executeCommand(commandEntered, splitCommand, 2, editThemeCommands, "cstm edtheme argument");
 	        	}
 	        	else
 	        	{
-	        		printCommandListOptions(editThemeCommands, "cstm edittheme");
+	        		printCommandListOptions(editThemeCommands, "cstm edtheme");
 	        	}
 	        }
 		}
@@ -575,7 +575,7 @@ function initialize()
 				else
 				{
 					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-					consoleString.innerHTML += "ex: editlaunch set totalprism https://totalprism.com";
+					consoleString.innerHTML += "ex: edlaunch set totalprism https://totalprism.com";
 					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 				}
 	        }
@@ -625,7 +625,7 @@ function initialize()
 				else
 				{
 					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-					consoleString.innerHTML += "ex: editlaunch remove totalprism";
+					consoleString.innerHTML += "ex: edlaunch remove totalprism";
 					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 				}
 	        }
@@ -660,18 +660,18 @@ function initialize()
 	        }
 		},
 		{
-			name: "openinnewwindow",
+			name: "newpage",
 			display: true,
 			argumentsNeeded: -1,
 			function: (commandEntered, splitCommand) => 
 	        {
 	        	if(splitCommand.length > 2)
 	        	{
-	        		executeCommand(commandEntered, splitCommand, 2, openInNewWindowCommands, "editlaunch openinnewwindow argument");
+	        		executeCommand(commandEntered, splitCommand, 2, openInNewWindowCommands, "edlaunch newpage argument");
 	        	}
 	        	else
 	        	{
-	        		printCommandListOptions(openInNewWindowCommands, "cstm openinnewwindow");
+	        		printCommandListOptions(openInNewWindowCommands, "edlaunch newpage");
 	        	}
 	        }
 	    }
@@ -794,18 +794,18 @@ function initialize()
 	        }
 		},
 		{
-			name: "editlaunch",
+			name: "edlaunch",
 			display: true,
 			argumentsNeeded: -1,
 			function: (commandEntered, splitCommand) => 
 	        {
 				if(splitCommand.length > 1)
 				{
-					executeCommand(commandEntered, splitCommand, 1, editLaunchCommands, "editlaunch argument");
+					executeCommand(commandEntered, splitCommand, 1, editLaunchCommands, "edlaunch argument");
 				}
 				else
 				{
-					printCommandListOptions(editLaunchCommands, "editlaunch");
+					printCommandListOptions(editLaunchCommands, "edlaunch");
 				}
 	        }
 		},
