@@ -6,6 +6,8 @@ var defaultLaunchTargets;
 var launchTargets;
 var launchCommands;
 var editLaunchCommands;
+var bannerCommands;
+var borderCommands;
 var themeCommands;
 var defaultThemeTargets;
 var themeTargets;
@@ -21,6 +23,7 @@ var PRINT_MESSAGE_WITH_SPACE;
 var PRINT_MESSAGE_WITHOUT_SPACE;
 var currentTheme;
 var sortAlphabetically;
+var openInNewWindow;
 
 function initialize()
 {
@@ -210,7 +213,7 @@ function initialize()
 			name: "set",
 			display: true,
 			argumentsNeeded: 6,
-			function: (commandEntered, splitCommand, commandList) => 
+			function: (commandEntered, splitCommand) => 
 	        {
 	        	if(splitCommand.length > 8)
 	        	{
@@ -338,22 +341,17 @@ function initialize()
 		}
 	];
 
-	cstmCommands = 
+	editThemeCommands.sort(sortAlphabetically);
+
+	bannerCommands = 
 	[
 		{
-			name: "tban",
+			name: "on",
 			display: true,
 			argumentsNeeded: 0,
-			function: () => 
-	        {
-	        	if(bannerToggle == true)
-				{
-					bannerToggle = false;
-				}
-				else
-				{
-					bannerToggle = true;
-				}
+			function: () =>
+			{
+				bannerToggle = true;
 
 				displayBanner();
 				synchro();
@@ -362,36 +360,106 @@ function initialize()
 				{
 					localStorage.setItem("userBannerPreference", bannerToggle);
 				}
-	        }
+			}
 		},
 		{
-			name: "tbor",
-			display: false,
+			name: "off",
+			display: true,
 			argumentsNeeded: 0,
-			function: () => 
-	        {
-	        	if(borderToggle == true)
-				{
-					borderToggle = false;
-				}
-				else
-				{
-					borderToggle = true;
-				}
+			function: () =>
+			{
+				bannerToggle = false;
 
+				displayBanner();
+				synchro();
+
+				if(checkStorage() == true)
+				{
+					localStorage.setItem("userBannerPreference", bannerToggle);
+				}
+			}
+		}
+	];
+
+	bannerCommands.sort(sortAlphabetically);
+
+	borderCommands = 
+	[
+		{
+			name: "on",
+			display: true,
+			argumentsNeeded: 0,
+			function: () =>
+			{
+				borderToggle = true;
+				
 				displayBorder();
 
 				if(checkStorage() == true)
 				{
 					localStorage.setItem("userBorderPreference", borderToggle);
 				}
+			}
+		},
+		{
+			name: "off",
+			display: true,
+			argumentsNeeded: 0,
+			function: () =>
+			{
+				borderToggle = false;
+				
+				displayBorder();
+
+				if(checkStorage() == true)
+				{
+					localStorage.setItem("userBorderPreference", borderToggle);
+				}
+			}
+		}
+	];
+
+	borderCommands.sort(sortAlphabetically);
+
+	cstmCommands = 
+	[
+		{
+			name: "banner",
+			display: true,
+			argumentsNeeded: -1,
+			function: (commandEntered, splitCommand) => 
+	        {
+	        	if(splitCommand.length > 2)
+	        	{
+	        		executeCommand(commandEntered, splitCommand, 2, bannerCommands, "cstm banner argument");
+	        	}
+	        	else
+	        	{
+	        		printCommandListOptions(bannerCommands, "cstm banner");
+	        	}
+	        }
+		},
+		{
+			name: "border",
+			display: false,
+			argumentsNeeded: -1,
+			function: (commandEntered, splitCommand) => 
+	        {
+	        	if(splitCommand.length > 2)
+	        	{
+	        		executeCommand(commandEntered, splitCommand, 2, borderCommands, "cstm border argument");
+	        	}
+	        	else
+	        	{
+	        		printCommandListOptions(borderCommands, "cstm border");
+	        	}
 	        }
 		},
 		{
 			name: "theme",
 			display: true,
 			argumentsNeeded: -1,
-			function: (commandEntered, splitCommand, commandList) => 
+			function: (commandEntered, splitCommand) => 
 	        {
 	        	if(splitCommand.length > 2)
 	        	{
@@ -407,7 +475,7 @@ function initialize()
 			name: "edittheme",
 			display: true,
 			argumentsNeeded: -1,
-			function: (commandEntered, splitCommand, commandList) => 
+			function: (commandEntered, splitCommand) => 
 	        {
 	        	if(splitCommand.length > 2)
 	        	{
@@ -423,13 +491,47 @@ function initialize()
 
 	cstmCommands.sort(sortAlphabetically);
 
+	openInNewWindowCommands = 
+	[
+		{
+			name: "on",
+			display: true,
+			argumentsNeeded: 0,
+			function: () =>
+			{
+				openInNewWindow = true;
+
+				if(checkStorage() == true)
+				{
+					localStorage.setItem("userNewWindowPreference", openInNewWindow);
+				}
+			}
+		},
+		{
+			name: "off",
+			display: true,
+			argumentsNeeded: 0,
+			function: () =>
+			{
+				openInNewWindow = false;
+
+				if(checkStorage() == true)
+				{
+					localStorage.setItem("userNewWindowPreference", openInNewWindow);
+				}
+			}
+		}
+	];
+
+	openInNewWindowCommands.sort(sortAlphabetically);
+
 	editLaunchCommands = 
 	[
 		{
 			name: "set",
 			display: true,
 			argumentsNeeded: 2,
-			function: (commandEntered, splitCommand, commandList) => 
+			function: (commandEntered, splitCommand) => 
 	        {
 	        	if(splitCommand.length > 3)
 	        	{
@@ -482,7 +584,7 @@ function initialize()
 			name: "remove",
 			display: true,
 			argumentsNeeded: 1,
-			function: (commandEntered, splitCommand, commandList) => 
+			function: (commandEntered, splitCommand) => 
 	        {
 				if(splitCommand.length > 2)
 				{
@@ -532,7 +634,7 @@ function initialize()
 			name: "reset",
 			display: true,
 			argumentsNeeded: 0,
-			function: (commandEntered, splitCommand, commandList) => 
+			function: (commandEntered, splitCommand) => 
 	        {
 				launchTargets = JSON.parse(JSON.stringify(defaultLaunchTargets));
 
@@ -556,8 +658,26 @@ function initialize()
 				consoleString.innerHTML += "successfully reset";
 				printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 	        }
-		}
+		},
+		{
+			name: "openinnewwindow",
+			display: true,
+			argumentsNeeded: -1,
+			function: (commandEntered, splitCommand) => 
+	        {
+	        	if(splitCommand.length > 2)
+	        	{
+	        		executeCommand(commandEntered, splitCommand, 2, openInNewWindowCommands, "editlaunch openinnewwindow argument");
+	        	}
+	        	else
+	        	{
+	        		printCommandListOptions(openInNewWindowCommands, "cstm openinnewwindow");
+	        	}
+	        }
+	    }
 	];
+
+	editLaunchCommands.sort(sortAlphabetically);
 
 	commands = 
 	[
@@ -645,7 +765,7 @@ function initialize()
 			name: "cstm",
 			display: true,
 			argumentsNeeded: -1,
-			function: (commandEntered, splitCommand, commandList) => 
+			function: (commandEntered, splitCommand) => 
 	        {
 	        	if(splitCommand.length > 1)
 	        	{
@@ -661,7 +781,7 @@ function initialize()
 			name: "launch",
 			display: true,
 			argumentsNeeded: -1,
-			function: (commandEntered, splitCommand, commandList) => 
+			function: (commandEntered, splitCommand) => 
 	        {
 				if(splitCommand.length > 1)
 				{
@@ -677,7 +797,7 @@ function initialize()
 			name: "editlaunch",
 			display: true,
 			argumentsNeeded: -1,
-			function: (commandEntered, splitCommand, commandList) => 
+			function: (commandEntered, splitCommand) => 
 	        {
 				if(splitCommand.length > 1)
 				{
@@ -692,6 +812,16 @@ function initialize()
 	];
 
 	commands.sort(sortAlphabetically);
+
+	openInNewWindow = false;
+
+	if(checkStorage() == true)
+	{
+		if((localStorage.getItem("userNewWindowPreference")) !== null)
+		{
+			openInNewWindow = JSON.parse(localStorage.getItem("userNewWindowPreference"));
+		}
+	}
 
 	if(checkStorage() == true)
 	{
@@ -883,7 +1013,14 @@ function launchATarget(targetName)
 	{
 		if(isSafeURL(launchTarget.url))
 		{
-			window.location.href = launchTarget.url;
+			if(openInNewWindow)
+			{
+				window.open(launchTarget.url, "_blank");
+			}
+			else
+			{
+				window.location.href = launchTarget.url;
+			}
 		}
 		else
 		{
