@@ -660,18 +660,18 @@ function initialize()
 	        }
 		},
 		{
-			name: "newpage",
+			name: "launchinnewpage",
 			display: true,
 			argumentsNeeded: -1,
 			function: (commandEntered, splitCommand) => 
 	        {
 	        	if(splitCommand.length > 2)
 	        	{
-	        		executeCommand(commandEntered, splitCommand, 2, openInNewWindowCommands, "edlaunch newpage argument");
+	        		executeCommand(commandEntered, splitCommand, 2, openInNewWindowCommands, "edlaunch launchinnewpage argument");
 	        	}
 	        	else
 	        	{
-	        		printCommandListOptions(openInNewWindowCommands, "edlaunch newpage");
+	        		printCommandListOptions(openInNewWindowCommands, "edlaunch launchinnewpage");
 	        	}
 	        }
 	    }
