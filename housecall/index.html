@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>House Call</title>
   <meta name="description" content="2d video game">
-  <script src="//cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.js"></script>
+  <script src="./assets/phaser3.6.0.min.js"></script>
   <link rel="shortcut icon" type="image" href="./assets/cultknifelogo.png">
   <style type="text/css">
     body {
@@ -309,7 +309,7 @@
 
                 this.input.setDefaultCursor('');
                 const worldWidthX = this.sys.game.config.width * 3;
-                this.physics.world.setBounds(0, 0, worldWidthX / 3, 176);
+                this.physics.world.setBounds(0, 0, (worldWidthX / 3) - 119, 176);
                 this.cursors = this.input.keyboard.createCursorKeys();
                 this.gameManager = this.scene.get('GameManager');
                 this.gameManager.reset();
