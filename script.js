@@ -784,13 +784,26 @@ function initialize()
 			argumentsNeeded: -1,
 			function: (commandEntered, splitCommand) => 
 	        {
+	        	let executeCommandString;
+	        	let commandListOptions;
+
+	        	if(splitCommand[0].toLowerCase() === "launch".toLowerCase())
+	        	{
+	        		executeCommandString = "launch argument";
+	        		commandListOptionsString = "launch";
+	        	}
+	        	else if(splitCommand[0].toLowerCase() === "l".toLowerCase())
+	        	{
+	        		executeCommandString = "l argument";
+	        		commandListOptionsString = "l";
+	        	}
 				if(splitCommand.length > 1)
 				{
-					executeCommand(commandEntered, splitCommand, 1, launchCommands, "launch argument");
+					executeCommand(commandEntered, splitCommand, 1, launchCommands, executeCommandString);
 				}
 				else
 				{
-					printCommandListOptions(launchCommands, "launch");
+					printCommandListOptions(launchCommands, commandListOptionsString);
 				}
 	        }
 		},
