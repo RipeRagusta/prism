@@ -779,6 +779,7 @@ function initialize()
 		},
 		{
 			name: "launch",
+			alias: "l",
 			display: true,
 			argumentsNeeded: -1,
 			function: (commandEntered, splitCommand) => 
@@ -1246,7 +1247,7 @@ function commandEnter(commandEntered)
 
 function executeCommand(commandEntered, splitCommand, startingPoint = 0, commandList, errorReason = "command")
 {
-	targetCommand = commandList.find(command => command.name.toLowerCase() === splitCommand[startingPoint].toLowerCase());
+	targetCommand = commandList.find(command => command.name.toLowerCase() === splitCommand[startingPoint].toLowerCase() || command.alias?.toLowerCase() === splitCommand[startingPoint].toLowerCase());
 
 	if(targetCommand)
 	{
