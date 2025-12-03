@@ -2151,6 +2151,12 @@
                     return false;
             }
         }
+        
+        document.addEventListener('contextmenu', event => 
+        {
+            event.preventDefault();
+            return false;
+        });
   
         const config =
         {
