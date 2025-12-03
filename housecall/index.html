@@ -564,6 +564,16 @@
                     this.screenShake.setText('Screen Shake: ' + this.screenShakeWords);
                 });
                 
+                this.screenShake.on('pointerover', () =>
+                {
+                    this.player.canShoot = false;
+                });
+                
+                this.screenShake.on('pointerout', () =>
+                {
+                    this.player.canShoot = true;
+                });
+                
                 this.toggleHUD = createText(this, this.game.config.width + 3, 3, 'U: Toggle HUD', 10, '#ff0000').setOrigin(0, 0).setDepth(1232300);
                 
                 //this.screenShake.setBackgroundColor('#000000');
