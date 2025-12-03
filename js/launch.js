@@ -185,6 +185,10 @@ function createEditLaunchCommands()
 						{
 							renameTarget.name = splitCommand[3];
 							refreshLaunchCommands("set");
+
+							let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+							consoleString.innerHTML += "successfully renamed: " + splitCommand[2] + " to " + splitCommand[3];
+							printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 						}
 					}
 					else

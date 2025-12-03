@@ -194,6 +194,8 @@ function createEditThemeCommands()
 						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 
 						changeThemeFromName(currentTheme);
+
+
 					}
 				}
 				else
@@ -217,6 +219,8 @@ function createEditThemeCommands()
 				themeTargets.sort(sortAlphabetically);
 
 				refreshThemeCommands("remove");
+
+				currentTheme = null;
 
 				let consoleString = createHistoryMessage("console", ALLOW_WRAP);
 				consoleString.innerHTML += "successfully reset";
@@ -245,8 +249,21 @@ function createEditThemeCommands()
 						}
 						else
 						{
+							if(splitCommand[3].toLowerCase() === currentTheme)
+							{
+								currentTheme = splitCommand[4];
+
+								if(checkStorage() == true)
+								{
+									localStorage.setItem("userThemePreference", currentTheme);
+								}
+							}
 							renameTarget.name = splitCommand[4];
 							refreshThemeCommands("set");
+
+							let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+							consoleString.innerHTML += "successfully renamed: " + splitCommand[3] + " to " + splitCommand[4];
+							printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 						}
 					}
 					else
