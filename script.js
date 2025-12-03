@@ -54,630 +54,55 @@ function initialize()
 	    return 0;
 	};
 
-	defaultLaunchTargets = 
-	[
-		{ name: "cyberclicker", url: "./cyberclicker/index.html", display: true},
-		{ name: "flesh", url: "https://flesh.enterprises/index.html", display: false},
-		{ name: "fp2rbpr", url: "./fp/index.html", display: false},
-		{ name: "housecall", url: "./housecall/index.html", display: true},
-		{ name: "jumpgame", url: "./jumpgame/index.html", display: false},
-		{ name: "vp1", url: "https://ragusta.com/index.html", display: false}
-	]
+	createLaunchCommands();
 
-	launchTargets = JSON.parse(JSON.stringify(defaultLaunchTargets));
+	createThemeCommands();
+
+	createEditThemeCommands();
+
+	bannerToggle = { value: true };
 
 	if(checkStorage() == true)
 	{
-		if((localStorage.getItem("userLaunchTargetPreference")) !== null)
+		if((localStorage.getItem("userBannerPreference")) !== null)
 		{
-			launchTargets = JSON.parse(localStorage.getItem("userLaunchTargetPreference"));
+			bannerToggle = { value: JSON.parse(localStorage.getItem("userBannerPreference")) };
 		}
 	}
 
-	launchTargets.sort(sortAlphabetically);
+	displayBanner();
 
-	launchCommands = 
-	[
+	createBannerCommands();
 
-	];
-
-	updateLaunchCommands();
-
-	launchCommands.sort(sortAlphabetically);
-
-	defaultThemeTargets = 
-	[
-		{
-			name: "default",
-			display: true,
-			backgroundColor: "#000d1a",
-			color: "#00ffff",
-			consoleColor: "#ff0000",
-			userColor: "#00ff00",
-			separatorColor: "#ffffff"
-		},
-		{
-			name: "orng",
-			display: true,
-			backgroundColor: "#0d0d0d",
-			color: "#ff6600",
-			consoleColor: "#ff0000",
-			userColor: "#00ff00",
-			separatorColor: "#ffffff"
-		},
-		{
-			name: "blue",
-			display: true,
-			backgroundColor: "#0d0d0d",
-			color: "#1a1aff",
-			consoleColor: "#ff0000",
-			userColor: "#00ff00",
-			separatorColor: "#ffffff"
-		},
-		{
-			name: "yllw",
-			display: true,
-			backgroundColor: "#0d0d0d",
-			color: "#ffff00",
-			consoleColor: "#ff0000",
-			userColor: "#00ff00",
-			separatorColor: "#ffffff"
-		},
-		{
-			name: "prpl",
-			display: true,
-			backgroundColor: "#0d0d0d",
-			color: "#e600e6",
-			consoleColor: "#ff0000",
-			userColor: "#00ff00",
-			separatorColor: "#ffffff"
-		},
-		{
-			name: "pink",
-			display: true,
-			backgroundColor: "#0d0d0d",
-			color: "#ff80ff",
-			consoleColor: "#ff0000",
-			userColor: "#00ff00",
-			separatorColor: "#ffffff"
-		},
-		{
-			name: "red",
-			display: true,
-			backgroundColor: "#0d0d0d",
-			color: "#ff0000",
-			consoleColor: "#0000ff",
-			userColor: "#00ff00",
-			separatorColor: "#ffffff"
-		},
-		{
-			name: "grn",
-			display: true,
-			backgroundColor: "#0d0d0d",
-			color: "#00e600",
-			consoleColor: "#ff0000",
-			userColor: "#0000e6",
-			separatorColor: "#ffffff"
-		},
-		{
-			name: "bw",
-			display: true,
-			backgroundColor: "#0d0d0d",
-			color: "#ffffff",
-			consoleColor: "#ff0000",
-			userColor: "#00ff00",
-			separatorColor: "#ffffff"
-		},
-		{
-			name: "altbw",
-			display: true,
-			backgroundColor: "#0d0d0d",
-			color: "#ffffff",
-			consoleColor: "#ff0000",
-			userColor: "#0000ff",
-			separatorColor: "#ffff00"
-		},
-		{
-			name: "brwn",
-			display: true,
-			backgroundColor: "#0d0d0d",
-			color: "#804000",
-			consoleColor: "#ff0000",
-			userColor: "#00ff00",
-			separatorColor: "#ffffff"
-		}
-	];
-
-	themeTargets = JSON.parse(JSON.stringify(defaultThemeTargets));
+	borderToggle = { value: false };
 
 	if(checkStorage() == true)
 	{
-		if((localStorage.getItem("userThemeTargetPreference")) !== null)
+		if((localStorage.getItem("userBorderPreference")) !== null)
 		{
-			themeTargets = JSON.parse(localStorage.getItem("userThemeTargetPreference"));
+			borderToggle = { value: JSON.parse(localStorage.getItem("userBorderPreference")) };
 		}
 	}
 
-	themeCommands = 
-	[
-		
-	];
+	displayBorder();
 
-	updateThemeCommands();
+	createBorderCommands();
 
-	themeCommands.sort(sortAlphabetically);
+	createCSTMCommands();
 
-	editThemeCommands = 
-	[
+	openInNewWindow = { value: false };
+
+	if(checkStorage() == true)
+	{
+		if((localStorage.getItem("userNewWindowPreference")) !== null)
 		{
-			name: "set",
-			display: true,
-			argumentsNeeded: 6,
-			function: (commandEntered, splitCommand) => 
-	        {
-	        	if(splitCommand.length > 8)
-	        	{
-	        		if(themeTargets.find(target => target.name.toLowerCase() === splitCommand[3].toLowerCase()))
-					{
-						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-						consoleString.innerHTML += "invalid name: " + splitCommand[3] + ", it is already in use";
-						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
-					}
-					else
-					{
-						themeTargets.push({ name: splitCommand[3], display: true, backgroundColor: splitCommand[4], color: splitCommand[5], consoleColor: splitCommand[6], userColor: splitCommand[7], separatorColor: splitCommand[8]});
-
-						themeTargets.sort(sortAlphabetically);
-
-						if(checkStorage() == true)
-						{
-							localStorage.setItem("userThemeTargetPreference", JSON.stringify(themeTargets));
-						}
-
-						themeCommands = 
-						[
-
-						];
-
-						updateThemeCommands();
-
-						themeCommands.sort(sortAlphabetically);
-
-						let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-						consoleString.innerHTML += "successfully set: " + splitCommand[2] + " " + splitCommand[3] + " " + splitCommand[4] + " " + splitCommand[5] + " " + splitCommand[6] + " " + splitCommand[7] + " " + splitCommand[8];
-						printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
-					}
-	        	}
-				else
-				{
-					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-					consoleString.innerHTML += "ex: cstm edtheme set cyan #0d0d0d #00ffff #ff0000 #00ff00 #ffffff";
-					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
-				}
-	        }
-		},
-		{
-			name: "remove",
-			display: true,
-			argumentsNeeded: 1,
-			function: () => 
-	        {
-	        	if(splitCommand.length > 3)
-				{
-					let currentThemeTarget = themeTargets.find(themeTarget => themeTarget.name.toLowerCase() === splitCommand[3].toLowerCase());
-
-					if(!currentThemeTarget)
-					{
-						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-						consoleString.innerHTML += "invalid name: " + splitCommand[3] + ", not found";
-						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
-					}
-					else
-					{
-						let themeTargetIndex = themeTargets.findIndex(themeTarget => themeTarget.name.toLowerCase() === currentThemeTarget.name.toLowerCase());
-						themeTargets.splice(themeTargetIndex, 1);
-
-						themeTargets.sort(sortAlphabetically);
-
-						if(checkStorage() == true)
-						{
-							localStorage.setItem("userThemeTargetPreference", JSON.stringify(themeTargets));
-						}
-
-						themeCommands = 
-						[
-
-						];
-
-						updateThemeCommands();
-
-						themeCommands.sort(sortAlphabetically);
-
-						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-						consoleString.innerHTML += "successfully removed: " + splitCommand[3];
-						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
-
-						changeThemeFromName(currentTheme);
-					}
-				}
-				else
-				{
-					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-					consoleString.innerHTML += "ex: cstm edtheme remove cyan";
-					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
-				}
-	        }
-		},
-		{
-			name: "reset",
-			display: true,
-			argumentsNeeded: 0,
-			function: () => 
-	        {
-	        	themeTargets = JSON.parse(JSON.stringify(defaultThemeTargets));
-
-				themeTargets.sort(sortAlphabetically);
-
-				if(checkStorage() == true)
-				{
-					localStorage.removeItem("userThemeTargetPreference");
-				}
-
-				themeCommands = 
-				[
-
-				];
-
-				updateThemeCommands();
-
-				themeCommands.sort(sortAlphabetically);
-
-				let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-				consoleString.innerHTML += "successfully reset";
-				printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
-
-				changeThemeFromName(currentTheme);
-	        }
+			openInNewWindow = { value: JSON.parse(localStorage.getItem("userNewWindowPreference")) };
 		}
-	];
+	}
 
-	editThemeCommands.sort(sortAlphabetically);
+	createLaunchInNewWindowCommands();
 
-	bannerCommands = 
-	[
-		{
-			name: "on",
-			display: true,
-			argumentsNeeded: 0,
-			function: () =>
-			{
-				bannerToggle = true;
-
-				displayBanner();
-				synchro();
-
-				if(checkStorage() == true)
-				{
-					localStorage.setItem("userBannerPreference", bannerToggle);
-				}
-			}
-		},
-		{
-			name: "off",
-			display: true,
-			argumentsNeeded: 0,
-			function: () =>
-			{
-				bannerToggle = false;
-
-				displayBanner();
-				synchro();
-
-				if(checkStorage() == true)
-				{
-					localStorage.setItem("userBannerPreference", bannerToggle);
-				}
-			}
-		}
-	];
-
-	bannerCommands.sort(sortAlphabetically);
-
-	borderCommands = 
-	[
-		{
-			name: "on",
-			display: true,
-			argumentsNeeded: 0,
-			function: () =>
-			{
-				borderToggle = true;
-				
-				displayBorder();
-
-				if(checkStorage() == true)
-				{
-					localStorage.setItem("userBorderPreference", borderToggle);
-				}
-			}
-		},
-		{
-			name: "off",
-			display: true,
-			argumentsNeeded: 0,
-			function: () =>
-			{
-				borderToggle = false;
-				
-				displayBorder();
-
-				if(checkStorage() == true)
-				{
-					localStorage.setItem("userBorderPreference", borderToggle);
-				}
-			}
-		}
-	];
-
-	borderCommands.sort(sortAlphabetically);
-
-	cstmCommands = 
-	[
-		{
-			name: "banner",
-			display: true,
-			argumentsNeeded: -1,
-			function: (commandEntered, splitCommand) => 
-	        {
-	        	if(splitCommand.length > 2)
-	        	{
-	        		executeCommand(commandEntered, splitCommand, 2, bannerCommands, "cstm banner argument");
-	        	}
-	        	else
-	        	{
-	        		printCommandListOptions(bannerCommands, "cstm banner");
-	        	}
-	        }
-		},
-		{
-			name: "border",
-			display: false,
-			argumentsNeeded: -1,
-			function: (commandEntered, splitCommand) => 
-	        {
-	        	if(splitCommand.length > 2)
-	        	{
-	        		executeCommand(commandEntered, splitCommand, 2, borderCommands, "cstm border argument");
-	        	}
-	        	else
-	        	{
-	        		printCommandListOptions(borderCommands, "cstm border");
-	        	}
-	        }
-		},
-		{
-			name: "theme",
-			display: true,
-			argumentsNeeded: -1,
-			function: (commandEntered, splitCommand) => 
-	        {
-	        	if(splitCommand.length > 2)
-	        	{
-	        		executeCommand(commandEntered, splitCommand, 2, themeCommands, "cstm theme argument");
-	        	}
-	        	else
-	        	{
-	        		printCommandListOptions(themeCommands, "cstm theme");
-	        	}
-	        }
-		},
-		{
-			name: "edtheme",
-			display: true,
-			argumentsNeeded: -1,
-			function: (commandEntered, splitCommand) => 
-	        {
-	        	if(splitCommand.length > 2)
-	        	{
-	        		executeCommand(commandEntered, splitCommand, 2, editThemeCommands, "cstm edtheme argument");
-	        	}
-	        	else
-	        	{
-	        		printCommandListOptions(editThemeCommands, "cstm edtheme");
-	        	}
-	        }
-		}
-	];
-
-	cstmCommands.sort(sortAlphabetically);
-
-	openInNewWindowCommands = 
-	[
-		{
-			name: "on",
-			display: true,
-			argumentsNeeded: 0,
-			function: () =>
-			{
-				openInNewWindow = true;
-
-				if(checkStorage() == true)
-				{
-					localStorage.setItem("userNewWindowPreference", openInNewWindow);
-				}
-			}
-		},
-		{
-			name: "off",
-			display: true,
-			argumentsNeeded: 0,
-			function: () =>
-			{
-				openInNewWindow = false;
-
-				if(checkStorage() == true)
-				{
-					localStorage.setItem("userNewWindowPreference", openInNewWindow);
-				}
-			}
-		}
-	];
-
-	openInNewWindowCommands.sort(sortAlphabetically);
-
-	editLaunchCommands = 
-	[
-		{
-			name: "set",
-			display: true,
-			argumentsNeeded: 2,
-			function: (commandEntered, splitCommand) => 
-	        {
-	        	if(splitCommand.length > 3)
-	        	{
-	        		if(launchTargets.find(target => target.name.toLowerCase() === splitCommand[2].toLowerCase()))
-					{
-						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-						consoleString.innerHTML += "invalid name: " + splitCommand[2] + ", it is already in use";
-						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
-					}
-					else if(!isSafeURL( splitCommand[3]))
-					{
-						let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-						consoleString.innerHTML += "invalid url: " + splitCommand[3] + ", incorrect format";
-						printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
-					}
-					else
-					{
-						launchTargets.push({ name: splitCommand[2], url: splitCommand[3], display: true});
-
-						launchTargets.sort(sortAlphabetically);
-
-						if(checkStorage() == true)
-						{
-							localStorage.setItem("userLaunchTargetPreference", JSON.stringify(launchTargets));
-						}
-
-						launchCommands = 
-						[
-
-						];
-
-						updateLaunchCommands();
-
-						launchCommands.sort(sortAlphabetically);
-
-						let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-						consoleString.innerHTML += "successfully set: " + splitCommand[2] + " " + splitCommand[3];
-						printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
-					}
-	        	}
-				else
-				{
-					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-					consoleString.innerHTML += "ex: edlaunch set totalprism https://totalprism.com";
-					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
-				}
-	        }
-		},
-		{
-			name: "remove",
-			display: true,
-			argumentsNeeded: 1,
-			function: (commandEntered, splitCommand) => 
-	        {
-				if(splitCommand.length > 2)
-				{
-					let currentLaunchTarget = launchTargets.find(launchTarget => launchTarget.name.toLowerCase() === splitCommand[2].toLowerCase());
-
-					if(!currentLaunchTarget)
-					{
-						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-						consoleString.innerHTML += "invalid name: " + splitCommand[2] + ", not found";
-						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
-					}
-					else
-					{
-						let launchTargetIndex = launchTargets.findIndex(launchTarget => launchTarget.name.toLowerCase() === currentLaunchTarget.name.toLowerCase());
-						launchTargets.splice(launchTargetIndex, 1);
-
-						launchTargets.sort(sortAlphabetically);
-
-						if(checkStorage() == true)
-						{
-							localStorage.setItem("userLaunchTargetPreference", JSON.stringify(launchTargets));
-						}
-
-						launchCommands = 
-						[
-
-						];
-
-						updateLaunchCommands();
-
-						launchCommands.sort(sortAlphabetically);
-
-						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-						consoleString.innerHTML += "successfully removed: " + splitCommand[2];
-						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
-					}
-				}
-				else
-				{
-					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-					consoleString.innerHTML += "ex: edlaunch remove totalprism";
-					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
-				}
-	        }
-		},
-		{
-			name: "reset",
-			display: true,
-			argumentsNeeded: 0,
-			function: (commandEntered, splitCommand) => 
-	        {
-				launchTargets = JSON.parse(JSON.stringify(defaultLaunchTargets));
-
-				launchTargets.sort(sortAlphabetically);
-
-				if(checkStorage() == true)
-				{
-					localStorage.removeItem("userLaunchTargetPreference");
-				}
-
-				launchCommands = 
-				[
-
-				];
-
-				updateLaunchCommands();
-
-				launchCommands.sort(sortAlphabetically);
-
-				let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-				consoleString.innerHTML += "successfully reset";
-				printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
-	        }
-		},
-		{
-			name: "launchinnewpage",
-			display: true,
-			argumentsNeeded: -1,
-			function: (commandEntered, splitCommand) => 
-	        {
-	        	if(splitCommand.length > 2)
-	        	{
-	        		executeCommand(commandEntered, splitCommand, 2, openInNewWindowCommands, "edlaunch launchinnewpage argument");
-	        	}
-	        	else
-	        	{
-	        		printCommandListOptions(openInNewWindowCommands, "edlaunch launchinnewpage");
-	        	}
-	        }
-	    }
-	];
-
-	editLaunchCommands.sort(sortAlphabetically);
+	createEditLaunchCommands();
 
 	commands = 
 	[
@@ -827,66 +252,14 @@ function initialize()
 
 	commands.sort(sortAlphabetically);
 
-	openInNewWindow = false;
+	currentTheme = null;
 
 	if(checkStorage() == true)
 	{
-		if((localStorage.getItem("userNewWindowPreference")) !== null)
-		{
-			openInNewWindow = JSON.parse(localStorage.getItem("userNewWindowPreference"));
-		}
-	}
-
-	if(checkStorage() == true)
-	{
-		if((localStorage.getItem("userBannerPreference")) === null)
-		{
-			bannerToggle = true;
-		}
-		else
-		{
-			bannerToggle = JSON.parse(localStorage.getItem("userBannerPreference"));
-		}
-	}
-	else
-	{
-		bannerToggle = true;
-	}
-
-	displayBanner();
-
-	if(checkStorage() == true)
-	{
-		if((localStorage.getItem("userBorderPreference")) === null)
-		{
-			borderToggle = false;
-		}
-		else
-		{
-			borderToggle = JSON.parse(localStorage.getItem("userBorderPreference"));
-		}
-	}
-	else
-	{
-		borderToggle = false;
-	}
-
-	displayBorder();
-
-	if(checkStorage() == true)
-	{
-		if((localStorage.getItem("userThemePreference")) === null)
-		{
-			currentTheme = null;
-		}
-		else
+		if((localStorage.getItem("userThemePreference")) !== null)
 		{
 			currentTheme = localStorage.getItem("userThemePreference");
 		}
-	}
-	else
-	{
-		currentTheme = null;
 	}
 
 	changeThemeFromName(currentTheme);
@@ -1003,54 +376,6 @@ function isSafeURL(urlString)
     return true;
 }
 
-function updateLaunchCommands()
-{
-	for(let i = 0; i < launchTargets.length; i++)
-	{
-		launchCommands.push({name: launchTargets[i].name, display: launchTargets[i].display, argumentsNeeded: 0, function: () => {launchATarget(launchTargets[i].name);}});
-	}
-}
-
-function updateThemeCommands()
-{
-	for(let i = 0; i < themeTargets.length; i++)
-	{
-		themeCommands.push({name: themeTargets[i].name, display: themeTargets[i].display, argumentsNeeded: 0, function: () => {currentTheme = themeTargets[i].name; changeThemeFromName(currentTheme);}});
-	}
-}
-
-function launchATarget(targetName)
-{
-	launchTarget = launchTargets.find(target => target.name.toLowerCase() === targetName.toLowerCase());
-
-	if(launchTarget)
-	{
-		if(isSafeURL(launchTarget.url))
-		{
-			if(openInNewWindow)
-			{
-				window.open(launchTarget.url, "_blank");
-			}
-			else
-			{
-				window.location.href = launchTarget.url;
-			}
-		}
-		else
-		{
-			let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-			consoleString.innerHTML += "launch aborted, incorrect url format";
-			printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
-		}
-	}
-	else
-	{
-		let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-		consoleString.innerHTML += "invalid launch argument: " + splitCommand[1];
-		printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
-	}
-}
-
 function printCommandListOptions(commandList, commandName)
 {
 	let consoleString = createHistoryMessage("console", PREVENT_WRAP);
@@ -1082,40 +407,6 @@ function printCommandListOptions(commandList, commandName)
 
 	consoleString.innerHTML += "     ex: " + commandName + " " + exampleTarget[(Math.floor(Math.random() * exampleTarget.length))];
 	printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
-}
-
-function changeThemeFromName(name)
-{
-	let selectedTheme = themeTargets.find(theme => theme.name.toLowerCase() === (name || "").toLowerCase());
-
-	if(checkStorage() == true)
-	{
-		localStorage.setItem("userThemePreference", name);
-	}
-
-	if(selectedTheme)
-	{
-		changetheme(selectedTheme.backgroundColor, selectedTheme.color, selectedTheme.consoleColor, selectedTheme.userColor, selectedTheme.separatorColor);
-	}
-	else
-	{
-		if(checkStorage() == true)
-		{
-			localStorage.removeItem("userThemePreference");
-		}
-
-		currentTheme = null;
-		changetheme("#000d1a", "#00ffff", "#ff0000", "#00ff00", "#ffffff");
-	}
-}
-
-function changetheme(backgroundColor, color, consoleColor, userColor, separatorColor)
-{
-	document.documentElement.style.setProperty('--backgroundcolor', backgroundColor);
-	document.documentElement.style.setProperty('--color', color);
-	document.documentElement.style.setProperty('--consolecolor', consoleColor);
-	document.documentElement.style.setProperty('--usercolor', userColor);
-	document.documentElement.style.setProperty('--separator', separatorColor);
 }
 
 function consoleDecorStringElement()
@@ -1377,7 +668,7 @@ function printMessage(content, printMessageWithSpace = false, makeStringInputWra
 
 function displayBanner()
 {
-	if(bannerToggle == true)
+	if(bannerToggle.value == true)
 	{
 		document.getElementById("toplogo").style.display = "block";
 	}
@@ -1389,7 +680,7 @@ function displayBanner()
 
 function displayBorder()
 {
-	if(borderToggle == true)
+	if(borderToggle.value == true)
 	{
 		document.body.style.border = "1px solid var(--color)";
 	}
