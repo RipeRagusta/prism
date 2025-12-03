@@ -108,6 +108,7 @@ function createEditLaunchCommands()
 					}
 					else
 					{
+						let currentLaunchTargetNameWithCase = currentLaunchTarget.name;
 						let launchTargetIndex = launchTargets.findIndex(launchTarget => launchTarget.name.toLowerCase() === currentLaunchTarget.name.toLowerCase());
 						launchTargets.splice(launchTargetIndex, 1);
 
@@ -116,7 +117,7 @@ function createEditLaunchCommands()
 						refreshLaunchCommands("set");
 
 						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-						consoleString.innerHTML += "successfully removed: " + splitCommand[2];
+						consoleString.innerHTML += "successfully removed: " + currentLaunchTargetNameWithCase;
 						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 					}
 				}

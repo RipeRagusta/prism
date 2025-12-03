@@ -182,6 +182,7 @@ function createEditThemeCommands()
 					}
 					else
 					{
+						let currentThemeTargetNameWithCase = currentThemeTarget.name;
 						let themeTargetIndex = themeTargets.findIndex(themeTarget => themeTarget.name.toLowerCase() === currentThemeTarget.name.toLowerCase());
 						themeTargets.splice(themeTargetIndex, 1);
 
@@ -190,7 +191,7 @@ function createEditThemeCommands()
 						refreshThemeCommands("set");
 
 						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-						consoleString.innerHTML += "successfully removed: " + splitCommand[3];
+						consoleString.innerHTML += "successfully removed: " + currentThemeTargetNameWithCase;
 						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 
 						changeThemeFromName(currentTheme);
