@@ -238,18 +238,20 @@ function createEditThemeCommands()
 				if(splitCommand.length > 3)
 				{
 					let renameTarget = themeTargets.find(target => target.name.toLowerCase() === splitCommand[3].toLowerCase());
-					
+
 					if(renameTarget)
 					{
-						if(themeTargets.find(target => target.name.toLowerCase() === splitCommand[4].toLowerCase()))
+						let renameTargetNameWithCase = renameTarget.name;
+
+						if(renameTargetNameWithCase === splitCommand[4])
 						{
 							let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-							consoleString.innerHTML += "invalid name: " + splitCommand[4] + ", it is already in use";
+							consoleString.innerHTML += "invalid name: " + splitCommand[4] + ", it is identical";
 							printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 						}
-						else
+						else if(splitCommand[3].toLowerCase() === splitCommand[4].toLowerCase())
 						{
-							if(splitCommand[3].toLowerCase() === currentTheme)
+							if(splitCommand[3].toLowerCase() === currentTheme.toLowerCase())
 							{
 								currentTheme = splitCommand[4];
 
@@ -262,7 +264,31 @@ function createEditThemeCommands()
 							refreshThemeCommands("set");
 
 							let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-							consoleString.innerHTML += "successfully renamed: " + splitCommand[3] + " to " + splitCommand[4];
+							consoleString.innerHTML += "successfully renamed: " + renameTargetNameWithCase + " to " + splitCommand[4];
+							printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+						}
+						else if(themeTargets.find(target => target.name.toLowerCase() === splitCommand[4].toLowerCase()))
+						{
+							let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+							consoleString.innerHTML += "invalid name: " + splitCommand[4] + ", it is already in use";
+							printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+						}
+						else
+						{
+							if(splitCommand[3].toLowerCase() === currentTheme.toLowerCase())
+							{
+								currentTheme = splitCommand[4];
+
+								if(checkStorage() == true)
+								{
+									localStorage.setItem("userThemePreference", currentTheme);
+								}
+							}
+							renameTarget.name = splitCommand[4];
+							refreshThemeCommands("set");
+
+							let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+							consoleString.innerHTML += "successfully renamed: " + renameTargetNameWithCase + " to " + splitCommand[4];
 							printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 						}
 					}

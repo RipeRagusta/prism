@@ -172,10 +172,27 @@ function createEditLaunchCommands()
 				if(splitCommand.length > 3)
 				{
 					let renameTarget = launchTargets.find(target => target.name.toLowerCase() === splitCommand[2].toLowerCase());
-					
+
 					if(renameTarget)
 					{
-						if(launchTargets.find(target => target.name.toLowerCase() === splitCommand[3].toLowerCase()))
+						let renameTargetNameWithCase = renameTarget.name;
+
+						if(renameTargetNameWithCase === splitCommand[3])
+						{
+							let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+							consoleString.innerHTML += "invalid name: " + splitCommand[3] + ", it is identical";
+							printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+						}
+						else if(splitCommand[2].toLowerCase() === splitCommand[3].toLowerCase())
+						{
+							renameTarget.name = splitCommand[3];
+							refreshLaunchCommands("set");
+
+							let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+							consoleString.innerHTML += "successfully renamed: " + renameTargetNameWithCase + " to " + splitCommand[3];
+							printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+						}
+						else if(launchTargets.find(target => target.name.toLowerCase() === splitCommand[3].toLowerCase()))
 						{
 							let consoleString = createHistoryMessage("console", ALLOW_WRAP);
 							consoleString.innerHTML += "invalid name: " + splitCommand[3] + ", it is already in use";
@@ -187,7 +204,7 @@ function createEditLaunchCommands()
 							refreshLaunchCommands("set");
 
 							let consoleString = createHistoryMessage("console", ALLOW_WRAP);
-							consoleString.innerHTML += "successfully renamed: " + splitCommand[2] + " to " + splitCommand[3];
+							consoleString.innerHTML += "successfully renamed: " + renameTargetNameWithCase + " to " + splitCommand[3];
 							printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 						}
 					}
