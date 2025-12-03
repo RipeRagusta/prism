@@ -547,6 +547,11 @@
                     this.gameManager.allowScreenShakeOnBlock = !this.gameManager.allowScreenShakeOnBlock;
                     this.gameManager.allowScreenShakeOnKill = !this.gameManager.allowScreenShakeOnKill;
                     
+                    if(checkStorage() === true)
+                    {
+                        localStorage.setItem("HCScreenShakeSetting", this.gameManager.allowScreenShakeOnBlock);
+                    }
+                    
                     if(this.gameManager.allowScreenShakeOnBlock)
                     {
                         this.screenShakeWords = "On";
@@ -1837,8 +1842,26 @@
                 this.alwaysBuddha = false;
 
                 this.alwaysDisplayUpgrades = true;
+                
+                if(checkStorage() === true)
+                {
+                    if((localStorage.getItem("HCHUDSetting")) !== null)
+                    {
+                        this.alwaysDisplayUpgrades = JSON.parse(localStorage.getItem("HCHUDSetting"));
+                    }
+                }
+
                 this.allowScreenShakeOnBlock = true;
                 this.allowScreenShakeOnKill = true;
+                
+                if(checkStorage() === true)
+                {
+                    if((localStorage.getItem("HCScreenShakeSetting")) !== null)
+                    {
+                        this.allowScreenShakeOnBlock = JSON.parse(localStorage.getItem("HCScreenShakeSetting"));
+                        this.allowScreenShakeOnKill = JSON.parse(localStorage.getItem("HCScreenShakeSetting"));
+                    }
+                }
             }
 
             create()
@@ -2093,7 +2116,28 @@
                     }
 
                     this.displayedMessage = !this.displayedMessage;
+                    
+                    if(checkStorage() === true)
+                    {
+                        localStorage.setItem("HCHUDSetting", this.gameManager.alwaysDisplayUpgrades);
+                    }
                 }
+            }
+        }
+        
+        function checkStorage()
+        {
+            var test = "test";
+    
+            try 
+            {
+                    localStorage.setItem(test, test);
+                    localStorage.removeItem(test);
+            return true;
+            } 
+                catch(e)
+            {
+                    return false;
             }
         }
   
