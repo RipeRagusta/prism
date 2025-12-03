@@ -309,7 +309,7 @@
 
                 this.input.setDefaultCursor('');
                 const worldWidthX = this.sys.game.config.width * 3;
-                this.physics.world.setBounds(0, 0, (worldWidthX / 3) - 119, 176);
+                this.physics.world.setBounds(0, 0, (worldWidthX / 3) - 120, 176);
                 this.cursors = this.input.keyboard.createCursorKeys();
                 this.gameManager = this.scene.get('GameManager');
                 this.gameManager.reset();
@@ -958,6 +958,7 @@
                 this.tractor.setOrigin(0, 1);
                 this.tractor.body.allowGravity = false;
                 this.tractor.body.setImmovable(true);
+                this.tractor.setDepth(550);
 
                 this.physics.add.collider(this.tractor, this.ground);
                 this.physics.add.collider(this.tractor, this.player);
