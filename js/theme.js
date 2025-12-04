@@ -252,7 +252,7 @@ function createEditThemeCommands()
 						}
 						else if(splitCommand[3].toLowerCase() === splitCommand[4].toLowerCase())
 						{
-							if(splitCommand[3].toLowerCase() === currentTheme.toLowerCase())
+							if(currentTheme !== null && splitCommand[3].toLowerCase() === currentTheme.toLowerCase())
 							{
 								currentTheme = splitCommand[4];
 
@@ -276,7 +276,7 @@ function createEditThemeCommands()
 						}
 						else
 						{
-							if(splitCommand[3].toLowerCase() === currentTheme.toLowerCase())
+							if(currentTheme !== null && splitCommand[3].toLowerCase() === currentTheme.toLowerCase())
 							{
 								currentTheme = splitCommand[4];
 
