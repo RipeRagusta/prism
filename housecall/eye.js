@@ -8,7 +8,7 @@ function eyeCreator(scene, eyePositions, gameManager)
     });
     scene.physics.add.overlap(scene.player, scene.eyeOrbHolder, (player, orb) =>
     {
-        if(!player.block)
+        if(!player.block || player.flip)
         {
             player.health -= 10;
         }
