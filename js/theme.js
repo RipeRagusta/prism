@@ -303,9 +303,9 @@ function createEditThemeCommands()
 				else
 				{
 					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-					consoleString.innerHTML += "ex: edlaunch rename default dflt" + "\n";
+					consoleString.innerHTML += "ex: cstm edtheme rename default dflt" + "\n";
 					consoleString.appendChild(consoleDecorSeperatorElement(3, false));
-					consoleString.innerHTML += "\n     " + "ex: edlaunch rename currentname newname";
+					consoleString.innerHTML += "\n     " + "ex: cstm edtheme rename currentname newname";
 					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 				}
 			}
