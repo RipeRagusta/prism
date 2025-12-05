@@ -49,7 +49,7 @@ function cultCreator(scene, cultPositions, gameManager)
         });
         scene.physics.add.overlap(scene.player, scene.cultOrbHolder, (player, orb) =>
         {
-            if(!player.block || (!player.flip && orb.x < player.x) || (player.flip && orb.x > player.x))
+            if(!player.block)
             {
                 player.health -= 10;
             }
