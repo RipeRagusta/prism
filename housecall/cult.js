@@ -158,7 +158,7 @@ function cultSeparation(cults, player)
   
   function cultSynchro(scene, cults)
   {
-        let aCultAcvite = false;
+        let firstCult = null;
         let cultSoundPlayed = false;
         
         cults.children.entries.forEach(cult => 
@@ -167,21 +167,27 @@ function cultSeparation(cults, player)
             {
                 cult.shoot();
                 
-                if(!aCultAcvite)
+                if(firstCult === null)
                 {
-                    aCultAcvite = !aCultAcvite;
+                    firstCult = cult;
                 }
-                
-                cult.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
-                {
-                    if(frame.index === 2 && !cultSoundPlayed)
-                    {
-                        cultSoundPlayed = true;
-                        scene.sound.play('orbthrow');
-                    }
-                });
             }
         });
+        
+        if(firstCult)
+        {
+            let cultSoundUpdate = (anim, frame) => 
+            {
+                if(firstCult.anims.isPlaying && firstCult.anims.currentAnim.key === 'orbThrow' && frame.index === 2 && !cultSoundPlayed)
+                {
+                    cultSoundPlayed = true;
+                    scene.sound.play('orbthrow');
+                    firstCult.off(Phaser.Animations.Events.ANIMATION_UPDATE, cultSoundUpdate);
+                }
+            };
+            
+            firstCult.on(Phaser.Animations.Events.ANIMATION_UPDATE, cultSoundUpdate);
+        }  
     }
 
   class cult extends Phaser.Physics.Arcade.Sprite
@@ -205,6 +211,7 @@ function cultSeparation(cults, player)
         this.distanceOffset = 1;
         this.flip = false;
         this.scene = scene;
+        this.shotOnce = false;
       
         if(!scene.anims.get('orbThrow'))
         {
@@ -252,6 +259,39 @@ function cultSeparation(cults, player)
                 frequency: -1
             }
         );
+
+
+        this.orbFrameUpdate = (anim, frame) => 
+        {
+            if(this.anims.isPlaying && this.anims.currentAnim.key === 'orbThrow' && frame.index === 2 && !this.shotOnce)
+            {
+                this.shotOnce = true;
+                const orb = this.orbs.get(this.x, this.y, 'cultorb');
+
+                if(orb)
+                {
+                    if(this.flip === false)
+                    {
+                        orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(180));
+                    }
+                    else
+                    {
+                        orb.fire(this.x + (this.width / 2), this.y, Phaser.Math.DegToRad(0));
+                    }
+                }
+            }
+            else if (this.anims.isPlaying && this.anims.currentAnim.key === 'orbThrow' && frame.index !== 2 && this.shotOnce) 
+            {
+                 this.shotOnce = false;
+            }
+        };   
+        
+        this.on(Phaser.Animations.Events.ANIMATION_UPDATE, this.orbFrameUpdate, this);
+
+        this.on(Phaser.GameObjects.Events.DESTROY, () => 
+        {
+            this.off(Phaser.Animations.Events.ANIMATION_UPDATE, this.orbFrameUpdate, this);
+        }, this);
     }
 
     preUpdate(time, delta)
@@ -333,27 +373,7 @@ function cultSeparation(cults, player)
     shoot()
     {
         this.play('orbThrow', false); 
-        let shotOnce = false;
-        this.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
-        {
-            if(frame.index === 2 && !shotOnce)
-            {
-                shotOnce = true;
-                const orb = this.orbs.get(this.x, this.y, 'cultorb');
-
-                if(orb)
-                {
-                    if(this.flip === false)
-                    {
-                        orb.fire(this.x - (this.width / 2), this.y, Phaser.Math.DegToRad(180));
-                    }
-                    else
-                    {
-                        orb.fire(this.x + (this.width / 2), this.y, Phaser.Math.DegToRad(0));
-                    }
-                }
-            }
-        });   
+        
     }
     
     buddha()
@@ -373,6 +393,18 @@ function cultSeparation(cults, player)
                 this.scene.player.activateDoubleFire();
             } 
         }
+        gameManager.score += 35;
+        if(gameManager.score > gameManager.highScore)
+        {
+            gameManager.highScore = gameManager.score;
+            if(checkStorage() === true)
+            {
+                localStorage.setItem("HCHighScore", gameManager.highScore);
+            }
+        }
+        const HUD = this.scene.HUD;
+        HUD.updateScore();
+        HUD.updateHighScore();
         this.setActive(false);
         this.setVisible(false);
         this.destroy();

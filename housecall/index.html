@@ -163,7 +163,9 @@
             else if(gameManager.currentLevel === 4)
             {
                 scene.scene.stop('HUD');
-                scene.scene.start('MainMenu');
+                scene.gameManager.reset();
+                scene.scene.start('Level1Game');
+                scene.scene.launch('HUD');
             }
         }
 
@@ -220,6 +222,8 @@
                 this.load.image('hollowpointsicon', 'assets/hollowpointsicon.png');
                 this.load.image('pistolcasing', 'assets/pistolcasing.png');
                 this.load.image('multiammoicon', 'assets/multiammoicon.png');
+                this.load.image('triplepistolicon', 'assets/triplepistolicon.png');
+                this.load.image('quintuplepistolicon', 'assets/quintuplepistolicon.png');
 
                 this.load.audio('shotgunshot', 
                 [
@@ -288,6 +292,17 @@
                 this.scene.start('GameManager');
                 this.scene.start('MainMenu');
             }
+            
+            shutdown() 
+            {
+                this.children.list.forEach(child => 
+                {
+                    if(child.destroy) 
+                    {
+                        child.destroy();
+                    }
+                });
+            }
         }
 
         class MainMenu extends Phaser.Scene
@@ -312,6 +327,7 @@
                 this.physics.world.setBounds(0, 0, (worldWidthX / 3) - 120, 176);
                 this.cursors = this.input.keyboard.createCursorKeys();
                 this.gameManager = this.scene.get('GameManager');
+                this.HUD = this.scene.get('HUD');
                 this.gameManager.reset();
 
 
@@ -531,7 +547,7 @@
                 this.pistolControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + 40, 'Q/E: Use Pistol', 12, '#fff');
                 //this.hudControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + this.pistolControls.height + 45, 'U: Toggle HUD', 12, '#fff');
                 
-                if(this.gameManager.allowScreenShakeOnBlock)
+                /*if(this.gameManager.allowScreenShakeOnBlock)
                 {
                     this.screenShakeWords = "On";
                 }
@@ -572,7 +588,11 @@
                 this.screenShake.on('pointerout', () =>
                 {
                     this.player.canShoot = true;
-                });
+                });*/
+            
+                this.screenShake = createText(this, this.game.config.width * 2 - 3, 3, 'I: Toggle Jitter', 10, '#ff0000').setOrigin(1, 0).setDepth(1232300);
+                
+                this.highScore = createText(this, this.game.config.width * 3 - (this.game.config.width / 2), 3, 'High Score: ' + this.gameManager.highScore, 10, '#ff0000').setOrigin(0.5, 0).setDepth(1232300);
                 
                 this.toggleHUD = createText(this, this.game.config.width + 3, 3, 'U: Toggle HUD', 10, '#ff0000').setOrigin(0, 0).setDepth(1232300);
                 
@@ -614,6 +634,17 @@
                 {
                     this.player.buddha();
                 }
+            }
+            
+            shutdown() 
+            {
+                this.children.list.forEach(child => 
+                {
+                    if(child.destroy) 
+                    {
+                        child.destroy();
+                    }
+                });
             }
         }
   
@@ -842,6 +873,7 @@
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
                 this.cursors = this.input.keyboard.createCursorKeys();
                 this.gameManager = this.scene.get('GameManager');
+                this.HUD = this.scene.get('HUD');
                 this.gameManager.updateHighestLevel(1);
                 this.gameManager.updateCurrentLevel(1);
 
@@ -992,7 +1024,7 @@
 
             update(time, delta)
             {
-                if(this.player.health < 1)
+                if(this.player.killed)
                 {
                     this.scene.stop('Level1Game');
                     this.scene.stop('HUD');
@@ -1002,6 +1034,17 @@
 
                 cultSeparation(this.cults, this.player);
                 //eyeSeparation(this.eyes, this.player);
+            }
+            
+            shutdown() 
+            {
+                this.children.list.forEach(child => 
+                {
+                    if(child.destroy) 
+                    {
+                        child.destroy();
+                    }
+                });
             }
         }
 
@@ -1027,6 +1070,7 @@
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
                 this.cursors = this.input.keyboard.createCursorKeys();
                 this.gameManager = this.scene.get('GameManager');
+                this.HUD = this.scene.get('HUD');
                 this.gameManager.updateHighestLevel(2);
                 this.gameManager.updateCurrentLevel(2);
 
@@ -1177,7 +1221,7 @@
 
             update(time, delta)
             {
-                if(this.player.health < 1)
+                if(this.player.killed)
                 {
                     this.scene.stop('Level2Game');
                     this.scene.stop('HUD');
@@ -1191,6 +1235,17 @@
                 //activateCultGroups(this, this.cultGroup1); //OLD PRESET
                 //activateCultGroups(this, this.cultGroup2);
                 //activateCultGroups(this, this.cultGroup3);
+            }
+            
+            shutdown() 
+            {
+                this.children.list.forEach(child => 
+                {
+                    if(child.destroy) 
+                    {
+                        child.destroy();
+                    }
+                });
             }
         }
   
@@ -1215,6 +1270,7 @@
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
                 this.cursors = this.input.keyboard.createCursorKeys();
                 this.gameManager = this.scene.get('GameManager');
+                this.HUD = this.scene.get('HUD');
                 this.gameManager.updateHighestLevel(3);
                 this.gameManager.updateCurrentLevel(3);
 
@@ -1368,7 +1424,7 @@
 
             update(time, delta)
             {
-                if(this.player.health < 1)
+                if(this.player.killed)
                 {
                     this.scene.stop('Level3Game');
                     this.scene.stop('HUD');
@@ -1378,6 +1434,17 @@
 
                 cultSeparation(this.cults, this.player);
                 eyeSeparation(this.eyes, this.player);
+            }
+            
+            shutdown() 
+            {
+                this.children.list.forEach(child => 
+                {
+                    if(child.destroy) 
+                    {
+                        child.destroy();
+                    }
+                });
             }
         }
   
@@ -1398,6 +1465,7 @@
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
                 this.cursors = this.input.keyboard.createCursorKeys();
                 this.gameManager = this.scene.get('GameManager');
+                this.HUD = this.scene.get('HUD');
                 this.gameManager.updateHighestLevel(4);
                 this.gameManager.updateCurrentLevel(4);
 
@@ -1572,7 +1640,7 @@
 
             update(time, delta)
             {
-                if(this.player.health < 1)
+                if(this.player.killed)
                 {
                     this.scene.stop('Level4Game');
                     this.scene.stop('HUD');
@@ -1589,6 +1657,17 @@
                 //activateEyeGroups(this, this.eyeGroup1); OLD PRESET UPDATE
                 //activateEyeGroups(this, this.eyeGroup2);
             }
+            
+            shutdown() 
+            {
+                this.children.list.forEach(child => 
+                {
+                    if(child.destroy) 
+                    {
+                        child.destroy();
+                    }
+                });
+            }
         }
   
   
@@ -1598,10 +1677,9 @@
             constructor()
             {
                 super({key: 'UpgradeRoom'});
-
-                this.cardAmount = 7;
-
+                
                 this.gameManager = game.scene.getScene('GameManager');
+                this.cardAmount = Object.keys(this.gameManager.upgradeCardData).length;
                 this.upgradeCardData = this.gameManager.upgradeCardData;
             }
 
@@ -1715,6 +1793,17 @@
 
                 return cardContainer;
             }
+            
+            shutdown() 
+            {
+                this.children.list.forEach(child => 
+                {
+                    if(child.destroy) 
+                    {
+                        child.destroy();
+                    }
+                });
+            }
         }
   
         class GameManager extends Phaser.Scene
@@ -1818,6 +1907,30 @@
                             this.clearAmmoOwned();
                             gameManager.multiAmmoUpgrade = true;
                         }
+                    },
+                    'triplepistol': 
+                    {
+                        id: 8,
+                        name: 'Panic',
+                        description: 'Fire three handgun rounds in one activation.',
+                        icon: 'triplepistolicon',
+                        effect: (gameManager) => 
+                        {
+                            gameManager.triplePistolUpgrade = true;
+                            gameManager.quintuplePistolUpgrade = false;
+                        }
+                    },
+                    'quintuplepistol': 
+                    {
+                        id: 9,
+                        name: 'Terror',
+                        description: 'Fire five handgun rounds in one activation.',
+                        icon: 'quintuplepistolicon',
+                        effect: (gameManager) => 
+                        {
+                            gameManager.triplePistolUpgrade = false;
+                            gameManager.quintuplePistolUpgrade = true;
+                        }
                     }
                 };
 
@@ -1829,6 +1942,15 @@
                 this.visitedUpgradeRoom1 = false;
                 this.visitedUpgradeRoom2 = false;
                 this.visitedUpgradeRoom3 = false;
+                this.score = 0;
+                this.highScore = 0;
+                if(checkStorage() === true)
+                {
+                    if((localStorage.getItem("HCHighScore")) !== null)
+                    {
+                        this.highScore = parseInt(localStorage.getItem("HCHighScore"));
+                    }
+                }
 
                 this.ownedCards = new Set();
 
@@ -1839,6 +1961,8 @@
                 this.doubleFireUpgrade = false;
                 this.pistolUpgrade = false;
                 this.multiAmmoUpgrade = false;
+                this.triplePistolUpgrade = false;
+                this.quintuplePistolUpgrade = false;
 
                 this.level1Data = null;
                 this.level2Data = null;
@@ -1877,12 +2001,24 @@
 
             create()
             {
-
+                this.wasd =
+                {
+                    i: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.I)
+                };
             }
 
             update(time, delta)
             {
-
+                if(Phaser.Input.Keyboard.JustDown(this.wasd.i))
+                {
+                    this.allowScreenShakeOnBlock = !this.allowScreenShakeOnBlock;
+                    this.allowScreenShakeOnKill = !this.allowScreenShakeOnKill;
+                    
+                    if(checkStorage() === true)
+                    {
+                        localStorage.setItem("HCScreenShakeSetting", this.allowScreenShakeOnBlock);
+                    }
+                }
             }
 
             clearAmmoOwned()
@@ -1933,6 +2069,8 @@
                 this.doubleFireUpgrade = false;
                 this.pistolUpgrade = false;
                 this.multiAmmoUpgrade = false;
+                this.triplePistolUpgrade = false;
+                this.quintuplePistolUpgrade = false;
 
                 this.level1Data = null;
                 this.level2Data = null;
@@ -1943,6 +2081,17 @@
                 this.scarecrowPos2 = null;
                 this.scarecrowPos3 = null;
                 this.scarecrowPos4 = null;
+            }
+            
+            shutdown() 
+            {
+                this.children.list.forEach(child => 
+                {
+                    if(child.destroy) 
+                    {
+                        child.destroy();
+                    }
+                });
             }
         }
   
@@ -1966,18 +2115,22 @@
 
                 if(this.gameManager.alwaysDisplayUpgrades === true)
                 {
-                    this.displayUpgradeMessage(this.generateUpgradeMessage());
-                    this.displayCurrentLevel();
+                    //this.displayUpgradeMessage(this.generateUpgradeMessage());
+                    //this.displayCurrentLevel();
                     //this.displayScreenShake();
                     //this.displayUToggle();
+                    this.displayHighScore();
+                    this.displayCurrentScore();
                     this.displayedMessage = true;
                 }
                 else
                 {
-                    this.destroyUpgradeMessage();
-                    this.destroyCurrentLevel();
+                    //this.destroyUpgradeMessage();
+                    //this.destroyCurrentLevel();
                     //this.destroyScreenShake();
                     //this.destroyUToggle();
+                    this.destroyHighScore();
+                    this.destroyCurrentScore();
                     this.displayedMessage = false;
                 }
             }
@@ -1995,6 +2148,44 @@
                     this.currentLevel.destroy();
                     this.currentLevel = null;
                 }
+            }
+            
+            displayCurrentScore()
+            {
+                this.currentScore = createText(this, 3, 3, 'Score: ' + this.gameManager.score, 10, '#ff0000').setOrigin(0, 0).setDepth(1232300);
+            }
+            
+            destroyCurrentScore()
+            {
+                if(this.currentScore)
+                {
+                    this.currentScore.destroy();
+                    this.currentScore = null;
+                }
+            }
+            
+            displayHighScore()
+            {
+                this.highScore = createText(this, this.game.config.width - 3, 3, 'High Score: ' + this.gameManager.highScore, 10, '#ff0000').setOrigin(1, 0).setDepth(1232300);
+            }
+            
+            destroyHighScore()
+            {
+                if(this.highScore)
+                {
+                    this.highScore.destroy();
+                    this.highScore = null;
+                }
+            }
+            
+            updateHighScore()
+            {
+                this.highScore.setText('High Score: ' + this.gameManager.highScore);
+            }
+            
+            updateScore()
+            {
+                this.currentScore.setText('Score: ' + this.gameManager.score);
             }
             
             displayUToggle()
@@ -2111,18 +2302,22 @@
                 {
                     if(this.displayedMessage)
                     {
-                        this.destroyUpgradeMessage();
-                        this.destroyCurrentLevel();
+                        //this.destroyUpgradeMessage();
+                        //this.destroyCurrentLevel();
                         //this.destroyScreenShake();
                         //this.destroyUToggle();
+                        this.destroyCurrentScore();
+                        this.destroyHighScore();
                         this.gameManager.alwaysDisplayUpgrades = false;
                     }
                     else
                     {
-                        this.displayUpgradeMessage(this.generateUpgradeMessage());
-                        this.displayCurrentLevel();
+                        //this.displayUpgradeMessage(this.generateUpgradeMessage());
+                        //this.displayCurrentLevel();
                         //this.displayScreenShake();
                         //this.displayUToggle();
+                        this.displayCurrentScore();
+                        this.displayHighScore();
                         this.gameManager.alwaysDisplayUpgrades = true;
                     }
 
@@ -2133,6 +2328,17 @@
                         localStorage.setItem("HCHUDSetting", this.gameManager.alwaysDisplayUpgrades);
                     }
                 }
+            }
+            
+            shutdown() 
+            {
+                this.children.list.forEach(child => 
+                {
+                    if(child.destroy) 
+                    {
+                        child.destroy();
+                    }
+                });
             }
         }
         

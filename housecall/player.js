@@ -137,6 +137,11 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.lastPistolMove = 0;
         this.lastShellCycle = 0;
         this.canMove = true;
+        this.pistolShootingFrames = [4];
+        this.triplePistolShootingFrames = [4, 6, 8];
+        this.quintuplePistolShootingFrames = [4, 6, 8, 10, 12];
+        this.playedPistolShootingSound = false;
+        this.killed = false;
 
         this.wasd =
         {
@@ -186,6 +191,56 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 frames: [
                             { key: 'player', frame: 5 },
                             { key: 'player', frame: 3 },
+                            { key: 'player', frame: 3 },
+                            { key: 'player', frame: 4 },
+                            { key: 'player', frame: 3 },
+                            { key: 'player', frame: 5 },
+                            { key: 'player', frame: 0 }
+                        ],
+                frameRate: 7,
+                repeat: 0
+            });
+        }
+        
+        if(!scene.anims.get('triplepistol'))
+        {
+            scene.anims.create
+            ({
+                key: 'triplepistol',
+                frames: [
+                            { key: 'player', frame: 5 },
+                            { key: 'player', frame: 3 },
+                            { key: 'player', frame: 3 },
+                            { key: 'player', frame: 4 },
+                            { key: 'player', frame: 3 },
+                            { key: 'player', frame: 4 },
+                            { key: 'player', frame: 3 },
+                            { key: 'player', frame: 4 },
+                            { key: 'player', frame: 3 },
+                            { key: 'player', frame: 5 },
+                            { key: 'player', frame: 0 }
+                        ],
+                frameRate: 7,
+                repeat: 0
+            });
+        }
+        
+        if(!scene.anims.get('quintuplepistol'))
+        {
+            scene.anims.create
+            ({
+                key: 'quintuplepistol',
+                frames: [
+                            { key: 'player', frame: 5 },
+                            { key: 'player', frame: 3 },
+                            { key: 'player', frame: 3 },
+                            { key: 'player', frame: 4 },
+                            { key: 'player', frame: 3 },
+                            { key: 'player', frame: 4 },
+                            { key: 'player', frame: 3 },
+                            { key: 'player', frame: 4 },
+                            { key: 'player', frame: 3 },
+                            { key: 'player', frame: 4 },
                             { key: 'player', frame: 3 },
                             { key: 'player', frame: 4 },
                             { key: 'player', frame: 3 },
@@ -390,6 +445,71 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         });
         
         this.scene.anims.get('pump').frameRate = 6;
+        
+        this.pistolFrameUpdate = (anim, frame) => 
+        {
+            let animation = anim.key;
+            let shootingFrames;
+
+            if(animation === "pistolmove")
+            {
+                shootingFrames = this.pistolShootingFrames;
+            }
+            else if(animation === "triplepistol")
+            {
+                shootingFrames = this.triplePistolShootingFrames;
+            }
+            else if (animation === "quintuplepistol")
+            {
+                shootingFrames = this.quintuplePistolShootingFrames;
+            }
+            else
+            {
+                return;
+            }
+            
+            if(this.anims.isPlaying && this.anims.currentAnim.key === animation && shootingFrames.includes(frame.index) && !this.playedPistolShootingSound) 
+            {
+                this.playedPistolShootingSound = true;
+                this.scene.sound.play('pistolsound');
+
+                const bullet = this.bullets.get(this.x, this.y, 'slug');
+
+                if(bullet)
+                {
+                    let pistolDamage = 7;
+
+                    const gameManager = this.scene.gameManager;
+
+                    if(gameManager.pistolUpgrade)
+                    {
+                        pistolDamage = 14;
+                    }
+
+                    if(this.flip === false)
+                    {
+                      bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(0), pistolDamage);
+                    }
+                    else
+                    {
+                      bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(180), pistolDamage);
+                    }
+
+                    this.pistolCasing.emitParticleAt(this.x, this.y);
+                }  
+            }
+            else if(this.anims.isPlaying && anim.key === animation && !shootingFrames.includes(frame.index) && this.playedPistolShootingSound) 
+            {
+                this.playedPistolShootingSound = false;
+            }
+        };
+        
+        this.on(Phaser.Animations.Events.ANIMATION_UPDATE, this.pistolFrameUpdate, this);
+
+        this.on(Phaser.GameObjects.Events.DESTROY, () => 
+        {
+            this.off(Phaser.Animations.Events.ANIMATION_UPDATE, this.pistolFrameUpdate, this);
+        }, this);
     }
 
     preUpdate(time, delta)
@@ -398,9 +518,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
 
         if(this.health < 1)
         {
-            this.setActive(false);
-            this.setVisible(false);
-            this.destroy();
+            this.kill()
         }
         else
         {
@@ -415,50 +533,57 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         } 
     }
     
+    kill()
+    {
+        const gameManager = this.scene.gameManager;
+        gameManager.score = 0;
+        const HUD = this.scene.HUD;
+        HUD.updateScore();
+        this.killed = true;
+        this.setActive(false);
+        this.setVisible(false);
+        this.destroy();
+    }
+    
     checkPistolMove(time)
     {
+        const gameManager = this.scene.gameManager;
+        
+        if(gameManager.triplePistolUpgrade)
+        {
+            this.pistolMoveFireRate = 2071;
+        }
+        else if(gameManager.quintuplePistolUpgrade)
+        {
+            this.pistolMoveFireRate = 2643;
+        }
+        else
+        {
+            this.pistolMoveFireRate = 1500;
+        }
+            
         if((this.wasd.e.isDown || this.wasd.q.isDown) && time > this.lastPistolMove + this.pistolMoveFireRate)
         {
-            this.play("pistolmove", true);
-            
-            this.playedPistolShootingSound = false;
-            
-            this.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
+            if(gameManager.triplePistolUpgrade)
             {
-                if(frame.index === 4 && !this.playedPistolShootingSound) 
-                {
-                    this.playedPistolShootingSound = true;
-                    this.scene.sound.play('pistolsound');
-                    
-                    const bullet = this.bullets.get(this.x, this.y, 'slug');
-
-                    if(bullet)
-                    {
-                        let pistolDamage = 7;
-                        
-                        const gameManager = this.scene.gameManager;
-                         
-                        if(gameManager.pistolUpgrade)
-                        {
-                            pistolDamage = 14;
-                        }
-                        
-                        if(this.flip === false)
-                        {
-                          bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(0), pistolDamage);
-                        }
-                        else
-                        {
-                          bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(180), pistolDamage);
-                        }
-                        
-                        this.pistolCasing.emitParticleAt(this.x, this.y);
-                    }  
-                }
-            });
-            
-            this.lastPistolMove = time;
+                this.shootPistol(time, "triplepistol");
+            }
+            else if(gameManager.quintuplePistolUpgrade)
+            {
+                this.shootPistol(time, "quintuplepistol");
+            }
+            else
+            {
+                this.shootPistol(time, "pistolmove");
+            }
         }
+    }
+    
+    shootPistol(time, animation)
+    {
+        this.play(animation, true);
+        this.lastPistolMove = time;
+        this.playedPistolShootingSound = false;
     }
     
     checkFireMode(time)

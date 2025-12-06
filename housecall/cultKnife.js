@@ -154,6 +154,18 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
                 this.scene.player.activateDoubleFire();
             } 
         }
+        gameManager.score += 10;
+        if(gameManager.score > gameManager.highScore)
+        {
+            gameManager.highScore = gameManager.score;
+            if(checkStorage() === true)
+            {
+                localStorage.setItem("HCHighScore", gameManager.highScore);
+            }
+        }
+        const HUD = this.scene.HUD;
+        HUD.updateScore();
+        HUD.updateHighScore();
         this.setActive(false);
         this.setVisible(false);
         this.destroy();
