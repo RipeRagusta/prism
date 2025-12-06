@@ -70,7 +70,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         scene.playerBulletsHolder = scene.physics.add.group
         ({
           classType: playerBullet,
-          maxSize: 60,
+          maxSize: 360,
           runChildUpdate: true
         });
 
