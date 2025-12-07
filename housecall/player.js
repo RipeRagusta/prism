@@ -342,6 +342,36 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             }
         );
 
+        this.numfourbuckShotShellEmitter = this.scene.add.particles
+        (
+            0, 0, 
+            'numfourbuckshotshell',
+            {
+                angle: 
+                {
+                    onEmit: () => 
+                    {
+                        if(this.flip === true)
+                        {
+                            return Phaser.Math.Between(-45, 45);
+                        }
+                        else
+                        {
+                            return  Phaser.Math.Between(135, 225);
+                        }
+                    }
+                }, 
+                speed: { min: 100, max: 200 },
+                gravityY: 300,
+                lifespan: { min: 1000, max: 1000 },
+                quantity: 1,
+                scale: { start: 1, end: 1 },
+                alpha: { start: 1, end: 1 },
+                blendMode: 'NORMAL',
+                frequency: -1
+            }
+        );
+
         this.orbDestory = this.scene.add.particles
         (
             0, 0, 
@@ -411,7 +441,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 sound: 'shotgunshot',
                 shellEmitter: this.shellEmitter,
                 pelletCount: 10,
-                spread: 15,
+                spread: 13.5,
                 spreadIncrement: 1.5
             },
             'slug': 
@@ -431,8 +461,28 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 sound: 'birdshot',
                 shellEmitter: this.birdShotShellEmitter,
                 pelletCount: 40,
-                spread: 40,
+                spread: 29.25,
+                spreadIncrement: 0.75
+            },
+            'numfourbuckshot': 
+            {
+                normalPelletType: 'bullet',
+                doublePelletType: 'bulletcult',
+                sound: 'shotgunshot',
+                shellEmitter: this.numfourbuckShotShellEmitter,
+                pelletCount: 20,
+                spread: 19,
                 spreadIncrement: 1
+            },
+            '000buckshot': 
+            {
+                normalPelletType: 'bullet',
+                doublePelletType: 'bulletcult',
+                sound: 'shotgunshot',
+                shellEmitter: this.shellEmitter,
+                pelletCount: 8,
+                spread: 5.6,
+                spreadIncrement: 0.8
             }
         };
 
@@ -608,7 +658,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         {
             if(time > this.lastShellCycle + 50)
             {
-                let randomShell = Math.floor(Math.random() * (3 - 1 + 1)) + 1;
+                let randomShell = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
                 
                 switch(randomShell)
                 {
@@ -622,6 +672,14 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                         
                     case 3:
                         this.fireMode = 'birdshot';
+                        break;
+                        
+                    case 4:
+                        this.fireMode = '000buckshot';
+                        break;
+                        
+                    case 5:
+                        this.fireMode = 'numfourbuckshot';
                         break;
                 }
                 
@@ -640,6 +698,14 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         else if(this.fireMode === 'birdshot')
         {
             this.damagePerShot = this.baseDamage * 0.5;
+        }
+        else if(this.fireMode === '000buckshot')
+        {
+            this.damagePerShot = this.baseDamage * 1.5;
+        }
+        else if(this.fireMode === 'numfourbuckshot')
+        {
+            this.damagePerShot = this.baseDamage;
         }
     }
     

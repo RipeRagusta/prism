@@ -225,6 +225,9 @@
                 this.load.image('triplepistolicon', 'assets/triplepistolicon.png');
                 this.load.image('quintuplepistolicon', 'assets/quintuplepistolicon.png');
                 this.load.image('mousepistolicon', 'assets/mousepistolicon.png');
+                this.load.image('numfourbuckshotshell', 'assets/numfourbuckshotshell.png');
+                this.load.image('numfourbuckshoticon', 'assets/numfourbuckshoticon.png');
+                 this.load.image('000buckshoticon', 'assets/000buckshoticon.png');
 
                 this.load.audio('shotgunshot', 
                 [
@@ -1879,7 +1882,7 @@
                     {
                         id: 5,
                         name: 'Veneration',
-                        description: 'Succesful kills trigger double fire rate.',
+                        description: 'Successful kills trigger double fire rate.',
                         icon: 'cultenergyicon',
                         effect: (gameManager) => 
                         {
@@ -1913,7 +1916,7 @@
                     {
                         id: 8,
                         name: 'Panic',
-                        description: 'Fire three handgun rounds in one activation.',
+                        description: 'Fire three handgun rounds in one activation. Higher cooldown.',
                         icon: 'triplepistolicon',
                         effect: (gameManager) => 
                         {
@@ -1925,7 +1928,7 @@
                     {
                         id: 9,
                         name: 'Terror',
-                        description: 'Fire five handgun rounds in one activation.',
+                        description: 'Fire five handgun rounds in one activation. Much higher cooldown.',
                         icon: 'quintuplepistolicon',
                         effect: (gameManager) => 
                         {
@@ -1936,17 +1939,43 @@
                     'mousepistol': 
                     {
                         id: 10,
-                        name: 'Handgun Training',
+                        name: 'Center Mass',
                         description: 'Handgun aims with mouse.',
                         icon: 'mousepistolicon',
                         effect: (gameManager) => 
                         {
                             gameManager.mousePistolUpgrade = true;
                         }
+                    },
+                    'numfourbuckshot': 
+                    {
+                        id: 11,
+                        name: '#4 Buckshot',
+                        description: 'Replace shells with #4 buckshot.',
+                        icon: 'numfourbuckshoticon',
+                        effect: (gameManager) => 
+                        {
+                            this.clearAmmoOwned();
+                            gameManager.multiAmmoUpgrade = false;
+                            gameManager.fireModeUpgrade = 'numfourbuckshot';
+                        }
+                    },
+                    '000buckshot': 
+                    {
+                        id: 12,
+                        name: '000 Buckshot',
+                        description: 'Replace shells with 000 buckshot.',
+                        icon: '000buckshoticon',
+                        effect: (gameManager) => 
+                        {
+                            this.clearAmmoOwned();
+                            gameManager.multiAmmoUpgrade = false;
+                            gameManager.fireModeUpgrade = '000buckshot';
+                        }
                     }
                 };
 
-                this.ammoUpgrades = new Set([1, 2, 7]);
+                this.ammoUpgrades = new Set([1, 2, 7, 11, 12]);
 
                 this.highestLevel = 0;
                 this.initialHighestLevel = this.highestLevel;

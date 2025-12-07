@@ -158,36 +158,30 @@ function cultSeparation(cults, player)
   
   function cultSynchro(scene, cults)
   {
-        let firstCult = null;
         let cultSoundPlayed = false;
         
         cults.children.entries.forEach(cult => 
         {
             if(cult.alert && cult.visible) 
             {
-                cult.shoot();
-                
-                if(firstCult === null)
+                let cultSoundUpdate = (anim, frame) => 
                 {
-                    firstCult = cult;
-                }
+                    if(cult.anims.isPlaying && cult.anims.currentAnim.key === 'orbThrow' && frame.index === 2 && !cultSoundPlayed)
+                    {
+                        cultSoundPlayed = true;
+                        scene.sound.play('orbthrow');
+                    }
+
+                    if(cultSoundPlayed)
+                    {
+                        cult.off(Phaser.Animations.Events.ANIMATION_UPDATE, cultSoundUpdate);
+                    }
+                };
+
+                cult.on(Phaser.Animations.Events.ANIMATION_UPDATE, cultSoundUpdate);
+                cult.shoot();
             }
         });
-        
-        if(firstCult)
-        {
-            let cultSoundUpdate = (anim, frame) => 
-            {
-                if(firstCult.anims.isPlaying && firstCult.anims.currentAnim.key === 'orbThrow' && frame.index === 2 && !cultSoundPlayed)
-                {
-                    cultSoundPlayed = true;
-                    scene.sound.play('orbthrow');
-                    firstCult.off(Phaser.Animations.Events.ANIMATION_UPDATE, cultSoundUpdate);
-                }
-            };
-            
-            firstCult.on(Phaser.Animations.Events.ANIMATION_UPDATE, cultSoundUpdate);
-        }  
     }
 
   class cult extends Phaser.Physics.Arcade.Sprite
