@@ -485,16 +485,30 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                     {
                         pistolDamage = 14;
                     }
-
-                    if(this.flip === false)
+                    
+                    if(gameManager.mousePistolUpgrade)
                     {
-                      bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(0), pistolDamage);
+                        if(this.flip === false)
+                        {
+                          bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle, pistolDamage);
+                        }
+                        else
+                        {
+                          bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle, pistolDamage);
+                        }
                     }
                     else
                     {
-                      bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(180), pistolDamage);
+                        if(this.flip === false)
+                        {
+                          bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(0), pistolDamage);
+                        }
+                        else
+                        {
+                          bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(180), pistolDamage);
+                        }
                     }
-
+                    
                     this.pistolCasing.emitParticleAt(this.x, this.y);
                 }  
             }

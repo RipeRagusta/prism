@@ -224,6 +224,7 @@
                 this.load.image('multiammoicon', 'assets/multiammoicon.png');
                 this.load.image('triplepistolicon', 'assets/triplepistolicon.png');
                 this.load.image('quintuplepistolicon', 'assets/quintuplepistolicon.png');
+                this.load.image('mousepistolicon', 'assets/mousepistolicon.png');
 
                 this.load.audio('shotgunshot', 
                 [
@@ -1931,6 +1932,17 @@
                             gameManager.triplePistolUpgrade = false;
                             gameManager.quintuplePistolUpgrade = true;
                         }
+                    },
+                    'mousepistol': 
+                    {
+                        id: 10,
+                        name: 'Handgun Training',
+                        description: 'Handgun aims with mouse.',
+                        icon: 'mousepistolicon',
+                        effect: (gameManager) => 
+                        {
+                            gameManager.mousePistolUpgrade = true;
+                        }
                     }
                 };
 
@@ -1963,6 +1975,7 @@
                 this.multiAmmoUpgrade = false;
                 this.triplePistolUpgrade = false;
                 this.quintuplePistolUpgrade = false;
+                this.mousePistolUpgrade = false;
 
                 this.level1Data = null;
                 this.level2Data = null;
@@ -2071,6 +2084,7 @@
                 this.multiAmmoUpgrade = false;
                 this.triplePistolUpgrade = false;
                 this.quintuplePistolUpgrade = false;
+                this.mousePistolUpgrade = false;
 
                 this.level1Data = null;
                 this.level2Data = null;
@@ -2180,12 +2194,18 @@
             
             updateHighScore()
             {
-                this.highScore.setText('High Score: ' + this.gameManager.highScore);
+                if(this.highScore)
+                {
+                    this.highScore.setText('High Score: ' + this.gameManager.highScore);
+                }
             }
             
             updateScore()
             {
-                this.currentScore.setText('Score: ' + this.gameManager.score);
+                if(this.currentScore)
+                {
+                    this.currentScore.setText('Score: ' + this.gameManager.score);
+                }
             }
             
             displayUToggle()
