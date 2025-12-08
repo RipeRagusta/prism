@@ -283,6 +283,16 @@
                 [
                     'assets/pistolsound.wav'
                 ]);
+                
+                this.load.audio('000buckshot', 
+                [
+                    'assets/000buckshot.wav'
+                ]);
+                
+                this.load.audio('numfourbuckshot', 
+                [
+                    'assets/numfourbuckshot.wav'
+                ]);
             }
 
             create()
@@ -952,12 +962,35 @@
 
 
                 if(this.gameManager.level1Data === null)
-                {
-                    this.spawnList = 
-                    [
-                        { type: 'cult', amount: getRandMinMax(2, 3) },
-                        { type: 'cultKnife', amount: getRandMinMax(4, 5) }
-                    ];
+                { 
+                    let randomListToGenerate = getRandMinMax(1, 3);
+                    
+                    switch(randomListToGenerate)
+                    {
+                        case 1:
+                            this.spawnList = 
+                            [
+                                { type: 'cult', amount: getRandMinMax(2, 3) },
+                                { type: 'cultKnife', amount: getRandMinMax(4, 5) }
+                            ];
+                            break;
+                            
+                        case 2: 
+                            this.spawnList = 
+                            [
+                                { type: 'cult', amount: getRandMinMax(2, 3) },
+                                { type: 'cultKnife', amount: getRandMinMax(3, 5) }                            
+                            ]; 
+                            break;
+                            
+                        case 3: 
+                            this.spawnList = 
+                            [
+                                { type: 'cult', amount: getRandMinMax(2, 2) },
+                                { type: 'cultKnife', amount: getRandMinMax(4, 6) }
+                            ];
+                            break;
+                    }
 
                     this.gameManager.level1Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
                 }
@@ -1153,11 +1186,35 @@
 
                 if(this.gameManager.level2Data === null)
                 {
-                    this.spawnList = 
-                    [
-                        { type: 'cult', amount: getRandMinMax(8, 12) },
-                        { type: 'cultKnife', amount: getRandMinMax(1, 1) }
-                    ];
+                    let randomListToGenerate = getRandMinMax(1, 3);
+                    
+                    switch(randomListToGenerate)
+                    {
+                        case 1:
+                            this.spawnList = 
+                            [
+                                { type: 'cult', amount: getRandMinMax(8, 12) },
+                                { type: 'cultKnife', amount: getRandMinMax(1, 1) }
+                            ];
+                            break;
+                            
+                        case 2: 
+                            this.spawnList = 
+                            [
+                                { type: 'cult', amount: getRandMinMax(10, 13) },
+                                { type: 'cultKnife', amount: getRandMinMax(1, 2) }
+                            ];
+                            break;
+                            
+                        case 3:
+                            this.spawnList = 
+                            [
+                                { type: 'cult', amount: getRandMinMax(8, 15) },
+                                { type: 'cultKnife', amount: getRandMinMax(1, 2) }
+                            ];
+                            break;
+                    }
+                    
 
                     this.gameManager.level2Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
                 }
@@ -1349,12 +1406,37 @@
 
                 if(this.gameManager.level3Data === null)
                 {
-                    this.spawnList = 
-                    [
-                        { type: 'cult', amount: getRandMinMax(1, 2) },
-                        { type: 'cultKnife', amount: getRandMinMax(8, 10) },
-                        { type: 'eye', amount: getRandMinMax(2, 4) }
-                    ];
+                    let randomListToGenerate = getRandMinMax(1, 3);
+                    
+                    switch(randomListToGenerate)
+                    {
+                        case 1:
+                            this.spawnList = 
+                            [
+                                { type: 'cult', amount: getRandMinMax(1, 2) },
+                                { type: 'cultKnife', amount: getRandMinMax(8, 10) },
+                                { type: 'eye', amount: getRandMinMax(2, 4) }
+                            ];
+                            break;
+                            
+                        case 2: 
+                            this.spawnList = 
+                            [
+                                { type: 'cult', amount: getRandMinMax(1, 2) },
+                                { type: 'cultKnife', amount: getRandMinMax(2, 4) },
+                                { type: 'eye', amount: getRandMinMax(8, 10) }
+                            ]; 
+                            break;
+                            
+                        case 3: 
+                            this.spawnList = 
+                            [
+                                { type: 'cult', amount: getRandMinMax(8, 10) },
+                                { type: 'cultKnife', amount: getRandMinMax(2, 4) },
+                                { type: 'eye', amount: getRandMinMax(1, 8) }
+                            ];
+                            break;
+                    }
 
                     this.gameManager.level3Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
                 }
@@ -1567,13 +1649,38 @@
 
                 if(this.gameManager.level4Data === null)
                 {
-                    this.spawnList = 
-                    [
-                        { type: 'cult', amount: getRandMinMax(19, 21) },
-                        { type: 'cultKnife', amount: getRandMinMax(4, 5) },
-                        { type: 'eye', amount: getRandMinMax(6, 8) }
-                    ];
-
+                    let randomListToGenerate = getRandMinMax(1, 3);
+                    
+                    switch(randomListToGenerate)
+                    {
+                        case 1:
+                            this.spawnList = 
+                            [
+                                { type: 'cult', amount: getRandMinMax(19, 21) },
+                                { type: 'cultKnife', amount: getRandMinMax(4, 5) },
+                                { type: 'eye', amount: getRandMinMax(6, 8) }
+                            ];
+                            break;
+                            
+                        case 2: 
+                            this.spawnList = 
+                            [
+                                { type: 'cult', amount: getRandMinMax(17, 19) },
+                                { type: 'cultKnife', amount: getRandMinMax(2, 4) },
+                                { type: 'eye', amount: getRandMinMax(8, 10) }
+                            ]; 
+                            break;
+                            
+                        case 3: 
+                            this.spawnList = 
+                            [
+                                { type: 'cult', amount: getRandMinMax(19, 21) },
+                                { type: 'cultKnife', amount: getRandMinMax(1, 1) },
+                                { type: 'eye', amount: getRandMinMax(6, 8) }
+                            ];
+                            break;
+                    }
+                    
                     this.gameManager.level4Data = createRandomEnemies(this, this.spawnList, worldWidthX, this.gameManager);
                 }
                 else

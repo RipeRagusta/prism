@@ -3,13 +3,12 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     constructor(scene, x, y, texture)
     {
         super(scene, x, y, texture);
-        this.speed = 400;
         this.setActive(false);
         this.setVisible(false);
         this.scene = scene;
     }
 
-    fire(x, y, angle, damage)
+    fire(x, y, angle, damage, velocity = 400)
     {
         this.originX = x;
         this.body.reset(x, y);
@@ -17,7 +16,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.setVisible(true);
         this.setRotation(angle);
         this.damage = damage;
-     
+        this.speed = velocity;
+        
         this.scene.physics.velocityFromRotation(angle, this.speed, this.body.velocity);
        
         this.initialVelocity = this.body.velocity.x;
@@ -442,7 +442,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 shellEmitter: this.shellEmitter,
                 pelletCount: 10,
                 spread: 13.5,
-                spreadIncrement: 1.5
+                spreadIncrement: 1.5,
+                pelletVelocity: 400
             },
             'slug': 
             {
@@ -452,7 +453,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 shellEmitter: this.slugShellEmitter,
                 pelletCount: 1,
                 spread: 0,
-                spreadIncrement: 0
+                spreadIncrement: 0,
+                pelletVelocity: 550
             },
             'birdshot': 
             {
@@ -462,27 +464,30 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 shellEmitter: this.birdShotShellEmitter,
                 pelletCount: 40,
                 spread: 29.25,
-                spreadIncrement: 0.75
+                spreadIncrement: 0.75,
+                pelletVelocity: 480
             },
             'numfourbuckshot': 
             {
                 normalPelletType: 'bullet',
                 doublePelletType: 'bulletcult',
-                sound: 'shotgunshot',
+                sound: 'numfourbuckshot',
                 shellEmitter: this.numfourbuckShotShellEmitter,
                 pelletCount: 20,
                 spread: 19,
-                spreadIncrement: 1
+                spreadIncrement: 1,
+                pelletVelocity: 450
             },
             '000buckshot': 
             {
                 normalPelletType: 'bullet',
                 doublePelletType: 'bulletcult',
-                sound: 'shotgunshot',
+                sound: '000buckshot',
                 shellEmitter: this.shellEmitter,
                 pelletCount: 8,
                 spread: 5.6,
-                spreadIncrement: 0.8
+                spreadIncrement: 0.8,
+                pelletVelocity: 370
             }
         };
 
@@ -582,7 +587,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
 
         if(this.health < 1)
         {
-            this.kill()
+            this.kill();
         }
         else
         {
@@ -740,11 +745,11 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             {
                 if(this.flip === false)
                 {
-                  bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot);
+                  bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot, fireConfig.pelletVelocity);
                 }
                 else
                 {
-                  bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot);
+                  bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot, fireConfig.pelletVelocity);
                 }
 
                 offset += fireConfig.spreadIncrement;
