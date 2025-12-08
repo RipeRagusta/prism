@@ -246,6 +246,12 @@ function createEditLaunchCommands()
 							consoleString.innerHTML += "invalid url: " + splitCommand[3] + ", incorrect format";
 							printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 						}
+						else if(renameTarget.url === splitCommand[3])
+						{
+							let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+							consoleString.innerHTML += "invalid url: " + splitCommand[3] + ", it is identical";
+							printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+						}
 						else
 						{
 							renameTarget.url = splitCommand[3];
@@ -273,7 +279,7 @@ function createEditLaunchCommands()
 					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 				}
 	        }
-		},
+		}
 	];
 
 	editLaunchCommands.sort(sortAlphabetically);
