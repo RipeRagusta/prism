@@ -261,7 +261,6 @@ function createEditLaunchCommands()
 							consoleString.innerHTML += "successfully changed link of: " + renameTargetNameWithCase + " to " + splitCommand[3];
 							printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
 						}
-
 					}
 					else
 					{
