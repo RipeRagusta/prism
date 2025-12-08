@@ -225,7 +225,55 @@ function createEditLaunchCommands()
 					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 				}
 			}
-	    }
+	    },
+	    {
+			name: "changelink",
+			display: true,
+			argumentsNeeded: 2,
+			function: (commandEntered, splitCommand) => 
+	        {
+	        	if(splitCommand.length > 3)
+	        	{
+	        		let renameTarget = launchTargets.find(target => target.name.toLowerCase() === splitCommand[2].toLowerCase());
+
+					if(renameTarget)
+					{
+						let renameTargetNameWithCase = renameTarget.name;
+
+						if(!isSafeURL(splitCommand[3]))
+						{
+							let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+							consoleString.innerHTML += "invalid url: " + splitCommand[3] + ", incorrect format";
+							printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+						}
+						else
+						{
+							renameTarget.url = splitCommand[3];
+							refreshLaunchCommands("set");
+
+							let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+							consoleString.innerHTML += "successfully changed link of: " + renameTargetNameWithCase + " to " + splitCommand[3];
+							printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+						}
+
+					}
+					else
+					{
+						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+						consoleString.innerHTML += "invalid name: " + splitCommand[2] + ", not found";
+						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+					}
+	        	}
+				else
+				{
+					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+					consoleString.innerHTML += "ex: edlaunch rename totalprism https://totalprism.com" + "\n";
+					consoleString.appendChild(consoleDecorSeperatorElement(3, false));
+					consoleString.innerHTML += "\n     " + "ex: edlaunch rename name link";
+					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+				}
+	        }
+		},
 	];
 
 	editLaunchCommands.sort(sortAlphabetically);
