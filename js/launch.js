@@ -272,9 +272,9 @@ function createEditLaunchCommands()
 				else
 				{
 					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-					consoleString.innerHTML += "ex: edlaunch rename totalprism https://totalprism.com" + "\n";
+					consoleString.innerHTML += "ex: edlaunch changelink totalprism https://totalprism.com" + "\n";
 					consoleString.appendChild(consoleDecorSeperatorElement(3, false));
-					consoleString.innerHTML += "\n     " + "ex: edlaunch rename name link";
+					consoleString.innerHTML += "\n     " + "ex: edlaunch changelink name link";
 					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 				}
 	        }
