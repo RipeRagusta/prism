@@ -465,7 +465,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 pelletCount: 40,
                 spread: 29.25,
                 spreadIncrement: 0.75,
-                pelletVelocity: 480
+                pelletVelocity: 500
             },
             'numfourbuckshot': 
             {
@@ -487,7 +487,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 pelletCount: 8,
                 spread: 5.6,
                 spreadIncrement: 0.8,
-                pelletVelocity: 370
+                pelletVelocity: 350
             }
         };
 
