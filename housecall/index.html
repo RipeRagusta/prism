@@ -342,7 +342,6 @@
                 this.cursors = this.input.keyboard.createCursorKeys();
                 this.gameManager = this.scene.get('GameManager');
                 this.HUD = this.scene.get('HUD');
-                this.gameManager.reset();
 
 
                 //END BASIC SETUP MainMenu
@@ -377,7 +376,6 @@
                     this.sys.game.config.height - 16,
                     'barn'
                 ).setOrigin(0, 1);
-                this.barn.setTint(0x999999);
                 this.barn.setScrollFactor(0.25);
 
                 this.silo = this.add.image
@@ -396,19 +394,29 @@
                     'cross'
                 );
                 this.cross.setOrigin(0, 1);
-                this.cross.setScrollFactor(0.25);
-                this.cross.setTint(0x999999);
-
+                this.cross.setScrollFactor(0.2);
+                
+                this.wheat = this.add.tileSprite
+                (
+                    0,
+                    176 - 16,
+                    worldWidthX,
+                    16,
+                    'wheat'
+                );
+                this.wheat.setOrigin(0, 1);
+                this.wheat.setScrollFactor(0.575);
+                
                 this.fence = this.add.tileSprite
                 (
                     this.sys.game.config.width / 2,
                     this.sys.game.config.height - 16,
-                    worldWidthX,
+                    worldWidthX / 2,
                     16,
                     'fence'
                 );
                 this.fence.setScrollFactor(0.75);
-                this.fence.setOrigin(0.25, 1);
+                this.fence.setOrigin(0.5, 1);
 
 
                 //END PROPS BEFORE PLAYER MainMenu
@@ -721,7 +729,7 @@
   
         function filterColors(scene, color)
         {
-            if(scene.shed)
+            /*if(scene.shed)
             {
                 scene.shed.setTint(color);
             }
@@ -749,6 +757,28 @@
             {
                 scene.wheat.setTint(color);
             }
+            if(scene.cross)
+            {
+                scene.cross.setTint(color);
+            }
+            if(scene.tractor)
+            {
+                scene.tractor.setTint(color);
+            }*/
+        
+            const itemsToTint = 
+            [
+                "shed", "fence", "couch", "grill", "ground", "grasstop", "wheat", "cross", "barn", "silo", "tractor"
+            ];
+
+            itemsToTint.forEach(propKey => 
+            {
+                const asset = scene[propKey];
+                if(asset) 
+                {
+                    asset.setTint(color);
+                }
+            });
         }
   
         function createRandomEnemies(scene, spawnList, worldWidthX, gameManager)
@@ -864,6 +894,203 @@
         {
             return (Math.floor(Math.random() * (max - min + 1)) + min);
         }
+        
+        function makeLevelPropsRandomAfterWheat(scene, propData, worldWidthX)
+        {
+            if(!propData)
+            {
+                propData = 
+                {
+                    "fence":
+                    {
+                        name: "fence",
+                        pos:  getRandomXAnywhere(worldWidthX * 0.75),
+                        scrollFactor: 0.75,
+                        display: getRandMinMax(1, 2) === 1 ? true : false,
+                        tileSprite: true,
+                        width:  getRandMinMax(3, worldWidthX * 0.75 / 2)
+                    }/*,
+                    "couch":
+                    {
+                        name: "couch",
+                        pos:  getRandomXAnywhere(worldWidthX * 0.76),
+                        scrollFactor: 0.775,
+                        display: getRandMinMax(1, 2) === 1 ? true : false
+                    },
+                    "grill":
+                    {
+                        name: "grill",
+                        pos:  getRandomXAnywhere(worldWidthX * 0.8),
+                        scrollFactor: 0.8,
+                        display: getRandMinMax(1, 2) === 1 ? true : false
+                    }*/
+                };
+            }
+            
+            Object.entries(propData).forEach(([name, definition]) => 
+            {
+                if(definition.display)
+                {
+                    if(definition.tileSprite)
+                    {
+                        scene[name] = scene.add.tileSprite(definition.pos, 176 - 16, definition.width, 16, definition.name).setOrigin(0.5, 1).setScrollFactor(definition.scrollFactor);
+                    }
+                    else
+                    {
+                        scene[name] = scene.add.image(definition.pos, scene.sys.game.config.height - 16, definition.name).setOrigin(0.5, 1).setScrollFactor(definition.scrollFactor);
+                    }
+                }
+            });
+            
+            return propData;
+        }
+        
+        function makeLevelPropsRandomBeforeWheat(scene, propData, worldWidthX)
+        {
+            if(!propData)
+            {
+                propData = 
+                {
+                    "silo":
+                    {
+                        name: "silo",
+                        pos:  getRandomXAnywhere(worldWidthX * 0.17),
+                        scrollFactor: 0.17,
+                        flip: getRandMinMax(1, 2) === 1 ? true : false,
+                        display: getRandMinMax(1, 2) === 1 ? true : false
+                    },
+                    "barn":
+                    {
+                        name: "barn",
+                        pos:  getRandomXAnywhere(worldWidthX *  0.2),
+                        scrollFactor: 0.2,
+                        flip: getRandMinMax(1, 2) === 1 ? true : false,
+                        display: getRandMinMax(1, 2) === 1 ? true : false
+                    },
+                    "cross":
+                    {
+                        name: "cross",
+                        pos:  getRandomXAnywhere(worldWidthX * 0.25),
+                        scrollFactor: 0.25,
+                        flip: getRandMinMax(1, 2) === 1 ? true : false,
+                        display: getRandMinMax(1, 2) === 1 ? true : false
+                    },
+                    "shed":
+                    {
+                        name: "shed",
+                        pos:  getRandomXAnywhere(worldWidthX * 0.325),
+                        scrollFactor: 0.325,
+                        flip: getRandMinMax(1, 2) === 1 ? true : false,
+                        display: getRandMinMax(1, 2) === 1 ? true : false
+                    },
+                    "scarecrow":
+                    {
+                        name: "scarecrow",
+                        pos:  getRandomXAnywhere(worldWidthX * 0.4),
+                        scrollFactor: 0.4,
+                        flip: getRandMinMax(1, 2) === 1 ? true : false,
+                        display: getRandMinMax(1, 2) === 1 ? true : false
+                    },
+                    /*"scarecrow2":
+                    {
+                        name: "scarecrow",
+                        pos:  getRandomXAnywhere(worldWidthX * (1.0 - 0.4)),
+                        scrollFactor: 0.4
+                    },
+                    "scarecrow3":
+                    {
+                        name: "scarecrow",
+                        pos:  getRandomXAnywhere(worldWidthX * (1.0 - 0.4)),
+                        scrollFactor: 0.4
+                    },*/
+                    "tractor":
+                    {
+                        name: "tractor",
+                        pos:  getRandomXAnywhere(worldWidthX * 0.45),
+                        scrollFactor: 0.45,
+                        flip: getRandMinMax(1, 2) === 1 ? true : false,
+                        display: getRandMinMax(1, 2) === 1 ? true : false
+                    }
+                };
+            }
+            
+            Object.entries(propData).forEach(([name, definition]) => 
+            {
+                if(definition.display)
+                {
+                    scene[name] = scene.add.image(definition.pos, scene.sys.game.config.height - 16, definition.name).setOrigin(0.5, 1).setScrollFactor(definition.scrollFactor).setFlipX(definition.flip);
+                }
+            });
+            
+            return propData;
+            
+            /*this.tractor = this.physics.add.sprite(200, this.sys.game.config.height - 16, 'tractor');
+                this.tractor.setOrigin(0, 1);
+                this.tractor.body.allowGravity = false;
+                this.tractor.body.setImmovable(true);
+                this.tractor.setDepth(550);
+            /*if(!scene.gameManager.crossPos1)
+            {
+                let crossPos = getRandomXAnywhere(worldWidthX);
+                scene.cross = scene.add.image(crossPos, scene.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
+                scene.gameManager.crossPos1 = crossPos;
+            }
+            else
+            {
+                scene.cross = scene.add.image(scene.gameManager.crossPos1, scene.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
+            }
+
+            scene.cross.setScrollFactor(0.25);
+
+            if(!scene.gameManager.scarecrowPos1)
+            {
+                let scarePos = getRandomXAnywhere(worldWidthX);
+                scene.scarecrow = scene.add.image(scarePos, scene.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+                scene.gameManager.scarecrowPos1 = scarePos;
+            }
+            else
+            {
+                scene.scarecrow = scene.add.image(scene.gameManager.scarecrowPos1, scene.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
+            }
+
+            scene.scarecrow.setScrollFactor(0.4);
+
+            scene.shed = scene.add.image(75, scene.sys.game.config.height - 16, 'shed');
+            scene.shed.setOrigin(0, 1);
+            scene.shed.setScrollFactor(0.65);
+
+            scene.wheat = scene.add.tileSprite
+            (
+                0,
+                176 - 16,
+                worldWidthX,
+                16,
+                'wheat'
+            );
+            scene.wheat.setOrigin(0, 1);
+            scene.wheat.setScrollFactor(0.575);
+
+
+
+            scene.fence = scene.add.tileSprite
+            (
+              0,
+              scene.sys.game.config.height - 16,
+              148,
+              16,
+              'fence'
+            );
+            scene.fence.setScrollFactor(0.75);
+            scene.fence.setOrigin(0, 1);
+
+            scene.couch = scene.add.image(45, scene.sys.game.config.height - 16, 'couch');
+            scene.couch.setScrollFactor(0.8);
+            scene.couch.setOrigin(0, 1);
+
+            scene.grill = scene.add.image(15, scene.sys.game.config.height - 16, 'grill');
+            scene.grill.setScrollFactor(0.8);
+            scene.grill.setOrigin(0, 1);*/
+        }
     
         class Level1Game extends Phaser.Scene
         {
@@ -903,7 +1130,20 @@
 
                 this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
                 this.stars.setScrollFactor(0.1);
+                
+                /*if(!this.gameManager.crossPos1)
+                {
+                    let crossPos = getRandomXAnywhere(worldWidthX);
+                    this.cross = this.add.image(crossPos, this.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
+                    this.gameManager.crossPos1 = crossPos;
+                }
+                else
+                {
+                    this.cross = this.add.image(this.gameManager.crossPos1, this.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
+                }
 
+                this.cross.setScrollFactor(0.25);
+                
                 if(!this.gameManager.scarecrowPos1)
                 {
                     let scarePos = getRandomXAnywhere(worldWidthX);
@@ -914,8 +1154,10 @@
                 {
                     this.scarecrow = this.add.image(this.gameManager.scarecrowPos1, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
                 }
-
-                this.scarecrow.setScrollFactor(0.4);
+                
+                this.scarecrow.setScrollFactor(0.4);*/
+                
+                this.gameManager.level1BeforePropData = makeLevelPropsRandomBeforeWheat(this, this.gameManager.level1BeforePropData, worldWidthX);
 
                 this.wheat = this.add.tileSprite
                 (
@@ -927,7 +1169,9 @@
                 );
                 this.wheat.setOrigin(0, 1);
                 this.wheat.setScrollFactor(0.575);
-
+                
+                this.gameManager.level1AfterPropData = makeLevelPropsRandomAfterWheat(this, this.gameManager.level1AfterPropData, worldWidthX);
+                
                 this.ground = this.add.tileSprite
                 (
                     0,
@@ -942,7 +1186,7 @@
                 this.ground.body.setImmovable(true);
                 this.ground.body.allowGravity = false;
 
-                createLevelProps(this);
+                //createLevelProps(this);
 
 
                 //END PROPS BEFORE PLAYER Level1Game
@@ -1033,14 +1277,14 @@
                 );
                 this.grasstop.setOrigin(0, 1);
 
-                this.tractor = this.physics.add.sprite(200, this.sys.game.config.height - 16, 'tractor');
+                /*this.tractor = this.physics.add.sprite(200, this.sys.game.config.height - 16, 'tractor');
                 this.tractor.setOrigin(0, 1);
                 this.tractor.body.allowGravity = false;
                 this.tractor.body.setImmovable(true);
                 this.tractor.setDepth(550);
 
                 this.physics.add.collider(this.tractor, this.ground);
-                this.physics.add.collider(this.tractor, this.player);
+                this.physics.add.collider(this.tractor, this.player);*/
 
 
                 //END PROPS AFTER PLAYER Level1Game
@@ -1121,7 +1365,20 @@
                 this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'sky').setOrigin(0, 0);
                 this.sky.setScrollFactor(0.1);
                 this.sky.postFX.addColorMatrix().grayscale(1);
+                
+                /*if(!this.gameManager.crossPos2)
+                {
+                    let crossPos = getRandomXAnywhere(worldWidthX);
+                    this.cross = this.add.image(crossPos, this.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
+                    this.gameManager.crossPos2 = crossPos;
+                }
+                else
+                {
+                    this.cross = this.add.image(this.gameManager.crossPos2, this.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
+                }
 
+                this.cross.setScrollFactor(0.25);
+                
                 if(!this.gameManager.scarecrowPos2)
                 {
                     let scarePos = getRandomXAnywhere(worldWidthX);
@@ -1133,7 +1390,13 @@
                     this.scarecrow = this.add.image(this.gameManager.scarecrowPos2, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
                 }
 
-                this.scarecrow.setScrollFactor(0.4);
+                this.scarecrow.setScrollFactor(0.4);*/
+                        
+                        
+                this.gameManager.level2BeforePropData = makeLevelPropsRandomBeforeWheat(this, this.gameManager.level2BeforePropData, worldWidthX);
+                
+                
+
 
                 this.wheat = this.add.tileSprite
                 (
@@ -1145,7 +1408,9 @@
                 );
                 this.wheat.setOrigin(0, 1);
                 this.wheat.setScrollFactor(0.575);
-
+                
+                this.gameManager.level2AfterPropData = makeLevelPropsRandomAfterWheat(this, this.gameManager.level2AfterPropData, worldWidthX);
+                
                 this.ground = this.add.tileSprite
                 (
                     -worldWidthX,
@@ -1163,8 +1428,7 @@
 
                 //createLevelProps(this);
 
-                this.pipe = this.add.image(15, this.sys.game.config.height - 16, 'pipe');
-                this.pipe.setScrollFactor(0.8);
+                this.pipe = this.add.image(15, this.sys.game.config.height - 16, 'pipe');       
                 this.pipe.setOrigin(0, 1);
 
 
@@ -1344,7 +1608,20 @@
 
                 this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'redskyrain').setOrigin(0, 0);
                 this.sky.setScrollFactor(0.1);
+                
+                /*if(!this.gameManager.crossPos3)
+                {
+                    let crossPos = getRandomXAnywhere(worldWidthX);
+                    this.cross = this.add.image(crossPos, this.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
+                    this.gameManager.crossPos3 = crossPos;
+                }
+                else
+                {
+                    this.cross = this.add.image(this.gameManager.crossPos3, this.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
+                }
 
+                this.cross.setScrollFactor(0.25);
+                
                 if(!this.gameManager.scarecrowPos3)
                 {
                     let scarePos = getRandomXAnywhere(worldWidthX);
@@ -1356,7 +1633,12 @@
                     this.scarecrow = this.add.image(this.gameManager.scarecrowPos3, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
                 }
 
-                this.scarecrow.setScrollFactor(0.4);
+                this.scarecrow.setScrollFactor(0.4);*/
+                                    
+                                    
+                this.gameManager.level3BeforePropData = makeLevelPropsRandomBeforeWheat(this, this.gameManager.level3BeforePropData, worldWidthX);
+                
+                
 
                 this.wheat = this.add.tileSprite
                 (
@@ -1368,6 +1650,8 @@
                 );
                 this.wheat.setOrigin(0, 1);
                 this.wheat.setScrollFactor(0.575);
+                
+                this.gameManager.level3AfterPropData = makeLevelPropsRandomAfterWheat(this, this.gameManager.level3AfterPropData, worldWidthX);
 
                 this.ground = this.add.tileSprite
                 (
@@ -1384,7 +1668,6 @@
                 this.ground.body.allowGravity = false;
 
                 this.pipe = this.add.image(15, this.sys.game.config.height - 16, 'pipe');
-                this.pipe.setScrollFactor(0.8);
                 this.pipe.setOrigin(0, 1);
 
 
@@ -1564,7 +1847,20 @@
 
                 this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'redsky').setOrigin(0, 0);
                 this.sky.setScrollFactor(0.1);
+                
+                /*if(!this.gameManager.crossPos4)
+                {
+                    let crossPos = getRandomXAnywhere(worldWidthX);
+                    this.cross = this.add.image(crossPos, this.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
+                    this.gameManager.crossPos4 = crossPos;
+                }
+                else
+                {
+                    this.cross = this.add.image(this.gameManager.crossPos4, this.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
+                }
 
+                this.cross.setScrollFactor(0.25);
+                
                 if(!this.gameManager.scarecrowPos4)
                 {
                     let scarePos = getRandomXAnywhere(worldWidthX);
@@ -1576,7 +1872,11 @@
                     this.scarecrow = this.add.image(this.gameManager.scarecrowPos4, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
                 }
 
-                this.scarecrow.setScrollFactor(0.4);
+                this.scarecrow.setScrollFactor(0.4);*/
+                                                
+                this.gameManager.level4BeforePropData = makeLevelPropsRandomBeforeWheat(this, this.gameManager.level4BeforePropData, worldWidthX);
+                
+                
 
                 this.wheat = this.add.tileSprite
                 (
@@ -1588,6 +1888,8 @@
                 );
                 this.wheat.setOrigin(0, 1);
                 this.wheat.setScrollFactor(0.575);
+                
+                this.gameManager.level4AfterPropData = makeLevelPropsRandomAfterWheat(this, this.gameManager.level4AfterPropData, worldWidthX);
 
                 this.ground = this.add.tileSprite
                 (
@@ -1603,7 +1905,7 @@
                 this.ground.body.setImmovable(true);
                 this.ground.body.allowGravity = false;
 
-                this.shed = this.add.image(1561, this.sys.game.config.height - 16, 'shed');
+                /*this.shed = this.add.image(1561, this.sys.game.config.height - 16, 'shed');
                 this.shed.setOrigin(0, 1);
                 this.shed.setScrollFactor(0.65);
 
@@ -1624,10 +1926,9 @@
 
                 this.grill = this.add.image(1969, this.sys.game.config.height - 16, 'grill');
                 this.grill.setScrollFactor(0.8);
-                this.grill.setOrigin(0, 1);
+                this.grill.setOrigin(0, 1);*/
 
                 this.pipe = this.add.image(15, this.sys.game.config.height - 16, 'pipe');
-                this.pipe.setScrollFactor(0.8);
                 this.pipe.setOrigin(0, 1);
 
 
@@ -2117,11 +2418,21 @@
                 this.level2Data = null;
                 this.level3Data = null;
                 this.level4Data = null;
-
-                this.scarecrowPos1 = null;
+                
+                this.level1BeforePropData = null;
+                this.level2BeforePropData = null;
+                this.level3BeforePropData = null;
+                this.level4BeforePropData = null;
+                
+                this.level1AfterPropData = null;
+                this.level2AfterPropData = null;
+                this.level3AfterPropData = null;
+                this.level4AfterPropData = null;
+                
+                /*this.scarecrowPos1 = null;
                 this.scarecrowPos2 = null;
                 this.scarecrowPos3 = null;
-                this.scarecrowPos4 = null;
+                this.scarecrowPos4 = null;*/
 
                 this.alwaysBuddha = false;
 
@@ -2226,11 +2537,26 @@
                 this.level2Data = null;
                 this.level3Data = null;
                 this.level4Data = null;
+                
+                this.level1BeforePropData = null;
+                this.level2BeforePropData = null;
+                this.level3BeforePropData = null;
+                this.level4BeforePropData = null;
+                
+                this.level1AfterPropData = null;
+                this.level2AfterPropData = null;
+                this.level3AfterPropData = null;
+                this.level4AfterPropData = null;
 
-                this.scarecrowPos1 = null;
+                /*this.scarecrowPos1 = null;
                 this.scarecrowPos2 = null;
                 this.scarecrowPos3 = null;
                 this.scarecrowPos4 = null;
+                
+                this.crossPos1 = null;
+                this.crossPos2 = null;
+                this.crossPos3 = null;
+                this.crossPos4 = null;*/
             }
             
             shutdown() 
