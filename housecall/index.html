@@ -915,6 +915,7 @@
                         name: "couch",
                         pos:  getRandomXAnywhere(worldWidthX * 0.775),
                         scrollFactor: 0.775,
+                        flip: false,
                         display: getRandMinMax(1, 100) === 1 ? true : false
                     },
                     "grill":
@@ -922,6 +923,7 @@
                         name: "grill",
                         pos:  getRandomXAnywhere(worldWidthX * 0.8),
                         scrollFactor: 0.8,
+                        flip: false,
                         display: getRandMinMax(1, 100) === 1 ? true : false
                     },
                     "copcar":
@@ -929,6 +931,7 @@
                         name: "copcar",
                         pos:  getRandomXAnywhere(worldWidthX * 1),
                         scrollFactor: 1,
+                        flip: getRandMinMax(1, 2) === 1 ? true : false,
                         display: getRandMinMax(1, 5) === 1 ? true : false
                     }
                 };
@@ -944,7 +947,7 @@
                     }
                     else
                     {
-                        scene[name] = scene.add.image(definition.pos, scene.sys.game.config.height - 16, definition.name).setOrigin(0.5, 1).setScrollFactor(definition.scrollFactor);
+                        scene[name] = scene.add.image(definition.pos, scene.sys.game.config.height - 16, definition.name).setOrigin(0.5, 1).setScrollFactor(definition.scrollFactor).setFlipX(definition.flip);
                     }
                 }
             });
@@ -963,7 +966,7 @@
                         name: "silo",
                         pos:  getRandomXAnywhere(worldWidthX * 0.17),
                         scrollFactor: 0.17,
-                        flip: getRandMinMax(1, 5) === 1 ? true : false,
+                        flip: getRandMinMax(1, 2) === 1 ? true : false,
                         display: getRandMinMax(1, 5) === 1 ? true : false
                     },
                     "barn":
@@ -971,7 +974,7 @@
                         name: "barn",
                         pos:  getRandomXAnywhere(worldWidthX *  0.2),
                         scrollFactor: 0.2,
-                        flip: getRandMinMax(1, 5) === 1 ? true : false,
+                        flip: getRandMinMax(1, 2) === 1 ? true : false,
                         display: getRandMinMax(1, 5) === 1 ? true : false
                     },
                     "cross":
@@ -979,7 +982,7 @@
                         name: "cross",
                         pos:  getRandomXAnywhere(worldWidthX * 0.25),
                         scrollFactor: 0.25,
-                        flip: getRandMinMax(1, 10) === 1 ? true : false,
+                        flip: getRandMinMax(1, 2) === 1 ? true : false,
                         display: getRandMinMax(1, 10) === 1 ? true : false
                     },
                     "shed":
@@ -987,7 +990,7 @@
                         name: "shed",
                         pos:  getRandomXAnywhere(worldWidthX * 0.325),
                         scrollFactor: 0.325,
-                        flip: getRandMinMax(1, 5) === 1 ? true : false,
+                        flip: getRandMinMax(1, 2) === 1 ? true : false,
                         display: getRandMinMax(1, 5) === 1 ? true : false
                     },
                     "scarecrow":
@@ -995,27 +998,15 @@
                         name: "scarecrow",
                         pos:  getRandomXAnywhere(worldWidthX * 0.4),
                         scrollFactor: 0.4,
-                        flip: getRandMinMax(1, 5) === 1 ? true : false,
+                        flip: getRandMinMax(1, 2) === 1 ? true : false,
                         display: getRandMinMax(1, 5) === 1 ? true : false
                     },
-                    /*"scarecrow2":
-                    {
-                        name: "scarecrow",
-                        pos:  getRandomXAnywhere(worldWidthX * (1.0 - 0.4)),
-                        scrollFactor: 0.4
-                    },
-                    "scarecrow3":
-                    {
-                        name: "scarecrow",
-                        pos:  getRandomXAnywhere(worldWidthX * (1.0 - 0.4)),
-                        scrollFactor: 0.4
-                    },*/
                     "tractor":
                     {
                         name: "tractor",
                         pos:  getRandomXAnywhere(worldWidthX * 0.45),
                         scrollFactor: 0.45,
-                        flip: getRandMinMax(1, 10) === 1 ? true : false,
+                        flip: getRandMinMax(1, 2) === 1 ? true : false,
                         display: getRandMinMax(1, 10) === 1 ? true : false
                     }
                 };
