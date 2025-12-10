@@ -227,7 +227,7 @@
                 this.load.image('mousepistolicon', 'assets/mousepistolicon.png');
                 this.load.image('numfourbuckshotshell', 'assets/numfourbuckshotshell.png');
                 this.load.image('numfourbuckshoticon', 'assets/numfourbuckshoticon.png');
-                 this.load.image('000buckshoticon', 'assets/000buckshoticon.png');
+                this.load.image('000buckshoticon', 'assets/000buckshoticon.png');
 
                 this.load.audio('shotgunshot', 
                 [
@@ -409,9 +409,9 @@
                 
                 this.fence = this.add.tileSprite
                 (
-                    this.sys.game.config.width / 2,
+                    this.sys.game.config.width * (2/4) - 2,
                     this.sys.game.config.height - 16,
-                    worldWidthX / 2,
+                    worldWidthX / 2 * (3 / 4) + 2,
                     16,
                     'fence'
                 );
@@ -768,7 +768,7 @@
         
             const itemsToTint = 
             [
-                "shed", "fence", "couch", "grill", "ground", "grasstop", "wheat", "cross", "barn", "silo", "tractor"
+                "shed", "fence", "couch", "grill", "ground", "grasstop", "wheat", "cross", "barn", "silo", "tractor", "copcar"
             ];
 
             itemsToTint.forEach(propKey => 
@@ -906,24 +906,31 @@
                         name: "fence",
                         pos:  getRandomXAnywhere(worldWidthX * 0.75),
                         scrollFactor: 0.75,
-                        display: getRandMinMax(1, 2) === 1 ? true : false,
+                        display: getRandMinMax(1, 5) === 1 ? true : false,
                         tileSprite: true,
                         width:  getRandMinMax(3, worldWidthX * 0.75 / 2)
-                    }/*,
+                    },
                     "couch":
                     {
                         name: "couch",
                         pos:  getRandomXAnywhere(worldWidthX * 0.76),
                         scrollFactor: 0.775,
-                        display: getRandMinMax(1, 2) === 1 ? true : false
+                        display: getRandMinMax(1, 100) === 1 ? true : false
                     },
                     "grill":
                     {
                         name: "grill",
                         pos:  getRandomXAnywhere(worldWidthX * 0.8),
                         scrollFactor: 0.8,
-                        display: getRandMinMax(1, 2) === 1 ? true : false
-                    }*/
+                        display: getRandMinMax(1, 100) === 1 ? true : false
+                    },
+                    "copcar":
+                    {
+                        name: "copcar",
+                        pos:  getRandomXAnywhere(worldWidthX * 1),
+                        scrollFactor: 1,
+                        display: getRandMinMax(1, 5) === 1 ? true : false
+                    }
                 };
             }
             
@@ -956,40 +963,40 @@
                         name: "silo",
                         pos:  getRandomXAnywhere(worldWidthX * 0.17),
                         scrollFactor: 0.17,
-                        flip: getRandMinMax(1, 2) === 1 ? true : false,
-                        display: getRandMinMax(1, 2) === 1 ? true : false
+                        flip: getRandMinMax(1, 5) === 1 ? true : false,
+                        display: getRandMinMax(1, 5) === 1 ? true : false
                     },
                     "barn":
                     {
                         name: "barn",
                         pos:  getRandomXAnywhere(worldWidthX *  0.2),
                         scrollFactor: 0.2,
-                        flip: getRandMinMax(1, 2) === 1 ? true : false,
-                        display: getRandMinMax(1, 2) === 1 ? true : false
+                        flip: getRandMinMax(1, 5) === 1 ? true : false,
+                        display: getRandMinMax(1, 5) === 1 ? true : false
                     },
                     "cross":
                     {
                         name: "cross",
                         pos:  getRandomXAnywhere(worldWidthX * 0.25),
                         scrollFactor: 0.25,
-                        flip: getRandMinMax(1, 2) === 1 ? true : false,
-                        display: getRandMinMax(1, 2) === 1 ? true : false
+                        flip: getRandMinMax(1, 10) === 1 ? true : false,
+                        display: getRandMinMax(1, 10) === 1 ? true : false
                     },
                     "shed":
                     {
                         name: "shed",
                         pos:  getRandomXAnywhere(worldWidthX * 0.325),
                         scrollFactor: 0.325,
-                        flip: getRandMinMax(1, 2) === 1 ? true : false,
-                        display: getRandMinMax(1, 2) === 1 ? true : false
+                        flip: getRandMinMax(1, 5) === 1 ? true : false,
+                        display: getRandMinMax(1, 5) === 1 ? true : false
                     },
                     "scarecrow":
                     {
                         name: "scarecrow",
                         pos:  getRandomXAnywhere(worldWidthX * 0.4),
                         scrollFactor: 0.4,
-                        flip: getRandMinMax(1, 2) === 1 ? true : false,
-                        display: getRandMinMax(1, 2) === 1 ? true : false
+                        flip: getRandMinMax(1, 5) === 1 ? true : false,
+                        display: getRandMinMax(1, 5) === 1 ? true : false
                     },
                     /*"scarecrow2":
                     {
@@ -1008,8 +1015,8 @@
                         name: "tractor",
                         pos:  getRandomXAnywhere(worldWidthX * 0.45),
                         scrollFactor: 0.45,
-                        flip: getRandMinMax(1, 2) === 1 ? true : false,
-                        display: getRandMinMax(1, 2) === 1 ? true : false
+                        flip: getRandMinMax(1, 10) === 1 ? true : false,
+                        display: getRandMinMax(1, 10) === 1 ? true : false
                     }
                 };
             }
