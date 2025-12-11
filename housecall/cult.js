@@ -2,7 +2,7 @@ class cultOrb extends Phaser.Physics.Arcade.Sprite
   {
     constructor(scene, x, y)
     {
-      super(scene, x, y, 'cultorb');
+      super(scene, x, y, "cultorb");
       this.speed = 200;
       this.setActive(false);
       this.setVisible(false);
@@ -55,7 +55,7 @@ function cultCreator(scene, cultPositions, gameManager)
             }
             else
             {
-                scene.sound.play('block');
+                scene.sound.play("block");
                 player.defenceParticles();
                 player.activateDoubleFire();
                 player.play("block", false);
@@ -162,10 +162,10 @@ function cultSeparation(cults, player)
             {
                 let cultSoundUpdate = (anim, frame) => 
                 {
-                    if(cult.anims.isPlaying && cult.anims.currentAnim.key === 'orbThrow' && frame.index === 2 && !cultSoundPlayed)
+                    if(cult.anims.isPlaying && cult.anims.currentAnim.key === "orbThrow" && frame.index === 2 && !cultSoundPlayed)
                     {
                         cultSoundPlayed = true;
-                        scene.sound.play('orbthrow');
+                        scene.sound.play("orbthrow");
                     }
 
                     if(cultSoundPlayed)
@@ -184,7 +184,7 @@ function cultSeparation(cults, player)
   {
     constructor(scene, x, y, player, cultOrbHolder)
     {
-        super(scene, x, y, 'cult');
+        super(scene, x, y, "cult");
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -203,30 +203,30 @@ function cultSeparation(cults, player)
         this.scene = scene;
         this.shotOnce = false;
       
-        if(!scene.anims.get('orbThrow'))
+        if(!scene.anims.get("orbThrow"))
         {
             scene.anims.create
             ({
-              key: 'orbThrow',
+              key: "orbThrow",
               frames: [
-                     { key: 'cult', frame: 1 },
-                     { key: 'cult', frame: 2 },
-                     { key: 'cult', frame: 1 },
-                     { key: 'cult', frame: 0 }
+                     { key: "cult", frame: 1 },
+                     { key: "cult", frame: 2 },
+                     { key: "cult", frame: 1 },
+                     { key: "cult", frame: 0 }
                  ],
               frameRate: 6,
               repeat: 0
             });
         }
         
-        if(!scene.anims.get('cultOrbHurt'))
+        if(!scene.anims.get("cultOrbHurt"))
         {
             scene.anims.create
             ({
-                key: 'cultOrbHurt',
+                key: "cultOrbHurt",
                 frames: [
-                     { key: 'cult', frame: 3 },
-                     { key: 'cult', frame: 0 }
+                     { key: "cult", frame: 3 },
+                     { key: "cult", frame: 0 }
                  ],
                 frameRate: 2,
                 repeat: 0
@@ -236,7 +236,7 @@ function cultSeparation(cults, player)
         this.bloodEmitter = this.scene.add.particles
         (
             0, 0, 
-            'blood',
+            "blood",
             {
                 angle: { min: 0, max: 360 },
                 speed: { min: 100, max: 200 },
@@ -245,7 +245,7 @@ function cultSeparation(cults, player)
                 quantity: 100,
                 scale: { start: 0.5, end: 0 },
                 alpha: { start: 1, end: 0 },
-                blendMode: 'NORMAL',
+                blendMode: "NORMAL",
                 frequency: -1
             }
         );
@@ -253,10 +253,10 @@ function cultSeparation(cults, player)
 
         this.orbFrameUpdate = (anim, frame) => 
         {
-            if(this.anims.isPlaying && this.anims.currentAnim.key === 'orbThrow' && frame.index === 2 && !this.shotOnce)
+            if(this.anims.isPlaying && this.anims.currentAnim.key === "orbThrow" && frame.index === 2 && !this.shotOnce)
             {
                 this.shotOnce = true;
-                const orb = this.orbs.get(this.x, this.y, 'cultorb');
+                const orb = this.orbs.get(this.x, this.y, "cultorb");
 
                 if(orb)
                 {
@@ -270,7 +270,7 @@ function cultSeparation(cults, player)
                     }
                 }
             }
-            else if (this.anims.isPlaying && this.anims.currentAnim.key === 'orbThrow' && frame.index !== 2 && this.shotOnce) 
+            else if (this.anims.isPlaying && this.anims.currentAnim.key === "orbThrow" && frame.index !== 2 && this.shotOnce) 
             {
                  this.shotOnce = false;
             }
@@ -290,7 +290,7 @@ function cultSeparation(cults, player)
 
         if(this.health < 1)
         {
-            this.scene.sound.play('hurt');
+            this.scene.sound.play("hurt");
             if(this.scene.gameManager.allowScreenShakeOnKill)
             {
                 this.scene.cameras.main.shake(50, 0.004);
@@ -362,7 +362,7 @@ function cultSeparation(cults, player)
     
     shoot()
     {
-        this.play('orbThrow', false); 
+        this.play("orbThrow", false); 
         
     }
     

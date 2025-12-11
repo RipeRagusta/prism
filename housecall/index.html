@@ -331,6 +331,10 @@
                 this.currentFrameIndex = 0;
                 this.create();
                 this.scene.events.on('update', this.update, this);
+                this.scene.events.once('shutdown', () => 
+                {
+                    this.scene.events.off('update', this.update, this);
+                });
             }
 
             create() 
@@ -382,6 +386,10 @@
                 this.currentFrameIndex = 0;
                 this.create();
                 this.scene.events.on('update', this.update, this);
+                this.scene.events.once('shutdown', () => 
+                {
+                    this.scene.events.off('update', this.update, this);
+                });
             }
 
             create() 
@@ -682,6 +690,8 @@
                 {
                     this.player.buddha();
                 }
+                
+                this.sky.tilePositionX += 0.005;
             }
             
             shutdown() 
@@ -1143,6 +1153,8 @@
                 }
 
                 cultSeparation(this.cults, this.player);
+                
+                this.sky.tilePositionX += 0.005;
             }
             
             shutdown() 
@@ -1316,6 +1328,8 @@
                 }
 
                 cultSeparation(this.cults, this.player);
+                
+                this.sky.tilePositionX += 0.01;
             }
             
             shutdown() 
@@ -1456,7 +1470,7 @@
 
 
                 const thisLevel = 3;
-                this.pipe = new pipeNext(this, 1219, this.sys.game.config.height - 16, 'Level4Game', thisLevel, this.gameManager);
+                this.pipe = new pipeNext(this, 1119, this.sys.game.config.height - 16, 'Level4Game', thisLevel, this.gameManager);
 
                 this.ground = new Ground(this, worldWidthX);
 
@@ -1493,6 +1507,8 @@
 
                 cultSeparation(this.cults, this.player);
                 eyeSeparation(this.eyes, this.player);
+                
+                this.sky.tilePositionX += 0.01;
             }
             
             shutdown() 
@@ -1632,7 +1648,7 @@
 
 
                 const thisLevel = 4;
-                this.pipe = new pipeNext(this, 2106, this.sys.game.config.height - 16, 'MainMenu', 4, this.gameManager);
+                this.pipe = new pipeNext(this, 2206, this.sys.game.config.height - 16, 'MainMenu', 4, this.gameManager);
 
                 this.ground = new Ground(this, worldWidthX);
 
@@ -1667,6 +1683,8 @@
 
                 cultSeparation(this.cults, this.player);
                 eyeSeparation(this.eyes, this.player);
+                
+                this.sky.tilePositionX += 0.02;
             }
             
             shutdown() 
