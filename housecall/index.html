@@ -321,14 +321,14 @@
         class Wheat
         {
             constructor(scene, worldWidthX)
-            {
-                this.frameCounter = 0;
-                this.frameRate = 48;       
+            {    
                 this.maxFrames = 2;        
                 this.width = worldWidthX;
                 this.scene = scene;
                 this.direction = 1;
                 this.currentFrameIndex = 0;
+                this.delay = 300;
+                this.timeAlive = 0;
                 this.create();
                 this.scene.events.on("update", this.update, this);
                 this.scene.events.once("shutdown", () => 
@@ -344,10 +344,15 @@
 
             update(time, delta) 
             {
-                this.frameCounter += 1;
-
-                if(this.frameCounter % this.frameRate === 0) 
+                this.timeAlive += delta;
+                
+                if(this.timeAlive >= this.delay)
                 {
+                    while(this.timeAlive >= this.delay) 
+                    {
+                        this.timeAlive -= this.delay;
+                    }
+                    
                     let currentFrame = this.currentFrameIndex;
 
                     if(currentFrame === this.maxFrames - 1 && this.direction === 1) 
@@ -377,13 +382,13 @@
         {
             constructor(scene, worldWidthX)
             {
-                this.frameCounter = 0;
-                this.frameRate = 48;       
                 this.maxFrames = 2;        
                 this.width = worldWidthX;
                 this.scene = scene;
                 this.direction = 1;
                 this.currentFrameIndex = 0;
+                this.delay = 300;
+                this.timeAlive = 0;
                 this.create();
                 this.scene.events.on("update", this.update, this);
                 this.scene.events.once("shutdown", () => 
@@ -422,10 +427,15 @@
 
             update(time, delta) 
             {
-                this.frameCounter += 1;
-
-                if(this.frameCounter % this.frameRate === 0) 
+                this.timeAlive += delta;
+                
+                if(this.timeAlive >= this.delay)
                 {
+                    while(this.timeAlive >= this.delay) 
+                    {
+                        this.timeAlive -= this.delay;
+                    }
+                    
                     let currentFrame = this.currentFrameIndex;
 
                     if(currentFrame === this.maxFrames - 1 && this.direction === 1) 
@@ -453,6 +463,46 @@
             }
         }
         
+        class Sky
+        {
+            constructor(scene, worldWidthX, texture)
+            { 
+                this.width = worldWidthX;
+                this.scene = scene;
+                this.delay = 300;
+                this.scrollAmount = 1;
+                this.timeAlive = 0;
+                this.texture = texture;
+                this.create();
+                this.scene.events.on("update", this.update, this);
+                this.scene.events.once("shutdown", () => 
+                {
+                    this.scene.events.off("update", this.update, this);
+                });
+            }
+
+            create() 
+            {
+                this.scene.sky = this.scene.add.tileSprite(0, -32, this.width, this.scene.sys.game.config.height + 32, this.texture).setOrigin(0, 0);
+                this.scene.sky.setScrollFactor(0.1);
+            }
+
+            update(time, delta) 
+            {
+                this.timeAlive += delta;
+                
+                if(this.timeAlive >= this.delay)
+                {
+                    while(this.timeAlive >= this.delay) 
+                    {
+                        this.timeAlive -= this.delay;
+                    }
+                    
+                    this.scene.sky.tilePositionX += this.scrollAmount;
+                }
+            }
+        }
+    
         class MainMenu extends Phaser.Scene
         {
             constructor()
@@ -484,8 +534,7 @@
                 //START PROPS BEFORE PLAYER MainMenu
 
 
-                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, "sky").setOrigin(0, 0);
-                this.sky.setScrollFactor(0.1);
+                this.newSky = new Sky(this, worldWidthX, "sky");
 
                 this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, "stars").setOrigin(0, 0);
                 this.stars.setScrollFactor(0.1);
@@ -684,14 +733,12 @@
                 //END CAMERA SETUP MainMenu
             }
 
-            update(time)
+            update(time, delta)
             {
                 if(this.player.health < 1000)
                 {
                     this.player.buddha();
                 }
-                
-                this.sky.tilePositionX += 0.005;
             }
             
             shutdown() 
@@ -1033,8 +1080,7 @@
                 //START PROPS BEFORE PLAYER Level1Game
 
 
-                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, "sky").setOrigin(0, 0);
-                this.sky.setScrollFactor(0.1);
+                this.newSky = new Sky(this, worldWidthX, "sky");
 
                 this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, "stars").setOrigin(0, 0);
                 this.stars.setScrollFactor(0.1);
@@ -1153,8 +1199,6 @@
                 }
 
                 cultSeparation(this.cults, this.player);
-                
-                this.sky.tilePositionX += 0.005;
             }
             
             shutdown() 
@@ -1202,8 +1246,7 @@
                 //START PROPS BEFORE PLAYER Level2Game
 
 
-                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, "sky").setOrigin(0, 0);
-                this.sky.setScrollFactor(0.1);
+                this.newSky = new Sky(this, worldWidthX, "sky");
                 this.sky.postFX.addColorMatrix().grayscale(1);   
                         
                 this.gameManager.level2BeforePropData = makeLevelPropsRandomBeforeWheat(this, this.gameManager.level2BeforePropData, worldWidthX);
@@ -1328,8 +1371,6 @@
                 }
 
                 cultSeparation(this.cults, this.player);
-                
-                this.sky.tilePositionX += 0.01;
             }
             
             shutdown() 
@@ -1372,8 +1413,7 @@
                 //START PROPS BEFORE PLAYER Level3Game
 
 
-                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, "redskyrain").setOrigin(0, 0);
-                this.sky.setScrollFactor(0.1);
+                this.newSky = new Sky(this, worldWidthX, "redskyrain");
                                     
                 this.gameManager.level3BeforePropData = makeLevelPropsRandomBeforeWheat(this, this.gameManager.level3BeforePropData, worldWidthX);
 
@@ -1551,8 +1591,7 @@
                 //START PROPS BEFORE PLAYER Level4Game
 
 
-                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, "redsky").setOrigin(0, 0);
-                this.sky.setScrollFactor(0.1);
+                this.newSky = new Sky(this, worldWidthX, "redsky");
                                                 
                 this.gameManager.level4BeforePropData = makeLevelPropsRandomBeforeWheat(this, this.gameManager.level4BeforePropData, worldWidthX);
 
@@ -1683,8 +1722,6 @@
 
                 cultSeparation(this.cults, this.player);
                 eyeSeparation(this.eyes, this.player);
-                
-                this.sky.tilePositionX += 0.02;
             }
             
             shutdown() 
