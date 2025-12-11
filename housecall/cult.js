@@ -47,8 +47,11 @@ function cultCreator(scene, cultPositions, gameManager)
           maxSize: 30,
           runChildUpdate: true
         });
+        
         scene.physics.add.overlap(scene.player, scene.cultOrbHolder, (player, orb) =>
         {
+            orb.destroy();
+            
             if(!player.block)
             {
                 player.health -= 10;
@@ -59,12 +62,13 @@ function cultCreator(scene, cultPositions, gameManager)
                 player.defenceParticles();
                 player.activateDoubleFire();
                 player.play("block", false);
+                player.succesfulBlock = true;
+                player.lastPlayerBlock = 0;
                 if(scene.gameManager.allowScreenShakeOnBlock)
                 {
                     scene.cameras.main.shake(100, 0.005);
                 }
             }
-            orb.destroy();
         });
         
         scene.cults = scene.physics.add.group();
@@ -81,8 +85,8 @@ function cultCreator(scene, cultPositions, gameManager)
         scene.physics.add.collider(scene.cults, scene.cults);
         scene.physics.add.overlap(scene.cults, scene.playerBulletsHolder, (cult, bullet) =>
         {
-          cult.health -= bullet.damage;
           bullet.destroy();
+          cult.health -= bullet.damage;
           if(!cult.anims.isPlaying)
           {
             cult.play("cultOrbHurt", false);

@@ -11,8 +11,8 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
 
     scene.physics.add.overlap(scene.cultKnifes, scene.playerBulletsHolder, (cult, bullet) =>
     {
-        cult.health -= bullet.damage;
         bullet.destroy();
+        cult.health -= bullet.damage;
         cult.bloodEmitter.setQuantity(4);
         cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
     });

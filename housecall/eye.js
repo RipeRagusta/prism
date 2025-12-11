@@ -6,8 +6,11 @@ function eyeCreator(scene, eyePositions, gameManager)
         maxSize: 30,
         runChildUpdate: true
     });
+    
     scene.physics.add.overlap(scene.player, scene.eyeOrbHolder, (player, orb) =>
     {
+        orb.destroy();
+        
         if(!player.block)
         {
             player.health -= 10;
@@ -18,13 +21,13 @@ function eyeCreator(scene, eyePositions, gameManager)
             player.defenceParticles();
             player.activateDoubleFire();
             player.play("block", false);
+            player.succesfulBlock = true;
+            player.lastPlayerBlock = 0;
             if(scene.gameManager.allowScreenShakeOnBlock)
             {
                 scene.cameras.main.shake(100, 0.005);
             }
-
         }
-        orb.destroy();
     });
 
     scene.eyes = scene.physics.add.group
@@ -44,8 +47,8 @@ function eyeCreator(scene, eyePositions, gameManager)
 
     scene.physics.add.overlap(scene.eyes, scene.playerBulletsHolder, (eye, bullet) =>
     {
-        eye.health -= bullet.damage;
         bullet.destroy();
+        eye.health -= bullet.damage;
     });
 
     scene.time.addEvent

@@ -793,16 +793,39 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     
     checkBlock(time)
     {
-        if(this.wasd.shift.isDown && time > this.lastPlayerBlock + this.blockRate)
+        const isShiftActive = this.wasd.shift.isDown;
+        const isMouseActive = this.mouseRef.activePointer.isDown && this.mouseRef.activePointer.rightButtonDown();
+        const inputActive = isShiftActive || isMouseActive;
+        const passedCooldown = time > this.lastPlayerBlock + this.blockRate;
+
+        if(inputActive && !this.blockInputHeld && (passedCooldown || this.succesfulBlock))
         {
             this.play("block", false);
-            this.lastPlayerBlock = time;
+            this.blockInputHeld = true;
+
+            if(isMouseActive) 
+            {
+                this.mouseRef.mouse.disableContextMenu();
+            }
+
+            if(this.succesfulBlock)
+            {
+                this.lastPlayerBlock = 0;
+                this.succesfulBlock = false;
+            }
+            else
+            {
+                this.lastPlayerBlock = time;
+            }
         }
-        else if(this.mouseRef.activePointer.isDown && time > this.lastPlayerBlock + this.blockRate && this.mouseRef.activePointer.rightButtonDown())
+        else if(!inputActive && this.blockInputHeld)
         {
-            this.mouseRef.mouse.disableContextMenu();
-            this.play("block", false);
-            this.lastPlayerBlock = time;
+            this.blockInputHeld = false;
+
+            if(this.succesfulBlock)
+            {
+                this.succesfulBlock = false;
+            }
         }
         
         let xOffset;
