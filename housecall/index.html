@@ -435,19 +435,6 @@
                 //START ENEMY SETUP MainMenu
 
 
-                /*const cultPositions = 
-                [
-                    { x: worldWidthX / 2 + 7, y: 100 }
-                ];
-
-                cultCreator(this, cultPositions, this.gameManager);
-
-                this.cults.children.entries.forEach(cult => 
-                {
-                    cult.buddha();
-                });*/
-
-
                 //END ENEMY SETUP MainMenu
 
 
@@ -494,11 +481,6 @@
                         {
                             this.sound.play('stab');
 
-                            /*this.cults.children.entries.forEach(cult => 
-                            {
-                                cult.health = -100;
-                            });*/
-
                             this.controls.destroy();
                             this.strafeControls.destroy();
                             this.jumpControls.destroy();
@@ -507,7 +489,6 @@
                             this.pistolControls.destroy();
                             this.screenShake.destroy();
                             this.toggleHUD.destroy();
-                            //this.hudControls.destroy();
                         }
                     });
 
@@ -567,60 +548,12 @@
                 this.rightClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 30, 'Right-Click: Block', 12, '#fff');
                 this.leftClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 35, 'Left-Click: Use Shotgun (Hold)', 12, '#fff');
                 this.pistolControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + 40, 'Q/E: Use Pistol', 12, '#fff');
-                //this.hudControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + this.pistolControls.height + 45, 'U: Toggle HUD', 12, '#fff');
-                
-                /*if(this.gameManager.allowScreenShakeOnBlock)
-                {
-                    this.screenShakeWords = "On";
-                }
-                else
-                {
-                    this.screenShakeWords = "Off";
-                }
-                
-                this.screenShake = createText(this, this.game.config.width * 2 - 3, 3, 'Screen Shake: ' + this.screenShakeWords, 10, '#ff0000').setOrigin(1, 0).setDepth(1232300);
-                this.screenShake.setInteractive({cursor: 'pointer'});
-                this.screenShake.on('pointerdown', () =>
-                {
-                    this.gameManager.allowScreenShakeOnBlock = !this.gameManager.allowScreenShakeOnBlock;
-                    this.gameManager.allowScreenShakeOnKill = !this.gameManager.allowScreenShakeOnKill;
-                    
-                    if(checkStorage() === true)
-                    {
-                        localStorage.setItem("HCScreenShakeSetting", this.gameManager.allowScreenShakeOnBlock);
-                    }
-                    
-                    if(this.gameManager.allowScreenShakeOnBlock)
-                    {
-                        this.screenShakeWords = "On";
-                    }
-                    else
-                    {
-                        this.screenShakeWords = "Off";
-                    }
-                    
-                    this.screenShake.setText('Screen Shake: ' + this.screenShakeWords);
-                });
-                
-                this.screenShake.on('pointerover', () =>
-                {
-                    this.player.canShoot = false;
-                });
-                
-                this.screenShake.on('pointerout', () =>
-                {
-                    this.player.canShoot = true;
-                });*/
             
                 this.screenShake = createText(this, this.game.config.width * 2 - 3, 3, 'I: Toggle Jitter', 10, '#ff0000').setOrigin(1, 0).setDepth(1232300);
                 
                 this.highScore = createText(this, this.game.config.width * 3 - (this.game.config.width / 2), 3, 'High Score: ' + this.gameManager.highScore, 10, '#ff0000').setOrigin(0.5, 0).setDepth(1232300);
                 
                 this.toggleHUD = createText(this, this.game.config.width + 3, 3, 'U: Toggle HUD', 10, '#ff0000').setOrigin(0, 0).setDepth(1232300);
-                
-                //this.screenShake.setBackgroundColor('#000000');
-                
-                //this.hudControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + this.pistolControls.height + 45, 'U: Info and Settings', 12, '#fff');
                 
                 this.start = createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Start', 20, '#fff').setOrigin(0.5, 0.5);
                 this.start.setInteractive({cursor: 'pointer'});
@@ -643,7 +576,6 @@
                 this.cameras.main.setBounds(0, 0, worldWidthX, 176);
                 this.cameras.scrollX = 0;
                 this.cameras.scrollY = 0;
-                //this.cameras.main.startFollow(this.player, true, 1, 1, 0, (this.sys.game.config.height / 2));
                 this.cameras.main.setZoom(1);
 
 
@@ -676,32 +608,6 @@
             return newText;
         }
   
-        function createLevelProps(scene)
-        {
-            scene.shed = scene.add.image(75, scene.sys.game.config.height - 16, 'shed');
-            scene.shed.setOrigin(0, 1);
-            scene.shed.setScrollFactor(0.65);
-
-            scene.fence = scene.add.tileSprite
-            (
-              0,
-              scene.sys.game.config.height - 16,
-              148,
-              16,
-              'fence'
-            );
-            scene.fence.setScrollFactor(0.75);
-            scene.fence.setOrigin(0, 1);
-
-            scene.couch = scene.add.image(45, scene.sys.game.config.height - 16, 'couch');
-            scene.couch.setScrollFactor(0.8);
-            scene.couch.setOrigin(0, 1);
-
-            scene.grill = scene.add.image(15, scene.sys.game.config.height - 16, 'grill');
-            scene.grill.setScrollFactor(0.8);
-            scene.grill.setOrigin(0, 1);
-        }
-  
         function makeRain(scene, texture)
         {
             scene.rain = scene.add.particles
@@ -729,43 +635,6 @@
   
         function filterColors(scene, color)
         {
-            /*if(scene.shed)
-            {
-                scene.shed.setTint(color);
-            }
-            if(scene.fence)
-            {
-                scene.fence.setTint(color);
-            }
-            if(scene.couch)
-            {
-                scene.couch.setTint(color);
-            }
-            if(scene.grill)
-            {
-                scene.grill.setTint(color);
-            }
-            if(scene.ground)
-            {
-                scene.ground.setTint(color);
-            }
-            if(scene.grasstop)
-            {
-                scene.grasstop.setTint(color);
-            }
-            if(scene.wheat)
-            {
-                scene.wheat.setTint(color);
-            }
-            if(scene.cross)
-            {
-                scene.cross.setTint(color);
-            }
-            if(scene.tractor)
-            {
-                scene.tractor.setTint(color);
-            }*/
-        
             const itemsToTint = 
             [
                 "shed", "fence", "couch", "grill", "ground", "grasstop", "wheat", "cross", "barn", "silo", "tractor", "copcar"
@@ -908,7 +777,8 @@
                         scrollFactor: 0.75,
                         display: getRandMinMax(1, 5) === 1 ? true : false,
                         tileSprite: true,
-                        width:  getRandMinMax(3, worldWidthX * 0.75 / 2)
+                        width:  (Math.floor(getRandMinMax(0, worldWidthX * 0.75 / 2) / 4) * 4) + 3,
+                        positionOffset: -3
                     },
                     "couch":
                     {
@@ -931,7 +801,7 @@
                         name: "copcar",
                         pos:  getRandomXAnywhere(worldWidthX * 1),
                         scrollFactor: 1,
-                        flip: getRandMinMax(1, 2) === 1 ? true : false,
+                        flip: getRandMinMax(1, 5) === 1 ? true : false,
                         display: getRandMinMax(1, 5) === 1 ? true : false
                     }
                 };
@@ -943,7 +813,9 @@
                 {
                     if(definition.tileSprite)
                     {
+                        let offsetX = definition.positionOffset || 0;
                         scene[name] = scene.add.tileSprite(definition.pos, 176 - 16, definition.width, 16, definition.name).setOrigin(0.5, 1).setScrollFactor(definition.scrollFactor);
+                        scene[name].tilePositionX = offsetX;
                     }
                     else
                     {
@@ -1021,73 +893,6 @@
             });
             
             return propData;
-            
-            /*this.tractor = this.physics.add.sprite(200, this.sys.game.config.height - 16, 'tractor');
-                this.tractor.setOrigin(0, 1);
-                this.tractor.body.allowGravity = false;
-                this.tractor.body.setImmovable(true);
-                this.tractor.setDepth(550);
-            /*if(!scene.gameManager.crossPos1)
-            {
-                let crossPos = getRandomXAnywhere(worldWidthX);
-                scene.cross = scene.add.image(crossPos, scene.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
-                scene.gameManager.crossPos1 = crossPos;
-            }
-            else
-            {
-                scene.cross = scene.add.image(scene.gameManager.crossPos1, scene.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
-            }
-
-            scene.cross.setScrollFactor(0.25);
-
-            if(!scene.gameManager.scarecrowPos1)
-            {
-                let scarePos = getRandomXAnywhere(worldWidthX);
-                scene.scarecrow = scene.add.image(scarePos, scene.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-                scene.gameManager.scarecrowPos1 = scarePos;
-            }
-            else
-            {
-                scene.scarecrow = scene.add.image(scene.gameManager.scarecrowPos1, scene.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-            }
-
-            scene.scarecrow.setScrollFactor(0.4);
-
-            scene.shed = scene.add.image(75, scene.sys.game.config.height - 16, 'shed');
-            scene.shed.setOrigin(0, 1);
-            scene.shed.setScrollFactor(0.65);
-
-            scene.wheat = scene.add.tileSprite
-            (
-                0,
-                176 - 16,
-                worldWidthX,
-                16,
-                'wheat'
-            );
-            scene.wheat.setOrigin(0, 1);
-            scene.wheat.setScrollFactor(0.575);
-
-
-
-            scene.fence = scene.add.tileSprite
-            (
-              0,
-              scene.sys.game.config.height - 16,
-              148,
-              16,
-              'fence'
-            );
-            scene.fence.setScrollFactor(0.75);
-            scene.fence.setOrigin(0, 1);
-
-            scene.couch = scene.add.image(45, scene.sys.game.config.height - 16, 'couch');
-            scene.couch.setScrollFactor(0.8);
-            scene.couch.setOrigin(0, 1);
-
-            scene.grill = scene.add.image(15, scene.sys.game.config.height - 16, 'grill');
-            scene.grill.setScrollFactor(0.8);
-            scene.grill.setOrigin(0, 1);*/
         }
     
         class Level1Game extends Phaser.Scene
@@ -1129,62 +934,16 @@
                 this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
                 this.stars.setScrollFactor(0.1);
                 
-                /*if(!this.gameManager.crossPos1)
-                {
-                    let crossPos = getRandomXAnywhere(worldWidthX);
-                    this.cross = this.add.image(crossPos, this.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
-                    this.gameManager.crossPos1 = crossPos;
-                }
-                else
-                {
-                    this.cross = this.add.image(this.gameManager.crossPos1, this.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
-                }
-
-                this.cross.setScrollFactor(0.25);
-                
-                if(!this.gameManager.scarecrowPos1)
-                {
-                    let scarePos = getRandomXAnywhere(worldWidthX);
-                    this.scarecrow = this.add.image(scarePos, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-                    this.gameManager.scarecrowPos1 = scarePos;
-                }
-                else
-                {
-                    this.scarecrow = this.add.image(this.gameManager.scarecrowPos1, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-                }
-                
-                this.scarecrow.setScrollFactor(0.4);*/
-                
                 this.gameManager.level1BeforePropData = makeLevelPropsRandomBeforeWheat(this, this.gameManager.level1BeforePropData, worldWidthX);
 
-                this.wheat = this.add.tileSprite
-                (
-                    0,
-                    176 - 16,
-                    worldWidthX,
-                    16,
-                    'wheat'
-                );
-                this.wheat.setOrigin(0, 1);
-                this.wheat.setScrollFactor(0.575);
+                this.wheat = this.add.tileSprite(0, 176 - 16, worldWidthX, 16, 'wheat').setOrigin(0, 1).setScrollFactor(0.575);
                 
                 this.gameManager.level1AfterPropData = makeLevelPropsRandomAfterWheat(this, this.gameManager.level1AfterPropData, worldWidthX);
                 
-                this.ground = this.add.tileSprite
-                (
-                    0,
-                    this.sys.game.config.height + 16,
-                    worldWidthX * 2,
-                    32,
-                    'ground'
-                );
-
-                this.ground.setOrigin(0, 1);
+                this.ground = this.add.tileSprite(0, this.sys.game.config.height + 16, worldWidthX * 2, 32, 'ground').setOrigin(0, 1);
                 this.physics.add.existing(this.ground);
                 this.ground.body.setImmovable(true);
                 this.ground.body.allowGravity = false;
-
-                //createLevelProps(this);
 
 
                 //END PROPS BEFORE PLAYER Level1Game
@@ -1194,7 +953,6 @@
 
 
                 createPlayer(this, 100, this.sys.game.config.height - 24, this.gameManager);
-                //this.player.buddha();
 
 
                 //END PLAYER SETUP Level1Game
@@ -1265,24 +1023,7 @@
                 const thisLevel = 1;
                 this.pipe = new pipeNext(this, 1594, this.sys.game.config.height - 16, 'Level2Game', thisLevel, this.gameManager);
 
-                this.grasstop = this.add.tileSprite
-                (
-                    0,
-                    this.sys.game.config.height - 16,
-                    worldWidthX,
-                    16,
-                    'grasstop'
-                );
-                this.grasstop.setOrigin(0, 1);
-
-                /*this.tractor = this.physics.add.sprite(200, this.sys.game.config.height - 16, 'tractor');
-                this.tractor.setOrigin(0, 1);
-                this.tractor.body.allowGravity = false;
-                this.tractor.body.setImmovable(true);
-                this.tractor.setDepth(550);
-
-                this.physics.add.collider(this.tractor, this.ground);
-                this.physics.add.collider(this.tractor, this.player);*/
+                this.grasstop = this.add.tileSprite(0, this.sys.game.config.height - 16, worldWidthX, 16, 'grasstop').setOrigin(0, 1);
 
 
                 //END PROPS AFTER PLAYER Level1Game
@@ -1312,7 +1053,6 @@
                 }
 
                 cultSeparation(this.cults, this.player);
-                //eyeSeparation(this.eyes, this.player);
             }
             
             shutdown() 
@@ -1362,48 +1102,11 @@
 
                 this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'sky').setOrigin(0, 0);
                 this.sky.setScrollFactor(0.1);
-                this.sky.postFX.addColorMatrix().grayscale(1);
-                
-                /*if(!this.gameManager.crossPos2)
-                {
-                    let crossPos = getRandomXAnywhere(worldWidthX);
-                    this.cross = this.add.image(crossPos, this.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
-                    this.gameManager.crossPos2 = crossPos;
-                }
-                else
-                {
-                    this.cross = this.add.image(this.gameManager.crossPos2, this.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
-                }
-
-                this.cross.setScrollFactor(0.25);
-                
-                if(!this.gameManager.scarecrowPos2)
-                {
-                    let scarePos = getRandomXAnywhere(worldWidthX);
-                    this.scarecrow = this.add.image(scarePos, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-                    this.gameManager.scarecrowPos2 = scarePos;
-                }
-                else
-                {
-                    this.scarecrow = this.add.image(this.gameManager.scarecrowPos2, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-                }
-
-                this.scarecrow.setScrollFactor(0.4);*/
-                        
+                this.sky.postFX.addColorMatrix().grayscale(1);   
                         
                 this.gameManager.level2BeforePropData = makeLevelPropsRandomBeforeWheat(this, this.gameManager.level2BeforePropData, worldWidthX);
-                
-                
 
-
-                this.wheat = this.add.tileSprite
-                (
-                    0,
-                    176 - 16,
-                    worldWidthX,
-                    16,
-                    'wheat'
-                );
+                this.wheat = this.add.tileSprite(0, 176 - 16, worldWidthX, 16,'wheat');
                 this.wheat.setOrigin(0, 1);
                 this.wheat.setScrollFactor(0.575);
                 
@@ -1424,8 +1127,6 @@
                 this.ground.body.allowGravity = false;
                 this.ground.setTint(0xd1e0e0);
 
-                //createLevelProps(this);
-
                 this.pipe = this.add.image(15, this.sys.game.config.height - 16, 'pipe');       
                 this.pipe.setOrigin(0, 1);
 
@@ -1437,7 +1138,6 @@
 
 
                 createPlayer(this, 100, this.sys.game.config.height - 24, this.gameManager);
-                //this.player.buddha();
 
 
                 //END PLAYER SETUP Level2Game
@@ -1553,11 +1253,6 @@
                 }
 
                 cultSeparation(this.cults, this.player);
-                //eyeSeparation(this.eyes, this.player);
-
-                //activateCultGroups(this, this.cultGroup1); //OLD PRESET
-                //activateCultGroups(this, this.cultGroup2);
-                //activateCultGroups(this, this.cultGroup3);
             }
             
             shutdown() 
@@ -1571,10 +1266,6 @@
                 });
             }
         }
-  
-  
-  
- 
 
         class Level3Game extends Phaser.Scene
         {
@@ -1606,37 +1297,8 @@
 
                 this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'redskyrain').setOrigin(0, 0);
                 this.sky.setScrollFactor(0.1);
-                
-                /*if(!this.gameManager.crossPos3)
-                {
-                    let crossPos = getRandomXAnywhere(worldWidthX);
-                    this.cross = this.add.image(crossPos, this.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
-                    this.gameManager.crossPos3 = crossPos;
-                }
-                else
-                {
-                    this.cross = this.add.image(this.gameManager.crossPos3, this.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
-                }
-
-                this.cross.setScrollFactor(0.25);
-                
-                if(!this.gameManager.scarecrowPos3)
-                {
-                    let scarePos = getRandomXAnywhere(worldWidthX);
-                    this.scarecrow = this.add.image(scarePos, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-                    this.gameManager.scarecrowPos3 = scarePos;
-                }
-                else
-                {
-                    this.scarecrow = this.add.image(this.gameManager.scarecrowPos3, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-                }
-
-                this.scarecrow.setScrollFactor(0.4);*/
-                                    
                                     
                 this.gameManager.level3BeforePropData = makeLevelPropsRandomBeforeWheat(this, this.gameManager.level3BeforePropData, worldWidthX);
-                
-                
 
                 this.wheat = this.add.tileSprite
                 (
@@ -1845,36 +1507,8 @@
 
                 this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'redsky').setOrigin(0, 0);
                 this.sky.setScrollFactor(0.1);
-                
-                /*if(!this.gameManager.crossPos4)
-                {
-                    let crossPos = getRandomXAnywhere(worldWidthX);
-                    this.cross = this.add.image(crossPos, this.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
-                    this.gameManager.crossPos4 = crossPos;
-                }
-                else
-                {
-                    this.cross = this.add.image(this.gameManager.crossPos4, this.sys.game.config.height - 16, 'cross').setOrigin(0, 1);
-                }
-
-                this.cross.setScrollFactor(0.25);
-                
-                if(!this.gameManager.scarecrowPos4)
-                {
-                    let scarePos = getRandomXAnywhere(worldWidthX);
-                    this.scarecrow = this.add.image(scarePos, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-                    this.gameManager.scarecrowPos4 = scarePos;
-                }
-                else
-                {
-                    this.scarecrow = this.add.image(this.gameManager.scarecrowPos4, this.sys.game.config.height - 16, 'scarecrow').setOrigin(0, 1);
-                }
-
-                this.scarecrow.setScrollFactor(0.4);*/
                                                 
                 this.gameManager.level4BeforePropData = makeLevelPropsRandomBeforeWheat(this, this.gameManager.level4BeforePropData, worldWidthX);
-                
-                
 
                 this.wheat = this.add.tileSprite
                 (
@@ -1903,29 +1537,6 @@
                 this.ground.body.setImmovable(true);
                 this.ground.body.allowGravity = false;
 
-                /*this.shed = this.add.image(1561, this.sys.game.config.height - 16, 'shed');
-                this.shed.setOrigin(0, 1);
-                this.shed.setScrollFactor(0.65);
-
-                this.fence = this.add.tileSprite
-                (
-                  1751,
-                  this.sys.game.config.height - 16,
-                  200,
-                  16,
-                  'fence'
-                );
-                this.fence.setScrollFactor(0.75);
-                this.fence.setOrigin(0, 1);
-
-                this.couch = this.add.image(1923, this.sys.game.config.height - 16, 'couch');
-                this.couch.setScrollFactor(0.8);
-                this.couch.setOrigin(0, 1);
-
-                this.grill = this.add.image(1969, this.sys.game.config.height - 16, 'grill');
-                this.grill.setScrollFactor(0.8);
-                this.grill.setOrigin(0, 1);*/
-
                 this.pipe = this.add.image(15, this.sys.game.config.height - 16, 'pipe');
                 this.pipe.setOrigin(0, 1);
 
@@ -1937,7 +1548,6 @@
 
 
                 createPlayer(this, 100, this.sys.game.config.height - 24, this.gameManager);
-                //this.player.buddha();
 
 
                 //END PLAYER SETUP Level4Game
@@ -2060,12 +1670,6 @@
 
                 cultSeparation(this.cults, this.player);
                 eyeSeparation(this.eyes, this.player);
-
-                // activateCultGroups(this, this.cultGroup1);
-                //activateCultGroups(this, this.cultGroup2);
-
-                //activateEyeGroups(this, this.eyeGroup1); OLD PRESET UPDATE
-                //activateEyeGroups(this, this.eyeGroup2);
             }
             
             shutdown() 
@@ -2079,8 +1683,6 @@
                 });
             }
         }
-  
-  
   
         class UpgradeRoom extends Phaser.Scene
         {
@@ -2260,19 +1862,7 @@
                         {
                             gameManager.damageUpgrade = true;
                         }
-                    },
-                    /*'block': 
-                    {
-                        id: 4,
-                        name: 'Refrain',
-                        description: 'Succesful blocks reset block duration.',
-                        icon: 'shieldicon',
-                        effect: (gameManager) => 
-                        {
-                            gameManager.blockUpgrade = true;
-                        }
-
-                    },*/
+                    }, 
                     'health': 
                     {
                         id: 4,
@@ -2427,11 +2017,6 @@
                 this.level3AfterPropData = null;
                 this.level4AfterPropData = null;
                 
-                /*this.scarecrowPos1 = null;
-                this.scarecrowPos2 = null;
-                this.scarecrowPos3 = null;
-                this.scarecrowPos4 = null;*/
-
                 this.alwaysBuddha = false;
 
                 this.alwaysDisplayUpgrades = true;
@@ -2545,16 +2130,6 @@
                 this.level2AfterPropData = null;
                 this.level3AfterPropData = null;
                 this.level4AfterPropData = null;
-
-                /*this.scarecrowPos1 = null;
-                this.scarecrowPos2 = null;
-                this.scarecrowPos3 = null;
-                this.scarecrowPos4 = null;
-                
-                this.crossPos1 = null;
-                this.crossPos2 = null;
-                this.crossPos3 = null;
-                this.crossPos4 = null;*/
             }
             
             shutdown() 
@@ -2578,49 +2153,25 @@
 
             create()
             {
-
                 this.wasd =
                 {
-                  u: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U)
+                    u: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U)
                 };
 
                 this.gameManager = this.scene.get('GameManager');
                 this.displayedMessage = false;
 
                 if(this.gameManager.alwaysDisplayUpgrades === true)
-                {
-                    //this.displayUpgradeMessage(this.generateUpgradeMessage());
-                    //this.displayCurrentLevel();
-                    //this.displayScreenShake();
-                    //this.displayUToggle();
+                { 
                     this.displayHighScore();
                     this.displayCurrentScore();
                     this.displayedMessage = true;
                 }
                 else
                 {
-                    //this.destroyUpgradeMessage();
-                    //this.destroyCurrentLevel();
-                    //this.destroyScreenShake();
-                    //this.destroyUToggle();
                     this.destroyHighScore();
                     this.destroyCurrentScore();
                     this.displayedMessage = false;
-                }
-            }
-            
-            displayCurrentLevel()
-            {
-                this.currentLevel = createText(this, this.game.config.width - 3, 3, 'Level: ' + this.gameManager.currentLevel, 10, '#ff0000').setOrigin(1, 0).setDepth(1232300);
-                //this.currentLevel.setBackgroundColor('#000000');
-            }
-            
-            destroyCurrentLevel()
-            {
-                if(this.currentLevel)
-                {
-                    this.currentLevel.destroy();
-                    this.currentLevel = null;
                 }
             }
             
@@ -2667,114 +2218,6 @@
                     this.currentScore.setText('Score: ' + this.gameManager.score);
                 }
             }
-            
-            displayUToggle()
-            {
-                let offsetY;
-                
-                if(this.finalUpgradeString)
-                {
-                    offsetY = 8 + this.finalUpgradeString.height;
-                }
-                else
-                {
-                    offsetY = 4;
-                }
-                
-                this.uText = createText(this, 4, offsetY, 'U: Toggle HUD', 8, '#ff0000').setOrigin(0, 0).setDepth(1232300);
-            }
-            
-            destroyUToggle()
-            {
-                if(this.uText)
-                {
-                    this.uText.destroy();
-                    this.uText = null;
-                }
-            }
-            
-            displayScreenShake()
-            {
-                this.screenShake = createText(this, this.game.config.width - 0, 0, 'Screen Shake: ' + this.gameManager.allowScreenShakeOnBlock, 8, '#ff0000').setOrigin(1, 0).setDepth(1232300);
-                this.screenShake.setInteractive({cursor: 'pointer'});
-                this.screenShake.on('pointerdown', () =>
-                {
-                    this.gameManager.allowScreenShakeOnBlock = !this.gameManager.allowScreenShakeOnBlock;
-                    this.gameManager.allowScreenShakeOnKill = !this.gameManager.allowScreenShakeOnKill;
-                    this.screenShake.setText('Screen Shake: ' + this.gameManager.allowScreenShakeOnBlock);
-                });
-            }
-            
-            destroyScreenShake()
-            {
-                if(this.screenShake)
-                {
-                    this.screenShake.destroy();
-                    this.screenShake = null;
-                }
-            }
-
-            anUpgradeToDisplay()
-            {
-                if(this.gameManager.ownedCards.size === 0)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-
-            generateUpgradeMessage()
-            {
-                if(this.anUpgradeToDisplay())
-                {
-                    let upgradeString = "Upgrades: ";
-                    let firstNewComma = true;
-
-                    for(const ownedCard of this.gameManager.ownedCards)
-                    {
-                        if(firstNewComma)
-                        {
-                            upgradeString += this.gameManager.returnCardNameFromId(ownedCard);
-                            firstNewComma = false;
-                        }
-                        else
-                        {
-                            upgradeString += ", " + this.gameManager.returnCardNameFromId(ownedCard);
-                        } 
-                    }
-
-                    return upgradeString;
-                }
-                else
-                {
-                    return "Upgrades: None";
-                }
-            }
-
-            displayUpgradeMessage(upgradeString)
-            {
-                /*if(this.anUpgradeToDisplay())
-                {*/
-                    this.finalUpgradeString = createText(this, 3, 3, upgradeString, 10, '#f00').setOrigin(0, 0).setDepth(1232300);
-                    this.finalUpgradeString.setStyle
-                    ({
-                        wordWrap: { width: this.sys.game.config.width - 8, use:'true' }
-                    });
-                    //this.finalUpgradeString.setBackgroundColor('#000000');
-                //}
-            }
-
-            destroyUpgradeMessage()
-            {
-                if(this.finalUpgradeString)
-                {
-                    this.finalUpgradeString.destroy();
-                    this.finalUpgradeString = null;
-                }
-            }
 
             update(time)
             {
@@ -2782,20 +2225,12 @@
                 {
                     if(this.displayedMessage)
                     {
-                        //this.destroyUpgradeMessage();
-                        //this.destroyCurrentLevel();
-                        //this.destroyScreenShake();
-                        //this.destroyUToggle();
                         this.destroyCurrentScore();
                         this.destroyHighScore();
                         this.gameManager.alwaysDisplayUpgrades = false;
                     }
                     else
                     {
-                        //this.displayUpgradeMessage(this.generateUpgradeMessage());
-                        //this.displayCurrentLevel();
-                        //this.displayScreenShake();
-                        //this.displayUToggle();
                         this.displayCurrentScore();
                         this.displayHighScore();
                         this.gameManager.alwaysDisplayUpgrades = true;
