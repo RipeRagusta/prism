@@ -101,7 +101,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
   {
     constructor(scene, x, y, playerBulletsHolder)
     {
-        super(scene, x, y, 'player');
+        super(scene, x, y, "player");
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -127,7 +127,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.damagePerShot = 1;
         this.baseDamage = 1;
         this.initialDamage = this.baseDamage;
-        this.fireMode = 'buckshot';
+        this.fireMode = "buckshot";
         this.pistolMoveFireRate = 1500;
         this.lastPistolMove = 0;
         this.lastShellCycle = 0;
@@ -153,94 +153,94 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.mouseRef = scene.input;
         this.bullets = playerBulletsHolder;
 
-        if(!scene.anims.get('pump'))
+        if(!scene.anims.get("pump"))
         {
             scene.anims.create
             ({
-                key: 'pump',
-                frames: scene.anims.generateFrameNumbers('player', { start: 1, end: 0 }),
+                key: "pump",
+                frames: scene.anims.generateFrameNumbers("player", { start: 1, end: 0 }),
                 frameRate: 6,
                 repeat: 0
             });
         }
         
-        if(!scene.anims.get('block'))
+        if(!scene.anims.get("block"))
         {
             scene.anims.create
             ({
-                key: 'block',
+                key: "block",
                 frames: [
-                            { key: 'player', frame: 2 },
-                            { key: 'player', frame: 0 }
+                            { key: "player", frame: 2 },
+                            { key: "player", frame: 0 }
                         ],
                 frameRate: 2,
                 repeat: 0
             });
         }
         
-        if(!scene.anims.get('pistolmove'))
+        if(!scene.anims.get("pistolmove"))
         {
             scene.anims.create
             ({
-                key: 'pistolmove',
+                key: "pistolmove",
                 frames: [
-                            { key: 'player', frame: 5 },
-                            { key: 'player', frame: 3 },
-                            { key: 'player', frame: 3 },
-                            { key: 'player', frame: 4 },
-                            { key: 'player', frame: 3 },
-                            { key: 'player', frame: 5 },
-                            { key: 'player', frame: 0 }
+                            { key: "player", frame: 5 },
+                            { key: "player", frame: 3 },
+                            { key: "player", frame: 3 },
+                            { key: "player", frame: 4 },
+                            { key: "player", frame: 3 },
+                            { key: "player", frame: 5 },
+                            { key: "player", frame: 0 }
                         ],
                 frameRate: 7,
                 repeat: 0
             });
         }
         
-        if(!scene.anims.get('triplepistol'))
+        if(!scene.anims.get("triplepistol"))
         {
             scene.anims.create
             ({
-                key: 'triplepistol',
+                key: "triplepistol",
                 frames: [
-                            { key: 'player', frame: 5 },
-                            { key: 'player', frame: 3 },
-                            { key: 'player', frame: 3 },
-                            { key: 'player', frame: 4 },
-                            { key: 'player', frame: 3 },
-                            { key: 'player', frame: 4 },
-                            { key: 'player', frame: 3 },
-                            { key: 'player', frame: 4 },
-                            { key: 'player', frame: 3 },
-                            { key: 'player', frame: 5 },
-                            { key: 'player', frame: 0 }
+                            { key: "player", frame: 5 },
+                            { key: "player", frame: 3 },
+                            { key: "player", frame: 3 },
+                            { key: "player", frame: 4 },
+                            { key: "player", frame: 3 },
+                            { key: "player", frame: 4 },
+                            { key: "player", frame: 3 },
+                            { key: "player", frame: 4 },
+                            { key: "player", frame: 3 },
+                            { key: "player", frame: 5 },
+                            { key: "player", frame: 0 }
                         ],
                 frameRate: 7,
                 repeat: 0
             });
         }
         
-        if(!scene.anims.get('quintuplepistol'))
+        if(!scene.anims.get("quintuplepistol"))
         {
             scene.anims.create
             ({
-                key: 'quintuplepistol',
+                key: "quintuplepistol",
                 frames: [
-                            { key: 'player', frame: 5 },
-                            { key: 'player', frame: 3 },
-                            { key: 'player', frame: 3 },
-                            { key: 'player', frame: 4 },
-                            { key: 'player', frame: 3 },
-                            { key: 'player', frame: 4 },
-                            { key: 'player', frame: 3 },
-                            { key: 'player', frame: 4 },
-                            { key: 'player', frame: 3 },
-                            { key: 'player', frame: 4 },
-                            { key: 'player', frame: 3 },
-                            { key: 'player', frame: 4 },
-                            { key: 'player', frame: 3 },
-                            { key: 'player', frame: 5 },
-                            { key: 'player', frame: 0 }
+                            { key: "player", frame: 5 },
+                            { key: "player", frame: 3 },
+                            { key: "player", frame: 3 },
+                            { key: "player", frame: 4 },
+                            { key: "player", frame: 3 },
+                            { key: "player", frame: 4 },
+                            { key: "player", frame: 3 },
+                            { key: "player", frame: 4 },
+                            { key: "player", frame: 3 },
+                            { key: "player", frame: 4 },
+                            { key: "player", frame: 3 },
+                            { key: "player", frame: 4 },
+                            { key: "player", frame: 3 },
+                            { key: "player", frame: 5 },
+                            { key: "player", frame: 0 }
                         ],
                 frameRate: 7,
                 repeat: 0
@@ -250,7 +250,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.shellEmitter = this.scene.add.particles
         (
             0, 0, 
-            'shell',
+            "shell",
             {
                 angle: 
                 {
@@ -272,7 +272,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 quantity: 1,
                 scale: { start: 1, end: 1 },
                 alpha: { start: 1, end: 1 },
-                blendMode: 'NORMAL',
+                blendMode: "NORMAL",
                 frequency: -1
             }
         );
@@ -280,7 +280,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.slugShellEmitter = this.scene.add.particles
         (
             0, 0, 
-            'slugshell',
+            "slugshell",
             {
                 angle: 
                 {
@@ -302,7 +302,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 quantity: 1,
                 scale: { start: 1, end: 1 },
                 alpha: { start: 1, end: 1 },
-                blendMode: 'NORMAL',
+                blendMode: "NORMAL",
                 frequency: -1
             }
         );
@@ -310,7 +310,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.birdShotShellEmitter = this.scene.add.particles
         (
             0, 0, 
-            'birdshotshell',
+            "birdshotshell",
             {
                 angle: 
                 {
@@ -332,7 +332,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 quantity: 1,
                 scale: { start: 1, end: 1 },
                 alpha: { start: 1, end: 1 },
-                blendMode: 'NORMAL',
+                blendMode: "NORMAL",
                 frequency: -1
             }
         );
@@ -340,7 +340,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.numfourbuckShotShellEmitter = this.scene.add.particles
         (
             0, 0, 
-            'numfourbuckshotshell',
+            "numfourbuckshotshell",
             {
                 angle: 
                 {
@@ -362,7 +362,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 quantity: 1,
                 scale: { start: 1, end: 1 },
                 alpha: { start: 1, end: 1 },
-                blendMode: 'NORMAL',
+                blendMode: "NORMAL",
                 frequency: -1
             }
         );
@@ -370,7 +370,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.orbDestory = this.scene.add.particles
         (
             0, 0, 
-            'bulletcult',
+            "bulletcult",
             {
                 angle: 
                 {
@@ -392,7 +392,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 quantity: 4,
                 scale: { start: 1, end: 1 },
                 alpha: { start: 1, end: 0 },
-                blendMode: 'NORMAL',
+                blendMode: "NORMAL",
                 frequency: -1
             }
         );
@@ -400,7 +400,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.pistolCasing = this.scene.add.particles
         (
             0, 0, 
-            'pistolcasing',
+            "pistolcasing",
             {
                 angle: 
                 {
@@ -422,62 +422,62 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 quantity: 1,
                 scale: { start: 1, end: 1 },
                 alpha: { start: 1, end: 1 },
-                blendMode: 'NORMAL',
+                blendMode: "NORMAL",
                 frequency: -1
             }
         );
 
         this.fireModeConfig = 
         {
-            'buckshot': 
+            "buckshot": 
             {
-                normalPelletType: 'bullet',
-                doublePelletType: 'bulletcult',
-                sound: 'shotgunshot',
+                normalPelletType: "bullet",
+                doublePelletType: "bulletcult",
+                sound: "shotgunshot",
                 shellEmitter: this.shellEmitter,
                 pelletCount: 10,
                 spread: 13.5,
                 spreadIncrement: 1.5,
                 pelletVelocity: 400
             },
-            'slug': 
+            "slug": 
             {
-                normalPelletType: 'slug',
-                doublePelletType: 'slugcult',
-                sound: 'slug',
+                normalPelletType: "slug",
+                doublePelletType: "slugcult",
+                sound: "slug",
                 shellEmitter: this.slugShellEmitter,
                 pelletCount: 1,
                 spread: 0,
                 spreadIncrement: 0,
                 pelletVelocity: 550
             },
-            'birdshot': 
+            "birdshot": 
             {
-                normalPelletType: 'bullet',
-                doublePelletType: 'bulletcult',
-                sound: 'birdshot',
+                normalPelletType: "bullet",
+                doublePelletType: "bulletcult",
+                sound: "birdshot",
                 shellEmitter: this.birdShotShellEmitter,
                 pelletCount: 40,
                 spread: 29.25,
                 spreadIncrement: 0.75,
                 pelletVelocity: 500
             },
-            'numfourbuckshot': 
+            "numfourbuckshot": 
             {
-                normalPelletType: 'bullet',
-                doublePelletType: 'bulletcult',
-                sound: 'numfourbuckshot',
+                normalPelletType: "bullet",
+                doublePelletType: "bulletcult",
+                sound: "numfourbuckshot",
                 shellEmitter: this.numfourbuckShotShellEmitter,
                 pelletCount: 20,
                 spread: 19,
                 spreadIncrement: 1,
                 pelletVelocity: 450
             },
-            '000buckshot': 
+            "000buckshot": 
             {
-                normalPelletType: 'bullet',
-                doublePelletType: 'bulletcult',
-                sound: '000buckshot',
+                normalPelletType: "bullet",
+                doublePelletType: "bulletcult",
+                sound: "000buckshot",
                 shellEmitter: this.shellEmitter,
                 pelletCount: 8,
                 spread: 5.6,
@@ -494,7 +494,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             }
         });
         
-        this.scene.anims.get('pump').frameRate = 6;
+        this.scene.anims.get("pump").frameRate = 6;
         
         this.pistolFrameUpdate = (anim, frame) => 
         {
@@ -521,9 +521,9 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             if(this.anims.isPlaying && this.anims.currentAnim.key === animation && shootingFrames.includes(frame.index) && !this.playedPistolShootingSound) 
             {
                 this.playedPistolShootingSound = true;
-                this.scene.sound.play('pistolsound');
+                this.scene.sound.play("pistolsound");
 
-                const bullet = this.bullets.get(this.x, this.y, 'slug');
+                const bullet = this.bullets.get(this.x, this.y, "slug");
 
                 if(bullet)
                 {
@@ -663,23 +663,23 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 switch(randomShell)
                 {
                     case 1:
-                        this.fireMode = 'buckshot';
+                        this.fireMode = "buckshot";
                         break;
                         
                     case 2:
-                        this.fireMode = 'slug';
+                        this.fireMode = "slug";
                         break;
                         
                     case 3:
-                        this.fireMode = 'birdshot';
+                        this.fireMode = "birdshot";
                         break;
                         
                     case 4:
-                        this.fireMode = '000buckshot';
+                        this.fireMode = "000buckshot";
                         break;
                         
                     case 5:
-                        this.fireMode = 'numfourbuckshot';
+                        this.fireMode = "numfourbuckshot";
                         break;
                 }
                 
@@ -687,23 +687,23 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             }
         }
             
-        if(this.fireMode === 'buckshot')
+        if(this.fireMode === "buckshot")
         {
             this.damagePerShot = this.baseDamage;
         }
-        else if(this.fireMode === 'slug')
+        else if(this.fireMode === "slug")
         {
             this.damagePerShot = this.baseDamage * 7.5;
         }
-        else if(this.fireMode === 'birdshot')
+        else if(this.fireMode === "birdshot")
         {
             this.damagePerShot = this.baseDamage * 0.5;
         }
-        else if(this.fireMode === '000buckshot')
+        else if(this.fireMode === "000buckshot")
         {
             this.damagePerShot = this.baseDamage * 1.5;
         }
-        else if(this.fireMode === 'numfourbuckshot')
+        else if(this.fireMode === "numfourbuckshot")
         {
             this.damagePerShot = this.baseDamage;
         }
@@ -807,7 +807,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         
         let xOffset;
         
-        if(this.anims.isPlaying && this.anims.currentAnim.key === 'block' && this.anims.currentFrame.index === 1)
+        if(this.anims.isPlaying && this.anims.currentAnim.key === "block" && this.anims.currentFrame.index === 1)
         {
             this.block = true;
             this.setSize(8, 16);
@@ -883,7 +883,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         if(this.doubleFire === true)
         {
             this.fireRate = 325;
-            this.scene.anims.get('pump').frameRate = 12;
+            this.scene.anims.get("pump").frameRate = 12;
         }
         
         if(this.doubleFireTimer)
@@ -895,7 +895,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         {
             this.doubleFire = false;
             this.fireRate = this.baseFireRate;
-            this.scene.anims.get('pump').frameRate = 6;
+            this.scene.anims.get("pump").frameRate = 6;
         });
     }
     

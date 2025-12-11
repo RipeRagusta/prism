@@ -28,19 +28,19 @@
         {
             constructor(scene, x, y, key, fromLevel, gameManager) 
             {
-                super(scene, x, y, 'pipe');
+                super(scene, x, y, "pipe");
 
-                this.pipe = scene.physics.add.sprite(x, y, 'pipe');
+                this.pipe = scene.physics.add.sprite(x, y, "pipe");
                 this.pipe.setOrigin(0, 1);
                 this.pipe.body.allowGravity = false;
                 this.pipe.body.setImmovable(true);
 
-                if(!scene.anims.get('stabAnim'))
+                if(!scene.anims.get("stabAnim"))
                 {
                     scene.anims.create
                     ({
                         key: "stabAnim",
-                        frames: this.anims.generateFrameNumbers('stab', {start: 0, end: 2 }),
+                        frames: this.anims.generateFrameNumbers("stab", {start: 0, end: 2 }),
                         frameRate: 2,
                         repeat: 0
                     });
@@ -54,14 +54,14 @@
                     player.destroy();
                     scene.stab.setActive(true);
                     scene.stab.setVisible(true);
-                    scene.sound.play('powerup');
+                    scene.sound.play("powerup");
 
                     scene.stab.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
                     {
                         if(frame.index === 2) 
                         {
                             let aCultActive = false;
-                            scene.sound.play('stab');
+                            scene.sound.play("stab");
 
                             if(scene.cults && scene.cults.children.entries)
                             {
@@ -101,7 +101,7 @@
 
                             if(aCultActive)
                             {
-                                scene.sound.play('hurt');
+                                scene.sound.play("hurt");
                             }
                         }
                     });
@@ -121,50 +121,50 @@
             {
                 if(gameManager.visitedUpgradeRoom1 === true)
                 {
-                    scene.scene.start('Level2Game');
-                    scene.scene.launch('HUD');
+                    scene.scene.start("Level2Game");
+                    scene.scene.launch("HUD");
                 }
                 else
                 {
                     gameManager.visitedUpgradeRoom1 = true;
-                    scene.scene.start('UpgradeRoom');
-                    scene.scene.stop('HUD');
+                    scene.scene.start("UpgradeRoom");
+                    scene.scene.stop("HUD");
                 }
             }
             else if(gameManager.currentLevel === 2)
             {
                 if(gameManager.visitedUpgradeRoom2 === true)
                 {
-                    scene.scene.start('Level3Game');
-                    scene.scene.launch('HUD');
+                    scene.scene.start("Level3Game");
+                    scene.scene.launch("HUD");
                 }
                 else
                 {
                     gameManager.visitedUpgradeRoom2 = true;
-                    scene.scene.start('UpgradeRoom');
-                    scene.scene.stop('HUD');
+                    scene.scene.start("UpgradeRoom");
+                    scene.scene.stop("HUD");
                 }
             }
             else if(gameManager.currentLevel === 3)
             {
                 if(gameManager.visitedUpgradeRoom3 === true)
                 {
-                    scene.scene.start('Level4Game');
-                    scene.scene.launch('HUD');
+                    scene.scene.start("Level4Game");
+                    scene.scene.launch("HUD");
                 }
                 else
                 {
                     gameManager.visitedUpgradeRoom3 = true;
-                    scene.scene.start('UpgradeRoom');
-                    scene.scene.stop('HUD');
+                    scene.scene.start("UpgradeRoom");
+                    scene.scene.stop("HUD");
                 }
             }
             else if(gameManager.currentLevel === 4)
             {
-                scene.scene.stop('HUD');
+                scene.scene.stop("HUD");
                 scene.gameManager.reset();
-                scene.scene.start('Level1Game');
-                scene.scene.launch('HUD');
+                scene.scene.start("Level1Game");
+                scene.scene.launch("HUD");
             }
         }
 
@@ -172,138 +172,138 @@
         {
             constructor()
             {
-              super({key: 'Loading'});
+              super({key: "Loading"});
             }
 
             preload()
             {
-                this.load.image('sky', 'assets/sky.png');
-                this.load.spritesheet('player', 'assets/player.png', {frameWidth: 16, frameHeight: 16});
-                this.load.image('ground', 'assets/grass.png');
-                this.load.image('bullet', 'assets/bullet.png');
-                this.load.image('barn', 'assets/barn.png');
-                this.load.image('fence', 'assets/fence.png');
-                this.load.image('stars', 'assets/stars.png');
-                this.load.image('cross', 'assets/cross.png');
-                this.load.spritesheet('cult', './assets/cult.png', {frameWidth: 16, frameHeight: 16});
-                this.load.image('couch', './assets/couch.png');
-                this.load.image('tractor', './assets/tractor.png');
-                this.load.spritesheet('grasstop', './assets/grasstop.png', {frameWidth: 32, frameHeight: 16});
-                this.load.image('grill', './assets/grill.png');
-                this.load.spritesheet('cultknife', './assets/cultknife.png', {frameWidth: 16, frameHeight: 16});
-                this.load.image('copcar', './assets/copcar.png');
-                this.load.image('cultorb', './assets/cultorb.png');
-                this.load.spritesheet('wheat', './assets/wheat.png', {frameWidth: 16, frameHeight: 16});
-                this.load.image('shed', './assets/shed.png');
-                this.load.image('silo', './assets/silo.png');
-                this.load.image('scarecrow', './assets/scarecrow.png');
-                this.load.image('pipe', './assets/pipe.png');
-                this.load.image('eye', './assets/eye.png');
-                this.load.spritesheet('stab', './assets/stab.png', {frameWidth: 12, frameHeight: 18});
-                this.load.image('blood', 'assets/bloodparticle.png');
-                this.load.image('eyechunk', 'assets/eyechunk.png');
-                this.load.image('shell', 'assets/shell.png');
-                this.load.image('raindrop', 'assets/raindrop.png');
-                this.load.image('bloodrain', 'assets/bloodrain.png');
-                this.load.image('redsky', 'assets/redsky.png');
-                this.load.image('redskyrain', 'assets/redskyrain.png');
-                this.load.image('bulletcult', 'assets/bulletcult.png');
-                this.load.image('slug', 'assets/slug.png');
-                this.load.image('slugcult', 'assets/slugcult.png');
-                this.load.image('slugshell', 'assets/slugshell.png');
-                this.load.image('slugicon', 'assets/slugicon.png');
-                this.load.image('birdshotshell', 'assets/birdshotshell.png');
-                this.load.image('birdshoticon', 'assets/birdshoticon.png');
-                this.load.image('healthicon', 'assets/healthicon.png');
-                this.load.image('shieldicon', 'assets/shieldicon.png');
-                this.load.image('damageicon', 'assets/damageicon.png');
-                this.load.image('cultenergyicon', 'assets/cultenergyicon.png');
-                this.load.image('hollowpointsicon', 'assets/hollowpointsicon.png');
-                this.load.image('pistolcasing', 'assets/pistolcasing.png');
-                this.load.image('multiammoicon', 'assets/multiammoicon.png');
-                this.load.image('triplepistolicon', 'assets/triplepistolicon.png');
-                this.load.image('quintuplepistolicon', 'assets/quintuplepistolicon.png');
-                this.load.image('mousepistolicon', 'assets/mousepistolicon.png');
-                this.load.image('numfourbuckshotshell', 'assets/numfourbuckshotshell.png');
-                this.load.image('numfourbuckshoticon', 'assets/numfourbuckshoticon.png');
-                this.load.image('000buckshoticon', 'assets/000buckshoticon.png');
+                this.load.image("sky", "assets/sky.png");
+                this.load.spritesheet("player", "assets/player.png", {frameWidth: 16, frameHeight: 16});
+                this.load.image("ground", "assets/grass.png");
+                this.load.image("bullet", "assets/bullet.png");
+                this.load.image("barn", "assets/barn.png");
+                this.load.image("fence", "assets/fence.png");
+                this.load.image("stars", "assets/stars.png");
+                this.load.image("cross", "assets/cross.png");
+                this.load.spritesheet("cult", "./assets/cult.png", {frameWidth: 16, frameHeight: 16});
+                this.load.image("couch", "./assets/couch.png");
+                this.load.image("tractor", "./assets/tractor.png");
+                this.load.spritesheet("grasstop", "./assets/grasstop.png", {frameWidth: 32, frameHeight: 16});
+                this.load.image("grill", "./assets/grill.png");
+                this.load.spritesheet("cultknife", "./assets/cultknife.png", {frameWidth: 16, frameHeight: 16});
+                this.load.image("copcar", "./assets/copcar.png");
+                this.load.image("cultorb", "./assets/cultorb.png");
+                this.load.spritesheet("wheat", "./assets/wheat.png", {frameWidth: 16, frameHeight: 16});
+                this.load.image("shed", "./assets/shed.png");
+                this.load.image("silo", "./assets/silo.png");
+                this.load.image("scarecrow", "./assets/scarecrow.png");
+                this.load.image("pipe", "./assets/pipe.png");
+                this.load.image("eye", "./assets/eye.png");
+                this.load.spritesheet("stab", "./assets/stab.png", {frameWidth: 12, frameHeight: 18});
+                this.load.image("blood", "assets/bloodparticle.png");
+                this.load.image("eyechunk", "assets/eyechunk.png");
+                this.load.image("shell", "assets/shell.png");
+                this.load.image("raindrop", "assets/raindrop.png");
+                this.load.image("bloodrain", "assets/bloodrain.png");
+                this.load.image("redsky", "assets/redsky.png");
+                this.load.image("redskyrain", "assets/redskyrain.png");
+                this.load.image("bulletcult", "assets/bulletcult.png");
+                this.load.image("slug", "assets/slug.png");
+                this.load.image("slugcult", "assets/slugcult.png");
+                this.load.image("slugshell", "assets/slugshell.png");
+                this.load.image("slugicon", "assets/slugicon.png");
+                this.load.image("birdshotshell", "assets/birdshotshell.png");
+                this.load.image("birdshoticon", "assets/birdshoticon.png");
+                this.load.image("healthicon", "assets/healthicon.png");
+                this.load.image("shieldicon", "assets/shieldicon.png");
+                this.load.image("damageicon", "assets/damageicon.png");
+                this.load.image("cultenergyicon", "assets/cultenergyicon.png");
+                this.load.image("hollowpointsicon", "assets/hollowpointsicon.png");
+                this.load.image("pistolcasing", "assets/pistolcasing.png");
+                this.load.image("multiammoicon", "assets/multiammoicon.png");
+                this.load.image("triplepistolicon", "assets/triplepistolicon.png");
+                this.load.image("quintuplepistolicon", "assets/quintuplepistolicon.png");
+                this.load.image("mousepistolicon", "assets/mousepistolicon.png");
+                this.load.image("numfourbuckshotshell", "assets/numfourbuckshotshell.png");
+                this.load.image("numfourbuckshoticon", "assets/numfourbuckshoticon.png");
+                this.load.image("000buckshoticon", "assets/000buckshoticon.png");
 
-                this.load.audio('shotgunshot', 
+                this.load.audio("shotgunshot", 
                 [
-                    'assets/shotgunshot.wav'
+                    "assets/shotgunshot.wav"
                 ]);
 
-                this.load.audio('slug', 
+                this.load.audio("slug", 
                 [
-                    'assets/slug.wav'
+                    "assets/slug.wav"
                 ]);
 
-                this.load.audio('orbthrow', 
+                this.load.audio("orbthrow", 
                 [
-                    'assets/orbthrow.wav'
+                    "assets/orbthrow.wav"
                 ]);
 
-                this.load.audio('hurt', 
+                this.load.audio("hurt", 
                 [
-                    'assets/hurt.wav'
+                    "assets/hurt.wav"
                 ]);
 
-                this.load.audio('powerup', 
+                this.load.audio("powerup", 
                 [
-                    'assets/powerup.wav'
+                    "assets/powerup.wav"
                 ]);
 
-                this.load.audio('block', 
+                this.load.audio("block", 
                 [
-                    'assets/block.wav'
+                    "assets/block.wav"
                 ]);
 
-                this.load.audio('stab', 
+                this.load.audio("stab", 
                 [
-                    'assets/stab.wav'
+                    "assets/stab.wav"
                 ]);
 
-                this.load.audio('eyeorb', 
+                this.load.audio("eyeorb", 
                 [
-                    'assets/eyeorb.wav'
+                    "assets/eyeorb.wav"
                 ]);
 
-                this.load.audio('birdshot', 
+                this.load.audio("birdshot", 
                 [
-                    'assets/birdshot.wav'
+                    "assets/birdshot.wav"
                 ]);
 
-                this.load.audio('switchfiremode', 
+                this.load.audio("switchfiremode", 
                 [
-                    'assets/switchfiremode.wav'
+                    "assets/switchfiremode.wav"
                 ]);
 
-                this.load.audio('pistolsound', 
+                this.load.audio("pistolsound", 
                 [
-                    'assets/pistolsound.wav'
+                    "assets/pistolsound.wav"
                 ]);
                 
-                this.load.audio('000buckshot', 
+                this.load.audio("000buckshot", 
                 [
-                    'assets/000buckshot.wav'
+                    "assets/000buckshot.wav"
                 ]);
                 
-                this.load.audio('numfourbuckshot', 
+                this.load.audio("numfourbuckshot", 
                 [
-                    'assets/numfourbuckshot.wav'
+                    "assets/numfourbuckshot.wav"
                 ]);
             }
 
             create()
             {
-                this.loading = this.add.text((this.sys.game.config.width / 2), this.sys.game.config.height / 2, 'Loading', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+                this.loading = this.add.text((this.sys.game.config.width / 2), this.sys.game.config.height / 2, "Loading", { fontSize: "16px", fill: "#fff" }).setOrigin(0.5);
             }
 
             update()
             {
-                this.scene.stop('Loading');
-                this.scene.start('GameManager');
-                this.scene.start('MainMenu');
+                this.scene.stop("Loading");
+                this.scene.start("GameManager");
+                this.scene.start("MainMenu");
             }
             
             shutdown() 
@@ -330,16 +330,16 @@
                 this.direction = 1;
                 this.currentFrameIndex = 0;
                 this.create();
-                this.scene.events.on('update', this.update, this);
-                this.scene.events.once('shutdown', () => 
+                this.scene.events.on("update", this.update, this);
+                this.scene.events.once("shutdown", () => 
                 {
-                    this.scene.events.off('update', this.update, this);
+                    this.scene.events.off("update", this.update, this);
                 });
             }
 
             create() 
             {
-                this.scene.wheat = this.scene.add.tileSprite(0, this.scene.sys.game.config.height - 16, this.width, 16, 'wheat', this.currentFrameIndex).setOrigin(0, 1).setScrollFactor(0.575);
+                this.scene.wheat = this.scene.add.tileSprite(0, this.scene.sys.game.config.height - 16, this.width, 16, "wheat", this.currentFrameIndex).setOrigin(0, 1).setScrollFactor(0.575);
             }
 
             update(time, delta) 
@@ -385,16 +385,16 @@
                 this.direction = 1;
                 this.currentFrameIndex = 0;
                 this.create();
-                this.scene.events.on('update', this.update, this);
-                this.scene.events.once('shutdown', () => 
+                this.scene.events.on("update", this.update, this);
+                this.scene.events.once("shutdown", () => 
                 {
-                    this.scene.events.off('update', this.update, this);
+                    this.scene.events.off("update", this.update, this);
                 });
             }
 
             create() 
             {
-                this.scene.groundBotom = this.scene.add.tileSprite(0, this.scene.sys.game.config.height + 16, this.width * 2, 32, 'ground').setOrigin(0, 1);
+                this.scene.groundBotom = this.scene.add.tileSprite(0, this.scene.sys.game.config.height + 16, this.width * 2, 32, "ground").setOrigin(0, 1);
                 this.scene.physics.add.existing(this.scene.groundBotom);
                 
                 if(this.scene.groundBotom.body) 
@@ -403,7 +403,7 @@
                     this.scene.groundBotom.body.allowGravity = false;
                 }
 
-                this.scene.grassTop = this.scene.add.tileSprite(0, this.scene.sys.game.config.height - 16, this.width, 16, 'grasstop', this.currentFrameIndex);
+                this.scene.grassTop = this.scene.add.tileSprite(0, this.scene.sys.game.config.height - 16, this.width, 16, "grasstop", this.currentFrameIndex);
                 this.scene.grassTop.setOrigin(0, 1);
 
                 if(this.scene.player)
@@ -457,7 +457,7 @@
         {
             constructor()
             {
-              super({key: 'MainMenu'});
+              super({key: "MainMenu"});
             }
 
             preload()
@@ -470,12 +470,12 @@
                 //START BASIC SETUP MainMenu
 
 
-                this.input.setDefaultCursor('');
+                this.input.setDefaultCursor("");
                 const worldWidthX = this.sys.game.config.width * 3;
                 this.physics.world.setBounds(0, 0, (worldWidthX / 3) - 120, 176);
                 this.cursors = this.input.keyboard.createCursorKeys();
-                this.gameManager = this.scene.get('GameManager');
-                this.HUD = this.scene.get('HUD');
+                this.gameManager = this.scene.get("GameManager");
+                this.HUD = this.scene.get("HUD");
 
 
                 //END BASIC SETUP MainMenu
@@ -484,17 +484,17 @@
                 //START PROPS BEFORE PLAYER MainMenu
 
 
-                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'sky').setOrigin(0, 0);
+                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, "sky").setOrigin(0, 0);
                 this.sky.setScrollFactor(0.1);
 
-                this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
+                this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, "stars").setOrigin(0, 0);
                 this.stars.setScrollFactor(0.1);
 
                 this.barn = this.add.image
                 (
                     (worldWidthX / 3) / 30,
                     this.sys.game.config.height - 16,
-                    'barn'
+                    "barn"
                 ).setOrigin(0, 1);
                 this.barn.setScrollFactor(0.25);
 
@@ -502,7 +502,7 @@
                 (
                     this.barn.width + (worldWidthX / 3) / 30,
                     this.sys.game.config.height - 16,
-                    'silo'
+                    "silo"
                 );
                 this.silo.setOrigin(0, 1);
                 this.silo.setScrollFactor(0.225);
@@ -511,7 +511,7 @@
                 (
                     (worldWidthX / 3) + ((worldWidthX / 3) / 30),
                     this.sys.game.config.height - 16,
-                    'cross'
+                    "cross"
                 );
                 this.cross.setOrigin(0, 1);
                 this.cross.setScrollFactor(0.2);
@@ -524,7 +524,7 @@
                     this.sys.game.config.height - 16,
                     worldWidthX / 2 * (3 / 4) + 2,
                     16,
-                    'fence'
+                    "fence"
                 );
                 this.fence.setScrollFactor(0.75);
                 this.fence.setOrigin(0.5, 1);
@@ -556,20 +556,20 @@
                 (
                     worldWidthX / 4 + this.sys.game.config.width / 4 - this.sys.game.config.width / 8,
                     this.sys.game.config.height - 16,
-                    'copcar'
+                    "copcar"
                 ).setOrigin(1, 1);
 
-                this.pipe = this.physics.add.sprite(worldWidthX / 2 + this.sys.game.config.width / 4 - 6, this.sys.game.config.height - 16, 'pipe');
+                this.pipe = this.physics.add.sprite(worldWidthX / 2 + this.sys.game.config.width / 4 - 6, this.sys.game.config.height - 16, "pipe");
                 this.pipe.setOrigin(0, 1);
                 this.pipe.body.allowGravity = false;
                 this.pipe.body.setImmovable(true);
 
-                if(!this.anims.get('stabAnim'))
+                if(!this.anims.get("stabAnim"))
                 {
                     this.anims.create
                     ({
                         key: "stabAnim",
-                        frames: this.anims.generateFrameNumbers('stab', {start: 0, end: 2 }),
+                        frames: this.anims.generateFrameNumbers("stab", {start: 0, end: 2 }),
                         frameRate: 2,
                         repeat: 0
                     });
@@ -583,13 +583,13 @@
                     player.destroy();
                     this.stab.setActive(true);
                     this.stab.setVisible(true);
-                    this.sound.play('powerup');
+                    this.sound.play("powerup");
 
                     this.stab.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
                     {
                         if(frame.index === 2) 
                         {
-                            this.sound.play('stab');
+                            this.sound.play("stab");
 
                             this.controls.destroy();
                             this.strafeControls.destroy();
@@ -607,20 +607,20 @@
 
                 this.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => 
                 {
-                    this.cameras.main.pan(worldWidthX, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
+                    this.cameras.main.pan(worldWidthX, this.sys.game.config.height / 2, 2000, "Sine.easeInOut");
                 });
                 
                 this.ground = new Ground(this, worldWidthX);
 
-                this.logo = createText(this, worldWidthX / 6, this.sys.game.config.height / 2, 'House Call', 20, '#fff').setOrigin(0.5, 0.5);
-                this.logo.setInteractive({cursor: 'pointer'});
+                this.logo = createText(this, worldWidthX / 6, this.sys.game.config.height / 2, "House Call", 20, "#fff").setOrigin(0.5, 0.5);
+                this.logo.setInteractive({cursor: "pointer"});
 
                 this.physics.add.existing(this.logo, true);
                 this.physics.add.collider(this.logo, this.playerBulletsHolder, (logo, bullet) =>
                 {
                     bullet.destroy();
                     logo.destroy();
-                    this.cameras.main.pan(worldWidthX / 2, this.sys.game.config.height / 2, 2000, 'Sine.easeInOut');
+                    this.cameras.main.pan(worldWidthX / 2, this.sys.game.config.height / 2, 2000, "Sine.easeInOut");
 
                     this.time.delayedCall(2000, () =>
                     {
@@ -632,7 +632,7 @@
                             x: worldWidthX / 3 + this.player.width / 2,               
                             y: this.sys.game.config.height - 24,               
                             duration: 250,       
-                            ease: 'linear',       
+                            ease: "linear",       
                             onComplete: () => 
                             {
                                 this.physics.world.setBounds(this.sys.game.config.width, 0, this.sys.game.config.width, 176);
@@ -643,29 +643,29 @@
 
                 });
                 
-                this.controls = createText(this, worldWidthX / 2, 10, 'Controls:', 20, '#fff');
+                this.controls = createText(this, worldWidthX / 2, 10, "Controls:", 20, "#fff");
 
-                this.strafeControls = createText(this, worldWidthX / 2, 0 + this.controls.height + 20, 'A/D: Walk', 12, '#fff');
-                this.jumpControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + 25, 'Space: Jump', 12, '#fff');
-                this.rightClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 30, 'Right-Click: Block', 12, '#fff');
-                this.leftClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 35, 'Left-Click: Use Shotgun (Hold)', 12, '#fff');
-                this.pistolControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + 40, 'Q/E: Use Pistol', 12, '#fff');
+                this.strafeControls = createText(this, worldWidthX / 2, 0 + this.controls.height + 20, "A/D: Walk", 12, "#fff");
+                this.jumpControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + 25, "Space: Jump", 12, "#fff");
+                this.rightClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 30, "Right-Click: Block", 12, "#fff");
+                this.leftClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 35, "Left-Click: Use Shotgun (Hold)", 12, "#fff");
+                this.pistolControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + 40, "Q/E: Use Pistol", 12, "#fff");
             
-                this.screenShake = createText(this, this.game.config.width * 2 - 3, 3, 'I: Toggle Jitter', 10, '#ff0000').setOrigin(1, 0).setDepth(1232300);
+                this.screenShake = createText(this, this.game.config.width * 2 - 3, 3, "I: Toggle Jitter", 10, "#ff0000").setOrigin(1, 0).setDepth(1232300);
                 
-                this.highScore = createText(this, this.game.config.width * 3 - (this.game.config.width / 2), 3, 'High Score: ' + this.gameManager.highScore, 10, '#ff0000').setOrigin(0.5, 0).setDepth(1232300);
+                this.highScore = createText(this, this.game.config.width * 3 - (this.game.config.width / 2), 3, "High Score: " + this.gameManager.highScore, 10, "#ff0000").setOrigin(0.5, 0).setDepth(1232300);
                 
-                this.toggleHUD = createText(this, this.game.config.width + 3, 3, 'U: Toggle HUD', 10, '#ff0000').setOrigin(0, 0).setDepth(1232300);
+                this.toggleHUD = createText(this, this.game.config.width + 3, 3, "U: Toggle HUD", 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
                 
-                this.start = createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'Start', 20, '#fff').setOrigin(0.5, 0.5);
-                this.start.setInteractive({cursor: 'pointer'});
-                this.start.on('pointerdown', () =>
+                this.start = createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, "Start", 20, "#fff").setOrigin(0.5, 0.5);
+                this.start.setInteractive({cursor: "pointer"});
+                this.start.on("pointerdown", () =>
                 {
-                    this.scene.stop('MainMenu');
-                    this.scene.stop('HUD');
+                    this.scene.stop("MainMenu");
+                    this.scene.stop("HUD");
                     event.stopPropagation();
-                    this.scene.start('Level1Game');
-                    this.scene.launch('HUD');
+                    this.scene.start("Level1Game");
+                    this.scene.launch("HUD");
                 });
 
 
@@ -728,7 +728,7 @@
                     quantity: 15,
                     scale: { start: 0.35, end: 0.25 },
                     alpha: { start: 1, end: 0 },
-                    blendMode: 'NORMAL',
+                    blendMode: "NORMAL",
                     frequency: 50
                 }
             );
@@ -785,7 +785,7 @@
 
                 let positions = new Array();
 
-                if(currentEnemy === 'cult')
+                if(currentEnemy === "cult")
                 {
                     const chosenPositions = new Set();
 
@@ -805,10 +805,10 @@
                         positions.push(newCult);
                     }
 
-                    enemyData.set('cult', { positions: positions });
+                    enemyData.set("cult", { positions: positions });
                     cultCreator(scene, positions, gameManager);
                 }    
-                else if(currentEnemy === 'cultKnife')
+                else if(currentEnemy === "cultKnife")
                 {
                     const chosenPositions = new Set();
 
@@ -828,10 +828,10 @@
                         positions.push(newCultKnife);
                     }
 
-                    enemyData.set('cultKnife', { positions: positions });
+                    enemyData.set("cultKnife", { positions: positions });
                     cultKnifeCreator(scene, positions, gameManager);
                 }
-                else if(currentEnemy === 'eye')
+                else if(currentEnemy === "eye")
                 {
                     const chosenPositions = new Set();
 
@@ -851,7 +851,7 @@
                         positions.push(newEye);
                     }
 
-                    enemyData.set('eye', { positions: positions });
+                    enemyData.set("eye", { positions: positions });
                     eyeCreator(scene, positions, gameManager);
                 }
             }
@@ -1004,7 +1004,7 @@
         {
             constructor()
             {
-                super({ key: 'Level1Game' });
+                super({ key: "Level1Game" });
             }
 
             preload()
@@ -1017,12 +1017,12 @@
                 //START BASIC SETUP Level1Game
 
 
-                this.input.setDefaultCursor('');
+                this.input.setDefaultCursor("");
                 const worldWidthX = 1800;
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
                 this.cursors = this.input.keyboard.createCursorKeys();
-                this.gameManager = this.scene.get('GameManager');
-                this.HUD = this.scene.get('HUD');
+                this.gameManager = this.scene.get("GameManager");
+                this.HUD = this.scene.get("HUD");
                 this.gameManager.updateHighestLevel(1);
                 this.gameManager.updateCurrentLevel(1);
 
@@ -1033,10 +1033,10 @@
                 //START PROPS BEFORE PLAYER Level1Game
 
 
-                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'sky').setOrigin(0, 0);
+                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, "sky").setOrigin(0, 0);
                 this.sky.setScrollFactor(0.1);
 
-                this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, 'stars').setOrigin(0, 0);
+                this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, "stars").setOrigin(0, 0);
                 this.stars.setScrollFactor(0.1);
                 
                 this.gameManager.level1BeforePropData = makeLevelPropsRandomBeforeWheat(this, this.gameManager.level1BeforePropData, worldWidthX);
@@ -1070,24 +1070,24 @@
                         case 1:
                             this.spawnList = 
                             [
-                                { type: 'cult', amount: getRandMinMax(2, 3) },
-                                { type: 'cultKnife', amount: getRandMinMax(4, 5) }
+                                { type: "cult", amount: getRandMinMax(2, 3) },
+                                { type: "cultKnife", amount: getRandMinMax(4, 5) }
                             ];
                             break;
                             
                         case 2: 
                             this.spawnList = 
                             [
-                                { type: 'cult', amount: getRandMinMax(2, 3) },
-                                { type: 'cultKnife', amount: getRandMinMax(3, 5) }                            
+                                { type: "cult", amount: getRandMinMax(2, 3) },
+                                { type: "cultKnife", amount: getRandMinMax(3, 5) }                            
                             ]; 
                             break;
                             
                         case 3: 
                             this.spawnList = 
                             [
-                                { type: 'cult', amount: getRandMinMax(2, 2) },
-                                { type: 'cultKnife', amount: getRandMinMax(4, 6) }
+                                { type: "cult", amount: getRandMinMax(2, 2) },
+                                { type: "cultKnife", amount: getRandMinMax(4, 6) }
                             ];
                             break;
                     }
@@ -1098,13 +1098,13 @@
                 {
                     for(const enemy of this.gameManager.level1Data.keys()) 
                     {
-                        if(enemy === 'cult')
+                        if(enemy === "cult")
                         {
                             let enemyData = this.gameManager.level1Data.get(enemy);
                             let enemyPositionArray = enemyData.positions;
                             cultCreator(this, enemyPositionArray, this.gameManager);
                         }
-                        else if(enemy === 'cultKnife')
+                        else if(enemy === "cultKnife")
                         {
                             let enemyData = this.gameManager.level1Data.get(enemy);
                             let enemyPositionArray = enemyData.positions;
@@ -1121,7 +1121,7 @@
 
 
                 const thisLevel = 1;
-                this.pipe = new pipeNext(this, 1594, this.sys.game.config.height - 16, 'Level2Game', thisLevel, this.gameManager);
+                this.pipe = new pipeNext(this, 1594, this.sys.game.config.height - 16, "Level2Game", thisLevel, this.gameManager);
 
                 this.ground = new Ground(this, worldWidthX);
 
@@ -1146,10 +1146,10 @@
             {
                 if(this.player.killed)
                 {
-                    this.scene.stop('Level1Game');
-                    this.scene.stop('HUD');
-                    this.scene.start('Level1Game');
-                    this.scene.launch('HUD');
+                    this.scene.stop("Level1Game");
+                    this.scene.stop("HUD");
+                    this.scene.start("Level1Game");
+                    this.scene.launch("HUD");
                 }
 
                 cultSeparation(this.cults, this.player);
@@ -1173,7 +1173,7 @@
         {
             constructor()
             {
-                super({ key: 'Level2Game' });
+                super({ key: "Level2Game" });
             }
 
             preload()
@@ -1186,12 +1186,12 @@
                 //START BASIC SETUP Level2Game
 
 
-                this.input.setDefaultCursor('');
+                this.input.setDefaultCursor("");
                 const worldWidthX = 2250;
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
                 this.cursors = this.input.keyboard.createCursorKeys();
-                this.gameManager = this.scene.get('GameManager');
-                this.HUD = this.scene.get('HUD');
+                this.gameManager = this.scene.get("GameManager");
+                this.HUD = this.scene.get("HUD");
                 this.gameManager.updateHighestLevel(2);
                 this.gameManager.updateCurrentLevel(2);
 
@@ -1202,7 +1202,7 @@
                 //START PROPS BEFORE PLAYER Level2Game
 
 
-                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'sky').setOrigin(0, 0);
+                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, "sky").setOrigin(0, 0);
                 this.sky.setScrollFactor(0.1);
                 this.sky.postFX.addColorMatrix().grayscale(1);   
                         
@@ -1212,7 +1212,7 @@
                 
                 this.gameManager.level2AfterPropData = makeLevelPropsRandomAfterWheat(this, this.gameManager.level2AfterPropData, worldWidthX);
 
-                this.pipe = this.add.image(15, this.sys.game.config.height - 16, 'pipe');       
+                this.pipe = this.add.image(15, this.sys.game.config.height - 16, "pipe");       
                 this.pipe.setOrigin(0, 1);
 
 
@@ -1240,24 +1240,24 @@
                         case 1:
                             this.spawnList = 
                             [
-                                { type: 'cult', amount: getRandMinMax(8, 12) },
-                                { type: 'cultKnife', amount: getRandMinMax(1, 1) }
+                                { type: "cult", amount: getRandMinMax(8, 12) },
+                                { type: "cultKnife", amount: getRandMinMax(1, 1) }
                             ];
                             break;
                             
                         case 2: 
                             this.spawnList = 
                             [
-                                { type: 'cult', amount: getRandMinMax(10, 13) },
-                                { type: 'cultKnife', amount: getRandMinMax(1, 2) }
+                                { type: "cult", amount: getRandMinMax(10, 13) },
+                                { type: "cultKnife", amount: getRandMinMax(1, 2) }
                             ];
                             break;
                             
                         case 3:
                             this.spawnList = 
                             [
-                                { type: 'cult', amount: getRandMinMax(8, 15) },
-                                { type: 'cultKnife', amount: getRandMinMax(1, 2) }
+                                { type: "cult", amount: getRandMinMax(8, 15) },
+                                { type: "cultKnife", amount: getRandMinMax(1, 2) }
                             ];
                             break;
                     }
@@ -1269,13 +1269,13 @@
                 { 
                     for(const enemy of this.gameManager.level2Data.keys()) 
                     {
-                        if(enemy === 'cult')
+                        if(enemy === "cult")
                         {
                             let enemyData = this.gameManager.level2Data.get(enemy);
                             let enemyPositionArray = enemyData.positions;
                             cultCreator(this, enemyPositionArray, this.gameManager);
                         }
-                        else if(enemy === 'cultKnife')
+                        else if(enemy === "cultKnife")
                         {
                             let enemyData = this.gameManager.level2Data.get(enemy);
                             let enemyPositionArray = enemyData.positions;
@@ -1292,11 +1292,11 @@
 
 
                 const thisLevel = 2;
-                this.pipe = new pipeNext(this, 2044, this.sys.game.config.height - 16, 'Level3Game', 2, this.gameManager);
+                this.pipe = new pipeNext(this, 2044, this.sys.game.config.height - 16, "Level3Game", 2, this.gameManager);
 
                 this.ground = new Ground(this, worldWidthX);
 
-                makeRain(this, 'raindrop');
+                makeRain(this, "raindrop");
 
                 filterColors(this, 0xd1e0e0);
 
@@ -1321,10 +1321,10 @@
             {
                 if(this.player.killed)
                 {
-                    this.scene.stop('Level2Game');
-                    this.scene.stop('HUD');
-                    this.scene.start('Level1Game');
-                    this.scene.launch('HUD');
+                    this.scene.stop("Level2Game");
+                    this.scene.stop("HUD");
+                    this.scene.start("Level1Game");
+                    this.scene.launch("HUD");
                 }
 
                 cultSeparation(this.cults, this.player);
@@ -1348,7 +1348,7 @@
         {
             constructor()
             {
-              super({key: 'Level3Game'});
+              super({key: "Level3Game"});
             }
 
             create()
@@ -1356,12 +1356,12 @@
                 //START BASIC SETUP Level3Game
 
 
-                this.input.setDefaultCursor('');
+                this.input.setDefaultCursor("");
                 const worldWidthX = 1325;
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
                 this.cursors = this.input.keyboard.createCursorKeys();
-                this.gameManager = this.scene.get('GameManager');
-                this.HUD = this.scene.get('HUD');
+                this.gameManager = this.scene.get("GameManager");
+                this.HUD = this.scene.get("HUD");
                 this.gameManager.updateHighestLevel(3);
                 this.gameManager.updateCurrentLevel(3);
 
@@ -1372,7 +1372,7 @@
                 //START PROPS BEFORE PLAYER Level3Game
 
 
-                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'redskyrain').setOrigin(0, 0);
+                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, "redskyrain").setOrigin(0, 0);
                 this.sky.setScrollFactor(0.1);
                                     
                 this.gameManager.level3BeforePropData = makeLevelPropsRandomBeforeWheat(this, this.gameManager.level3BeforePropData, worldWidthX);
@@ -1381,7 +1381,7 @@
                 
                 this.gameManager.level3AfterPropData = makeLevelPropsRandomAfterWheat(this, this.gameManager.level3AfterPropData, worldWidthX);
 
-                this.pipe = this.add.image(15, this.sys.game.config.height - 16, 'pipe');
+                this.pipe = this.add.image(15, this.sys.game.config.height - 16, "pipe");
                 this.pipe.setOrigin(0, 1);
 
 
@@ -1410,27 +1410,27 @@
                         case 1:
                             this.spawnList = 
                             [
-                                { type: 'cult', amount: getRandMinMax(2, 4) },
-                                { type: 'cultKnife', amount: getRandMinMax(6, 8) },
-                                { type: 'eye', amount: getRandMinMax(2, 4) }
+                                { type: "cult", amount: getRandMinMax(2, 4) },
+                                { type: "cultKnife", amount: getRandMinMax(6, 8) },
+                                { type: "eye", amount: getRandMinMax(2, 4) }
                             ];
                             break;
                             
                         case 2: 
                             this.spawnList = 
                             [
-                                { type: 'cult', amount: getRandMinMax(2, 4) },
-                                { type: 'cultKnife', amount: getRandMinMax(2, 4) },
-                                { type: 'eye', amount: getRandMinMax(6, 8) }
+                                { type: "cult", amount: getRandMinMax(2, 4) },
+                                { type: "cultKnife", amount: getRandMinMax(2, 4) },
+                                { type: "eye", amount: getRandMinMax(6, 8) }
                             ]; 
                             break;
                             
                         case 3: 
                             this.spawnList = 
                             [
-                                { type: 'cult', amount: getRandMinMax(6, 8) },
-                                { type: 'cultKnife', amount: getRandMinMax(2, 4) },
-                                { type: 'eye', amount: getRandMinMax(2, 4) }
+                                { type: "cult", amount: getRandMinMax(6, 8) },
+                                { type: "cultKnife", amount: getRandMinMax(2, 4) },
+                                { type: "eye", amount: getRandMinMax(2, 4) }
                             ];
                             break;
                     }
@@ -1441,19 +1441,19 @@
                 { 
                     for(const enemy of this.gameManager.level3Data.keys()) 
                     {
-                        if(enemy === 'cult')
+                        if(enemy === "cult")
                         {
                             let enemyData = this.gameManager.level3Data.get(enemy);
                             let enemyPositionArray = enemyData.positions;
                             cultCreator(this, enemyPositionArray, this.gameManager);
                         }
-                        else if(enemy === 'cultKnife')
+                        else if(enemy === "cultKnife")
                         {
                             let enemyData = this.gameManager.level3Data.get(enemy);
                             let enemyPositionArray = enemyData.positions;
                             cultKnifeCreator(this, enemyPositionArray, this.gameManager);
                         }
-                        else if(enemy === 'eye')
+                        else if(enemy === "eye")
                         {
                             let enemyData = this.gameManager.level3Data.get(enemy);
                             let enemyPositionArray = enemyData.positions;
@@ -1470,11 +1470,11 @@
 
 
                 const thisLevel = 3;
-                this.pipe = new pipeNext(this, 1119, this.sys.game.config.height - 16, 'Level4Game', thisLevel, this.gameManager);
+                this.pipe = new pipeNext(this, 1119, this.sys.game.config.height - 16, "Level4Game", thisLevel, this.gameManager);
 
                 this.ground = new Ground(this, worldWidthX);
 
-                makeRain(this, 'bloodrain');
+                makeRain(this, "bloodrain");
 
                 filterColors(this, 0xffcccc);
 
@@ -1499,10 +1499,10 @@
             {
                 if(this.player.killed)
                 {
-                    this.scene.stop('Level3Game');
-                    this.scene.stop('HUD');
-                    this.scene.start('Level2Game');
-                    this.scene.launch('HUD');
+                    this.scene.stop("Level3Game");
+                    this.scene.stop("HUD");
+                    this.scene.start("Level2Game");
+                    this.scene.launch("HUD");
                 }
 
                 cultSeparation(this.cults, this.player);
@@ -1527,7 +1527,7 @@
         {
             constructor()
             {
-              super({key: 'Level4Game'});
+              super({key: "Level4Game"});
             }
 
             create()
@@ -1535,12 +1535,12 @@
                 //START BASIC SETUP Level4Game
 
 
-                this.input.setDefaultCursor('');
+                this.input.setDefaultCursor("");
                 const worldWidthX = 2400;
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
                 this.cursors = this.input.keyboard.createCursorKeys();
-                this.gameManager = this.scene.get('GameManager');
-                this.HUD = this.scene.get('HUD');
+                this.gameManager = this.scene.get("GameManager");
+                this.HUD = this.scene.get("HUD");
                 this.gameManager.updateHighestLevel(4);
                 this.gameManager.updateCurrentLevel(4);
 
@@ -1551,7 +1551,7 @@
                 //START PROPS BEFORE PLAYER Level4Game
 
 
-                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, 'redsky').setOrigin(0, 0);
+                this.sky = this.add.tileSprite(0, -32, worldWidthX, this.sys.game.config.height + 32, "redsky").setOrigin(0, 0);
                 this.sky.setScrollFactor(0.1);
                                                 
                 this.gameManager.level4BeforePropData = makeLevelPropsRandomBeforeWheat(this, this.gameManager.level4BeforePropData, worldWidthX);
@@ -1560,7 +1560,7 @@
                 
                 this.gameManager.level4AfterPropData = makeLevelPropsRandomAfterWheat(this, this.gameManager.level4AfterPropData, worldWidthX);
 
-                this.pipe = this.add.image(15, this.sys.game.config.height - 16, 'pipe');
+                this.pipe = this.add.image(15, this.sys.game.config.height - 16, "pipe");
                 this.pipe.setOrigin(0, 1);
 
 
@@ -1588,27 +1588,27 @@
                         case 1:
                             this.spawnList = 
                             [
-                                { type: 'cult', amount: getRandMinMax(19, 21) },
-                                { type: 'cultKnife', amount: getRandMinMax(4, 5) },
-                                { type: 'eye', amount: getRandMinMax(6, 8) }
+                                { type: "cult", amount: getRandMinMax(19, 21) },
+                                { type: "cultKnife", amount: getRandMinMax(4, 5) },
+                                { type: "eye", amount: getRandMinMax(6, 8) }
                             ];
                             break;
                             
                         case 2: 
                             this.spawnList = 
                             [
-                                { type: 'cult', amount: getRandMinMax(17, 19) },
-                                { type: 'cultKnife', amount: getRandMinMax(2, 4) },
-                                { type: 'eye', amount: getRandMinMax(8, 10) }
+                                { type: "cult", amount: getRandMinMax(17, 19) },
+                                { type: "cultKnife", amount: getRandMinMax(2, 4) },
+                                { type: "eye", amount: getRandMinMax(8, 10) }
                             ]; 
                             break;
                             
                         case 3: 
                             this.spawnList = 
                             [
-                                { type: 'cult', amount: getRandMinMax(19, 21) },
-                                { type: 'cultKnife', amount: getRandMinMax(1, 1) },
-                                { type: 'eye', amount: getRandMinMax(6, 8) }
+                                { type: "cult", amount: getRandMinMax(19, 21) },
+                                { type: "cultKnife", amount: getRandMinMax(1, 1) },
+                                { type: "eye", amount: getRandMinMax(6, 8) }
                             ];
                             break;
                     }
@@ -1619,19 +1619,19 @@
                 { 
                     for(const enemy of this.gameManager.level4Data.keys()) 
                     {
-                        if(enemy === 'cult')
+                        if(enemy === "cult")
                         {
                             let enemyData = this.gameManager.level4Data.get(enemy);
                             let enemyPositionArray = enemyData.positions;
                             cultCreator(this, enemyPositionArray, this.gameManager);
                         }
-                        else if(enemy === 'cultKnife')
+                        else if(enemy === "cultKnife")
                         {
                             let enemyData = this.gameManager.level4Data.get(enemy);
                             let enemyPositionArray = enemyData.positions;
                             cultKnifeCreator(this, enemyPositionArray, this.gameManager);
                         }
-                        else if(enemy === 'eye')
+                        else if(enemy === "eye")
                         {
                             let enemyData = this.gameManager.level4Data.get(enemy);
                             let enemyPositionArray = enemyData.positions;
@@ -1648,7 +1648,7 @@
 
 
                 const thisLevel = 4;
-                this.pipe = new pipeNext(this, 2206, this.sys.game.config.height - 16, 'MainMenu', 4, this.gameManager);
+                this.pipe = new pipeNext(this, 2206, this.sys.game.config.height - 16, "MainMenu", 4, this.gameManager);
 
                 this.ground = new Ground(this, worldWidthX);
 
@@ -1675,10 +1675,10 @@
             {
                 if(this.player.killed)
                 {
-                    this.scene.stop('Level4Game');
-                    this.scene.stop('HUD');
-                    this.scene.start('Level3Game');
-                    this.scene.launch('HUD');
+                    this.scene.stop("Level4Game");
+                    this.scene.stop("HUD");
+                    this.scene.start("Level3Game");
+                    this.scene.launch("HUD");
                 }
 
                 cultSeparation(this.cults, this.player);
@@ -1703,16 +1703,16 @@
         {
             constructor()
             {
-                super({key: 'UpgradeRoom'});
+                super({key: "UpgradeRoom"});
                 
-                this.gameManager = game.scene.getScene('GameManager');
+                this.gameManager = game.scene.getScene("GameManager");
                 this.cardAmount = Object.keys(this.gameManager.upgradeCardData).length;
                 this.upgradeCardData = this.gameManager.upgradeCardData;
             }
 
             create()
             {
-                this.input.setDefaultCursor('pointer');
+                this.input.setDefaultCursor("pointer");
 
 
                 //START CARD SETUP
@@ -1733,14 +1733,14 @@
                 }
                 while(card2 === card1 || this.gameManager.ownedCards.has(card2) || (this.gameManager.ammoUpgrades.has(card1) && this.gameManager.ammoUpgrades.has(card2)))
 
-                this.cardDisplay1 = this.displayCard(card1, 'left');
-                this.cardDisplay1.on('pointerdown', () =>
+                this.cardDisplay1 = this.displayCard(card1, "left");
+                this.cardDisplay1.on("pointerdown", () =>
                 {
                     this.acceptCard(card1);
                 });
 
-                this.cardDisplay2 = this.displayCard(card2, 'right');
-                this.cardDisplay2.on('pointerdown', () =>
+                this.cardDisplay2 = this.displayCard(card2, "right");
+                this.cardDisplay2.on("pointerdown", () =>
                 {
                     this.acceptCard(card2);
                 }); 
@@ -1776,7 +1776,7 @@
                 let xPos;
                 const yCenter = this.sys.game.config.height / 2;
 
-                if(position === 'left')
+                if(position === "left")
                 {
                     xPos = this.sys.game.config.width / 4;
                 }
@@ -1786,11 +1786,11 @@
                 }
 
                 const cardContainer = this.add.container(xPos, yCenter);
-                titleText = createText(this, 0, -50, card.name, 20, '#f00').setOrigin(0.5, 1);
-                descriptionText = createText(this, 0, 50, card.description, 12, '#f00').setOrigin(0.5, 0);
+                titleText = createText(this, 0, -50, card.name, 20, "#f00").setOrigin(0.5, 1);
+                descriptionText = createText(this, 0, 50, card.description, 12, "#f00").setOrigin(0.5, 0);
                 descriptionText.setStyle
                 ({
-                    wordWrap: { width: this.sys.game.config.width / 2 - 10, use:'true' }
+                    wordWrap: { width: this.sys.game.config.width / 2 - 10, use:"true" }
                 });
 
                 if(card.icon)
@@ -1837,151 +1837,151 @@
         {
             constructor()
             {
-                super({ key: 'GameManager' });
+                super({ key: "GameManager" });
 
                 this.upgradeCardData = 
                 {
-                    'birdshot': 
+                    "birdshot": 
                     {
                         id: 1,
-                        name: 'Birdshot',
-                        description: 'Replace shells with birdshot.',
-                        icon: 'birdshoticon',
+                        name: "Birdshot",
+                        description: "Replace shells with birdshot.",
+                        icon: "birdshoticon",
                         effect: (gameManager) => 
                         {
                             this.clearAmmoOwned();
                             gameManager.multiAmmoUpgrade = false;
-                            gameManager.fireModeUpgrade = 'birdshot';
+                            gameManager.fireModeUpgrade = "birdshot";
                         }
                     },
-                    'slugs': 
+                    "slugs": 
                     {
                         id: 2,
-                        name: 'Slugs',
-                        description: 'Replace shells with slugs.',
-                        icon: 'slugicon',
+                        name: "Slugs",
+                        description: "Replace shells with slugs.",
+                        icon: "slugicon",
                         effect: (gameManager) => 
                         {
                             this.clearAmmoOwned();
                             gameManager.multiAmmoUpgrade = false;
-                            gameManager.fireModeUpgrade = 'slug';
+                            gameManager.fireModeUpgrade = "slug";
                         }
                     },
-                    'damage': 
+                    "damage": 
                     {
                         id: 3,
-                        name: 'Gun Oil',
-                        description: 'Increase shotgun damage by 25%.',
-                        icon: 'damageicon',
+                        name: "Gun Oil",
+                        description: "Increase shotgun damage by 25%.",
+                        icon: "damageicon",
                         effect: (gameManager) => 
                         {
                             gameManager.damageUpgrade = true;
                         }
                     }, 
-                    'health': 
+                    "health": 
                     {
                         id: 4,
-                        name: 'Conditioning',
-                        description: 'Survive an extra hit.',
-                        icon: 'healthicon',
+                        name: "Conditioning",
+                        description: "Survive an extra hit.",
+                        icon: "healthicon",
                         effect: (gameManager) => 
                         {
                             gameManager.healthUpgrade = true;
                         }
                     },
-                    'doubleFire': 
+                    "doubleFire": 
                     {
                         id: 5,
-                        name: 'Veneration',
-                        description: 'Successful kills trigger double fire rate.',
-                        icon: 'cultenergyicon',
+                        name: "Veneration",
+                        description: "Successful kills trigger double fire rate.",
+                        icon: "cultenergyicon",
                         effect: (gameManager) => 
                         {
                             gameManager.doubleFireUpgrade = true;
                         }
                     },
-                    'pistolDamage': 
+                    "pistolDamage": 
                     {
                         id: 6,
-                        name: 'Hollow Points',
-                        description: 'Double handgun damage.',
-                        icon: 'hollowpointsicon',
+                        name: "Hollow Points",
+                        description: "Double handgun damage.",
+                        icon: "hollowpointsicon",
                         effect: (gameManager) => 
                         {
                             gameManager.pistolUpgrade = true;
                         }
                     },
-                    'multiAmmo': 
+                    "multiAmmo": 
                     {
                         id: 7,
-                        name: 'Random Shells',
-                        description: 'Replace shells with random ones.',
-                        icon: 'multiammoicon',
+                        name: "Random Shells",
+                        description: "Replace shells with random ones.",
+                        icon: "multiammoicon",
                         effect: (gameManager) => 
                         {
                             this.clearAmmoOwned();
                             gameManager.multiAmmoUpgrade = true;
                         }
                     },
-                    'triplepistol': 
+                    "triplepistol": 
                     {
                         id: 8,
-                        name: 'Panic',
-                        description: 'Fire three handgun rounds in one activation. Higher cooldown.',
-                        icon: 'triplepistolicon',
+                        name: "Panic",
+                        description: "Fire three handgun rounds in one activation. Higher cooldown.",
+                        icon: "triplepistolicon",
                         effect: (gameManager) => 
                         {
                             gameManager.triplePistolUpgrade = true;
                             gameManager.quintuplePistolUpgrade = false;
                         }
                     },
-                    'quintuplepistol': 
+                    "quintuplepistol": 
                     {
                         id: 9,
-                        name: 'Terror',
-                        description: 'Fire five handgun rounds in one activation. Much higher cooldown.',
-                        icon: 'quintuplepistolicon',
+                        name: "Terror",
+                        description: "Fire five handgun rounds in one activation. Much higher cooldown.",
+                        icon: "quintuplepistolicon",
                         effect: (gameManager) => 
                         {
                             gameManager.triplePistolUpgrade = false;
                             gameManager.quintuplePistolUpgrade = true;
                         }
                     },
-                    'mousepistol': 
+                    "mousepistol": 
                     {
                         id: 10,
-                        name: 'Center Mass',
-                        description: 'Handgun aims with mouse.',
-                        icon: 'mousepistolicon',
+                        name: "Center Mass",
+                        description: "Handgun aims with mouse.",
+                        icon: "mousepistolicon",
                         effect: (gameManager) => 
                         {
                             gameManager.mousePistolUpgrade = true;
                         }
                     },
-                    'numfourbuckshot': 
+                    "numfourbuckshot": 
                     {
                         id: 11,
-                        name: '#4 Buckshot',
-                        description: 'Replace shells with #4 buckshot.',
-                        icon: 'numfourbuckshoticon',
+                        name: "#4 Buckshot",
+                        description: "Replace shells with #4 buckshot.",
+                        icon: "numfourbuckshoticon",
                         effect: (gameManager) => 
                         {
                             this.clearAmmoOwned();
                             gameManager.multiAmmoUpgrade = false;
-                            gameManager.fireModeUpgrade = 'numfourbuckshot';
+                            gameManager.fireModeUpgrade = "numfourbuckshot";
                         }
                     },
-                    '000buckshot': 
+                    "000buckshot": 
                     {
                         id: 12,
-                        name: '000 Buckshot',
-                        description: 'Replace shells with 000 buckshot.',
-                        icon: '000buckshoticon',
+                        name: "000 Buckshot",
+                        description: "Replace shells with 000 buckshot.",
+                        icon: "000buckshoticon",
                         effect: (gameManager) => 
                         {
                             this.clearAmmoOwned();
                             gameManager.multiAmmoUpgrade = false;
-                            gameManager.fireModeUpgrade = '000buckshot';
+                            gameManager.fireModeUpgrade = "000buckshot";
                         }
                     }
                 };
@@ -2006,7 +2006,7 @@
 
                 this.ownedCards = new Set();
 
-                this.fireModeUpgrade = 'buckshot';
+                this.fireModeUpgrade = "buckshot";
                 this.damageUpgrade = false;
                 this.blockUpgrade = false;
                 this.healthUpgrade = false;
@@ -2120,7 +2120,7 @@
 
                 this.ownedCards = new Set();
 
-                this.fireModeUpgrade = 'buckshot';
+                this.fireModeUpgrade = "buckshot";
                 this.damageUpgrade = false;
                 this.blockUpgrade = false;
                 this.healthUpgrade = false;
@@ -2163,7 +2163,7 @@
         {
             constructor()
             {
-                super({ key: 'HUD' });
+                super({ key: "HUD" });
             }
 
             create()
@@ -2173,7 +2173,7 @@
                     u: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U)
                 };
 
-                this.gameManager = this.scene.get('GameManager');
+                this.gameManager = this.scene.get("GameManager");
                 this.displayedMessage = false;
 
                 if(this.gameManager.alwaysDisplayUpgrades === true)
@@ -2192,7 +2192,7 @@
             
             displayCurrentScore()
             {
-                this.currentScore = createText(this, 3, 3, 'Score: ' + this.gameManager.score, 10, '#ff0000').setOrigin(0, 0).setDepth(1232300);
+                this.currentScore = createText(this, 3, 3, "Score: " + this.gameManager.score, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
             }
             
             destroyCurrentScore()
@@ -2206,7 +2206,7 @@
             
             displayHighScore()
             {
-                this.highScore = createText(this, this.game.config.width - 3, 3, 'High Score: ' + this.gameManager.highScore, 10, '#ff0000').setOrigin(1, 0).setDepth(1232300);
+                this.highScore = createText(this, this.game.config.width - 3, 3, "High Score: " + this.gameManager.highScore, 10, "#ff0000").setOrigin(1, 0).setDepth(1232300);
             }
             
             destroyHighScore()
@@ -2222,7 +2222,7 @@
             {
                 if(this.highScore)
                 {
-                    this.highScore.setText('High Score: ' + this.gameManager.highScore);
+                    this.highScore.setText("High Score: " + this.gameManager.highScore);
                 }
             }
             
@@ -2230,7 +2230,7 @@
             {
                 if(this.currentScore)
                 {
-                    this.currentScore.setText('Score: ' + this.gameManager.score);
+                    this.currentScore.setText("Score: " + this.gameManager.score);
                 }
             }
 
@@ -2288,7 +2288,7 @@
             }
         }
         
-        document.addEventListener('contextmenu', event => 
+        document.addEventListener("contextmenu", event => 
         {
             event.preventDefault();
             return false;
@@ -2314,7 +2314,7 @@
 
             physics:
             {
-              default: 'arcade',
+              default: "arcade",
               arcade:
               {
                 gravity: { y: 300 },

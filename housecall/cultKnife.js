@@ -29,7 +29,7 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
 {
     constructor(scene, x, y, player)
     {
-        super(scene, x, y, 'cultknife');
+        super(scene, x, y, "cultknife");
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -45,7 +45,7 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
         this.bloodEmitter = this.scene.add.particles
         (
             0, 0, 
-            'blood',
+            "blood",
             {
                 angle: { min: 0, max: 360 }, 
                 speed: { min: 100, max: 200 },
@@ -54,25 +54,25 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
                 quantity: 75,
                 scale: { start: 0.5, end: 0 },
                 alpha: { start: 1, end: 0 },
-                blendMode: 'NORMAL',
+                blendMode: "NORMAL",
                 frequency: -1
             }
         );
         
-        if(!scene.anims.get('knifeidle'))
+        if(!scene.anims.get("knifeidle"))
         {
             scene.anims.create
             ({
-                key: 'knifeidle',
-                frames: scene.anims.generateFrameNumbers('cultknife', { start: 0, end: 2 }),
+                key: "knifeidle",
+                frames: scene.anims.generateFrameNumbers("cultknife", { start: 0, end: 2 }),
                 frameRate: 4,
                 repeat: -1
             });
         }
         
-        if(scene.anims.get('knifeidle'))
+        if(scene.anims.get("knifeidle"))
         {
-            this.play('knifeidle');
+            this.play("knifeidle");
         }
     }
 
@@ -82,7 +82,7 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
 
         if(this.health < 1)
         {
-            this.scene.sound.play('hurt');
+            this.scene.sound.play("hurt");
             if(this.scene.gameManager.allowScreenShakeOnKill)
             {
                 this.scene.cameras.main.shake(50, 0.004);

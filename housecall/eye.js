@@ -14,7 +14,7 @@ function eyeCreator(scene, eyePositions, gameManager)
         }
         else
         {
-            scene.sound.play('block');
+            scene.sound.play("block");
             player.defenceParticles();
             player.activateDoubleFire();
             player.play("block", false);
@@ -128,7 +128,7 @@ function eyeSynchro(scene, eyes)
 
     if(anEyeAcvite)
     {
-        scene.sound.play('eyeorb');
+        scene.sound.play("eyeorb");
     }
 }
   
@@ -136,7 +136,7 @@ class eye extends Phaser.Physics.Arcade.Sprite
 {
     constructor(scene, x, y, eyeOrbHolder)
     {
-        super(scene, x, y, 'eye');
+        super(scene, x, y, "eye");
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -159,7 +159,7 @@ class eye extends Phaser.Physics.Arcade.Sprite
         this.explode = this.scene.add.particles
         (
             0, 0, 
-            'eyechunk',
+            "eyechunk",
             {
                 angle: { min: 0, max: 360 }, 
                 speed: { min: 100, max: 200 },
@@ -168,7 +168,7 @@ class eye extends Phaser.Physics.Arcade.Sprite
                 quantity: 10,
                 scale: { start: 0.5, end: 0 },
                 alpha: { start: 1, end: 0 },
-                blendMode: 'NORMAL',
+                blendMode: "NORMAL",
                 frequency: -1
             }
         );
@@ -183,7 +183,7 @@ class eye extends Phaser.Physics.Arcade.Sprite
     {
         if(this.health < 1)
         {
-            this.scene.sound.play('hurt');
+            this.scene.sound.play("hurt");
             if(this.scene.gameManager.allowScreenShakeOnKill)
             {
                 this.scene.cameras.main.shake(50, 0.004);
@@ -234,7 +234,7 @@ class eye extends Phaser.Physics.Arcade.Sprite
     
     shoot()
     {
-        const orb = this.orbs.get(this.x, this.y, 'cultorb');
+        const orb = this.orbs.get(this.x, this.y, "cultorb");
 
         if(orb)
         {
