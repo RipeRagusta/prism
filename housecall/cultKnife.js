@@ -9,11 +9,6 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
         scene.cultKnifes.add(cultKnifeInstance);
     });
 
-    if(scene.ground)
-    {
-        scene.physics.add.collider(scene.cultKnifes, scene.ground);
-    }
-
     scene.physics.add.overlap(scene.cultKnifes, scene.playerBulletsHolder, (cult, bullet) =>
     {
         cult.health -= bullet.damage;

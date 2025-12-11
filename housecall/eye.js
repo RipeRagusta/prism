@@ -42,11 +42,6 @@ function eyeCreator(scene, eyePositions, gameManager)
         scene.eyes.add(eyeInstance);
     });
 
-    if(scene.ground)
-    {
-        scene.physics.add.collider(scene.cultKnifes, scene.ground);
-    }
-
     scene.physics.add.overlap(scene.eyes, scene.playerBulletsHolder, (eye, bullet) =>
     {
         eye.health -= bullet.damage;

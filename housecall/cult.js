@@ -77,11 +77,7 @@ function cultCreator(scene, cultPositions, gameManager)
             cultInstance.id = cultId;
             scene.cults.add(cultInstance);
         });
-        
-        if(scene.ground)
-        {
-            scene.physics.add.collider(scene.cults, scene.ground);
-        }
+
         scene.physics.add.collider(scene.cults, scene.cults);
         scene.physics.add.overlap(scene.cults, scene.playerBulletsHolder, (cult, bullet) =>
         {

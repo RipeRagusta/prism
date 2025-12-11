@@ -79,11 +79,6 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         scene.player.canShoot = false;
         scene.time.delayedCall(200, () => scene.player.canShoot = true);
         
-        if(scene.ground)
-        {
-            scene.physics.add.collider(scene.player, scene.ground);
-        }
-        
         scene.player.fireMode = gameManager.fireModeUpgrade;
         
         if(gameManager.damageUpgrade)
