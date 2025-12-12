@@ -51,10 +51,26 @@ function cultCreator(scene, cultPositions, gameManager)
         scene.physics.add.overlap(scene.player, scene.cultOrbHolder, (player, orb) =>
         {
             orb.destroy();
-            
+
             if(!player.block)
             {
-                player.health -= 10;
+                if(scene.gameManager.alwaysBlock)
+                {
+                    scene.sound.play("block");
+                    player.defenceParticles();
+                    player.activateDoubleFire();
+                    player.play("block", false);
+                    player.succesfulBlock = true;
+                    player.lastPlayerBlock = 0;
+                    if(scene.gameManager.allowScreenShakeOnBlock)
+                    {
+                        scene.cameras.main.shake(100, 0.005);
+                    }
+                }
+                else
+                {
+                    player.health -= 10;
+                }
             }
             else
             {
@@ -387,7 +403,12 @@ function cultSeparation(cults, player)
                 this.scene.player.activateDoubleFire();
             } 
         }
-        gameManager.score += 35;
+        
+        if(!gameManager.alwaysBlock)
+        {
+            gameManager.score += 35;
+        }
+        
         if(gameManager.score > gameManager.highScore)
         {
             gameManager.highScore = gameManager.score;
@@ -399,6 +420,7 @@ function cultSeparation(cults, player)
         const HUD = this.scene.HUD;
         HUD.updateScore();
         HUD.updateHighScore();
+        
         this.setActive(false);
         this.setVisible(false);
         this.destroy();

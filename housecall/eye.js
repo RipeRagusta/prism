@@ -13,7 +13,23 @@ function eyeCreator(scene, eyePositions, gameManager)
         
         if(!player.block)
         {
-            player.health -= 10;
+            if(scene.gameManager.alwaysBlock)
+            {
+                scene.sound.play("block");
+                player.defenceParticles();
+                player.activateDoubleFire();
+                player.play("block", false);
+                player.succesfulBlock = true;
+                player.lastPlayerBlock = 0;
+                if(scene.gameManager.allowScreenShakeOnBlock)
+                {
+                    scene.cameras.main.shake(100, 0.005);
+                }
+            }
+            else
+            {
+                player.health -= 10;
+            }
         }
         else
         {
@@ -264,7 +280,12 @@ class eye extends Phaser.Physics.Arcade.Sprite
                 this.scene.player.activateDoubleFire();
             } 
         }
-        gameManager.score += 20;
+        
+        if(!gameManager.alwaysBlock)
+        {
+            gameManager.score += 20;
+        }
+        
         if(gameManager.score > gameManager.highScore)
         {
             gameManager.highScore = gameManager.score;
@@ -276,6 +297,7 @@ class eye extends Phaser.Physics.Arcade.Sprite
         const HUD = this.scene.HUD;
         HUD.updateScore();
         HUD.updateHighScore();
+        
         this.setActive(false);
         this.setVisible(false);
         this.destroy();

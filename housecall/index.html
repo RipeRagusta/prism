@@ -716,6 +716,60 @@
                     this.scene.start("Level1Game");
                     this.scene.launch("HUD");
                 });
+                
+                if(this.gameManager.alwaysBlock)
+                {
+                    this.alwayBlockWords = "On";
+                }
+                else
+                {
+                    this.alwayBlockWords = "Off";
+                }
+                
+                this.alwaysBlock = createText(this, 0 + 3, 3, "Auto Block: " + this.alwayBlockWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                
+                this.alwaysBlockZone = this.add.zone
+                (
+                    this.alwaysBlock.x, 
+                    this.alwaysBlock.y, 
+                    this.alwaysBlock.width, 
+                    this.alwaysBlock.height
+                ).setOrigin(0, 0);
+
+                this.alwaysBlockZone.setInteractive({cursor: "pointer"});
+                this.alwaysBlockZone.on("pointerdown", () =>
+                {
+                    let currentAlpha = this.alwayBlockWords.alpha;
+                    this.alwaysBlock.setAlpha(1);
+                    
+                    this.gameManager.alwaysBlock = !this.gameManager.alwaysBlock;                   
+                    
+                    if(this.gameManager.alwaysBlock)
+                    {
+                        this.alwayBlockWords = "On";
+                    }
+                    else
+                    {
+                        this.alwayBlockWords = "Off";
+                    }
+                    
+                    this.alwaysBlock.setText("Auto Block: " + this.alwayBlockWords);
+                    this.alwaysBlock.setAlpha(currentAlpha);
+                });
+                
+                this.alwaysBlock.setAlpha(0);
+                
+                this.alwaysBlockZone.on("pointerover", () =>
+                {
+                    this.player.canShoot = false;
+                    this.alwaysBlock.setAlpha(1);
+                });
+
+                this.alwaysBlockZone.on("pointerout", () =>
+                {
+                    this.player.canShoot = true;
+                    this.alwaysBlock.setAlpha(0);
+                });
 
 
                 //END PROPS AFTER PLAYER MainMenu
@@ -1687,7 +1741,7 @@
 
 
                 const thisLevel = 4;
-                this.pipe = new pipeNext(this, 2206, this.sys.game.config.height - 16, "MainMenu", 4, this.gameManager);
+                this.pipe = new pipeNext(this, 2194, this.sys.game.config.height - 16, "MainMenu", 4, this.gameManager);
 
                 this.ground = new Ground(this, worldWidthX);
 
@@ -2070,6 +2124,7 @@
                 this.level4AfterPropData = null;
                 
                 this.alwaysBuddha = false;
+                this.alwaysBlock = false;
 
                 this.alwaysDisplayUpgrades = true;
                 
@@ -2340,7 +2395,7 @@
 
             audio:
             {
-                pauseOnBlur: true
+                pauseOnBlur: false
             },
 
             scale:
