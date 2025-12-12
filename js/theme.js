@@ -143,23 +143,23 @@ function createEditThemeCommands()
 					}
 					else
 					{
-						themeTargets.push({ name: splitCommand[3], display: true, backgroundColor: splitCommand[4], color: splitCommand[5], consoleColor: splitCommand[6], userColor: splitCommand[7], separatorColor: splitCommand[8]});
+						themeTargets.push({ name: splitCommand[3], display: true, backgroundColor: splitCommand[4], color: splitCommand[5], userColor: splitCommand[6], consoleColor: splitCommand[7], separatorColor: splitCommand[8]});
 
 						themeTargets.sort(sortAlphabetically);
 
 						refreshThemeCommands("set");
 
 						let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-						consoleString.innerHTML += "successfully set: " + splitCommand[2] + " " + splitCommand[3] + " " + splitCommand[4] + " " + splitCommand[5] + " " + splitCommand[6] + " " + splitCommand[7] + " " + splitCommand[8];
+						consoleString.innerHTML += "successfully set: " + splitCommand[3] + " " + splitCommand[4] + " " + splitCommand[5] + " " + splitCommand[6] + " " + splitCommand[7] + " " + splitCommand[8];
 						printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 					}
 	        	}
 				else
 				{
 					let consoleString = createHistoryMessage("console", PREVENT_WRAP);
-					consoleString.innerHTML += "ex: cstm edtheme set cyan #0d0d0d #00ffff #ff0000 #00ff00 #ffffff" + "\n";
+					consoleString.innerHTML += "ex: cstm edtheme set cyan #0d0d0d #00ffff #00ff00 #ff0000 #ffffff" + "\n";
 					consoleString.appendChild(consoleDecorSeperatorElement(3, false));
-					consoleString.innerHTML += "\n     " + "ex: cstm edtheme set name backgroundcolor maincolor consolecolor usercolor separatorcolor";
+					consoleString.innerHTML += "\n     " + "ex: cstm edtheme set name backgroundcolor maincolor usercolor consolecolor separatorcolor";
 					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
 				}
 	        }
