@@ -526,6 +526,7 @@
                 this.cursors = this.input.keyboard.createCursorKeys();
                 this.gameManager = this.scene.get("GameManager");
                 this.HUD = this.scene.get("HUD");
+                this.sound.pauseOnBlur = false;
 
 
                 //END BASIC SETUP MainMenu
@@ -1126,7 +1127,8 @@
                 this.HUD = this.scene.get("HUD");
                 this.gameManager.updateHighestLevel(1);
                 this.gameManager.updateCurrentLevel(1);
-
+                this.sound.pauseOnBlur = false;
+                
 
                 //END BASIC SETUP Level1Game
 
@@ -1292,6 +1294,7 @@
                 this.HUD = this.scene.get("HUD");
                 this.gameManager.updateHighestLevel(2);
                 this.gameManager.updateCurrentLevel(2);
+                this.sound.pauseOnBlur = false;
 
 
                 //END BASIC SETUP Level2Game
@@ -1459,6 +1462,7 @@
                 this.HUD = this.scene.get("HUD");
                 this.gameManager.updateHighestLevel(3);
                 this.gameManager.updateCurrentLevel(3);
+                this.sound.pauseOnBlur = false;
 
 
                 //END BASIC SETUP Level3Game
@@ -1637,6 +1641,7 @@
                 this.HUD = this.scene.get("HUD");
                 this.gameManager.updateHighestLevel(4);
                 this.gameManager.updateCurrentLevel(4);
+                this.sound.pauseOnBlur = false;
 
 
                 //END BASIC SETUP Level4Game
@@ -2392,12 +2397,12 @@
             pixelArt: true,
             width: Math.max(400, Math.min(400, (window.innerWidth / window.innerHeight) * 176)),
             height: 176,
-
-            audio:
+            
+            audio: 
             {
-                pauseOnBlur: false
+                disableWebAudio: false
             },
-
+    
             scale:
             {
               mode: Phaser.Scale.FIT,
