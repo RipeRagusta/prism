@@ -151,6 +151,39 @@ function createEditLaunchCommands()
 	        }
 		},
 		{
+			name: "printlink",
+			display: true,
+			argumentsNeeded: 1,
+			function: (commandEntered, splitCommand) => 
+	        {
+	        	if(splitCommand.length > 2)
+	        	{
+	        		let printTarget = launchTargets.find(target => target.name.toLowerCase() === splitCommand[2].toLowerCase());
+
+	        		if(printTarget)
+					{
+						let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+						consoleString.innerHTML += "url: " + printTarget.url;
+						printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+					}
+					else
+					{
+						let consoleString = createHistoryMessage("console", ALLOW_WRAP);
+						consoleString.innerHTML += "invalid name: " + splitCommand[2] + ", not found";
+						printMessage(consoleString, PRINT_MESSAGE_WITHOUT_SPACE);
+					}
+	        	}
+	        	else
+	        	{
+	        		let consoleString = createHistoryMessage("console", PREVENT_WRAP);
+					consoleString.innerHTML += "ex: edlaunch printlink totalprism" + "\n";
+					consoleString.appendChild(consoleDecorSeperatorElement(3, false));
+					consoleString.innerHTML += "\n     " + "ex: edlaunch printlink name";
+					printMessage(consoleString, PRINT_MESSAGE_WITH_SPACE);
+	        	}
+	        }
+	    },
+		{
 			name: "launchinnewpage",
 			display: true,
 			argumentsNeeded: -1,
