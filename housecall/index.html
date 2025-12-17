@@ -691,7 +691,7 @@
                 
                 this.displayControls();
                 
-                this.quickStart = createText(this, this.game.config.width - (this.game.config.width / 2), 3, "QUICK START", 9, "#ff0000").setOrigin(0.5, 0).setDepth(1232300);
+                this.quickStart = createText(this, this.game.config.width - (this.game.config.width / 2), 3, "QUICK START", 10, "#ffffff").setOrigin(0.5, 0).setDepth(1232300);
                 this.quickStart.setInteractive({cursor: "pointer"});
                 this.quickStart.on("pointerdown", () =>
                 {
@@ -702,7 +702,7 @@
                     this.scene.launch("HUD");
                 });
                
-                this.highScore = createText(this, this.game.config.width * 3 - (this.game.config.width / 2), 3, "High Score: " + this.gameManager.highScore, 10, "#ff0000").setOrigin(0.5, 0).setDepth(1232300);
+                this.highScore = createText(this, this.game.config.width * 3 - (this.game.config.width / 2), 3, "High Score: " + this.gameManager.highScore, 10, "#ffffff").setOrigin(0.5, 0).setDepth(1232300);
                 
                 this.start = createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, "Start", 20, "#fff").setOrigin(0.5, 0.5);
                 this.start.setInteractive({cursor: "pointer"});
