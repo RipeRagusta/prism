@@ -304,6 +304,7 @@
                 this.scene.stop("Loading");
                 this.scene.start("GameManager");
                 this.scene.start("MainMenu");
+                this.scene.start("Settings");
             }
             
             shutdown() 
@@ -527,14 +528,15 @@
                 this.gameManager = this.scene.get("GameManager");
                 this.HUD = this.scene.get("HUD");
                 this.sound.pauseOnBlur = false;
-
+                this.keyNameLookup = Object.fromEntries(Object.entries(Phaser.Input.Keyboard.KeyCodes).map(([name, code]) => [code, name]));
+                
 
                 //END BASIC SETUP MainMenu
 
 
                 //START PROPS BEFORE PLAYER MainMenu
 
-
+                
                 this.newSky = new Sky(this, worldWidthX, "sky");
 
                 this.stars = this.add.tileSprite(0, 0, worldWidthX, this.sys.game.config.height, "stars").setOrigin(0, 0);
@@ -641,14 +643,7 @@
                         {
                             this.sound.play("stab");
 
-                            this.controls.destroy();
-                            this.strafeControls.destroy();
-                            this.jumpControls.destroy();
-                            this.leftClickControls.destroy();
-                            this.rightClickControls.destroy();
-                            this.pistolControls.destroy();
-                            this.screenShake.destroy();
-                            this.toggleHUD.destroy();
+                            this.destroyControls();
                         }
                     });
 
@@ -670,6 +665,7 @@
                 {
                     bullet.destroy();
                     logo.destroy();
+                    this.quickStart.destroy();
                     this.cameras.main.pan(worldWidthX / 2, this.sys.game.config.height / 2, 2000, "Sine.easeInOut");
 
                     this.time.delayedCall(2000, () =>
@@ -693,19 +689,20 @@
 
                 });
                 
-                this.controls = createText(this, worldWidthX / 2, 10, "Controls:", 20, "#fff");
-
-                this.strafeControls = createText(this, worldWidthX / 2, 0 + this.controls.height + 20, "A/D: Walk", 12, "#fff");
-                this.jumpControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + 25, "Space: Jump", 12, "#fff");
-                this.rightClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 30, "Right-Click: Block", 12, "#fff");
-                this.leftClickControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 35, "Left-Click: Use Shotgun (Hold)", 12, "#fff");
-                this.pistolControls = createText(this, worldWidthX / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + 40, "Q/E: Use Pistol", 12, "#fff");
-            
-                this.screenShake = createText(this, this.game.config.width * 2 - 3, 3, "I: Toggle Jitter", 10, "#ff0000").setOrigin(1, 0).setDepth(1232300);
+                this.displayControls();
                 
+                this.quickStart = createText(this, this.game.config.width - (this.game.config.width / 2), 3, "Quick Start", 10, "#ff0000").setOrigin(0.5, 0).setDepth(1232300);
+                this.quickStart.setInteractive({cursor: "pointer"});
+                this.quickStart.on("pointerdown", () =>
+                {
+                    this.scene.stop("MainMenu");
+                    this.scene.stop("HUD");
+                    event.stopPropagation();
+                    this.scene.start("Level1Game");
+                    this.scene.launch("HUD");
+                });
+               
                 this.highScore = createText(this, this.game.config.width * 3 - (this.game.config.width / 2), 3, "High Score: " + this.gameManager.highScore, 10, "#ff0000").setOrigin(0.5, 0).setDepth(1232300);
-                
-                this.toggleHUD = createText(this, this.game.config.width + 3, 3, "U: Toggle HUD", 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
                 
                 this.start = createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, "Start", 20, "#fff").setOrigin(0.5, 0.5);
                 this.start.setInteractive({cursor: "pointer"});
@@ -716,60 +713,6 @@
                     event.stopPropagation();
                     this.scene.start("Level1Game");
                     this.scene.launch("HUD");
-                });
-                
-                if(this.gameManager.alwaysBlock)
-                {
-                    this.alwayBlockWords = "On";
-                }
-                else
-                {
-                    this.alwayBlockWords = "Off";
-                }
-                
-                this.alwaysBlock = createText(this, 0 + 3, 3, "Auto Block: " + this.alwayBlockWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
-                
-                this.alwaysBlockZone = this.add.zone
-                (
-                    this.alwaysBlock.x, 
-                    this.alwaysBlock.y, 
-                    this.alwaysBlock.width, 
-                    this.alwaysBlock.height
-                ).setOrigin(0, 0);
-
-                this.alwaysBlockZone.setInteractive({cursor: "pointer"});
-                this.alwaysBlockZone.on("pointerdown", () =>
-                {
-                    let currentAlpha = this.alwayBlockWords.alpha;
-                    this.alwaysBlock.setAlpha(1);
-                    
-                    this.gameManager.alwaysBlock = !this.gameManager.alwaysBlock;                   
-                    
-                    if(this.gameManager.alwaysBlock)
-                    {
-                        this.alwayBlockWords = "On";
-                    }
-                    else
-                    {
-                        this.alwayBlockWords = "Off";
-                    }
-                    
-                    this.alwaysBlock.setText("Auto Block: " + this.alwayBlockWords);
-                    this.alwaysBlock.setAlpha(currentAlpha);
-                });
-                
-                this.alwaysBlock.setAlpha(0);
-                
-                this.alwaysBlockZone.on("pointerover", () =>
-                {
-                    this.player.canShoot = false;
-                    this.alwaysBlock.setAlpha(1);
-                });
-
-                this.alwaysBlockZone.on("pointerout", () =>
-                {
-                    this.player.canShoot = true;
-                    this.alwaysBlock.setAlpha(0);
                 });
 
 
@@ -787,7 +730,66 @@
 
                 //END CAMERA SETUP MainMenu
             }
-
+            
+            refreshControls()
+            {
+                this.destroyControls();
+                this.displayControls();
+            }
+            
+            
+            displayControls()
+            {
+                this.controls = createText(this, 1200 / 2, 10, "Controls:", 20, "#fff");
+                this.strafeControls = createText(this, 1200 / 2, 0 + this.controls.height + 20, this.getActionAssignment("walkLeft") + "/" + this.getActionAssignment("walkRight") + ": Walk", 12, "#fff");
+                this.jumpControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + 25, this.getActionAssignment("jump") + ": Jump", 12, "#fff");
+                this.rightClickControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 30, this.getActionAssignment("block") + ": Block", 12, "#fff");
+                this.leftClickControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 35, this.getActionAssignment("useShotgun") + ": Use Shotgun (Hold)", 12, "#fff");
+                this.pistolControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + 40, this.getActionAssignment("usePistol") + ": Use Pistol", 12, "#fff");
+                this.settingsControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + this.pistolControls.height +  45, "Esc: Open Settings", 12, "#fff");
+            }
+            
+            destroyControls()
+            {
+                this.controls.destroy();
+                this.strafeControls.destroy();
+                this.jumpControls.destroy();
+                this.rightClickControls.destroy();
+                this.leftClickControls.destroy();
+                this.pistolControls.destroy();
+                this.settingsControls.destroy();
+            }
+            
+            getActionAssignment(actionName)
+            {
+                let currentAction = this.gameManager.actions[actionName];
+                
+                if(currentAction.type === "KEY") 
+                {
+                    let name = this.keyNameLookup[currentAction.code];
+                    return name;
+                } 
+                else 
+                {
+                    if(currentAction.button === 0)
+                    {
+                        return "LEFT_MOUSE";
+                    }
+                    else if(currentAction.button === 1)
+                    {
+                        return "MIDDLE_MOUSE";
+                    }
+                    else if(currentAction.button === 2)
+                    {
+                        return "RIGHT_MOUSE";
+                    }
+                    else
+                    {
+                        return "undefined";
+                    }
+                }
+            }
+            
             update(time, delta)
             {
                 if(this.player.health < 1000)
@@ -1129,6 +1131,10 @@
                 this.gameManager.updateCurrentLevel(1);
                 this.sound.pauseOnBlur = false;
                 
+                if(this.gameManager.cheats === true && this.gameManager.alwaysBlock === false)
+                {
+                    this.gameManager.cheats = false;
+                }
 
                 //END BASIC SETUP Level1Game
 
@@ -1802,14 +1808,16 @@
                 super({key: "UpgradeRoom"});
                 
                 this.gameManager = game.scene.getScene("GameManager");
+                
                 this.cardAmount = Object.keys(this.gameManager.upgradeCardData).length;
                 this.upgradeCardData = this.gameManager.upgradeCardData;
             }
 
             create()
             {
+                this.settings = this.scene.get("Settings");
                 this.input.setDefaultCursor("pointer");
-
+                
 
                 //START CARD SETUP
 
@@ -1832,13 +1840,19 @@
                 this.cardDisplay1 = this.displayCard(card1, "left");
                 this.cardDisplay1.on("pointerdown", () =>
                 {
-                    this.acceptCard(card1);
+                    if(this.settings.displayedSettings === false)
+                    {
+                        this.acceptCard(card1);
+                    }
                 });
 
                 this.cardDisplay2 = this.displayCard(card2, "right");
                 this.cardDisplay2.on("pointerdown", () =>
                 {
-                    this.acceptCard(card2);
+                    if(this.settings.displayedSettings === false)
+                    {
+                        this.acceptCard(card2);
+                    }
                 }); 
 
 
@@ -2141,39 +2155,154 @@
                     }
                 }
 
-                this.allowScreenShakeOnBlock = true;
-                this.allowScreenShakeOnKill = true;
+                this.screenShake = true;
                 
                 if(checkStorage() === true)
                 {
                     if((localStorage.getItem("HCScreenShakeSetting")) !== null)
                     {
-                        this.allowScreenShakeOnBlock = JSON.parse(localStorage.getItem("HCScreenShakeSetting"));
-                        this.allowScreenShakeOnKill = JSON.parse(localStorage.getItem("HCScreenShakeSetting"));
+                        this.screenShake = JSON.parse(localStorage.getItem("HCScreenShakeSetting"));
                     }
+                }
+            }
+            
+            resetActions()
+            {
+                localStorage.removeItem("HCGameControls");
+                this.actions = JSON.parse(JSON.stringify(this.defaultActions));
+                this.refreshControls();
+                game.scene.getScene("Settings").refresh();
+                
+                if(this.scene.isActive(game.scene.getScene("MainMenu")))
+                {
+                    game.scene.getScene("MainMenu").refreshControls();
                 }
             }
 
             create()
             {
-                this.wasd =
+                this.defaultActions =
                 {
-                    i: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.I)
+                    useShotgun: { type: "MOUSE", button: 0 },
+                    jump: { type: "KEY", code: 32 },
+                    walkLeft: { type: "KEY", code: 65 },
+                    walkRight: { type: "KEY", code: 68 },
+                    usePistol: { type: "KEY", code: 69 },
+                    block: { type: "MOUSE", button: 2 }
                 };
+                
+                this.actions = JSON.parse(JSON.stringify(this.defaultActions));
+                
+                if(checkStorage() === true)
+                {
+                    if((localStorage.getItem("HCGameControls")) !== null)
+                    {
+                        this.actions = JSON.parse(localStorage.getItem("HCGameControls"));
+                    }
+                }
+                
+                this.refreshControls(); 
+            }
+            
+            refreshControls() 
+            {
+                if(this.keys) 
+                {
+                    for(let action in this.keys) 
+                    {
+                        this.input.keyboard.removeKey(this.keys[action]);
+                    }
+                }
+
+                this.keys = {};
+
+                for(let action in this.actions) 
+                {
+                    if(this.actions[action].type === "KEY") 
+                    {
+                        this.keys[action] = this.input.keyboard.addKey(this.actions[action].code);
+                    }
+                }
+            }
+            
+            remapAction(actionName) 
+            {
+                game.scene.getScene("Settings").remapping = true;
+                
+                this.input.keyboard.once("keydown", (event) => 
+                {
+                    this.input.off("pointerdown");
+                    game.scene.getScene("Settings").remapping = false;
+                    
+                    if(event.keyCode !== Phaser.Input.Keyboard.KeyCodes.ESC)
+                    {
+                        this.updateBinding(actionName, "KEY", event.keyCode);
+                        game.scene.getScene("Settings").refresh();
+                        
+                        if(this.scene.isActive(game.scene.getScene("MainMenu")))
+                        {
+                            game.scene.getScene("MainMenu").refreshControls();
+                        }
+                    }
+                });
+
+                this.input.once("pointerdown", (pointer) => 
+                {
+                    this.input.keyboard.off("keydown");
+                    game.scene.getScene("Settings").remapping = false;
+                    
+                    if(event.keyCode !== Phaser.Input.Keyboard.KeyCodes.ESC)
+                    {
+                        this.updateBinding(actionName, "MOUSE", pointer.button);
+                        game.scene.getScene("Settings").refresh();
+                        
+                        if(this.scene.isActive(game.scene.getScene("MainMenu")))
+                        {
+                            game.scene.getScene("MainMenu").refreshControls();
+                        }
+                    }
+                });
+            }
+            
+            updateBinding(actionName, type, value) 
+            {
+                if(type === "KEY") 
+                {
+                    this.actions[actionName] = { type: "KEY", code: value };
+                } 
+                else 
+                {
+                    this.actions[actionName] = { type: "MOUSE", button: value };
+                }
+                
+                this.refreshControls();
+
+                localStorage.setItem("HCGameControls", JSON.stringify(this.actions));
+            }
+            
+            isActionActive(actionName) 
+            {
+                const binding = this.actions[actionName];
+
+                if(binding.type === "KEY") 
+                {
+                    return this.keys[actionName].isDown;
+                }
+
+                if(binding.type === "MOUSE") 
+                {
+                    const pointer = this.input.activePointer;
+                    if(binding.button === 0) return pointer.leftButtonDown();
+                    if(binding.button === 1) return pointer.middleButtonDown();
+                    if(binding.button === 2) return pointer.rightButtonDown();
+                }
+
+                return false;
             }
 
             update(time, delta)
             {
-                if(Phaser.Input.Keyboard.JustDown(this.wasd.i))
-                {
-                    this.allowScreenShakeOnBlock = !this.allowScreenShakeOnBlock;
-                    this.allowScreenShakeOnKill = !this.allowScreenShakeOnKill;
-                    
-                    if(checkStorage() === true)
-                    {
-                        localStorage.setItem("HCScreenShakeSetting", this.allowScreenShakeOnBlock);
-                    }
-                }
+                
             }
 
             clearAmmoOwned()
@@ -2265,14 +2394,14 @@
 
             create()
             {
-                this.wasd =
-                {
-                    u: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U)
-                };
-
-                this.gameManager = this.scene.get("GameManager");
+                this.gameManager = game.scene.getScene("GameManager");
                 this.displayedMessage = false;
 
+                this.toggleHUD();
+            }
+            
+            toggleHUD()
+            {
                 if(this.gameManager.alwaysDisplayUpgrades === true)
                 { 
                     this.displayHighScore();
@@ -2284,6 +2413,20 @@
                     this.destroyHighScore();
                     this.destroyCurrentScore();
                     this.displayedMessage = false;
+                }
+            }
+            
+            refreshHUD()
+            {
+                if(this.gameManager.alwaysDisplayUpgrades === true)
+                { 
+                    this.displayHighScore();
+                    this.displayCurrentScore();
+                }
+                else
+                {
+                    this.destroyHighScore();
+                    this.destroyCurrentScore();
                 }
             }
             
@@ -2333,28 +2476,7 @@
 
             update(time)
             {
-                if(Phaser.Input.Keyboard.JustDown(this.wasd.u))
-                {
-                    if(this.displayedMessage)
-                    {
-                        this.destroyCurrentScore();
-                        this.destroyHighScore();
-                        this.gameManager.alwaysDisplayUpgrades = false;
-                    }
-                    else
-                    {
-                        this.displayCurrentScore();
-                        this.displayHighScore();
-                        this.gameManager.alwaysDisplayUpgrades = true;
-                    }
-
-                    this.displayedMessage = !this.displayedMessage;
-                    
-                    if(checkStorage() === true)
-                    {
-                        localStorage.setItem("HCHUDSetting", this.gameManager.alwaysDisplayUpgrades);
-                    }
-                }
+                
             }
             
             shutdown() 
@@ -2366,6 +2488,273 @@
                         child.destroy();
                     }
                 });
+            }
+        }
+        
+        class Settings extends Phaser.Scene
+        {
+            constructor()
+            {
+                super({ key: "Settings" });
+                this.remapping = false;
+            }
+            
+            refresh()
+            {
+                for(let i = 0; i < 2; i++)
+                {
+                    this.toggleMenu();
+                }
+            }
+            
+            toggleMenu()
+            {
+                if(this.displayedSettings)
+                {
+                    this.displayedSettings = false;
+                    this.destroySettings();
+                    
+                }
+                else
+                {
+                    this.displayedSettings = true;
+                    this.displaySettings();
+                    
+                }
+            }
+            
+            create()
+            {
+                this.keyNameLookup = Object.fromEntries(Object.entries(Phaser.Input.Keyboard.KeyCodes).map(([name, code]) => [code, name]));
+                this.gameManager = this.scene.get("GameManager");
+                this.HUD = this.scene.get("HUD");
+                
+                this.wasd =
+                {
+                    esc: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC)
+                };
+                
+                this.displayedSettings = false;
+            }
+            
+            update()
+            {
+                if(Phaser.Input.Keyboard.JustDown(this.wasd.esc))
+                {
+                    this.toggleMenu();
+                }
+            }
+            
+            displaySettings()
+            {
+                this.settings = createText(this, 400 - 5, 5, "Remap Controls:", 20, "#ff0000").setOrigin(1, 0).setDepth(1232300);
+                
+                this.walkLeft = createText(this, 400 - 5, 10 + this.settings.height, this.getActionAssignment("walkLeft") + ": Walk Left", 12, "#ff0000").setOrigin(1, 0).setDepth(1232300);
+                this.walkLeft.setInteractive({cursor: "pointer"});
+                this.walkLeft.on("pointerdown", () =>
+                {
+                    !this.remapping && this.walkLeft.setColor("#ffffff");
+                    !this.remapping && this.gameManager.remapAction("walkLeft");
+                });
+                
+                this.walkRight = createText(this, 400 - 5, 13 + this.settings.height + this.walkLeft.height, this.getActionAssignment("walkRight") + ": Walk Right", 12, "#ff0000").setOrigin(1, 0).setDepth(1232300);
+                this.walkRight.setInteractive({cursor: "pointer"});
+                this.walkRight.on("pointerdown", () =>
+                {
+                    !this.remapping && this.walkRight.setColor("#ffffff");
+                    !this.remapping && this.gameManager.remapAction("walkRight");
+                });
+                
+                this.jump = createText(this, 400 - 5, 16 + this.settings.height + this.walkLeft.height + this.walkRight.height, this.getActionAssignment("jump") + ": Jump", 12, "#ff0000").setOrigin(1, 0).setDepth(1232300);
+                this.jump.setInteractive({cursor: "pointer"});
+                this.jump.on("pointerdown", () =>
+                {
+                    !this.remapping && this.jump.setColor("#ffffff");
+                    !this.remapping && this.gameManager.remapAction("jump");
+                });
+                
+                this.block =  createText(this, 400 - 5, 19 + this.settings.height + this.walkLeft.height + this.walkRight.height + this.jump.height, this.getActionAssignment("block") + ": Block", 12, "#ff0000").setOrigin(1, 0).setDepth(1232300);
+                this.block.setInteractive({cursor: "pointer"});
+                this.block.on("pointerdown", () =>
+                {
+                    !this.remapping && this.block.setColor("#ffffff");
+                    !this.remapping && this.gameManager.remapAction("block");
+                });
+                
+                this.useShotgun = createText(this, 400 - 5, 22 + this.settings.height + this.walkLeft.height + this.walkRight.height + this.jump.height + this.block.height, this.getActionAssignment("useShotgun") + ": Use Shotgun", 12, "#ff0000").setOrigin(1, 0).setDepth(1232300);
+                this.useShotgun.setInteractive({cursor: "pointer"});
+                this.useShotgun.on("pointerdown", () =>
+                {
+                    !this.remapping && this.useShotgun.setColor("#ffffff");
+                    !this.remapping && this.gameManager.remapAction("useShotgun");
+                });
+                
+                this.usePistol = createText(this, 400 - 5, 25 + this.settings.height + this.walkLeft.height + this.walkRight.height + this.jump.height + this.block.height + this.useShotgun.height, this.getActionAssignment("usePistol") + ": Use Pistol", 12, "#ff0000").setOrigin(1, 0).setDepth(1232300);
+                this.usePistol.setInteractive({cursor: "pointer"});
+                this.usePistol.on("pointerdown", () =>
+                {
+                    !this.remapping && this.usePistol.setColor("#ffffff");
+                    !this.remapping && this.gameManager.remapAction("usePistol");
+                });
+                
+                this.resetDefault = createText(this, 400 - 5, 176 - 3, "Reset Default", 10, "#ff0000").setOrigin(1, 1).setDepth(1232300);
+                this.resetDefault.setInteractive({cursor: "pointer"});
+                this.resetDefault.on("pointerdown", () =>
+                {
+                    this.gameManager.resetActions();
+                });
+                
+                this.gameSettings = createText(this, 5, 5, "Settings:", 15, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                
+                if(this.gameManager.alwaysBlock)
+                {
+                    this.autoBlockWords = "On";
+                }
+                else
+                {
+                    this.autoBlockWords = "Off";
+                }
+                
+                this.autoBlock = createText(this, 5, 10 + this.gameSettings.height, "Auto Block: " + this.autoBlockWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.autoBlock.setInteractive({cursor: "pointer"});
+                this.autoBlock.on("pointerdown", () =>
+                {
+                    this.gameManager.alwaysBlock = !this.gameManager.alwaysBlock;   
+                    this.gameManager.cheats = true; 
+                    this.gameManager.score = 0; 
+                    this.HUD.updateScore();
+                    this.HUD.updateHighScore();
+                    
+                    if(this.gameManager.alwaysBlock)
+                    {
+                        this.autoBlockWords = "On";
+                    }
+                    else
+                    {
+                        this.autoBlockWords = "Off";
+                    }
+                    
+                    this.autoBlock.setText("Auto Block: " + this.autoBlockWords);
+                });
+                
+                
+                if(this.gameManager.alwaysDisplayUpgrades === true)
+                {
+                    this.toggleHUDWords = "On";
+                }
+                else
+                {
+                    this.toggleHUDWords = "Off";
+                }
+                    
+                this.toggleHUD = createText(this, 5, 13 + this.gameSettings.height + this.autoBlock.height, "HUD: " + this.toggleHUDWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.toggleHUD.setInteractive({cursor: "pointer"});
+                this.toggleHUD.on("pointerdown", () =>
+                {
+                    this.gameManager.alwaysDisplayUpgrades = !this.gameManager.alwaysDisplayUpgrades;
+
+                    if((this.scene.isActive(this.HUD)))
+                    {
+                        this.HUD.refreshHUD();
+                    }
+
+                    if(this.gameManager.alwaysDisplayUpgrades === true)
+                    {
+                        this.toggleHUDWords = "On";
+                    }
+                    else
+                    {
+                        this.toggleHUDWords = "Off";
+                    }
+
+                    this.toggleHUD.setText("HUD: " + this.toggleHUDWords);
+                    
+                    if(checkStorage() === true)
+                    {
+                        localStorage.setItem("HCHUDSetting", JSON.stringify(this.gameManager.alwaysDisplayUpgrades));
+                    }
+                });
+                
+                if(this.gameManager.screenShake)
+                {
+                    this.toggleScreenShakeWords = "On";
+                }
+                else
+                {
+                    this.toggleScreenShakeWords = "Off";
+                }
+                
+                this.toggleScreenShake = createText(this, 5, 16 + this.gameSettings.height + this.autoBlock.height + this.toggleHUD.height, "Screen Shake: " + this.toggleScreenShakeWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.toggleScreenShake.setInteractive({cursor: "pointer"});
+                this.toggleScreenShake.on("pointerdown", () =>
+                {
+                    this.gameManager.screenShake = !this.gameManager.screenShake;                   
+                    
+                    if(this.gameManager.screenShake)
+                    {
+                        this.toggleScreenShakeWords = "On";
+                    }
+                    else
+                    {
+                        this.toggleScreenShakeWords = "Off";
+                    }
+                    
+                    this.toggleScreenShake.setText("Screen Shake: " + this.toggleScreenShakeWords);
+                    
+                    if(checkStorage() === true)
+                    {
+                        localStorage.setItem("HCScreenShakeSetting", JSON.stringify(this.gameManager.screenShake));
+                    }
+                });
+                
+                this.background = this.add.rectangle(200, 0, 400, 176, "#000000").setOrigin(0.5, 0).setAlpha(0.8); 
+            }
+            
+            getActionAssignment(actionName)
+            {
+                let currentAction = this.gameManager.actions[actionName];
+                
+                if(currentAction.type === "KEY") 
+                {
+                    let name = this.keyNameLookup[currentAction.code];
+                    return name;
+                } 
+                else 
+                {
+                    if(currentAction.button === 0)
+                    {
+                        return "LEFT_MOUSE";
+                    }
+                    else if(currentAction.button === 1)
+                    {
+                        return "MIDDLE_MOUSE";
+                    }
+                    else if(currentAction.button === 2)
+                    {
+                        return "RIGHT_MOUSE";
+                    }
+                    else
+                    {
+                        return "undefined";
+                    }
+                }
+            }
+            
+            destroySettings()
+            {
+                this.settings.destroy();
+                this.background.destroy();
+                this.walkLeft.destroy();
+                this.walkRight.destroy();
+                this.jump.destroy();
+                this.useShotgun.destroy();
+                this.block.destroy();
+                this.usePistol.destroy();
+                this.resetDefault.destroy();
+                this.gameSettings.destroy();
+                this.autoBlock.destroy();
+                this.toggleHUD.destroy();
+                this.toggleScreenShake.destroy();
             }
         }
         
@@ -2424,7 +2813,8 @@
               Level2Game,
               Level3Game,
               Level4Game,
-              HUD
+              HUD,
+              Settings
             ]
         };
 

@@ -137,21 +137,10 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.quintuplePistolShootingFrames = [4, 6, 8, 10, 12];
         this.playedPistolShootingSound = false;
         this.killed = false;
-
-        this.wasd =
-        {
-          space: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
-          w: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
-          s: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
-          a: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
-          d: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
-          q: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q),
-          e: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
-          shift: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT)
-        };
-
+        this.gameManager = this.scene.gameManager;
         this.mouseRef = scene.input;
         this.bullets = playerBulletsHolder;
+        this.settings = game.scene.getScene("Settings");
 
         if(!scene.anims.get("pump"))
         {
@@ -626,7 +615,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             this.pistolMoveFireRate = 1500;
         }
             
-        if((this.wasd.e.isDown || this.wasd.q.isDown) && time > this.lastPistolMove + this.pistolMoveFireRate)
+        if(this.gameActionActive("usePistol") && time > this.lastPistolMove + this.pistolMoveFireRate)
         {
             if(gameManager.triplePistolUpgrade)
             {
@@ -711,11 +700,11 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     
     checkShooting(time)
     {
-        if(this.mouseRef.activePointer.isDown && time > this.lastPlayerShot + this.fireRate && this.mouseRef.activePointer.leftButtonDown())
+        if(this.gameActionActive("useShotgun") && time > this.lastPlayerShot + this.fireRate)
         {
-          this.mouseRef.mouse.disableContextMenu();
+            this.mouseRef.mouse.disableContextMenu();
 
-            if(this.canShoot)
+            if(this.canShoot && this.settings.displayedSettings === false)
             {
                 this.shoot(time);
                 this.lastPlayerShot = time;
@@ -755,15 +744,20 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         fireConfig.shellEmitter.emitParticleAt(this.x, this.y);
     }
     
+    gameActionActive(keyName)
+    {
+        return this.scene.gameManager.isActionActive(keyName);
+    }
+    
     checkMovement()
     {
         if(this.canMove)
         {
-            if((this.wasd.a.isDown || this.scene.cursors.left.isDown))
+            if(this.gameActionActive("walkLeft"))
             {
                 this.setVelocityX(-120);
             }
-            else if((this.wasd.d.isDown || this.scene.cursors.right.isDown))
+            else if(this.gameActionActive("walkRight"))
             {
                 this.setVelocityX(120);
             }
@@ -772,7 +766,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 this.setVelocityX(0);
             }
 
-            if((this.wasd.space.isDown || this.wasd.w.isDown || this.scene.cursors.up.isDown) && this.body.touching.down)
+            if(this.gameActionActive("jump") && this.body.touching.down)
             {
                 this.setVelocityY(-120);
             }
@@ -793,20 +787,13 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     
     checkBlock(time)
     {
-        const isShiftActive = this.wasd.shift.isDown;
-        const isMouseActive = this.mouseRef.activePointer.isDown && this.mouseRef.activePointer.rightButtonDown();
-        const inputActive = isShiftActive || isMouseActive;
+        const inputActive = this.gameActionActive("block");
         const passedCooldown = time > this.lastPlayerBlock + this.blockRate;
 
         if(inputActive && !this.blockInputHeld && (passedCooldown || this.succesfulBlock))
         {
             this.play("block", false);
             this.blockInputHeld = true;
-
-            if(isMouseActive) 
-            {
-                this.mouseRef.mouse.disableContextMenu();
-            }
 
             if(this.succesfulBlock)
             {

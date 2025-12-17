@@ -62,7 +62,7 @@ function cultCreator(scene, cultPositions, gameManager)
                     player.play("block", false);
                     player.succesfulBlock = true;
                     player.lastPlayerBlock = 0;
-                    if(scene.gameManager.allowScreenShakeOnBlock)
+                    if(scene.gameManager.screenShake)
                     {
                         scene.cameras.main.shake(100, 0.005);
                     }
@@ -80,7 +80,7 @@ function cultCreator(scene, cultPositions, gameManager)
                 player.play("block", false);
                 player.succesfulBlock = true;
                 player.lastPlayerBlock = 0;
-                if(scene.gameManager.allowScreenShakeOnBlock)
+                if(scene.gameManager.screenShake)
                 {
                     scene.cameras.main.shake(100, 0.005);
                 }
@@ -311,7 +311,7 @@ function cultSeparation(cults, player)
         if(this.health < 1)
         {
             this.scene.sound.play("hurt");
-            if(this.scene.gameManager.allowScreenShakeOnKill)
+            if(this.scene.gameManager.screenShake)
             {
                 this.scene.cameras.main.shake(50, 0.004);
             }
@@ -404,7 +404,7 @@ function cultSeparation(cults, player)
             } 
         }
         
-        if(!gameManager.alwaysBlock)
+        if(!gameManager.cheats)
         {
             gameManager.score += 35;
         }
