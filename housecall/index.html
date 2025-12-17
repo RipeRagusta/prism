@@ -642,7 +642,7 @@
                         if(frame.index === 2) 
                         {
                             this.sound.play("stab");
-
+                            this.destroyedControlsForGood = true;
                             this.destroyControls();
                         }
                     });
@@ -733,8 +733,11 @@
             
             refreshControls()
             {
-                this.destroyControls();
-                this.displayControls();
+                if(!this.destroyedControlsForGood)
+                {
+                    this.destroyControls();
+                    this.displayControls();
+                }
             }
             
             
@@ -746,7 +749,7 @@
                 this.rightClickControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 30, this.getActionAssignment("block") + ": Block", 12, "#fff");
                 this.leftClickControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 35, this.getActionAssignment("useShotgun") + ": Use Shotgun (Hold)", 12, "#fff");
                 this.pistolControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + 40, this.getActionAssignment("usePistol") + ": Use Pistol", 12, "#fff");
-                this.settingsControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + this.pistolControls.height +  45, "ESC: Open Settings", 12, "#fff");
+                this.settingsControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + this.pistolControls.height +  45, "Esc: Open Settings", 12, "#fff");
             }
             
             destroyControls()
@@ -767,21 +770,28 @@
                 if(currentAction.type === "KEY") 
                 {
                     let name = this.keyNameLookup[currentAction.code];
-                    return name;
+                    try
+                    {
+                        return name.split("_").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join("-");
+                    }
+                    catch(e)
+                    {
+                        return name;
+                    }
                 } 
                 else 
                 {
                     if(currentAction.button === 0)
                     {
-                        return "LEFT_MOUSE";
+                        return "Left-Mouse";
                     }
                     else if(currentAction.button === 1)
                     {
-                        return "MIDDLE_MOUSE";
+                        return "Middle-Mouse";
                     }
                     else if(currentAction.button === 2)
                     {
-                        return "RIGHT_MOUSE";
+                        return "Right-Mouse";
                     }
                     else
                     {
@@ -2597,7 +2607,7 @@
                     !this.remapping && this.gameManager.remapAction("usePistol");
                 });
                 
-                this.resetDefault = createText(this, 400 - 5, 176 - 3, "Reset Default", 10, "#ff0000").setOrigin(1, 1).setDepth(1232300);
+                this.resetDefault = createText(this, 400 - 5, 176 - 5, "RESET DEFAULT", 10, "#ff0000").setOrigin(1, 1).setDepth(1232300);
                 this.resetDefault.setInteractive({cursor: "pointer"});
                 this.resetDefault.on("pointerdown", () =>
                 {
@@ -2707,6 +2717,13 @@
                     }
                 });
                 
+                this.restartGame = createText(this, 5, 176 - 5, "RELOAD GAME", 8, "#ff0000").setOrigin(0, 1).setDepth(1232300);
+                this.restartGame.setInteractive({cursor: "pointer"});
+                this.restartGame.on("pointerdown", () =>
+                {
+                    window.location.href = "./index.html";
+                });
+                
                 this.background = this.add.rectangle(200, 0, 400, 176, "#000000").setOrigin(0.5, 0).setAlpha(0.8); 
             }
             
@@ -2717,21 +2734,30 @@
                 if(currentAction.type === "KEY") 
                 {
                     let name = this.keyNameLookup[currentAction.code];
-                    return name;
+                    
+                    try
+                    {
+                        return name.split("_").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join("-");
+                    }
+                    catch(e)
+                    {
+                        return name;
+                    }
+                    
                 } 
                 else 
                 {
                     if(currentAction.button === 0)
                     {
-                        return "LEFT_MOUSE";
+                        return "Left-Mouse";
                     }
                     else if(currentAction.button === 1)
                     {
-                        return "MIDDLE_MOUSE";
+                        return "Middle-Mouse";
                     }
                     else if(currentAction.button === 2)
                     {
-                        return "RIGHT_MOUSE";
+                        return "Right-Mouse";
                     }
                     else
                     {
@@ -2755,6 +2781,7 @@
                 this.autoBlock.destroy();
                 this.toggleHUD.destroy();
                 this.toggleScreenShake.destroy();
+                this.restartGame.destroy();
             }
         }
         
