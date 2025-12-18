@@ -615,7 +615,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             this.pistolMoveFireRate = 1500;
         }
             
-        if(this.gameActionActive("usePistol") && time > this.lastPistolMove + this.pistolMoveFireRate)
+        if(this.gameActionActive("usePistol") && time > this.lastPistolMove + this.pistolMoveFireRate && this.settings.displayedSettings === false)
         {
             if(gameManager.triplePistolUpgrade)
             {
@@ -700,7 +700,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     
     checkShooting(time)
     {
-        if(this.gameActionActive("useShotgun") && time > this.lastPlayerShot + this.fireRate)
+        if(this.gameActionActive("useShotgun") && time > this.lastPlayerShot + this.fireRate && this.settings.displayedSettings === false)
         {
             this.mouseRef.mouse.disableContextMenu();
 
@@ -753,11 +753,11 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     {
         if(this.canMove)
         {
-            if(this.gameActionActive("walkLeft"))
+            if(this.gameActionActive("walkLeft") && this.settings.displayedSettings === false)
             {
                 this.setVelocityX(-120);
             }
-            else if(this.gameActionActive("walkRight"))
+            else if(this.gameActionActive("walkRight") && this.settings.displayedSettings === false)
             {
                 this.setVelocityX(120);
             }
@@ -766,7 +766,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 this.setVelocityX(0);
             }
 
-            if(this.gameActionActive("jump") && this.body.touching.down)
+            if(this.gameActionActive("jump") && this.body.touching.down && this.settings.displayedSettings === false)
             {
                 this.setVelocityY(-120);
             }
@@ -787,7 +787,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     
     checkBlock(time)
     {
-        const inputActive = this.gameActionActive("block");
+        const inputActive = this.gameActionActive("block") && this.settings.displayedSettings === false;
         const passedCooldown = time > this.lastPlayerBlock + this.blockRate;
 
         if(inputActive && !this.blockInputHeld && (passedCooldown || this.succesfulBlock))

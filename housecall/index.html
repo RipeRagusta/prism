@@ -529,6 +529,7 @@
                 this.HUD = this.scene.get("HUD");
                 this.sound.pauseOnBlur = false;
                 this.keyNameLookup = Object.fromEntries(Object.entries(Phaser.Input.Keyboard.KeyCodes).map(([name, code]) => [code, name]));
+                this.settings = this.scene.get("Settings");
                 
 
                 //END BASIC SETUP MainMenu
@@ -695,11 +696,14 @@
                 this.quickStart.setInteractive({cursor: "pointer"});
                 this.quickStart.on("pointerdown", () =>
                 {
-                    this.scene.stop("MainMenu");
-                    this.scene.stop("HUD");
-                    event.stopPropagation();
-                    this.scene.start("Level1Game");
-                    this.scene.launch("HUD");
+                    if(this.settings.displayedSettings === false)
+                    {
+                        this.scene.stop("MainMenu");
+                        this.scene.stop("HUD");
+                        event.stopPropagation();
+                        this.scene.start("Level1Game");
+                        this.scene.launch("HUD");
+                    }
                 });
                
                 this.highScore = createText(this, this.game.config.width * 3 - (this.game.config.width / 2), 3, "High Score: " + this.gameManager.highScore, 10, "#ffffff").setOrigin(0.5, 0).setDepth(1232300);
@@ -708,11 +712,14 @@
                 this.start.setInteractive({cursor: "pointer"});
                 this.start.on("pointerdown", () =>
                 {
-                    this.scene.stop("MainMenu");
-                    this.scene.stop("HUD");
-                    event.stopPropagation();
-                    this.scene.start("Level1Game");
-                    this.scene.launch("HUD");
+                    if(this.settings.displayedSettings === false)
+                    {
+                        this.scene.stop("MainMenu");
+                        this.scene.stop("HUD");
+                        event.stopPropagation();
+                        this.scene.start("Level1Game");
+                        this.scene.launch("HUD");
+                    }
                 });
 
 
