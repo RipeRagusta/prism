@@ -813,6 +813,23 @@
                 {
                     this.player.buddha();
                 }
+                
+                if(this.settings.displayedSettings === true)
+                {
+                    if(this.input.enabled) 
+                    {
+                        this.input.enabled = false;
+                        this.input.setDefaultCursor("default");
+                    }
+                }
+                else
+                {
+                    if(!this.input.enabled) 
+                    { 
+                        this.input.enabled = true;
+                        this.input.setDefaultCursor("default");
+                    }
+                }
             }
             
             shutdown() 
@@ -1878,7 +1895,22 @@
 
             update(time, delta)
             {
-
+                if(this.settings.displayedSettings === true)
+                {
+                    if(this.input.enabled) 
+                    {
+                        this.input.enabled = false;
+                        this.input.setDefaultCursor("default");
+                    }
+                }
+                else
+                {
+                    if(!this.input.enabled) 
+                    {
+                        this.input.enabled = true;
+                        this.input.setDefaultCursor("pointer");
+                    }
+                }
             }
 
             acceptCard(id)
