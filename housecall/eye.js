@@ -198,7 +198,7 @@ class eye extends Phaser.Physics.Arcade.Sprite
                 angle: { min: 0, max: 360 }, 
                 speed: { min: 100, max: 200 },
                 gravityY: 500,
-                lifespan: { min: 750, max: 750 },
+                lifespan: { min: 1000, max: 1000 },
                 quantity: 10,
                 scale: { start: 0.5, end: 0 },
                 alpha: { start: 1, end: 0 },

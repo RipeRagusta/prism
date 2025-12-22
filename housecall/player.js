@@ -443,7 +443,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 spread: 0,
                 spreadIncrement: 0,
                 pelletVelocity: 550,
-                penetrations: 1
+                penetrations: 2
             },
             "birdshot": 
             {
@@ -452,8 +452,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 sound: "birdshot",
                 shellEmitter: this.birdShotShellEmitter,
                 pelletCount: 40,
-                spread: 29.25,
-                spreadIncrement: 0.75,
+                spread: 25.35,
+                spreadIncrement: 0.65,
                 pelletVelocity: 500,
                 penetrations: 0
             },
@@ -690,7 +690,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         }
         else if(this.fireMode === "birdshot")
         {
-            this.damagePerShot = this.baseDamage * 0.5;
+            this.damagePerShot = this.baseDamage * 0.6;
         }
         else if(this.fireMode === "000buckshot")
         {
@@ -698,7 +698,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         }
         else if(this.fireMode === "numfourbuckshot")
         {
-            this.damagePerShot = this.baseDamage;
+            this.damagePerShot = this.baseDamage * 1.2;
         }
     }
     
