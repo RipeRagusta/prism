@@ -11,10 +11,25 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
 
     scene.physics.add.overlap(scene.cultKnifes, scene.playerBulletsHolder, (cult, bullet) =>
     {
-        bullet.destroy();
-        cult.health -= bullet.damage;
-        cult.bloodEmitter.setQuantity(4);
-        cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
+        if(!bullet.damagedList.includes(cult.id) && !bullet.penetrationsLeft >= 1)
+        {
+            bullet.damagedList.push(cult.id);
+            bullet.destroy();
+            cult.health -= bullet.damage;
+            cult.bloodEmitter.setQuantity(4);
+            cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
+        }
+        else
+        {
+            if(!bullet.damagedList.includes(cult.id))
+            {
+                bullet.damagedList.push(cult.id);
+                bullet.penetrationsLeft -= 1;
+                cult.health -= bullet.damage;
+                cult.bloodEmitter.setQuantity(4);
+                cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
+            }
+        }
     });
 
     scene.physics.add.collider(scene.player, scene.cultKnifes, (player, cult) =>
@@ -41,19 +56,93 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
         this.alert = false;
         this.flip = true;
         this.scene = scene;
+        this.id = Phaser.Utils.String.UUID();
       
         this.bloodEmitter = this.scene.add.particles
         (
             0, 0, 
             "blood",
             {
-                angle: { min: 0, max: 360 }, 
-                speed: { min: 100, max: 200 },
+                angle: { min: 180, max: 360 }, 
+                speed: { min: 50, max: 150 },
                 gravityY: 500,
-                lifespan: { min: 750, max: 750 },
-                quantity: 75,
-                scale: { start: 0.5, end: 0 },
-                alpha: { start: 1, end: 0 },
+                lifespan: { min: 1000, max: 1000 },
+                quantity: 10,
+                scale: { start: 1, end: 1 },
+                alpha: { start: 0.65, end: 0.5 },
+                rotate: { min: -180, max: 180 },
+                blendMode: "NORMAL",
+                frequency: -1
+            }
+        );
+
+        this.boneEmitter = this.scene.add.particles
+        (
+            0, 0, 
+            "bonegib",
+            {
+                angle: { min: 180, max: 360 }, 
+                speed: { min: 75, max: 100 },
+                gravityY: 500,
+                lifespan: { min: 1000, max: 1000 },
+                quantity: 2,
+                scale: { start: 1, end: 1 },
+                alpha: { start: 1, end: 0.5 },
+                rotate: { min: -180, max: 180 },
+                blendMode: "NORMAL",
+                frequency: -1
+            }
+        );
+
+        this.organEmitter = this.scene.add.particles
+        (
+            0, 0, 
+            "organgib",
+            {
+                angle: { min: 180, max: 360 }, 
+                speed: { min: 50, max: 100 },
+                gravityY: 500,
+                lifespan: { min: 1000, max: 1000 },
+                quantity: 4,
+                scale: { start: 1, end: 1 },
+                alpha: { start: 1, end: 0.5 },
+                rotate: { min: -180, max: 180 },
+                blendMode: "NORMAL",
+                frequency: -1
+            }
+        );
+
+        this.headEmitter = this.scene.add.particles
+        (
+            0, 0, 
+            "headgib",
+            {
+                angle: { min: 270, max: 315 }, 
+                speed: { min: 125, max: 150 },
+                gravityY: 500,
+                lifespan: { min: 1000, max: 1000 },
+                quantity: 1,
+                scale: { start: 1, end: 1 },
+                alpha: { start: 1, end: 1 },
+                rotate: { min: 0, max: 90 },
+                blendMode: "NORMAL",
+                frequency: -1
+            }
+        );
+        
+        this.ribEmitter = this.scene.add.particles
+        (
+            0, 0, 
+            "ribcagegib",
+            {
+                angle: { min: 270, max: 315 }, 
+                speed: { min: 75, max: 100 },
+                gravityY: 500,
+                lifespan: { min: 1000, max: 1000 },
+                quantity: 1,
+                scale: { start: 1, end: 1 },
+                alpha: { start: 1, end: 0.5 },
+                rotate: { min: 0, max: 90 },
                 blendMode: "NORMAL",
                 frequency: -1
             }
@@ -139,8 +228,12 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
     
     kill()
     {
-        this.bloodEmitter.setQuantity(100);
+        this.bloodEmitter.setQuantity(15);
         this.bloodEmitter.emitParticleAt(this.x, this.y);
+        this.boneEmitter.emitParticleAt(this.x, this.y);
+        this.organEmitter.emitParticleAt(this.x, this.y);
+        this.headEmitter.emitParticleAt(this.x, this.y);
+        this.ribEmitter.emitParticleAt(this.x, this.y);
         const gameManager = this.scene.gameManager;
         if(gameManager.doubleFireUpgrade)
         {

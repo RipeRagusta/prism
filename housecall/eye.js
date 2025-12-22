@@ -63,8 +63,22 @@ function eyeCreator(scene, eyePositions, gameManager)
 
     scene.physics.add.overlap(scene.eyes, scene.playerBulletsHolder, (eye, bullet) =>
     {
-        bullet.destroy();
-        eye.health -= bullet.damage;
+        if(!bullet.damagedList.includes(eye.id) && !bullet.penetrationsLeft >= 1)
+        {
+            bullet.damagedList.push(eye.id);
+            bullet.destroy();
+            eye.health -= bullet.damage;
+        }
+        else
+        {
+            if(!bullet.damagedList.includes(eye.id))
+            {
+                bullet.damagedList.push(eye.id);
+                bullet.penetrationsLeft -= 1;
+                eye.health -= bullet.damage;
+            }
+        }
+        
     });
 
     scene.time.addEvent
@@ -174,7 +188,8 @@ class eye extends Phaser.Physics.Arcade.Sprite
         this.initalDistancePref = this.distancePref;
         this.distanceOffset = 1;
         this.orbs = eyeOrbHolder;
-
+        this.id = Phaser.Utils.String.UUID();
+        
         this.explode = this.scene.add.particles
         (
             0, 0, 

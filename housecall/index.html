@@ -227,6 +227,10 @@
                 this.load.image("numfourbuckshotshell", "assets/numfourbuckshotshell.png");
                 this.load.image("numfourbuckshoticon", "assets/numfourbuckshoticon.png");
                 this.load.image("000buckshoticon", "assets/000buckshoticon.png");
+                this.load.image("bonegib", "assets/bonegib.png");
+                this.load.image("organgib", "assets/organgib.png");
+                this.load.image("headgib", "assets/headgib.png");
+                this.load.image("ribcagegib", "assets/ribcagegib.png");
 
                 this.load.audio("shotgunshot", 
                 [
@@ -400,7 +404,7 @@
 
             create() 
             {
-                this.scene.groundBotom = this.scene.add.tileSprite(0, this.scene.sys.game.config.height + 16, this.width * 2, 32, "ground").setOrigin(0, 1);
+                this.scene.groundBotom = this.scene.add.tileSprite(0, this.scene.sys.game.config.height + 16, this.width * 2, 32, "ground").setOrigin(0, 1).setDepth(999999999);
                 this.scene.physics.add.existing(this.scene.groundBotom);
                 
                 if(this.scene.groundBotom.body) 
@@ -410,7 +414,7 @@
                 }
 
                 this.scene.grassTop = this.scene.add.tileSprite(0, this.scene.sys.game.config.height - 16, this.width, 16, "grasstop", this.currentFrameIndex);
-                this.scene.grassTop.setOrigin(0, 1);
+                this.scene.grassTop.setOrigin(0, 1).setDepth(999999999);
 
                 if(this.scene.player)
                 {

@@ -8,7 +8,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.scene = scene;
     }
 
-    fire(x, y, angle, damage, velocity = 400)
+    fire(x, y, angle, damage, velocity = 400, penetrations = 0)
     {
         this.originX = x;
         this.body.reset(x, y);
@@ -17,6 +17,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.setRotation(angle);
         this.damage = damage;
         this.speed = velocity;
+        this.damagedList = [];
+        this.penetrationsLeft = penetrations;
         
         this.scene.physics.velocityFromRotation(angle, this.speed, this.body.velocity);
        
@@ -79,19 +81,19 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         scene.player.canShoot = false;
         scene.time.delayedCall(200, () => scene.player.canShoot = true);
         
-        scene.player.fireMode = gameManager.fireModeUpgrade;
+        scene.player.fireMode = scene.gameManager.fireModeUpgrade;
         
-        if(gameManager.damageUpgrade)
+        if(scene.gameManager.damageUpgrade)
         {
             scene.player.baseDamage = 1.25;
         }
         
-        if(gameManager.healthUpgrade)
+        if(scene.gameManager.healthUpgrade)
         {
             scene.player.health = 20;
         }
         
-        if(gameManager.alwaysBuddha)
+        if(scene.gameManager.alwaysBuddha)
         {
             scene.player.buddha();
         }
@@ -137,10 +139,11 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.quintuplePistolShootingFrames = [4, 6, 8, 10, 12];
         this.playedPistolShootingSound = false;
         this.killed = false;
-        this.gameManager = this.scene.gameManager;
+        
         this.mouseRef = scene.input;
         this.bullets = playerBulletsHolder;
         this.settings = game.scene.getScene("Settings");
+        this.gameManager = game.scene.getScene("GameManager");
 
         if(!scene.anims.get("pump"))
         {
@@ -427,7 +430,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 pelletCount: 10,
                 spread: 13.5,
                 spreadIncrement: 1.5,
-                pelletVelocity: 400
+                pelletVelocity: 400,
+                penetrations: 1
             },
             "slug": 
             {
@@ -438,7 +442,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 pelletCount: 1,
                 spread: 0,
                 spreadIncrement: 0,
-                pelletVelocity: 550
+                pelletVelocity: 550,
+                penetrations: 1
             },
             "birdshot": 
             {
@@ -449,7 +454,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 pelletCount: 40,
                 spread: 29.25,
                 spreadIncrement: 0.75,
-                pelletVelocity: 500
+                pelletVelocity: 500,
+                penetrations: 0
             },
             "numfourbuckshot": 
             {
@@ -460,7 +466,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 pelletCount: 20,
                 spread: 19,
                 spreadIncrement: 1,
-                pelletVelocity: 450
+                pelletVelocity: 450,
+                penetrations: 0
             },
             "000buckshot": 
             {
@@ -471,7 +478,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 pelletCount: 8,
                 spread: 5.6,
                 spreadIncrement: 0.8,
-                pelletVelocity: 350
+                pelletVelocity: 350,
+                penetrations: 1
             }
         };
 
@@ -518,14 +526,13 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 {
                     let pistolDamage = 7;
 
-                    const gameManager = this.scene.gameManager;
 
-                    if(gameManager.pistolUpgrade)
+                    if(this.gameManager.pistolUpgrade)
                     {
                         pistolDamage = 14;
                     }
                     
-                    if(gameManager.mousePistolUpgrade)
+                    if(this.gameManager.mousePistolUpgrade)
                     {
                         if(this.flip === false)
                         {
@@ -588,8 +595,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     
     kill()
     {
-        const gameManager = this.scene.gameManager;
-        gameManager.score = 0;
+        this.gameManager.score = 0;
         const HUD = this.scene.HUD;
         HUD.updateScore();
         this.killed = true;
@@ -600,13 +606,12 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     
     checkPistolMove(time)
     {
-        const gameManager = this.scene.gameManager;
         
-        if(gameManager.triplePistolUpgrade)
+        if(this.gameManager.triplePistolUpgrade)
         {
             this.pistolMoveFireRate = 2071;
         }
-        else if(gameManager.quintuplePistolUpgrade)
+        else if(this.gameManager.quintuplePistolUpgrade)
         {
             this.pistolMoveFireRate = 2643;
         }
@@ -617,11 +622,11 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             
         if(this.gameActionActive("usePistol") && time > this.lastPistolMove + this.pistolMoveFireRate && this.settings.displayedSettings === false)
         {
-            if(gameManager.triplePistolUpgrade)
+            if(this.gameManager.triplePistolUpgrade)
             {
                 this.shootPistol(time, "triplepistol");
             }
-            else if(gameManager.quintuplePistolUpgrade)
+            else if(this.gameManager.quintuplePistolUpgrade)
             {
                 this.shootPistol(time, "quintuplepistol");
             }
@@ -641,9 +646,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     
     checkFireMode(time)
     {
-        const gameManager = this.scene.gameManager;
                          
-        if(gameManager.multiAmmoUpgrade)
+        if(this.gameManager.multiAmmoUpgrade)
         {
             if(time > this.lastShellCycle + 50)
             {
@@ -729,11 +733,11 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             {
                 if(this.flip === false)
                 {
-                  bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot, fireConfig.pelletVelocity);
+                  bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot, fireConfig.pelletVelocity, fireConfig.penetrations);
                 }
                 else
                 {
-                  bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot, fireConfig.pelletVelocity);
+                  bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot, fireConfig.pelletVelocity, fireConfig.penetrations);
                 }
 
                 offset += fireConfig.spreadIncrement;
@@ -746,7 +750,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     
     gameActionActive(keyName)
     {
-        return this.scene.gameManager.isActionActive(keyName);
+        return this.gameManager.isActionActive(keyName);
     }
     
     checkMovement()
