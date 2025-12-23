@@ -105,6 +105,7 @@ function cultCreator(scene, cultPositions, gameManager)
             {
                 bullet.damagedList.push(cult.id);
                 bullet.destroy();
+                cult.hitFrom = bullet.fromWhat;
                 cult.health -= bullet.damage;
                 if(!cult.anims.isPlaying)
                 {
@@ -119,6 +120,7 @@ function cultCreator(scene, cultPositions, gameManager)
                 {
                     bullet.damagedList.push(cult.id);
                     bullet.penetrationsLeft -= 1;
+                    cult.hitFrom = bullet.fromWhat;
                     cult.health -= bullet.damage;
                     if(!cult.anims.isPlaying)
                     {
@@ -126,6 +128,7 @@ function cultCreator(scene, cultPositions, gameManager)
                     }
                     cult.bloodEmitter.setQuantity(4);
                     cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
+                    bullet.damage = bullet.damage * bullet.penetrationReduction;
                 }
             }
           
@@ -503,17 +506,50 @@ function cultSeparation(cults, player)
         
         if(!gameManager.cheats)
         {
-            gameManager.score += 35;
+            let currentScore = 35;
+            
+            if(this.hitFrom === "pistol")
+            {
+                currentScore = currentScore * 2;
+            }
+            
+            gameManager.score += currentScore;
         }
         
-        if(gameManager.score > gameManager.highScore)
+        if(gameManager.gameMode === "Classic")
         {
-            gameManager.highScore = gameManager.score;
-            if(checkStorage() === true)
+            if(gameManager.score > gameManager.highScore)
             {
-                localStorage.setItem("HCHighScore", gameManager.highScore);
+                gameManager.highScore = gameManager.score;
+                if(checkStorage() === true)
+                {
+                    localStorage.setItem("HCHighScore", gameManager.highScore);
+                }
             }
         }
+        else if(gameManager.gameMode === "Experimental")
+        {
+            if(gameManager.score > gameManager.experimentalHighScore)
+            {
+                gameManager.experimentalHighScore = gameManager.score;
+                if(checkStorage() === true)
+                {
+                    localStorage.setItem("HCExperimentalHighScore", gameManager.experimentalHighScore);
+                }
+            }
+        }
+        else if(gameManager.gameMode === "Easy")
+        {
+            if(gameManager.score > gameManager.easyHighScore)
+            {
+                gameManager.easyHighScore = gameManager.score;
+                if(checkStorage() === true)
+                {
+                    localStorage.setItem("HCEasyHighScore", gameManager.easyHighScore);
+                }
+            }
+        }
+        
         const HUD = this.scene.HUD;
         HUD.updateScore();
         HUD.updateHighScore();

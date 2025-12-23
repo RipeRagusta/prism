@@ -8,7 +8,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.scene = scene;
     }
 
-    fire(x, y, angle, damage, velocity = 400, penetrations = 0)
+    fire(x, y, angle, damage, velocity = 400, penetrations = 0, penetrationReduction = 0.5, fromWhat)
     {
         this.originX = x;
         this.body.reset(x, y);
@@ -19,6 +19,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.speed = velocity;
         this.damagedList = [];
         this.penetrationsLeft = penetrations;
+        this.penetrationReduction = penetrationReduction;
+        this.fromWhat = fromWhat;
         
         this.scene.physics.velocityFromRotation(angle, this.speed, this.body.velocity);
        
@@ -359,6 +361,15 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             }
         );
 
+        this.shotgunEmitters  = 
+        {
+            "red": this.shellEmitter,
+            "green": this.slugShellEmitter,
+            "blue": this.birdShotShellEmitter,
+            "black": this.numfourbuckShotShellEmitter
+            
+        }
+
         this.orbDestory = this.scene.add.particles
         (
             0, 0, 
@@ -419,70 +430,6 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             }
         );
 
-        this.fireModeConfig = 
-        {
-            "buckshot": 
-            {
-                normalPelletType: "bullet",
-                doublePelletType: "bulletcult",
-                sound: "shotgunshot",
-                shellEmitter: this.shellEmitter,
-                pelletCount: 10,
-                spread: 13.5,
-                spreadIncrement: 1.5,
-                pelletVelocity: 400,
-                penetrations: 1
-            },
-            "slug": 
-            {
-                normalPelletType: "slug",
-                doublePelletType: "slugcult",
-                sound: "slug",
-                shellEmitter: this.slugShellEmitter,
-                pelletCount: 1,
-                spread: 0,
-                spreadIncrement: 0,
-                pelletVelocity: 550,
-                penetrations: 2
-            },
-            "birdshot": 
-            {
-                normalPelletType: "bullet",
-                doublePelletType: "bulletcult",
-                sound: "birdshot",
-                shellEmitter: this.birdShotShellEmitter,
-                pelletCount: 40,
-                spread: 25.35,
-                spreadIncrement: 0.65,
-                pelletVelocity: 500,
-                penetrations: 0
-            },
-            "numfourbuckshot": 
-            {
-                normalPelletType: "bullet",
-                doublePelletType: "bulletcult",
-                sound: "numfourbuckshot",
-                shellEmitter: this.numfourbuckShotShellEmitter,
-                pelletCount: 20,
-                spread: 19,
-                spreadIncrement: 1,
-                pelletVelocity: 450,
-                penetrations: 0
-            },
-            "000buckshot": 
-            {
-                normalPelletType: "bullet",
-                doublePelletType: "bulletcult",
-                sound: "000buckshot",
-                shellEmitter: this.shellEmitter,
-                pelletCount: 8,
-                spread: 5.6,
-                spreadIncrement: 0.8,
-                pelletVelocity: 350,
-                penetrations: 1
-            }
-        };
-
         this.on(Phaser.GameObjects.Events.DESTROY, () => 
         {
             if(this.doubleFireTimer)
@@ -536,22 +483,22 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                     {
                         if(this.flip === false)
                         {
-                          bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle, pistolDamage);
+                          bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle, pistolDamage, 400, 0, 0.5, "pistol");
                         }
                         else
                         {
-                          bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle, pistolDamage);
+                          bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle, pistolDamage, 400, 0, 0.5, "pistol");
                         }
                     }
                     else
                     {
                         if(this.flip === false)
                         {
-                          bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(0), pistolDamage);
+                          bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(0), pistolDamage, 400, 0, 0.5, "pistol");
                         }
                         else
                         {
-                          bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(180), pistolDamage);
+                          bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(180), pistolDamage, 400, 0, 0.5, "pistol");
                         }
                     }
                     
@@ -680,26 +627,53 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             }
         }
             
-        if(this.fireMode === "buckshot")
+        if(this.gameManager.gameMode === "Classic")
         {
-            this.damagePerShot = this.baseDamage;
+            if(this.fireMode === "buckshot")
+            {
+                this.damagePerShot = this.baseDamage;
+            }
+            else if(this.fireMode === "slug")
+            {
+                this.damagePerShot = this.baseDamage * 7.5;
+            }
+            else if(this.fireMode === "birdshot")
+            {
+                this.damagePerShot = this.baseDamage * 0.5;
+            }
+            else if(this.fireMode === "000buckshot")
+            {
+                this.damagePerShot = this.baseDamage * 1.5;
+            }
+            else if(this.fireMode === "numfourbuckshot")
+            {
+                this.damagePerShot = this.baseDamage * 1;
+            }
         }
-        else if(this.fireMode === "slug")
+        else if(this.gameManager.gameMode === "Easy" || this.gameManager.gameMode === "Experimental")
         {
-            this.damagePerShot = this.baseDamage * 7.5;
+            if(this.fireMode === "buckshot")
+            {
+                this.damagePerShot = this.baseDamage;
+            }
+            else if(this.fireMode === "slug")
+            {
+                this.damagePerShot = this.baseDamage * 7.5;
+            }
+            else if(this.fireMode === "birdshot")
+            {
+                this.damagePerShot = this.baseDamage * 0.6;
+            }
+            else if(this.fireMode === "000buckshot")
+            {
+                this.damagePerShot = this.baseDamage * 1.5;
+            }
+            else if(this.fireMode === "numfourbuckshot")
+            {
+                this.damagePerShot = this.baseDamage * 1.2;
+            }
         }
-        else if(this.fireMode === "birdshot")
-        {
-            this.damagePerShot = this.baseDamage * 0.6;
-        }
-        else if(this.fireMode === "000buckshot")
-        {
-            this.damagePerShot = this.baseDamage * 1.5;
-        }
-        else if(this.fireMode === "numfourbuckshot")
-        {
-            this.damagePerShot = this.baseDamage * 1.2;
-        }
+        
     }
     
     checkShooting(time)
@@ -719,7 +693,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     
     shoot()
     {
-        const fireConfig = this.fireModeConfig[this.fireMode];
+        const fireConfig = this.gameManager.fireModeConfig[this.fireMode];
         
         let offset = -(fireConfig.spread / 2);
 
@@ -731,13 +705,22 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
 
             if(bullet)
             {
+                let currentPenetrations = fireConfig.penetrations;
+                
+                if(this.gameManager.highVelocityUpgrade)
+                {
+                    currentPenetrations += 1;
+                }
+                
+                let currentPenetrationReduction = fireConfig.penetrationReduction;
+                
                 if(this.flip === false)
                 {
-                  bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot, fireConfig.pelletVelocity, fireConfig.penetrations);
+                  bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot, fireConfig.pelletVelocity, currentPenetrations, currentPenetrationReduction, "shotgun");
                 }
                 else
                 {
-                  bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot, fireConfig.pelletVelocity, fireConfig.penetrations);
+                  bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot, fireConfig.pelletVelocity, currentPenetrations, currentPenetrationReduction, "shotgun");
                 }
 
                 offset += fireConfig.spreadIncrement;
@@ -745,7 +728,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         }
         
         this.scene.sound.play(fireConfig.sound);
-        fireConfig.shellEmitter.emitParticleAt(this.x, this.y);
+        this.shotgunEmitters[fireConfig.shellEmitter].emitParticleAt(this.x, this.y);
     }
     
     gameActionActive(keyName)
@@ -770,7 +753,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 this.setVelocityX(0);
             }
 
-            if(this.gameActionActive("jump") && this.body.touching.down && this.settings.displayedSettings === false)
+            if(this.gameActionActive("jump") && this.body.touching.down && this.settings.displayedSettings === false && this.gameManager.doubleFireUpgrade === false)
             {
                 this.setVelocityY(-120);
             }

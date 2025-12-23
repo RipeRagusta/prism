@@ -71,6 +71,7 @@
                                 {
                                     const cult = cultsArray[i];
                                     aCultActive = true;
+                                    cult.hitFrom = "pipe";
                                     cult.kill();  
                                 }
                             }
@@ -83,6 +84,7 @@
                                 {
                                     const cultKnife = cultKnifesArray[i];
                                     aCultActive = true;
+                                    cult.hitFrom = "pipe";
                                     cultKnife.kill();  
                                 }
                             }
@@ -95,6 +97,7 @@
                                 {
                                     const eye = eyesArray[i];
                                     aCultActive = true;
+                                    cult.hitFrom = "pipe";
                                     eye.kill();  
                                 }
                             }
@@ -2001,7 +2004,76 @@
             constructor()
             {
                 super({ key: "GameManager" });
-
+                
+                this.fireModeConfig = 
+                {
+                    "buckshot": 
+                    {
+                        normalPelletType: "bullet",
+                        doublePelletType: "bulletcult",
+                        sound: "shotgunshot",
+                        shellEmitter: "red",
+                        pelletCount: 10,
+                        spread: 13.5,
+                        spreadIncrement: 1.5,
+                        pelletVelocity: 400,
+                        penetrations: 0,
+                        penetrationReduction: 1
+                    },
+                    "slug": 
+                    {
+                        normalPelletType: "slug",
+                        doublePelletType: "slugcult",
+                        sound: "slug",
+                        shellEmitter: "green",
+                        pelletCount: 1,
+                        spread: 0,
+                        spreadIncrement: 0,
+                        pelletVelocity: 550,
+                        penetrations: 0,
+                        penetrationReduction: 1
+                    },
+                    "birdshot": 
+                    {
+                        normalPelletType: "bullet",
+                        doublePelletType: "bulletcult",
+                        sound: "birdshot",
+                        shellEmitter: "blue",
+                        pelletCount: 40,
+                        spread: 29.25,
+                        spreadIncrement: 0.75,
+                        pelletVelocity: 500,
+                        penetrations: 0,
+                        penetrationReduction: 1
+                    },
+                    "numfourbuckshot": 
+                    {
+                        normalPelletType: "bullet",
+                        doublePelletType: "bulletcult",
+                        sound: "numfourbuckshot",
+                        shellEmitter: "black",
+                        pelletCount: 20,
+                        spread: 19,
+                        spreadIncrement: 1,
+                        pelletVelocity: 450,
+                        penetrations: 0,
+                        penetrationReduction: 1
+                    },
+                    "000buckshot": 
+                    {
+                        normalPelletType: "bullet",
+                        doublePelletType: "bulletcult",
+                        sound: "000buckshot",
+                        shellEmitter: "red",
+                        pelletCount: 8,
+                        spread: 5.6,
+                        spreadIncrement: 0.8,
+                        pelletVelocity: 350,
+                        penetrations: 0,
+                        penetrationReduction: 1
+                    }
+                };
+                
                 this.upgradeCardData = 
                 {
                     "birdshot": 
@@ -2056,7 +2128,7 @@
                     {
                         id: 5,
                         name: "Veneration",
-                        description: "Successful kills trigger double fire rate.",
+                        description: "Successful kills trigger double fire rate. Feet never leave the ground.",
                         icon: "cultenergyicon",
                         effect: (gameManager) => 
                         {
@@ -2146,6 +2218,17 @@
                             gameManager.multiAmmoUpgrade = false;
                             gameManager.fireModeUpgrade = "000buckshot";
                         }
+                    },
+                    "highvelocity": 
+                    {
+                        id: 13,
+                        name: "High Velocity",
+                        description: "Shotgun projectiles penetrate an extra enemy.",
+                        icon: "shieldicon",
+                        effect: (gameManager) => 
+                        {
+                            gameManager.highVelocityUpgrade = true;
+                        }
                     }
                 };
 
@@ -2166,6 +2249,24 @@
                         this.highScore = parseInt(localStorage.getItem("HCHighScore"));
                     }
                 }
+                
+                this.experimentalHighScore = 0;
+                if(checkStorage() === true)
+                {
+                    if((localStorage.getItem("HCExperimentalHighScore")) !== null)
+                    {
+                        this.experimentalHighScore = parseInt(localStorage.getItem("HCExperimentalHighScore"));
+                    }
+                }
+                
+                this.easyHighScore = 0;
+                if(checkStorage() === true)
+                {
+                    if((localStorage.getItem("HCEasyHighScore")) !== null)
+                    {
+                        this.easyHighScore = parseInt(localStorage.getItem("HCEasyHighScore"));
+                    }
+                }
 
                 this.ownedCards = new Set();
 
@@ -2179,6 +2280,17 @@
                 this.triplePistolUpgrade = false;
                 this.quintuplePistolUpgrade = false;
                 this.mousePistolUpgrade = false;
+                this.highVelocityUpgrade = false;
+                
+                this.gameMode = "Experimental";
+                
+                if(checkStorage() === true)
+                {
+                    if((localStorage.getItem("HCGameMode")) !== null)
+                    {
+                        this.gameMode = localStorage.getItem("HCGameMode");
+                    }
+                }  
 
                 this.level1Data = null;
                 this.level2Data = null;
@@ -2217,6 +2329,8 @@
                         this.screenShake = JSON.parse(localStorage.getItem("HCScreenShakeSetting"));
                     }
                 }
+                
+                this.updateGameMode();
             }
             
             resetActions()
@@ -2413,6 +2527,7 @@
                 this.triplePistolUpgrade = false;
                 this.quintuplePistolUpgrade = false;
                 this.mousePistolUpgrade = false;
+                this.highVelocityUpgrade = false;
 
                 this.level1Data = null;
                 this.level2Data = null;
@@ -2440,6 +2555,249 @@
                     }
                 });
             }
+            
+            switchGameMode()
+            {
+                if(this.gameMode === "Experimental")
+                {
+                    this.gameMode = "Easy";
+                }
+                else if(this.gameMode === "Easy")
+                {
+                    this.gameMode = "Classic";
+                }
+                else if(this.gameMode === "Classic")
+                {
+                    this.gameMode = "Experimental";
+                }
+                
+                this.updateGameMode();
+                
+                if(checkStorage() === true)
+                {
+                    localStorage.setItem("HCGameMode", this.gameMode);
+                }
+            }
+            
+            updateGameMode()
+            {
+                if(this.gameMode === "Experimental")
+                {
+                    this.alwaysBlock = false;
+                    this.fireModeConfig = 
+                    {
+                        "buckshot": 
+                        {
+                            normalPelletType: "bullet",
+                            doublePelletType: "bulletcult",
+                            sound: "shotgunshot",
+                            shellEmitter: "red",
+                            pelletCount: 10,
+                            spread: 13.5,
+                            spreadIncrement: 1.5,
+                            pelletVelocity: 400,
+                            penetrations: 1,
+                            penetrationReduction: 1
+                        },
+                        "slug": 
+                        {
+                            normalPelletType: "slug",
+                            doublePelletType: "slugcult",
+                            sound: "slug",
+                            shellEmitter: "green",
+                            pelletCount: 1,
+                            spread: 0,
+                            spreadIncrement: 0,
+                            pelletVelocity: 550,
+                            penetrations: 2,
+                            penetrationReduction: 1
+                        },
+                        "birdshot": 
+                        {
+                            normalPelletType: "bullet",
+                            doublePelletType: "bulletcult",
+                            sound: "birdshot",
+                            shellEmitter: "blue",
+                            pelletCount: 40,
+                            spread: 25.35,
+                            spreadIncrement: 0.65,
+                            pelletVelocity: 500,
+                            penetrations: 0,
+                            penetrationReduction: 1
+                        },
+                        "numfourbuckshot": 
+                        {
+                            normalPelletType: "bullet",
+                            doublePelletType: "bulletcult",
+                            sound: "numfourbuckshot",
+                            shellEmitter: "black",
+                            pelletCount: 20,
+                            spread: 19,
+                            spreadIncrement: 1,
+                            pelletVelocity: 450,
+                            penetrations: 0,
+                            penetrationReduction: 1
+                        },
+                        "000buckshot": 
+                        {
+                            normalPelletType: "bullet",
+                            doublePelletType: "bulletcult",
+                            sound: "000buckshot",
+                            shellEmitter: "red",
+                            pelletCount: 8,
+                            spread: 5.6,
+                            spreadIncrement: 0.8,
+                            pelletVelocity: 350,
+                            penetrations: 1,
+                            penetrationReduction: 1
+                        }
+                    };
+                }
+                else if(this.gameMode === "Easy")
+                {
+                    this.alwaysBlock = true;
+                    this.fireModeConfig = 
+                    {
+                        "buckshot": 
+                        {
+                            normalPelletType: "bullet",
+                            doublePelletType: "bulletcult",
+                            sound: "shotgunshot",
+                            shellEmitter: "red",
+                            pelletCount: 10,
+                            spread: 13.5,
+                            spreadIncrement: 1.5,
+                            pelletVelocity: 400,
+                            penetrations: 1,
+                            penetrationReduction: 1
+                        },
+                        "slug": 
+                        {
+                            normalPelletType: "slug",
+                            doublePelletType: "slugcult",
+                            sound: "slug",
+                            shellEmitter: "green",
+                            pelletCount: 1,
+                            spread: 0,
+                            spreadIncrement: 0,
+                            pelletVelocity: 550,
+                            penetrations: 2,
+                            penetrationReduction: 1
+                        },
+                        "birdshot": 
+                        {
+                            normalPelletType: "bullet",
+                            doublePelletType: "bulletcult",
+                            sound: "birdshot",
+                            shellEmitter: "blue",
+                            pelletCount: 40,
+                            spread: 25.35,
+                            spreadIncrement: 0.65,
+                            pelletVelocity: 500,
+                            penetrations: 0,
+                            penetrationReduction: 1
+                        },
+                        "numfourbuckshot": 
+                        {
+                            normalPelletType: "bullet",
+                            doublePelletType: "bulletcult",
+                            sound: "numfourbuckshot",
+                            shellEmitter: "black",
+                            pelletCount: 20,
+                            spread: 19,
+                            spreadIncrement: 1,
+                            pelletVelocity: 450,
+                            penetrations: 0,
+                            penetrationReduction: 1
+                        },
+                        "000buckshot": 
+                        {
+                            normalPelletType: "bullet",
+                            doublePelletType: "bulletcult",
+                            sound: "000buckshot",
+                            shellEmitter: "red",
+                            pelletCount: 8,
+                            spread: 5.6,
+                            spreadIncrement: 0.8,
+                            pelletVelocity: 350,
+                            penetrations: 1,
+                            penetrationReduction: 1
+                        }
+                    };
+                }
+                else if(this.gameMode === "Classic")
+                {
+                    this.alwaysBlock = false;
+                    this.fireModeConfig = 
+                    {
+                        "buckshot": 
+                        {
+                            normalPelletType: "bullet",
+                            doublePelletType: "bulletcult",
+                            sound: "shotgunshot",
+                            shellEmitter: "red",
+                            pelletCount: 10,
+                            spread: 13.5,
+                            spreadIncrement: 1.5,
+                            pelletVelocity: 400,
+                            penetrations: 0,
+                            penetrationReduction: 1
+                        },
+                        "slug": 
+                        {
+                            normalPelletType: "slug",
+                            doublePelletType: "slugcult",
+                            sound: "slug",
+                            shellEmitter: "green",
+                            pelletCount: 1,
+                            spread: 0,
+                            spreadIncrement: 0,
+                            pelletVelocity: 550,
+                            penetrations: 0,
+                            penetrationReduction: 1
+                        },
+                        "birdshot": 
+                        {
+                            normalPelletType: "bullet",
+                            doublePelletType: "bulletcult",
+                            sound: "birdshot",
+                            shellEmitter: "blue",
+                            pelletCount: 40,
+                            spread: 29.25,
+                            spreadIncrement: 0.75,
+                            pelletVelocity: 500,
+                            penetrations: 0,
+                            penetrationReduction: 1
+                        },
+                        "numfourbuckshot": 
+                        {
+                            normalPelletType: "bullet",
+                            doublePelletType: "bulletcult",
+                            sound: "numfourbuckshot",
+                            shellEmitter: "black",
+                            pelletCount: 20,
+                            spread: 19,
+                            spreadIncrement: 1,
+                            pelletVelocity: 450,
+                            penetrations: 0,
+                            penetrationReduction: 1
+                        },
+                        "000buckshot": 
+                        {
+                            normalPelletType: "bullet",
+                            doublePelletType: "bulletcult",
+                            sound: "000buckshot",
+                            shellEmitter: "red",
+                            pelletCount: 8,
+                            spread: 5.6,
+                            spreadIncrement: 0.8,
+                            pelletVelocity: 350,
+                            penetrations: 0,
+                            penetrationReduction: 1
+                        }
+                    };
+                }
+            }
         }
   
         class HUD extends Phaser.Scene
@@ -2457,18 +2815,42 @@
                 this.toggleHUD();
             }
             
+            displayGameMode()
+            {
+                this.gameMode = createText(this, 200, 3, this.gameManager.gameMode, 10, "#ff0000").setOrigin(0.5, 0).setDepth(1232300);
+            }
+            
+            destroyGameMode()
+            {
+                if(this.gameMode)
+                {
+                    this.gameMode.destroy();
+                    this.gameMode = null;
+                }
+            }
+            
+            updateGameMode()
+            {
+                if(this.gameMode)
+                {
+                    this.gameMode.setText(this.gameManager.gameMode);
+                }
+            }
+            
             toggleHUD()
             {
                 if(this.gameManager.alwaysDisplayUpgrades === true)
                 { 
                     this.displayHighScore();
                     this.displayCurrentScore();
+                    this.displayGameMode();
                     this.displayedMessage = true;
                 }
                 else
                 {
                     this.destroyHighScore();
                     this.destroyCurrentScore();
+                    this.destroyGameMode();
                     this.displayedMessage = false;
                 }
             }
@@ -2479,17 +2861,20 @@
                 { 
                     this.displayHighScore();
                     this.displayCurrentScore();
+                    this.displayGameMode();
                 }
                 else
                 {
                     this.destroyHighScore();
                     this.destroyCurrentScore();
+                    this.destroyGameMode();
                 }
             }
             
             displayCurrentScore()
             {
                 this.currentScore = createText(this, 3, 3, "Score: " + this.gameManager.score, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.updateScore();
             }
             
             destroyCurrentScore()
@@ -2504,6 +2889,7 @@
             displayHighScore()
             {
                 this.highScore = createText(this, this.game.config.width - 3, 3, "High Score: " + this.gameManager.highScore, 10, "#ff0000").setOrigin(1, 0).setDepth(1232300);
+                this.updateHighScore();
             }
             
             destroyHighScore()
@@ -2519,7 +2905,18 @@
             {
                 if(this.highScore)
                 {
-                    this.highScore.setText("High Score: " + this.gameManager.highScore);
+                    if(this.gameManager.gameMode === "Classic")
+                    {
+                        this.highScore.setText("High Score: " + this.gameManager.highScore);
+                    }
+                    else if(this.gameManager.gameMode === "Experimental")
+                    {
+                        this.highScore.setText("High Score: " + this.gameManager.experimentalHighScore);
+                    }
+                    else if(this.gameManager.gameMode === "Easy")
+                    {
+                        this.highScore.setText("High Score: " + this.gameManager.easyHighScore);
+                    }
                 }
             }
             
@@ -2663,35 +3060,20 @@
                 
                 this.gameSettings = createText(this, 5, 5, "Settings:", 15, "#ff0000").setOrigin(0, 0).setDepth(1232300);
                 
-                if(this.gameManager.alwaysBlock)
-                {
-                    this.autoBlockWords = "On";
-                }
-                else
-                {
-                    this.autoBlockWords = "Off";
-                }
+                this.gameModeWords = this.gameManager.gameMode;
                 
-                this.autoBlock = createText(this, 5, 10 + this.gameSettings.height, "Auto Block: " + this.autoBlockWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
-                this.autoBlock.setInteractive({cursor: "pointer"});
-                this.autoBlock.on("pointerdown", () =>
-                {
-                    this.gameManager.alwaysBlock = !this.gameManager.alwaysBlock;   
-                    this.gameManager.cheats = true; 
+                this.gameMode = createText(this, 5, 10 + this.gameSettings.height, "Game Mode: " + this.gameModeWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.gameMode.setInteractive({cursor: "pointer"});
+                this.gameMode.on("pointerdown", () =>
+                {  
                     this.gameManager.score = 0; 
+                    this.gameManager.switchGameMode();
                     this.HUD.updateScore();
                     this.HUD.updateHighScore();
+                    this.HUD.updateGameMode();
                     
-                    if(this.gameManager.alwaysBlock)
-                    {
-                        this.autoBlockWords = "On";
-                    }
-                    else
-                    {
-                        this.autoBlockWords = "Off";
-                    }
-                    
-                    this.autoBlock.setText("Auto Block: " + this.autoBlockWords);
+                    this.gameModeWords = this.gameManager.gameMode;
+                    this.gameMode.setText("Game Mode: " + this.gameModeWords);
                 });
                 
                 
@@ -2704,7 +3086,7 @@
                     this.toggleHUDWords = "Off";
                 }
                     
-                this.toggleHUD = createText(this, 5, 13 + this.gameSettings.height + this.autoBlock.height, "HUD: " + this.toggleHUDWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.toggleHUD = createText(this, 5, 13 + this.gameSettings.height + this.gameMode.height, "HUD: " + this.toggleHUDWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
                 this.toggleHUD.setInteractive({cursor: "pointer"});
                 this.toggleHUD.on("pointerdown", () =>
                 {
@@ -2741,7 +3123,7 @@
                     this.toggleScreenShakeWords = "Off";
                 }
                 
-                this.toggleScreenShake = createText(this, 5, 16 + this.gameSettings.height + this.autoBlock.height + this.toggleHUD.height, "Screen Shake: " + this.toggleScreenShakeWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.toggleScreenShake = createText(this, 5, 16 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height, "Screen Shake: " + this.toggleScreenShakeWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
                 this.toggleScreenShake.setInteractive({cursor: "pointer"});
                 this.toggleScreenShake.on("pointerdown", () =>
                 {
@@ -2825,7 +3207,7 @@
                 this.usePistol.destroy();
                 this.resetDefault.destroy();
                 this.gameSettings.destroy();
-                this.autoBlock.destroy();
+                this.gameMode.destroy();
                 this.toggleHUD.destroy();
                 this.toggleScreenShake.destroy();
                 this.restartGame.destroy();
