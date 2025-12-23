@@ -625,55 +625,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 
                 this.lastShellCycle = time;
             }
-        }
-            
-        if(this.gameManager.gameMode === "Classic")
-        {
-            if(this.fireMode === "buckshot")
-            {
-                this.damagePerShot = this.baseDamage;
-            }
-            else if(this.fireMode === "slug")
-            {
-                this.damagePerShot = this.baseDamage * 7.5;
-            }
-            else if(this.fireMode === "birdshot")
-            {
-                this.damagePerShot = this.baseDamage * 0.5;
-            }
-            else if(this.fireMode === "000buckshot")
-            {
-                this.damagePerShot = this.baseDamage * 1.5;
-            }
-            else if(this.fireMode === "numfourbuckshot")
-            {
-                this.damagePerShot = this.baseDamage * 1;
-            }
-        }
-        else if(this.gameManager.gameMode === "Easy" || this.gameManager.gameMode === "Experimental")
-        {
-            if(this.fireMode === "buckshot")
-            {
-                this.damagePerShot = this.baseDamage;
-            }
-            else if(this.fireMode === "slug")
-            {
-                this.damagePerShot = this.baseDamage * 7.5;
-            }
-            else if(this.fireMode === "birdshot")
-            {
-                this.damagePerShot = this.baseDamage * 0.6;
-            }
-            else if(this.fireMode === "000buckshot")
-            {
-                this.damagePerShot = this.baseDamage * 1.5;
-            }
-            else if(this.fireMode === "numfourbuckshot")
-            {
-                this.damagePerShot = this.baseDamage * 1.2;
-            }
-        }
-        
+        }  
     }
     
     checkShooting(time)
@@ -713,6 +665,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 }
                 
                 let currentPenetrationReduction = fireConfig.penetrationReduction;
+                
+                this.damagePerShot = this.baseDamage * fireConfig.damage;
                 
                 if(this.flip === false)
                 {

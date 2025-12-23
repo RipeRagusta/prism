@@ -2005,75 +2005,6 @@
             {
                 super({ key: "GameManager" });
                 
-                this.fireModeConfig = 
-                {
-                    "buckshot": 
-                    {
-                        normalPelletType: "bullet",
-                        doublePelletType: "bulletcult",
-                        sound: "shotgunshot",
-                        shellEmitter: "red",
-                        pelletCount: 10,
-                        spread: 13.5,
-                        spreadIncrement: 1.5,
-                        pelletVelocity: 400,
-                        penetrations: 0,
-                        penetrationReduction: 1
-                    },
-                    "slug": 
-                    {
-                        normalPelletType: "slug",
-                        doublePelletType: "slugcult",
-                        sound: "slug",
-                        shellEmitter: "green",
-                        pelletCount: 1,
-                        spread: 0,
-                        spreadIncrement: 0,
-                        pelletVelocity: 550,
-                        penetrations: 0,
-                        penetrationReduction: 1
-                    },
-                    "birdshot": 
-                    {
-                        normalPelletType: "bullet",
-                        doublePelletType: "bulletcult",
-                        sound: "birdshot",
-                        shellEmitter: "blue",
-                        pelletCount: 40,
-                        spread: 29.25,
-                        spreadIncrement: 0.75,
-                        pelletVelocity: 500,
-                        penetrations: 0,
-                        penetrationReduction: 1
-                    },
-                    "numfourbuckshot": 
-                    {
-                        normalPelletType: "bullet",
-                        doublePelletType: "bulletcult",
-                        sound: "numfourbuckshot",
-                        shellEmitter: "black",
-                        pelletCount: 20,
-                        spread: 19,
-                        spreadIncrement: 1,
-                        pelletVelocity: 450,
-                        penetrations: 0,
-                        penetrationReduction: 1
-                    },
-                    "000buckshot": 
-                    {
-                        normalPelletType: "bullet",
-                        doublePelletType: "bulletcult",
-                        sound: "000buckshot",
-                        shellEmitter: "red",
-                        pelletCount: 8,
-                        spread: 5.6,
-                        spreadIncrement: 0.8,
-                        pelletVelocity: 350,
-                        penetrations: 0,
-                        penetrationReduction: 1
-                    }
-                };
-                
                 this.upgradeCardData = 
                 {
                     "birdshot": 
@@ -2282,7 +2213,7 @@
                 this.mousePistolUpgrade = false;
                 this.highVelocityUpgrade = false;
                 
-                this.gameMode = "Experimental";
+                this.gameMode = "Classic";
                 
                 if(checkStorage() === true)
                 {
@@ -2597,7 +2528,8 @@
                             spreadIncrement: 1.5,
                             pelletVelocity: 400,
                             penetrations: 1,
-                            penetrationReduction: 1
+                            penetrationReduction: 1,
+                            damage: 1
                         },
                         "slug": 
                         {
@@ -2610,7 +2542,8 @@
                             spreadIncrement: 0,
                             pelletVelocity: 550,
                             penetrations: 2,
-                            penetrationReduction: 1
+                            penetrationReduction: 1,
+                            damage: 7.5
                         },
                         "birdshot": 
                         {
@@ -2623,7 +2556,8 @@
                             spreadIncrement: 0.65,
                             pelletVelocity: 500,
                             penetrations: 0,
-                            penetrationReduction: 1
+                            penetrationReduction: 1,
+                            damage: 0.6
                         },
                         "numfourbuckshot": 
                         {
@@ -2636,7 +2570,8 @@
                             spreadIncrement: 1,
                             pelletVelocity: 450,
                             penetrations: 0,
-                            penetrationReduction: 1
+                            penetrationReduction: 1,
+                            damage: 1.2
                         },
                         "000buckshot": 
                         {
@@ -2649,7 +2584,8 @@
                             spreadIncrement: 0.8,
                             pelletVelocity: 350,
                             penetrations: 1,
-                            penetrationReduction: 1
+                            penetrationReduction: 1,
+                            damage: 1.5
                         }
                     };
                 }
@@ -2669,7 +2605,8 @@
                             spreadIncrement: 1.5,
                             pelletVelocity: 400,
                             penetrations: 1,
-                            penetrationReduction: 1
+                            penetrationReduction: 1,
+                            damage: 1
                         },
                         "slug": 
                         {
@@ -2682,7 +2619,8 @@
                             spreadIncrement: 0,
                             pelletVelocity: 550,
                             penetrations: 2,
-                            penetrationReduction: 1
+                            penetrationReduction: 1,
+                            damage: 7.5
                         },
                         "birdshot": 
                         {
@@ -2695,7 +2633,8 @@
                             spreadIncrement: 0.65,
                             pelletVelocity: 500,
                             penetrations: 0,
-                            penetrationReduction: 1
+                            penetrationReduction: 1,
+                            damage: 0.6
                         },
                         "numfourbuckshot": 
                         {
@@ -2708,7 +2647,8 @@
                             spreadIncrement: 1,
                             pelletVelocity: 450,
                             penetrations: 0,
-                            penetrationReduction: 1
+                            penetrationReduction: 1,
+                            damage: 1.2
                         },
                         "000buckshot": 
                         {
@@ -2721,7 +2661,8 @@
                             spreadIncrement: 0.8,
                             pelletVelocity: 350,
                             penetrations: 1,
-                            penetrationReduction: 1
+                            penetrationReduction: 1,
+                            damage: 1.5
                         }
                     };
                 }
@@ -2741,7 +2682,8 @@
                             spreadIncrement: 1.5,
                             pelletVelocity: 400,
                             penetrations: 0,
-                            penetrationReduction: 1
+                            penetrationReduction: 1,
+                            damage: 1
                         },
                         "slug": 
                         {
@@ -2754,7 +2696,8 @@
                             spreadIncrement: 0,
                             pelletVelocity: 550,
                             penetrations: 0,
-                            penetrationReduction: 1
+                            penetrationReduction: 1,
+                            damage: 7.5
                         },
                         "birdshot": 
                         {
@@ -2767,7 +2710,8 @@
                             spreadIncrement: 0.75,
                             pelletVelocity: 500,
                             penetrations: 0,
-                            penetrationReduction: 1
+                            penetrationReduction: 1,
+                            damage: 0.5
                         },
                         "numfourbuckshot": 
                         {
@@ -2780,7 +2724,8 @@
                             spreadIncrement: 1,
                             pelletVelocity: 450,
                             penetrations: 0,
-                            penetrationReduction: 1
+                            penetrationReduction: 1,
+                            damage: 1
                         },
                         "000buckshot": 
                         {
@@ -2793,7 +2738,8 @@
                             spreadIncrement: 0.8,
                             pelletVelocity: 350,
                             penetrations: 0,
-                            penetrationReduction: 1
+                            penetrationReduction: 1,
+                            damage: 1.5
                         }
                     };
                 }
@@ -3068,9 +3014,13 @@
                 {  
                     this.gameManager.score = 0; 
                     this.gameManager.switchGameMode();
-                    this.HUD.updateScore();
-                    this.HUD.updateHighScore();
-                    this.HUD.updateGameMode();
+                    
+                    if((this.scene.isActive(this.HUD)))
+                    {
+                        this.HUD.updateScore();
+                        this.HUD.updateHighScore();
+                        this.HUD.updateGameMode();
+                    }
                     
                     this.gameModeWords = this.gameManager.gameMode;
                     this.gameMode.setText("Game Mode: " + this.gameModeWords);
