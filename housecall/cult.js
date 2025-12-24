@@ -527,7 +527,7 @@ function cultSeparation(cults, player)
                 }
             }
         }
-        else if(gameManager.gameMode === "Experimental")
+        else if(gameManager.gameMode === "Standard")
         {
             if(gameManager.score > gameManager.experimentalHighScore)
             {

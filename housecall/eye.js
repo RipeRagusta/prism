@@ -322,7 +322,7 @@ class eye extends Phaser.Physics.Arcade.Sprite
                 }
             }
         }
-        else if(gameManager.gameMode === "Experimental")
+        else if(gameManager.gameMode === "Standard")
         {
             if(gameManager.score > gameManager.experimentalHighScore)
             {
