@@ -8,6 +8,13 @@
   <script src="./assets/phaser3.9.0.min.js"></script>
   <link rel="shortcut icon" type="image" href="./assets/cultknifelogo.png">
   <style type="text/css">
+    html {
+        cursor: none !important;
+    }
+    canvas{
+        cursor: none !important;
+    }
+      
     body {
       margin: 0;
       width: 100%;
@@ -15,6 +22,7 @@
       height: 100dvh;
       background-color: black;
       overflow: hidden;
+      cursor: none !important;
     }
   </style>
 </head>
@@ -170,6 +178,30 @@
                 scene.scene.launch("HUD");
             }
         }
+        
+        class Crosshair extends Phaser.Scene
+        {
+            constructor()
+            {
+                super({key: "Crosshair"});
+            }
+            
+            create()
+            {
+                this.crosshair = this.add.image
+                (
+                    0,
+                    0,
+                    "crosshair"
+                );
+            }
+            
+            update()
+            {
+                this.crosshair.x = this.input.activePointer.x;
+                this.crosshair.y = this.input.activePointer.y;
+            }
+        }
 
         class Loading extends Phaser.Scene
         {
@@ -234,6 +266,7 @@
                 this.load.image("organgib", "assets/organgib.png");
                 this.load.image("headgib", "assets/headgib.png");
                 this.load.image("ribcagegib", "assets/ribcagegib.png");
+                this.load.image("crosshair", "assets/crosshair.png");
 
                 this.load.audio("shotgunshot", 
                 [
@@ -280,11 +313,6 @@
                     "assets/birdshot.wav"
                 ]);
 
-                this.load.audio("switchfiremode", 
-                [
-                    "assets/switchfiremode.wav"
-                ]);
-
                 this.load.audio("pistolsound", 
                 [
                     "assets/pistolsound.wav"
@@ -312,17 +340,7 @@
                 this.scene.start("GameManager");
                 this.scene.start("MainMenu");
                 this.scene.start("Settings");
-            }
-            
-            shutdown() 
-            {
-                this.children.list.forEach(child => 
-                {
-                    if(child.destroy) 
-                    {
-                        child.destroy();
-                    }
-                });
+                this.scene.start("Crosshair");
             }
         }
         
@@ -838,17 +856,6 @@
                     }
                 }
             }
-            
-            shutdown() 
-            {
-                this.children.list.forEach(child => 
-                {
-                    if(child.destroy) 
-                    {
-                        child.destroy();
-                    }
-                });
-            }
         }
   
         function createText(scene, x, y, words, size, color)
@@ -1303,17 +1310,6 @@
 
                 cultSeparation(this.cults, this.player);
             }
-            
-            shutdown() 
-            {
-                this.children.list.forEach(child => 
-                {
-                    if(child.destroy) 
-                    {
-                        child.destroy();
-                    }
-                });
-            }
         }
 
         class Level2Game extends Phaser.Scene
@@ -1475,17 +1471,6 @@
                 }
 
                 cultSeparation(this.cults, this.player);
-            }
-            
-            shutdown() 
-            {
-                this.children.list.forEach(child => 
-                {
-                    if(child.destroy) 
-                    {
-                        child.destroy();
-                    }
-                });
             }
         }
 
@@ -1655,17 +1640,6 @@
                 
                 this.sky.tilePositionX += 0.01;
             }
-            
-            shutdown() 
-            {
-                this.children.list.forEach(child => 
-                {
-                    if(child.destroy) 
-                    {
-                        child.destroy();
-                    }
-                });
-            }
         }
   
         class Level4Game extends Phaser.Scene
@@ -1829,17 +1803,6 @@
                 cultSeparation(this.cults, this.player);
                 eyeSeparation(this.eyes, this.player);
             }
-            
-            shutdown() 
-            {
-                this.children.list.forEach(child => 
-                {
-                    if(child.destroy) 
-                    {
-                        child.destroy();
-                    }
-                });
-            }
         }
   
         class UpgradeRoom extends Phaser.Scene
@@ -1985,17 +1948,6 @@
                 cardContainer.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
 
                 return cardContainer;
-            }
-            
-            shutdown() 
-            {
-                this.children.list.forEach(child => 
-                {
-                    if(child.destroy) 
-                    {
-                        child.destroy();
-                    }
-                });
             }
         }
   
@@ -2476,17 +2428,6 @@
                 this.level4AfterPropData = null;
             }
             
-            shutdown() 
-            {
-                this.children.list.forEach(child => 
-                {
-                    if(child.destroy) 
-                    {
-                        child.destroy();
-                    }
-                });
-            }
-            
             switchGameMode()
             {
                 if(this.gameMode === "Standard")
@@ -2913,17 +2854,6 @@
             {
                 
             }
-            
-            shutdown() 
-            {
-                this.children.list.forEach(child => 
-                {
-                    if(child.destroy) 
-                    {
-                        child.destroy();
-                    }
-                });
-            }
         }
         
         class Settings extends Phaser.Scene
@@ -3240,7 +3170,8 @@
               Level3Game,
               Level4Game,
               HUD,
-              Settings
+              Settings,
+              Crosshair
             ]
         };
 
