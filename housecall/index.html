@@ -344,6 +344,49 @@
             }
         }
         
+        function restartToMainMenu(scene)
+        {
+            scene.gameManager.reset();
+            const activeScenes = scene.scene.manager.getScenes(true);
+            activeScenes.forEach(s => 
+            {
+                const key = s.scene.key;
+                if (key !== "GameManager" && key !== "Settings") 
+                {
+                    scene.scene.stop(key);
+                }
+            });
+
+            scene.scene.launch("MainMenu");
+            scene.scene.launch("Crosshair");
+
+            scene.scene.sendToBack("MainMenu");
+            scene.scene.bringToTop("Settings");
+            scene.scene.bringToTop("Crosshair");
+        }
+        
+         function restartToLevel1(scene)
+        {
+            scene.gameManager.reset();
+            const activeScenes = scene.scene.manager.getScenes(true);
+            activeScenes.forEach(s => 
+            {
+                const key = s.scene.key;
+                if (key !== "GameManager" && key !== "Settings") 
+                {
+                    scene.scene.stop(key);
+                }
+            });
+
+            scene.scene.launch("Level1Game");
+            scene.scene.launch("HUD");
+            scene.scene.launch("Crosshair");
+
+            scene.scene.sendToBack("Level1Game");
+            scene.scene.bringToTop("Settings");
+            scene.scene.bringToTop("Crosshair");
+        }
+        
         class Wheat
         {
             constructor(scene, worldWidthX)
@@ -775,13 +818,13 @@
             
             displayControls()
             {
-                this.controls = createText(this, 1200 / 2, 10, "Controls:", 20, "#fff");
-                this.strafeControls = createText(this, 1200 / 2, 0 + this.controls.height + 20, this.getActionAssignment("walkLeft") + "/" + this.getActionAssignment("walkRight") + ": Walk", 12, "#fff");
-                this.jumpControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + 25, this.getActionAssignment("jump") + ": Jump", 12, "#fff");
-                this.rightClickControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 30, this.getActionAssignment("block") + ": Block", 12, "#fff");
-                this.leftClickControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 35, this.getActionAssignment("useShotgun") + ": Use Shotgun (Hold)", 12, "#fff");
-                this.pistolControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + 40, this.getActionAssignment("usePistol") + ": Use Pistol", 12, "#fff");
-                this.settingsControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + this.pistolControls.height +  45, "Esc: Open Settings", 12, "#fff");
+                this.controls = createText(this, 1200 / 2, 5, "Controls:", 20, "#fff");
+                this.strafeControls = createText(this, 1200 / 2, 0 + this.controls.height + 10, this.getActionAssignment("walkLeft") + "/" + this.getActionAssignment("walkRight") + ": Walk", 12, "#fff");
+                this.jumpControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + 13, this.getActionAssignment("jump") + ": Jump", 12, "#fff");
+                this.rightClickControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + 16, this.getActionAssignment("block") + ": Block", 12, "#fff");
+                this.leftClickControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + 19, this.getActionAssignment("useShotgun") + ": Use Shotgun (Hold)", 12, "#fff");
+                this.pistolControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + 22, this.getActionAssignment("usePistol") + ": Use Pistol", 12, "#fff");
+                this.settingsControls = createText(this, 1200 / 2, 0 + this.controls.height + this.strafeControls.height + this.jumpControls.height + this.rightClickControls.height + this.leftClickControls.height + this.pistolControls.height +  25, "Esc: Open Settings", 12, "#fff");
             }
             
             destroyControls()
@@ -2232,6 +2275,19 @@
                 this.input.off("pointerdown");
                 game.scene.getScene("Settings").remapping = false;
             }
+            
+            resetMappingInProgress()
+            {
+                
+                if(this.scene.isActive(game.scene.getScene("MainMenu")))
+                {
+                    game.scene.getScene("MainMenu").refreshControls();
+                }
+                
+                this.input.keyboard.off("keydown");
+                this.input.off("pointerdown");
+                game.scene.getScene("Settings").remapping = false;
+            }
 
             create()
             {
@@ -2428,20 +2484,9 @@
                 this.level4AfterPropData = null;
             }
             
-            switchGameMode()
+            switchGameMode(name)
             {
-                if(this.gameMode === "Standard")
-                {
-                    this.gameMode = "Easy";
-                }
-                else if(this.gameMode === "Easy")
-                {
-                    this.gameMode = "Classic";
-                }
-                else if(this.gameMode === "Classic")
-                {
-                    this.gameMode = "Standard";
-                }
+                this.gameMode = name;
                 
                 this.updateGameMode();
                 
@@ -2892,6 +2937,7 @@
             {
                 this.keyNameLookup = Object.fromEntries(Object.entries(Phaser.Input.Keyboard.KeyCodes).map(([name, code]) => [code, name]));
                 this.gameManager = this.scene.get("GameManager");
+                this.gameModeWords = this.gameManager.gameMode;
                 this.HUD = this.scene.get("HUD");
                 
                 this.wasd =
@@ -2902,11 +2948,44 @@
                 this.displayedSettings = false;
             }
             
+            manualToggleMenu()
+            {
+                if(this.displayedSettings)
+                {
+                    this.displayedSettings = false;
+                    
+                    if(this.gameModeWords !== this.gameManager.gameMode)
+                    {
+                        this.gameManager.score = 0; 
+                        this.gameManager.switchGameMode(this.gameModeWords);
+
+                        if((this.scene.isActive(this.HUD)))
+                        {
+                            this.HUD.updateScore();
+                            this.HUD.updateHighScore();
+                            this.HUD.updateGameMode();
+                        }
+                        
+                        if(!this.scene.isActive(game.scene.getScene("MainMenu")))
+                        {
+                            restartToLevel1(this);
+                        }
+                    }
+
+                    this.destroySettings();
+                }
+                else
+                {
+                    this.displayedSettings = true;
+                    this.displaySettings();
+                }
+            }
+            
             update()
             {
                 if(Phaser.Input.Keyboard.JustDown(this.wasd.esc))
                 {
-                    this.toggleMenu();
+                    this.manualToggleMenu();
                 }
             }
             
@@ -2971,23 +3050,23 @@
                 
                 this.gameSettings = createText(this, 5, 5, "Settings:", 15, "#ff0000").setOrigin(0, 0).setDepth(1232300);
                 
-                this.gameModeWords = this.gameManager.gameMode;
-                
                 this.gameMode = createText(this, 5, 10 + this.gameSettings.height, "Game Mode: " + this.gameModeWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
                 this.gameMode.setInteractive({cursor: "pointer"});
                 this.gameMode.on("pointerdown", () =>
                 {  
-                    this.gameManager.score = 0; 
-                    this.gameManager.switchGameMode();
-                    
-                    if((this.scene.isActive(this.HUD)))
+                    if(this.gameModeWords === "Standard")
                     {
-                        this.HUD.updateScore();
-                        this.HUD.updateHighScore();
-                        this.HUD.updateGameMode();
+                        this.gameModeWords = "Easy";
+                    }
+                    else if(this.gameModeWords === "Easy")
+                    {
+                        this.gameModeWords = "Classic";
+                    }
+                    else if(this.gameModeWords === "Classic")
+                    {
+                        this.gameModeWords = "Standard";
                     }
                     
-                    this.gameModeWords = this.gameManager.gameMode;
                     this.gameMode.setText("Game Mode: " + this.gameModeWords);
                 });
                 
@@ -3046,11 +3125,17 @@
                     }
                 });
                 
-                this.restartGame = createText(this, 5, 176 - 5, "RELOAD GAME", 8, "#ff0000").setOrigin(0, 1).setDepth(1232300);
+                this.restartGame = createText(this, 5, 176 - 5, "MAIN MENU", 8, "#ff0000").setOrigin(0, 1).setDepth(1232300);
                 this.restartGame.setInteractive({cursor: "pointer"});
                 this.restartGame.on("pointerdown", () =>
                 {
-                    window.location.href = "./index.html";
+                    restartToMainMenu(this);
+                    if(this.displayedSettings)
+                    {
+                        this.displayedSettings = false;
+                        this.destroySettings();
+                    }
+                    this.gameManager.resetMappingInProgress();
                 });
                 
                 this.background = this.add.rectangle(200, 0, 400, 176, "#000000").setOrigin(0.5, 0).setAlpha(0.8); 
