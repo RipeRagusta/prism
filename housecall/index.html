@@ -762,7 +762,7 @@
                 
                 this.displayControls();
                 
-                this.quickStart = createText(this, this.game.config.width - (this.game.config.width / 2), 3, "QUICK START", 10, "#ffffff").setOrigin(0.5, 0).setDepth(1232300);
+                this.quickStart = createText(this, this.game.config.width - (this.game.config.width / 2), 5, "QUICK START", 10, "#ffffff").setOrigin(0.5, 0).setDepth(1232300);
                 this.quickStart.setInteractive({cursor: "pointer"});
                 this.quickStart.on("pointerdown", () =>
                 {
@@ -776,7 +776,7 @@
                     }
                 });
                
-                this.highScore = createText(this, this.game.config.width * 3 - (this.game.config.width / 2), 3, "High Score: " + this.gameManager.experimentalHighScore, 10, "#ffffff").setOrigin(0.5, 0).setDepth(1232300);
+                this.highScore = createText(this, this.game.config.width * 3 - (this.game.config.width / 2), 5, "High Score: " + this.gameManager.experimentalHighScore, 10, "#ffffff").setOrigin(0.5, 0).setDepth(1232300);
                 
                 this.start = createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, "Start", 20, "#fff").setOrigin(0.5, 0.5);
                 this.start.setInteractive({cursor: "pointer"});
@@ -2766,7 +2766,7 @@
             
             displayGameMode()
             {
-                this.gameMode = createText(this, 200, 3, this.gameManager.gameMode, 10, "#ff0000").setOrigin(0.5, 0).setDepth(1232300);
+                this.gameMode = createText(this, 200, 5, this.gameManager.gameMode, 10, "#ff0000").setOrigin(0.5, 0).setDepth(1232300);
             }
             
             destroyGameMode()
@@ -2842,7 +2842,7 @@
             
             displayCurrentScore()
             {
-                this.currentScore = createText(this, 3, 3, "Score: " + this.gameManager.score, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.currentScore = createText(this, 5, 5, "Score: " + this.gameManager.score, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
                 this.updateScore();
             }
             
@@ -2857,7 +2857,7 @@
             
             displayHighScore()
             {
-                this.highScore = createText(this, this.game.config.width - 3, 3, "High Score: " + this.gameManager.highScore, 10, "#ff0000").setOrigin(1, 0).setDepth(1232300);
+                this.highScore = createText(this, this.game.config.width - 5, 5, "High Score: " + this.gameManager.highScore, 10, "#ff0000").setOrigin(1, 0).setDepth(1232300);
                 this.updateHighScore();
             }
             
