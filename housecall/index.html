@@ -327,11 +327,13 @@
                 [
                     "assets/numfourbuckshot.wav"
                 ]);
+                
+                this.load.font("hcfont", "./assets/Metamorphous-Regular.ttf");
             }
 
             create()
             {
-                this.loading = this.add.text((this.sys.game.config.width / 2), this.sys.game.config.height / 2, "Loading", { fontSize: "16px", fill: "#fff" }).setOrigin(0.5);
+                this.loading = this.add.text((this.sys.game.config.width / 2), this.sys.game.config.height / 2, "Loading", { fontFamily: "hcfont", fontSize: "16px", fill: "#fff" }).setOrigin(0.5);
             }
 
             update()
@@ -903,7 +905,7 @@
   
         function createText(scene, x, y, words, size, color)
         {
-            let newText = scene.add.text(x, y, words, { fontSize: size, fill: color}).setOrigin(0.5, 0);
+            let newText = scene.add.text(x, y, words, { fontFamily: "hcfont", fontSize: size, fill: color}).setOrigin(0.5, 0);
             return newText;
         }
   
@@ -2054,7 +2056,7 @@
                     {
                         id: 5,
                         name: "Veneration",
-                        description: "Successful kills trigger double fire rate. Feet never leave the ground.",
+                        description: "Successful kills trigger double fire rate. Can't jump.",
                         icon: "cultenergyicon",
                         effect: (gameManager) => 
                         {
@@ -2088,7 +2090,7 @@
                     {
                         id: 8,
                         name: "Panic",
-                        description: "Fire three handgun rounds in one activation. Higher cooldown.",
+                        description: "Fire three handgun rounds at once. High cooldown.",
                         icon: "triplepistolicon",
                         effect: (gameManager) => 
                         {
@@ -2100,7 +2102,7 @@
                     {
                         id: 9,
                         name: "Terror",
-                        description: "Fire five handgun rounds in one activation. Much higher cooldown.",
+                        description: "Fire five handgun rounds at once. Highest cooldown.",
                         icon: "quintuplepistolicon",
                         effect: (gameManager) => 
                         {
