@@ -2558,8 +2558,8 @@
                             spreadIncrement: 0.65,
                             pelletVelocity: 500,
                             penetrations: 0,
-                            penetrationReduction: 1,
-                            damage: 0.6
+                            penetrationReduction: 0.33,
+                            damage: 0.76
                         },
                         "numfourbuckshot": 
                         {
@@ -2572,7 +2572,7 @@
                             spreadIncrement: 1,
                             pelletVelocity: 450,
                             penetrations: 0,
-                            penetrationReduction: 1,
+                            penetrationReduction: 0.33,
                             damage: 1.2
                         },
                         "000buckshot": 
@@ -2636,7 +2636,7 @@
                             pelletVelocity: 500,
                             penetrations: 0,
                             penetrationReduction: 1,
-                            damage: 0.6
+                            damage: 0.76
                         },
                         "numfourbuckshot": 
                         {
@@ -3136,6 +3136,7 @@
                         this.destroySettings();
                     }
                     this.gameManager.resetMappingInProgress();
+                    this.gameModeWords = this.gameManager.gameMode;
                 });
                 
                 this.background = this.add.rectangle(200, 0, 400, 176, "#000000").setOrigin(0.5, 0).setAlpha(0.8); 
