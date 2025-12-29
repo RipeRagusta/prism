@@ -3070,6 +3070,11 @@
                     }
                     
                     this.gameMode.setText("Game Mode: " + this.gameModeWords);
+                    
+                    if(this.scene.isActive(game.scene.getScene("MainMenu")))
+                    {
+                        this.gameManager.switchGameMode(this.gameModeWords);
+                    }
                 });
                 
                 this.toggleHUDWords = this.gameManager.HUDSetting;
@@ -3138,8 +3143,8 @@
                         this.destroySettings();
                     }
                     this.gameManager.resetMappingInProgress();
-                    this.gameManager.gameMode = this.gameModeWords;
-                    this.gameManager.score = 0;
+                    this.gameManager.score = 0; 
+                    this.gameManager.switchGameMode(this.gameModeWords);
                 });
                 
                 this.background = this.add.rectangle(200, 0, 400, 176, "#000000").setOrigin(0.5, 0).setAlpha(0.8); 
