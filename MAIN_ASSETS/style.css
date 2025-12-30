@@ -87,6 +87,7 @@ h1, h2, p{
 
 img{
 	width: 100%;
+	height: auto;
 	display: block;
 }
 
@@ -100,6 +101,7 @@ nav{
 .imagegallery{
 	display: flex;
 	flex-direction: column;
+	grid-gap: 0px;
 	gap: calc(var(--sizer) * 4);
 	color: var(--color);
 	margin: 0px;
@@ -128,6 +130,7 @@ nav{
 	.imagegallery{
 		display: grid;
 		grid-template-columns: 0.5fr 0.5fr;
+		gap: 0px;
 		grid-gap: var(--sizer);
 	}
 }
@@ -143,6 +146,7 @@ nav{
 	.imagegallery{
 		display: flex;
 		flex-direction: row;
+		grid-gap: 0px;
 		gap: var(--sizer);
 	}
 
