@@ -1,0 +1,153 @@
+:root{
+	--sizer: 15px;
+	--backgroundcolor: #000d1a;
+	--color: #00ffff;
+	--consolecolor: #ff0000;
+	--usercolor: #00ff00;
+	--separator: #ffffff;
+}
+
+html{
+	height: 100vh;
+	height: 100dvh;
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
+body{
+	font-size: 1rem;
+	background-color: var(--backgroundcolor);
+	font-family: monospace, arial, sans-serif, serif;
+	height: 100%;
+	padding: var(--sizer);
+  	margin: 0px auto;
+  	width: 100%;
+  	color: var(--color);
+  	box-sizing: border-box;
+  	display: grid;
+  	grid-template-columns: auto 383px;
+  	max-width: 1200px;
+}
+
+main{
+	padding: 0px;
+  	margin: 0px auto;
+  	height: 100%;
+  	width: 100%;
+  	position: relative;
+  	padding: 0px;
+  	box-sizing: border-box;
+}
+
+#title{
+	margin-bottom: var(--sizer);
+}
+
+a{
+	text-decoration: none;
+	display: inline-block;
+	color: var(--color);
+}
+
+a:visited, a:hover, a:active{
+	color: var(--color);
+}
+
+ul{
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+}
+
+h1, h2, p{
+	display: block;
+	margin: 0px;
+	padding: 0px;
+}
+
+.basictextlink{
+	display: flex;
+	gap: 0.5rem;
+}
+
+.basictextlink p{
+	text-decoration: underline;
+}
+
+
+.linkicon{
+    width: 1rem;
+    height: auto;
+}
+
+.linkicon path{
+    fill: currentColor;
+}
+
+img{
+	width: 100%;
+	display: block;
+}
+
+nav{
+	overflow-x: hidden;
+	overflow-y: auto;
+	margin: 0px;
+	padding: 0px;
+}
+
+.imagegallery{
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--sizer) * 4);
+	color: var(--color);
+	margin: 0px;
+	padding: 0px;
+}
+
+.imagelink a{
+	display: flex;
+	flex-direction: column;
+	gap: var(--sizer);
+}
+
+@media only screen and (max-width: 800px)
+{
+	body{
+		grid-template-columns: 1fr;
+		grid-template-rows: auto 1fr;
+		min-height: 100%;
+		height: auto;
+	}
+
+	main{
+		margin-bottom: var(--sizer);
+	}
+
+	.imagegallery{
+		display: grid;
+		grid-template-columns: 0.5fr 0.5fr;
+		grid-gap: var(--sizer);
+	}
+}
+
+@media only screen and (max-width: 515px)
+{
+	nav{
+		overflow-x: auto;
+		overflow-y: hidden;
+		height: fit-content;
+	}
+
+	.imagegallery{
+		display: flex;
+		flex-direction: row;
+		gap: var(--sizer);
+	}
+
+	.imagelink{
+		width: 80%;
+		flex-shrink: 0;
+	}
+}
