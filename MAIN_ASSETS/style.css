@@ -1,10 +1,22 @@
+@font-face{
+  font-family: "IBM Plex Sans";
+  src: url("./IBMPlexSans-VariableFont_wdth,wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+.ibm-plex-sans{
+  font-family: "IBM Plex Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
 :root{
 	--sizer: 15px;
 	--backgroundcolor: #000d1a;
 	--color: #00ffff;
-	--consolecolor: #ff0000;
-	--usercolor: #00ff00;
-	--separator: #ffffff;
 }
 
 html{
@@ -36,18 +48,19 @@ main{
   	height: 100%;
   	width: 100%;
   	position: relative;
-  	padding: 0px;
   	box-sizing: border-box;
 }
 
-#title{
-	margin-bottom: var(--sizer);
+#terminalbutton{
+	padding-top: var(--sizer);
+	padding-bottom: var(--sizer);
 }
 
 a{
 	text-decoration: none;
 	display: inline-block;
 	color: var(--color);
+	width: fit-content;
 }
 
 a:visited, a:hover, a:active{
@@ -89,6 +102,7 @@ img{
 	width: 100%;
 	height: auto;
 	display: block;
+	margin-bottom: calc(var(--sizer) / 2);
 }
 
 nav{
@@ -111,20 +125,16 @@ nav{
 .imagelink a{
 	display: flex;
 	flex-direction: column;
-	gap: var(--sizer);
+	gap: calc(var(--sizer) / 2);
 }
 
-@media only screen and (max-width: 800px)
+@media only screen and (max-width: 811px)
 {
 	body{
 		grid-template-columns: 1fr;
 		grid-template-rows: auto 1fr;
 		min-height: 100%;
 		height: auto;
-	}
-
-	main{
-		margin-bottom: var(--sizer);
 	}
 
 	.imagegallery{
@@ -153,5 +163,6 @@ nav{
 	.imagelink{
 		width: 80%;
 		flex-shrink: 0;
+		margin-bottom: var(--sizer);
 	}
 }
