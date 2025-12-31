@@ -73,6 +73,8 @@ footer{
 #terminalbutton{
 	padding-top: var(--sizer);
 	padding-bottom: var(--sizer);
+	position: sticky;
+	top: 0px;
 }
 
 a{
