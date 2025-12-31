@@ -2268,7 +2268,7 @@
                 this.refreshControls();
                 game.scene.getScene("Settings").refresh();
                 
-                if(this.scene.isActive(game.scene.getScene("MainMenu")))
+                if(this.scene.isActive("MainMenu"))
                 {
                     game.scene.getScene("MainMenu").refreshControls();
                 }
@@ -2281,7 +2281,7 @@
             resetMappingInProgress()
             {
                 
-                if(this.scene.isActive(game.scene.getScene("MainMenu")))
+                if(this.scene.isActive("MainMenu"))
                 {
                     game.scene.getScene("MainMenu").refreshControls();
                 }
@@ -2351,7 +2351,7 @@
                         this.updateBinding(actionName, "KEY", event.keyCode);
                         game.scene.getScene("Settings").refresh();
                         
-                        if(this.scene.isActive(game.scene.getScene("MainMenu")))
+                        if(this.scene.isActive("MainMenu"))
                         {
                             game.scene.getScene("MainMenu").refreshControls();
                         }
@@ -2368,7 +2368,7 @@
                         this.updateBinding(actionName, "MOUSE", pointer.button);
                         game.scene.getScene("Settings").refresh();
                         
-                        if(this.scene.isActive(game.scene.getScene("MainMenu")))
+                        if(this.scene.isActive("MainMenu"))
                         {
                             game.scene.getScene("MainMenu").refreshControls();
                         }
@@ -2961,14 +2961,14 @@
                         this.gameManager.score = 0; 
                         this.gameManager.switchGameMode(this.gameModeWords);
 
-                        if((this.scene.isActive(this.HUD)))
+                        if(this.scene.isActive("HUD"))
                         {
                             this.HUD.updateScore();
                             this.HUD.updateHighScore();
                             this.HUD.updateGameMode();
                         }
                         
-                        if(!this.scene.isActive(game.scene.getScene("MainMenu")))
+                        if(!this.scene.isActive("MainMenu"))
                         {
                             restartToLevel1(this);
                         }
@@ -3071,7 +3071,7 @@
                     
                     this.gameMode.setText("Game Mode: " + this.gameModeWords);
                     
-                    if(this.scene.isActive(game.scene.getScene("MainMenu")))
+                    if(this.scene.isActive("MainMenu"))
                     {
                         this.gameManager.switchGameMode(this.gameModeWords);
                     }
@@ -3085,7 +3085,7 @@
                 {
                     this.gameManager.changeHUDSetting();
 
-                    if((this.scene.isActive(this.HUD)))
+                    if(this.scene.isActive("HUD"))
                     {
                         this.HUD.refreshHUD();
                     }
