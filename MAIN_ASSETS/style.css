@@ -106,9 +106,8 @@ img{
 }
 
 nav{
-	overflow-x: hidden;
-	overflow-y: auto;
 	margin: 0px;
+	margin-bottom: var(--sizer);
 	padding: 0px;
 }
 
@@ -130,6 +129,10 @@ nav{
 
 @media only screen and (max-width: 811px)
 {
+	nav{
+		margin: 0px;
+	}
+
 	body{
 		grid-template-columns: 1fr;
 		grid-template-rows: auto 1fr;
