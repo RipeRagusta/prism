@@ -109,6 +109,8 @@ nav{
 	margin: 0px;
 	margin-bottom: var(--sizer);
 	padding: 0px;
+	scrollbar-width: thin;
+	scrollbar-color: var(--color) transparent;
 }
 
 .imagegallery{
@@ -131,6 +133,9 @@ nav{
 {
 	nav{
 		margin: 0px;
+		overflow-x: auto;
+		overflow-y: hidden;
+		height: fit-content;
 	}
 
 	body{
@@ -141,28 +146,21 @@ nav{
 	}
 
 	.imagegallery{
-		display: grid;
-		grid-template-columns: 0.5fr 0.5fr;
-		gap: 0px;
-		grid-gap: var(--sizer);
-	}
-}
-
-@media only screen and (max-width: 515px)
-{
-	nav{
-		overflow-x: auto;
-		overflow-y: hidden;
-		height: fit-content;
-	}
-
-	.imagegallery{
 		display: flex;
 		flex-direction: row;
 		grid-gap: 0px;
 		gap: var(--sizer);
 	}
 
+	.imagelink{
+		width: 383px;
+		flex-shrink: 0;
+		margin-bottom: var(--sizer);
+	}
+}
+
+@media only screen and (max-width: 507px)
+{
 	.imagelink{
 		width: 80%;
 		flex-shrink: 0;
