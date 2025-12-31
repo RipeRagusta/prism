@@ -31,24 +31,43 @@ body{
 	font-size: 1rem;
 	background-color: var(--backgroundcolor);
 	font-family: monospace, arial, sans-serif, serif;
-	height: 100%;
-	padding: var(--sizer);
-  	margin: 0px auto;
-  	width: 100%;
-  	color: var(--color);
-  	box-sizing: border-box;
-  	display: grid;
-  	grid-template-columns: auto 383px;
-  	max-width: 1200px;
+	min-height: 100%;
+	margin: 0px auto;
+	padding: 0px;
+	width: 100%;
+	color: var(--color);
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
 }
 
 main{
+	flex: 1;
+	margin: 0px auto;
+	height: 100%;
+	width: 100%;
+	position: relative;
+	box-sizing: border-box;
+	padding: var(--sizer);
+	display: grid;
+	grid-template-columns: auto 383px;
+	max-width: 1200px;
+}
+
+footer{
+	border-top: 1px solid var(--color);
+	display: block;
+	width: 100%;
 	padding: 0px;
-  	margin: 0px auto;
-  	height: 100%;
-  	width: 100%;
-  	position: relative;
-  	box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+#footercontent{
+	width: 100%;
+	max-width: 1200px;
+	margin: 0px auto;
+	padding: calc(var(--sizer) / 2) var(--sizer) calc(var(--sizer) / 2) var(--sizer);
+	box-sizing: border-box;
 }
 
 #terminalbutton{
@@ -73,7 +92,7 @@ ul{
 	margin: 0px;
 }
 
-h1, h2, p{
+h1, h2, p, small{
 	display: block;
 	margin: 0px;
 	padding: 0px;
@@ -107,7 +126,6 @@ img{
 
 nav{
 	margin: 0px;
-	margin-bottom: var(--sizer);
 	padding: 0px;
 	scrollbar-width: thin;
 	scrollbar-color: var(--color) transparent;
@@ -138,7 +156,7 @@ nav{
 		height: fit-content;
 	}
 
-	body{
+	main{
 		grid-template-columns: 1fr;
 		grid-template-rows: auto 1fr;
 		min-height: 100%;
