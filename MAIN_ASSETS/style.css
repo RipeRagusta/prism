@@ -48,7 +48,7 @@ main{
 	width: 100%;
 	position: relative;
 	box-sizing: border-box;
-	padding: var(--sizer);
+	padding: var(--sizer) var(--sizer) 0px var(--sizer);
 	display: grid;
 	grid-template-columns: auto 383px;
 	max-width: 1200px;
@@ -131,6 +131,8 @@ nav{
 	padding: 0px;
 	scrollbar-width: thin;
 	scrollbar-color: var(--color) transparent;
+	margin-top: calc(var(--sizer) * 3);
+	margin-bottom: calc(var(--sizer) * 4);
 }
 
 .imagegallery{
@@ -163,6 +165,7 @@ nav{
 		grid-template-rows: auto 1fr;
 		min-height: 100%;
 		height: auto;
+		padding: var(--sizer);
 	}
 
 	.imagegallery{
