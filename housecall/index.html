@@ -600,6 +600,7 @@
                 this.sound.pauseOnBlur = false;
                 this.keyNameLookup = Object.fromEntries(Object.entries(Phaser.Input.Keyboard.KeyCodes).map(([name, code]) => [code, name]));
                 this.settings = this.scene.get("Settings");
+                this.destroyedControlsForGood = false;
                 
 
                 //END BASIC SETUP MainMenu
