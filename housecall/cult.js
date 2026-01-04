@@ -239,7 +239,18 @@ function cultSeparation(cults, player)
         this.player = player;
         this.alert = false;
         this.orbs = cultOrbHolder;
+        this.gameManager = game.scene.getScene("GameManager");
         this.distancePref = 100;
+        
+        if(this.gameManager.moreDistanceUpgrade)
+        {
+            this.distancePref = 150;
+        }
+        else if(this.gameManager.lessDistanceUpgrade)
+        {
+            this.distancePref = 85;
+        }
+        
         this.initalDistancePref = this.distancePref;
         this.distanceOffset = 1;
         this.flip = false;

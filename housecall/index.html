@@ -267,6 +267,9 @@
                 this.load.image("headgib", "assets/headgib.png");
                 this.load.image("ribcagegib", "assets/ribcagegib.png");
                 this.load.image("crosshair", "assets/crosshair.png");
+                this.load.image("moredistanceicon", "assets/moredistanceicon.png");
+                this.load.image("lessdistanceicon", "assets/lessdistanceicon.png");
+                this.load.image("knifeaggressionicon", "assets/knifeaggressionicon.png");
 
                 this.load.audio("shotgunshot", 
                 [
@@ -2057,7 +2060,7 @@
                     {
                         id: 5,
                         name: "Veneration",
-                        description: "Successful kills trigger double fire rate. Can't jump.",
+                        description: "Successful kills trigger 2x fire rate. Can't jump.",
                         icon: "cultenergyicon",
                         effect: (gameManager) => 
                         {
@@ -2068,7 +2071,7 @@
                     {
                         id: 6,
                         name: "Hollow Points",
-                        description: "Double handgun damage.",
+                        description: "2x handgun damage.",
                         icon: "hollowpointsicon",
                         effect: (gameManager) => 
                         {
@@ -2091,7 +2094,7 @@
                     {
                         id: 8,
                         name: "Panic",
-                        description: "Fire three handgun rounds at once. High cooldown.",
+                        description: "Fire 3 handgun rounds at once. High cooldown.",
                         icon: "triplepistolicon",
                         effect: (gameManager) => 
                         {
@@ -2103,7 +2106,7 @@
                     {
                         id: 9,
                         name: "Terror",
-                        description: "Fire five handgun rounds at once. Highest cooldown.",
+                        description: "Fire 5 handgun rounds at once. Highest cooldown.",
                         icon: "quintuplepistolicon",
                         effect: (gameManager) => 
                         {
@@ -2158,6 +2161,41 @@
                         {
                             gameManager.highVelocityUpgrade = true;
                         }
+                    },
+                    "moredistance": 
+                    {
+                        id: 14,
+                        name: "Intimidation",
+                        description: "Orb throwers keep 50% more distance from player.",
+                        icon: "moredistanceicon",
+                        effect: (gameManager) => 
+                        {
+                            gameManager.lessDistanceUpgrade = false;
+                            gameManager.moreDistanceUpgrade = true;
+                        }
+                    },
+                    "lessdistance": 
+                    {
+                        id: 15,
+                        name: "Aggression",
+                        description: "Orb throwers keep 15% less distance from player.",
+                        icon: "lessdistanceicon",
+                        effect: (gameManager) => 
+                        {
+                            gameManager.moreDistanceUpgrade = false;
+                            gameManager.lessDistanceUpgrade = true;
+                        }
+                    },
+                    "knifeAggression": 
+                    {
+                        id: 16,
+                        name: "Blind Rage",
+                        description: "Knife wielding enemies only run forwards.",
+                        icon: "knifeaggressionicon",
+                        effect: (gameManager) => 
+                        {
+                            gameManager.knifeAggressionUpgrade = true;
+                        }
                     }
                 };
 
@@ -2210,6 +2248,9 @@
                 this.quintuplePistolUpgrade = false;
                 this.mousePistolUpgrade = false;
                 this.highVelocityUpgrade = false;
+                this.moreDistanceUpgrade = false;
+                this.lessDistanceUpgrade = false;
+                this.knifeAggressionUpgrade = false;
                 
                 this.gameMode = "Standard";
                 
@@ -2470,6 +2511,9 @@
                 this.quintuplePistolUpgrade = false;
                 this.mousePistolUpgrade = false;
                 this.highVelocityUpgrade = false;
+                this.moreDistanceUpgrade = false;
+                this.lessDistanceUpgrade = false;
+                this.knifeAggressionUpgrade = false;
 
                 this.level1Data = null;
                 this.level2Data = null;

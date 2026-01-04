@@ -60,6 +60,7 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
         this.flip = true;
         this.scene = scene;
         this.id = Phaser.Utils.String.UUID();
+        this.gameManager = game.scene.getScene("GameManager");
       
         this.bloodEmitter = this.scene.add.particles
         (
@@ -187,23 +188,32 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
 
             if(this.alert === true || this.health < 5)
             {
-                if(Math.abs(this.player.x - this.x) >= 0 - 5 && Math.abs(this.player.x - this.x) <= 0 + 5)
+                if(this.gameManager.knifeAggressionUpgrade)
                 {
-                    this.setVelocityX(0);
+                    this.setVelocityX(-150);
+                    this.flip = false;
+                    this.setFlipX(false);
                 }
                 else
                 {
-                    if(this.player.x < this.x)
+                    if(Math.abs(this.player.x - this.x) >= 0 - 5 && Math.abs(this.player.x - this.x) <= 0 + 5)
                     {
-                        this.setVelocityX(-150);
-                        this.flip = false;
-                        this.setFlipX(false);
+                        this.setVelocityX(0);
                     }
                     else
                     {
-                        this.setVelocityX(150);
-                        this.flip = true;
-                        this.setFlipX(true);
+                        if(this.player.x < this.x)
+                        {
+                            this.setVelocityX(-150);
+                            this.flip = false;
+                            this.setFlipX(false);
+                        }
+                        else
+                        {
+                            this.setVelocityX(150);
+                            this.flip = true;
+                            this.setFlipX(true);
+                        }
                     }
                 }
             }
