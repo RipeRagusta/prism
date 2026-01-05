@@ -741,7 +741,12 @@
                 {
                     bullet.destroy();
                     logo.destroy();
-                    this.quickStart.destroy();
+                    
+                    if(this.quickStart)
+                    {
+                        this.quickStart.destroy();
+                    }
+                    
                     this.cameras.main.pan(worldWidthX / 2, this.sys.game.config.height / 2, 2000, "Sine.easeInOut");
 
                     this.time.delayedCall(2000, () =>
@@ -767,20 +772,35 @@
                 
                 this.displayControls();
                 
-                this.quickStart = createText(this, this.game.config.width - (this.game.config.width / 2), 5, "QUICK START", 10, "#ffffff").setOrigin(0.5, 0).setDepth(1232300);
-                this.quickStart.setInteractive({cursor: "pointer"});
-                this.quickStart.on("pointerdown", () =>
+                let seenControls = true;
+                
+                if(checkStorage() === true)
                 {
-                    if(this.settings.displayedSettings === false)
+                    seenControls = false;
+                    
+                    if((localStorage.getItem("HCSeenControls")) !== null)
                     {
-                        this.scene.stop("MainMenu");
-                        this.scene.stop("HUD");
-                        event.stopPropagation();
-                        this.scene.start("Level1Game");
-                        this.scene.launch("HUD");
+                        seenControls = JSON.parse(localStorage.getItem("HCSeenControls"));
                     }
-                });
-               
+                }
+                
+                if(seenControls === true)
+                {
+                    this.quickStart = createText(this, this.game.config.width - (this.game.config.width / 2), 5, "QUICK START", 10, "#ffffff").setOrigin(0.5, 0).setDepth(1232300);
+                    this.quickStart.setInteractive({cursor: "pointer"});
+                    this.quickStart.on("pointerdown", () =>
+                    {
+                        if(this.settings.displayedSettings === false)
+                        {
+                            this.scene.stop("MainMenu");
+                            this.scene.stop("HUD");
+                            event.stopPropagation();
+                            this.scene.start("Level1Game");
+                            this.scene.launch("HUD");
+                        }
+                    });
+                }
+                
                 this.highScore = createText(this, this.game.config.width * 3 - (this.game.config.width / 2), 5, "High Score: " + this.gameManager.experimentalHighScore, 10, "#ffffff").setOrigin(0.5, 0).setDepth(1232300);
                 
                 this.start = createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, "Start", 20, "#fff").setOrigin(0.5, 0.5);
@@ -789,6 +809,10 @@
                 {
                     if(this.settings.displayedSettings === false)
                     {
+                        if(checkStorage() === true)
+                        {
+                            localStorage.setItem("HCSeenControls", JSON.stringify(true));
+                        }
                         this.scene.stop("MainMenu");
                         this.scene.stop("HUD");
                         event.stopPropagation();
