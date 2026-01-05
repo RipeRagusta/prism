@@ -270,6 +270,7 @@
                 this.load.image("moredistanceicon", "assets/moredistanceicon.png");
                 this.load.image("lessdistanceicon", "assets/lessdistanceicon.png");
                 this.load.image("knifeaggressionicon", "assets/knifeaggressionicon.png");
+                this.load.image("rainsky", "assets/rainsky.png");
 
                 this.load.audio("shotgunshot", 
                 [
@@ -1395,8 +1396,7 @@
                 //START PROPS BEFORE PLAYER Level2Game
 
 
-                this.newSky = new Sky(this, worldWidthX, "sky");
-                this.sky.postFX.addColorMatrix().grayscale(1);   
+                this.newSky = new Sky(this, worldWidthX, "rainsky"); 
                         
                 this.gameManager.level2BeforePropData = makeLevelPropsRandomBeforeWheat(this, this.gameManager.level2BeforePropData, worldWidthX);
 
