@@ -802,6 +802,7 @@
                 }
                 
                 this.highScore = createText(this, this.game.config.width * 3 - (this.game.config.width / 2), 5, "High Score: " + this.gameManager.experimentalHighScore, 10, "#ffffff").setOrigin(0.5, 0).setDepth(1232300);
+                this.updateMainMenuHighScore();
                 
                 this.start = createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, "Start", 20, "#fff").setOrigin(0.5, 0.5);
                 this.start.setInteractive({cursor: "pointer"});
@@ -835,6 +836,25 @@
 
 
                 //END CAMERA SETUP MainMenu
+            }
+            
+            updateMainMenuHighScore()
+            {
+                if(this.highScore)
+                {
+                    if(this.gameManager.gameMode === "Classic")
+                    {
+                        this.highScore.setText("High Score: " + this.gameManager.highScore);
+                    }
+                    else if(this.gameManager.gameMode === "Standard")
+                    {
+                        this.highScore.setText("High Score: " + this.gameManager.experimentalHighScore);
+                    }
+                    else if(this.gameManager.gameMode === "Easy")
+                    {
+                        this.highScore.setText("High Score: " + this.gameManager.easyHighScore);
+                    }
+                }
             }
             
             refreshControls()
@@ -2558,6 +2578,11 @@
                 this.gameMode = name;
                 
                 this.updateGameMode();
+                
+                if(this.scene.isActive("MainMenu"))
+                {
+                    game.scene.getScene("MainMenu").updateMainMenuHighScore();
+                }
                 
                 if(checkStorage() === true)
                 {

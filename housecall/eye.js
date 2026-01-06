@@ -52,12 +52,9 @@ function eyeCreator(scene, eyePositions, gameManager)
         allowGravity: false
     });
 
-    let eyeId = 0;
     eyePositions.forEach(pos =>
     {
-        eyeId += 1;
         const eyeInstance = new eye(scene, pos.x, pos.y, scene.eyeOrbHolder);
-        eyeInstance.id = eyeId;
         scene.eyes.add(eyeInstance);
     });
 

@@ -89,12 +89,9 @@ function cultCreator(scene, cultPositions, gameManager)
         
         scene.cults = scene.physics.add.group();
         
-        let cultId = 0;
         cultPositions.forEach(pos => 
         {
-            cultId += 1;
             const cultInstance = new cult(scene, pos.x, pos.y, scene.player, scene.cultOrbHolder);
-            cultInstance.id = cultId;
             scene.cults.add(cultInstance);
         });
 
