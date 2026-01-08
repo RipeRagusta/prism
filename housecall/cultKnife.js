@@ -262,6 +262,10 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
             
             if(this.hitFrom === "pistol")
             {
+                currentScore = currentScore * 4;
+            }
+            else if(this.hitFrom === "doubleFire")
+            {
                 currentScore = currentScore * 2;
             }
             
