@@ -233,7 +233,7 @@
             
             rotateCrosshairRight()
             {
-                if(this.gameManager.crosshairMotion)
+                if(this.gameManager.crosshairMotion && !this.settings.displayedSettings)
                 {
                     this.crosshair.play("crosshairrotateRightFirst", true);
                 }
