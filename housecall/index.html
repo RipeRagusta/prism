@@ -184,12 +184,67 @@
             
             create()
             {
-                this.crosshair = this.add.image
+                this.gameManager = this.scene.get("GameManager");
+                this.settings = this.scene.get("Settings");
+                
+                this.crosshair = this.add.sprite
                 (
                     0,
                     0,
                     "crosshair"
                 );
+                
+                if(!this.anims.get("crosshairrotateRightFirst"))
+                {
+                    this.anims.create
+                    ({
+                        key: "crosshairrotateRightFirst",
+                        frames: [
+                                    { key: "crosshair", frame: 3 },
+                                    { key: "crosshair", frame: 2 },
+                                    { key: "crosshair", frame: 1 },
+                                    { key: "crosshair", frame: 0 },
+                                    { key: "crosshair", frame: 3 },
+                                    { key: "crosshair", frame: 2 },
+                                    { key: "crosshair", frame: 1 },
+                                    { key: "crosshair", frame: 0 }
+                                ],
+                        frameRate: 72,
+                        repeat: 0
+                    });
+                }
+                
+                if(!this.anims.get("crosshairrotateLeftFirst"))
+                {
+                    this.anims.create
+                    ({
+                        key: "crosshairrotateLeftFirst",
+                        frames: [
+                                    { key: "crosshair", frame: 1 },
+                                    { key: "crosshair", frame: 2 },
+                                    { key: "crosshair", frame: 3 },
+                                    { key: "crosshair", frame: 0 }
+                                ],
+                        frameRate: 36,
+                        repeat: 0
+                    });
+                }
+            }
+            
+            rotateCrosshairRight()
+            {
+                if(this.gameManager.crosshairMotion)
+                {
+                    this.crosshair.play("crosshairrotateRightFirst", true);
+                }
+            }
+            
+            rotateCrosshairLeft()
+            {
+                if(this.gameManager.crosshairMotion && !this.settings.displayedSettings)
+                {
+                    this.crosshair.play("crosshairrotateLeftFirst", true);
+                }
             }
             
             update()
@@ -210,6 +265,8 @@
             {
                 this.load.image("sky", "assets/sky.png");
                 this.load.spritesheet("player", "assets/player.png", {frameWidth: 16, frameHeight: 16});
+                this.load.spritesheet("playerchromeshotgun", "assets/playerchromeshotgun.png", {frameWidth: 16, frameHeight: 16});
+                this.load.spritesheet("playerzombiehunter", "assets/playerzombiehunter.png", {frameWidth: 16, frameHeight: 16});
                 this.load.image("ground", "assets/grass.png");
                 this.load.image("bullet", "assets/bullet.png");
                 this.load.image("barn", "assets/barn.png");
@@ -262,7 +319,7 @@
                 this.load.image("organgib", "assets/organgib.png");
                 this.load.image("headgib", "assets/headgib.png");
                 this.load.image("ribcagegib", "assets/ribcagegib.png");
-                this.load.image("crosshair", "assets/crosshair.png");
+                this.load.spritesheet("crosshair", "assets/crosshair.png", {frameWidth: 5, frameHeight: 5});
                 this.load.image("moredistanceicon", "assets/moredistanceicon.png");
                 this.load.image("lessdistanceicon", "assets/lessdistanceicon.png");
                 this.load.image("knifeaggressionicon", "assets/knifeaggressionicon.png");
@@ -326,6 +383,11 @@
                 this.load.audio("numfourbuckshot", 
                 [
                     "assets/numfourbuckshot.wav"
+                ]);
+                
+                this.load.audio("playerhurt", 
+                [
+                    "assets/playerhurt.wav"
                 ]);
                 
                 this.load.font("hcfont", "./assets/Metamorphous-Regular.ttf");
@@ -593,7 +655,7 @@
 
                 this.input.setDefaultCursor("");
                 const worldWidthX = this.sys.game.config.width * 3;
-                this.physics.world.setBounds(0, 0, (worldWidthX / 3) - 120, 176);
+                this.physics.world.setBounds(0, 0, (worldWidthX / 3), 176);
                 this.cursors = this.input.keyboard.createCursorKeys();
                 this.gameManager = this.scene.get("GameManager");
                 this.HUD = this.scene.get("HUD");
@@ -601,6 +663,7 @@
                 this.keyNameLookup = Object.fromEntries(Object.entries(Phaser.Input.Keyboard.KeyCodes).map(([name, code]) => [code, name]));
                 this.settings = this.scene.get("Settings");
                 this.destroyedControlsForGood = false;
+                this.didFirstTransition = false;
                 
 
                 //END BASIC SETUP MainMenu
@@ -652,6 +715,13 @@
                 );
                 this.fence.setScrollFactor(0.75);
                 this.fence.setOrigin(0.5, 1);
+                
+                this.copcar = this.add.image
+                (
+                    worldWidthX / 4 + this.sys.game.config.width / 4 - this.sys.game.config.width / 8,
+                    this.sys.game.config.height - 16,
+                    "copcar"
+                ).setOrigin(1, 1);
 
 
                 //END PROPS BEFORE PLAYER MainMenu
@@ -675,13 +745,6 @@
 
                 //START PROPS AFTER PLAYER MainMenu
 
-
-                this.copcar = this.add.image
-                (
-                    worldWidthX / 4 + this.sys.game.config.width / 4 - this.sys.game.config.width / 8,
-                    this.sys.game.config.height - 16,
-                    "copcar"
-                ).setOrigin(1, 1);
 
                 this.pipe = this.physics.add.sprite(worldWidthX / 2 + this.sys.game.config.width / 4 - 6, this.sys.game.config.height - 16, "pipe");
                 this.pipe.setOrigin(0, 1);
@@ -729,41 +792,47 @@
                 
                 this.ground = new Ground(this, worldWidthX);
 
-                this.logo = createText(this, worldWidthX / 6, this.sys.game.config.height / 2, "House Call", 20, "#fff").setOrigin(0.5, 0.5);
+                this.logo = createText(this, worldWidthX / 6, this.sys.game.config.height / 2, "HOUSE CALL", 20, "#fff").setOrigin(0.5, 0.5);
                 this.logo.setInteractive({cursor: "pointer"});
 
                 this.physics.add.existing(this.logo, true);
                 this.physics.add.collider(this.logo, this.playerBulletsHolder, (logo, bullet) =>
                 {
-                    bullet.destroy();
-                    logo.destroy();
-                    
-                    if(this.quickStart)
+                    if(this.didFirstTransition === false)
                     {
-                        this.quickStart.destroy();
-                    }
-                    
-                    this.cameras.main.pan(worldWidthX / 2, this.sys.game.config.height / 2, 2000, "Sine.easeInOut");
+                        this.didFirstTransition = true;
+                        
+                        bullet.destroy();
+                        logo.destroy();
 
-                    this.time.delayedCall(2000, () =>
-                    {
-                        this.player.x = worldWidthX / 3 - this.player.width / 2;
+                        if(this.quickStart)
+                        {
+                            this.quickStart.destroy();
+                        }
+                        
                         this.player.canMove = false;
-                        this.tweens.add
-                        ({
-                            targets: this.player, 
-                            x: worldWidthX / 3 + this.player.width / 2,               
-                            y: this.sys.game.config.height - 24,               
-                            duration: 250,       
-                            ease: "linear",       
-                            onComplete: () => 
-                            {
-                                this.physics.world.setBounds(this.sys.game.config.width, 0, this.sys.game.config.width, 176);
-                                this.player.canMove = true;
-                            }
-                        });
-                    }, [], this);
-
+                        this.player.setVelocityX(0);
+                        this.cameras.main.pan(worldWidthX / 2, this.sys.game.config.height / 2, 2000, "Sine.easeInOut");
+                        
+                        this.time.delayedCall(2000, () =>
+                        {
+                            this.player.x = worldWidthX / 3 - this.player.width / 2;
+                            
+                            this.tweens.add
+                            ({
+                                targets: this.player, 
+                                x: worldWidthX / 3 + this.player.width / 2,               
+                                y: this.sys.game.config.height - 24,               
+                                duration: 250,       
+                                ease: "linear",       
+                                onComplete: () => 
+                                {
+                                    this.physics.world.setBounds(this.sys.game.config.width, 0, this.sys.game.config.width, 176);
+                                    this.player.canMove = true;
+                                }
+                            });
+                        }, [], this);
+                    }
                 });
                 
                 this.displayControls();
@@ -800,7 +869,7 @@
                 this.highScore = createText(this, this.game.config.width * 3 - (this.game.config.width / 2), 5, "High Score: " + this.gameManager.experimentalHighScore, 10, "#ffffff").setOrigin(0.5, 0).setDepth(1232300);
                 this.updateMainMenuHighScore();
                 
-                this.start = createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, "Start", 20, "#fff").setOrigin(0.5, 0.5);
+                this.start = createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, "START", 20, "#fff").setOrigin(0.5, 0.5);
                 this.start.setInteractive({cursor: "pointer"});
                 this.start.on("pointerdown", () =>
                 {
@@ -927,6 +996,44 @@
                 if(this.player.health < 1000)
                 {
                     this.player.buddha();
+                }
+                
+                if(this.player.x >= 360)
+                {
+                    if(this.didFirstTransition === false)
+                    {
+                        this.didFirstTransition = true;
+                        
+                        this.logo.destroy();
+
+                        if(this.quickStart)
+                        {
+                            this.quickStart.destroy();
+                        }
+                        
+                        this.player.canMove = false;
+                        this.player.setVelocityX(0);
+                        this.cameras.main.pan(1200 / 2, this.sys.game.config.height / 2, 2000, "Sine.easeInOut");
+                        
+                        this.time.delayedCall(2000, () =>
+                        {
+                            this.player.x = 1200 / 3 - this.player.width / 2;
+                            
+                            this.tweens.add
+                            ({
+                                targets: this.player, 
+                                x: 1200 / 3 + this.player.width / 2,               
+                                y: this.sys.game.config.height - 24,               
+                                duration: 250,       
+                                ease: "linear",       
+                                onComplete: () => 
+                                {
+                                    this.physics.world.setBounds(this.sys.game.config.width, 0, this.sys.game.config.width, 176);
+                                    this.player.canMove = true;
+                                }
+                            });
+                        }, [], this);
+                    }
                 }
                 
                 if(this.settings.displayedSettings === true)
@@ -2098,7 +2205,7 @@
                     {
                         id: 5,
                         name: "Veneration",
-                        description: "Successful kills trigger 2x fire rate. Can't jump.",
+                        description: "Successful kills trigger 2x fire rate.",
                         icon: "cultenergyicon",
                         effect: (gameManager) => 
                         {
@@ -2338,7 +2445,81 @@
                     }
                 }
                 
+                this.crosshairMotion = true;
+                
+                if(checkStorage() === true)
+                {
+                    if((localStorage.getItem("HCCrosshairMotionSetting")) !== null)
+                    {
+                        this.crosshairMotion = JSON.parse(localStorage.getItem("HCCrosshairMotionSetting"));
+                    }
+                }
+                
+                this.playerSkin = "player";
+                
+                if(checkStorage() === true)
+                {
+                    if((localStorage.getItem("HCSkin")) !== null)
+                    {
+                        this.playerSkin = localStorage.getItem("HCSkin");
+                    }
+                }
+                
                 this.updateGameMode();
+            }
+            
+            changePlayerSkin()
+            {
+                if(this.playerSkin === "player")
+                {
+                    this.playerSkin = "playerchromeshotgun";
+                }
+                else if(this.playerSkin === "playerchromeshotgun")
+                {
+                    this.playerSkin = "playerzombiehunter";
+                }
+                else if(this.playerSkin === "playerzombiehunter")
+                {
+                     this.playerSkin = "player";
+                }
+                
+                if(checkStorage() === true)
+                {
+                    localStorage.setItem("HCSkin", this.playerSkin);
+                }
+                
+                let scenePlayerIsIn = null;
+
+                if(game.scene.isActive("MainMenu"))
+                {
+                    scenePlayerIsIn = "MainMenu";
+                }
+                else if(game.scene.isActive("Level1Game"))
+                {
+                     scenePlayerIsIn = "Level1Game";
+                }
+                else if(game.scene.isActive("Level2Game"))
+                {
+                     scenePlayerIsIn = "Level2Game";
+                }
+                else if(game.scene.isActive("Level3Game"))
+                {
+                     scenePlayerIsIn = "Level3Game";
+                }
+                else if(game.scene.isActive("Level4Game"))
+                {
+                     scenePlayerIsIn = "Level4Game";
+                }
+
+                if(scenePlayerIsIn != null)
+                {
+                    if(game.scene.getScene(scenePlayerIsIn).player && game.scene.getScene(scenePlayerIsIn).player.active)
+                    {
+                        game.scene.getScene(scenePlayerIsIn).player.stop();
+                        game.scene.getScene(scenePlayerIsIn).player.changeSkin(this.playerSkin);
+                        game.scene.getScene(scenePlayerIsIn).player.setFrame(0);
+                    }
+                }
             }
             
             resetActions()
@@ -3220,6 +3401,73 @@
                     }
                 });
                 
+                if(this.gameManager.crosshairMotion)
+                {
+                    this.toggleCrosshairMotionWords = "On";
+                }
+                else
+                {
+                    this.toggleCrosshairMotionWords = "Off";
+                }
+                
+                this.toggleCrosshairMotion = createText(this, 5, 19 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height, "Crosshair Rotation: " + this.toggleCrosshairMotionWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.toggleCrosshairMotion.setInteractive({cursor: "pointer"});
+                this.toggleCrosshairMotion.on("pointerdown", () =>
+                {
+                    this.gameManager.crosshairMotion = !this.gameManager.crosshairMotion;                   
+                    
+                    if(this.gameManager.crosshairMotion)
+                    {
+                        this.toggleCrosshairMotionWords = "On";
+                    }
+                    else
+                    {
+                        this.toggleCrosshairMotionWords = "Off";
+                    }
+                    
+                    this.toggleCrosshairMotion.setText("Crosshair Rotation: " + this.toggleCrosshairMotionWords);
+                    
+                    if(checkStorage() === true)
+                    {
+                        localStorage.setItem("HCCrosshairMotionSetting", JSON.stringify(this.gameManager.crosshairMotion));
+                    }
+                });
+                
+                if(this.gameManager.playerSkin === "player")
+                {
+                    this.changeSkinWords = "Default";
+                }
+                else if(this.gameManager.playerSkin === "playerchromeshotgun")
+                {
+                    this.changeSkinWords = "Sport";
+                }
+                else if(this.gameManager.playerSkin === "playerzombiehunter")
+                {
+                     this.changeSkinWords = "Zombie Hunter";
+                }
+                
+                this.changeSkin = createText(this, 5, 22 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height + this.toggleCrosshairMotion.height, "Skin: " + this.changeSkinWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.changeSkin.setInteractive({cursor: "pointer"});
+                this.changeSkin.on("pointerdown", () =>
+                {
+                    this.gameManager.changePlayerSkin();
+                    
+                    if(this.gameManager.playerSkin === "player")
+                    {
+                        this.changeSkinWords = "Default";
+                    }
+                    else if(this.gameManager.playerSkin === "playerchromeshotgun")
+                    {
+                        this.changeSkinWords = "Sport";
+                    }
+                    else if(this.gameManager.playerSkin === "playerzombiehunter")
+                    {
+                         this.changeSkinWords = "Zombie Hunter";
+                    }
+                    
+                    this.changeSkin.setText("Skin: " + this.changeSkinWords);
+                });
+                
                 this.restartGame = createText(this, 5, 176 - 5, "MAIN MENU", 8, "#ff0000").setOrigin(0, 1).setDepth(1232300);
                 this.restartGame.setInteractive({cursor: "pointer"});
                 this.restartGame.on("pointerdown", () =>
@@ -3292,7 +3540,9 @@
                 this.gameMode.destroy();
                 this.toggleHUD.destroy();
                 this.toggleScreenShake.destroy();
+                this.toggleCrosshairMotion.destroy();
                 this.restartGame.destroy();
+                this.changeSkin.destroy();
             }
         }
         

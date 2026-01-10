@@ -38,6 +38,7 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
     scene.physics.add.collider(scene.player, scene.cultKnifes, (player, cult) =>
     {
         player.health -= 10;
+        scene.sound.play("playerhurt");
     });
 
     scene.physics.add.collider(scene.cultKnifes, scene.cultKnifes);

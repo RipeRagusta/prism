@@ -29,6 +29,7 @@ function eyeCreator(scene, eyePositions, gameManager)
             else
             {
                 player.health -= 10;
+                scene.sound.play("playerhurt");
             }
         }
         else

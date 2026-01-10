@@ -107,7 +107,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     constructor(scene, x, y, playerBulletsHolder)
     {
         super(scene, x, y, "player");
-
+        
         scene.add.existing(this);
         scene.physics.add.existing(this);
         this.setSize(6, 16);
@@ -147,100 +147,10 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.bullets = playerBulletsHolder;
         this.settings = game.scene.getScene("Settings");
         this.gameManager = game.scene.getScene("GameManager");
+        
+        this.changeSkin(this.gameManager.playerSkin);
 
-        if(!scene.anims.get("pump"))
-        {
-            scene.anims.create
-            ({
-                key: "pump",
-                frames: scene.anims.generateFrameNumbers("player", { start: 1, end: 0 }),
-                frameRate: 6,
-                repeat: 0
-            });
-        }
-        
-        if(!scene.anims.get("block"))
-        {
-            scene.anims.create
-            ({
-                key: "block",
-                frames: [
-                            { key: "player", frame: 2 },
-                            { key: "player", frame: 0 }
-                        ],
-                frameRate: 2,
-                repeat: 0
-            });
-        }
-        
-        if(!scene.anims.get("pistolmove"))
-        {
-            scene.anims.create
-            ({
-                key: "pistolmove",
-                frames: [
-                            { key: "player", frame: 5 },
-                            { key: "player", frame: 3 },
-                            { key: "player", frame: 3 },
-                            { key: "player", frame: 4 },
-                            { key: "player", frame: 3 },
-                            { key: "player", frame: 5 },
-                            { key: "player", frame: 0 }
-                        ],
-                frameRate: 7,
-                repeat: 0
-            });
-        }
-        
-        if(!scene.anims.get("triplepistol"))
-        {
-            scene.anims.create
-            ({
-                key: "triplepistol",
-                frames: [
-                            { key: "player", frame: 5 },
-                            { key: "player", frame: 3 },
-                            { key: "player", frame: 3 },
-                            { key: "player", frame: 4 },
-                            { key: "player", frame: 3 },
-                            { key: "player", frame: 4 },
-                            { key: "player", frame: 3 },
-                            { key: "player", frame: 4 },
-                            { key: "player", frame: 3 },
-                            { key: "player", frame: 5 },
-                            { key: "player", frame: 0 }
-                        ],
-                frameRate: 7,
-                repeat: 0
-            });
-        }
-        
-        if(!scene.anims.get("quintuplepistol"))
-        {
-            scene.anims.create
-            ({
-                key: "quintuplepistol",
-                frames: [
-                            { key: "player", frame: 5 },
-                            { key: "player", frame: 3 },
-                            { key: "player", frame: 3 },
-                            { key: "player", frame: 4 },
-                            { key: "player", frame: 3 },
-                            { key: "player", frame: 4 },
-                            { key: "player", frame: 3 },
-                            { key: "player", frame: 4 },
-                            { key: "player", frame: 3 },
-                            { key: "player", frame: 4 },
-                            { key: "player", frame: 3 },
-                            { key: "player", frame: 4 },
-                            { key: "player", frame: 3 },
-                            { key: "player", frame: 5 },
-                            { key: "player", frame: 0 }
-                        ],
-                frameRate: 7,
-                repeat: 0
-            });
-        }
+        this.makeAnimations();
 
         this.shellEmitter = this.scene.add.particles
         (
@@ -519,6 +429,131 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             this.off(Phaser.Animations.Events.ANIMATION_UPDATE, this.pistolFrameUpdate, this);
         }, this);
     }
+    
+    changeSkin(skin)
+    {
+        this.currentTexture = skin;
+        this.setTexture(this.currentTexture);
+        this.makeAnimations();
+    }
+    
+    makeAnimations()
+    {
+        if(this.scene.anims.exists("pump")) 
+        {
+            this.scene.anims.remove("pump");
+        }
+        if(this.scene.anims.exists("block")) 
+        {
+            this.scene.anims.remove("block");
+        }
+        if(this.scene.anims.exists("pistolmove")) 
+        {
+            this.scene.anims.remove("pistolmove");
+        }
+        if(this.scene.anims.exists("triplepistol")) 
+        {
+            this.scene.anims.remove("triplepistol");
+        }
+        if(this.scene.anims.exists("quintuplepistol")) 
+        {
+            this.scene.anims.remove("quintuplepistol");
+        }
+
+        if(!this.scene.anims.get("pump"))
+        {
+            this.scene.anims.create
+            ({
+                key: "pump",
+                frames: this.scene.anims.generateFrameNumbers(this.currentTexture, { start: 1, end: 0 }),
+                frameRate: 6,
+                repeat: 0
+            });
+        }
+        
+        if(!this.scene.anims.get("block"))
+        {
+            this.scene.anims.create
+            ({
+                key: "block",
+                frames: [
+                            { key: this.currentTexture, frame: 2 },
+                            { key: this.currentTexture, frame: 0 }
+                        ],
+                frameRate: 2,
+                repeat: 0
+            });
+        }
+        
+        if(!this.scene.anims.get("pistolmove"))
+        {
+            this.scene.anims.create
+            ({
+                key: "pistolmove",
+                frames: [
+                            { key: this.currentTexture, frame: 5 },
+                            { key: this.currentTexture, frame: 3 },
+                            { key: this.currentTexture, frame: 3 },
+                            { key: this.currentTexture, frame: 4 },
+                            { key: this.currentTexture, frame: 3 },
+                            { key: this.currentTexture, frame: 5 },
+                            { key: this.currentTexture, frame: 0 }
+                        ],
+                frameRate: 7,
+                repeat: 0
+            });
+        }
+        
+        if(!this.scene.anims.get("triplepistol"))
+        {
+            this.scene.anims.create
+            ({
+                key: "triplepistol",
+                frames: [
+                            { key: this.currentTexture, frame: 5 },
+                            { key: this.currentTexture, frame: 3 },
+                            { key: this.currentTexture, frame: 3 },
+                            { key: this.currentTexture, frame: 4 },
+                            { key: this.currentTexture, frame: 3 },
+                            { key: this.currentTexture, frame: 4 },
+                            { key: this.currentTexture, frame: 3 },
+                            { key: this.currentTexture, frame: 4 },
+                            { key: this.currentTexture, frame: 3 },
+                            { key: this.currentTexture, frame: 5 },
+                            { key: this.currentTexture, frame: 0 }
+                        ],
+                frameRate: 7,
+                repeat: 0
+            });
+        }
+        
+        if(!this.scene.anims.get("quintuplepistol"))
+        {
+            this.scene.anims.create
+            ({
+                key: "quintuplepistol",
+                frames: [
+                            { key: this.currentTexture, frame: 5 },
+                            { key: this.currentTexture, frame: 3 },
+                            { key: this.currentTexture, frame: 3 },
+                            { key: this.currentTexture, frame: 4 },
+                            { key: this.currentTexture, frame: 3 },
+                            { key: this.currentTexture, frame: 4 },
+                            { key: this.currentTexture, frame: 3 },
+                            { key: this.currentTexture, frame: 4 },
+                            { key: this.currentTexture, frame: 3 },
+                            { key: this.currentTexture, frame: 4 },
+                            { key: this.currentTexture, frame: 3 },
+                            { key: this.currentTexture, frame: 4 },
+                            { key: this.currentTexture, frame: 3 },
+                            { key: this.currentTexture, frame: 5 },
+                            { key: this.currentTexture, frame: 0 }
+                        ],
+                frameRate: 7,
+                repeat: 0
+            });
+        }
+    }
 
     preUpdate(time, delta)
     {
@@ -708,7 +743,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 this.setVelocityX(0);
             }
 
-            if(this.gameActionActive("jump") && this.body.touching.down && this.settings.displayedSettings === false && this.gameManager.doubleFireUpgrade === false)
+            if(this.gameActionActive("jump") && this.body.touching.down && this.settings.displayedSettings === false)
             {
                 this.setVelocityY(-120);
             }
@@ -773,6 +808,16 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             }
             
             this.body.setOffset(xOffset, 0);
+            
+            if(!this.playedCrosshairAnimation)
+            {
+                this.playedCrosshairAnimation = true;
+                
+                if(game.scene.getScene("Crosshair"))
+                {
+                    game.scene.getScene("Crosshair").rotateCrosshairLeft();
+                }
+            }
         }
         else
         {
@@ -786,6 +831,17 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             {
                 xOffset = 8;
             }
+            
+            if(this.playedCrosshairAnimation)
+            {
+                this.playedCrosshairAnimation = false;
+                
+                if(game.scene.getScene("Crosshair"))
+                {
+                    game.scene.getScene("Crosshair").rotateCrosshairRight();
+                }
+            }
+            
             this.body.setOffset(xOffset, 0);
         }
     }

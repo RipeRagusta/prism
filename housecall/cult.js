@@ -70,6 +70,7 @@ function cultCreator(scene, cultPositions, gameManager)
                 else
                 {
                     player.health -= 10;
+                    scene.sound.play("playerhurt");
                 }
             }
             else
@@ -511,7 +512,7 @@ function cultSeparation(cults, player)
                 this.scene.player.activateDoubleFire();
             } 
         }
-        
+
         if(!gameManager.cheats)
         {
             let currentScore = 35;
