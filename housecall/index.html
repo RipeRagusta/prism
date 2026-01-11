@@ -56,6 +56,7 @@
                 scene.physics.add.collider(this.pipe, scene.player, (pipe, player) =>
                 {
                     player.destroy();
+                    resetCrosshairIfDifferent();
                     scene.stab.setActive(true);
                     scene.stab.setVisible(true);
                     scene.sound.play("powerup");
@@ -203,7 +204,7 @@
                                     { key: "crosshair", frame: 3 },
                                     { key: "crosshair", frame: 2 },
                                     { key: "crosshair", frame: 1 },
-                                    { key: "crosshair", frame: 0 },
+                                    { key: "crosshair", frame: 4 },
                                     { key: "crosshair", frame: 3 },
                                     { key: "crosshair", frame: 2 },
                                     { key: "crosshair", frame: 1 },
@@ -223,7 +224,7 @@
                                     { key: "crosshair", frame: 1 },
                                     { key: "crosshair", frame: 2 },
                                     { key: "crosshair", frame: 3 },
-                                    { key: "crosshair", frame: 0 }
+                                    { key: "crosshair", frame: 4 }
                                 ],
                         frameRate: 36,
                         repeat: 0
@@ -233,9 +234,10 @@
             
             rotateCrosshairRight()
             {
-                if(this.gameManager.crosshairMotion && !this.settings.displayedSettings)
+                if(this.rotatedLeft)
                 {
                     this.crosshair.play("crosshairrotateRightFirst", true);
+                    this.rotatedLeft = false;
                 }
             }
             
@@ -244,6 +246,7 @@
                 if(this.gameManager.crosshairMotion && !this.settings.displayedSettings)
                 {
                     this.crosshair.play("crosshairrotateLeftFirst", true);
+                    this.rotatedLeft = true;
                 }
             }
             
@@ -319,7 +322,7 @@
                 this.load.image("organgib", "assets/organgib.png");
                 this.load.image("headgib", "assets/headgib.png");
                 this.load.image("ribcagegib", "assets/ribcagegib.png");
-                this.load.spritesheet("crosshair", "assets/crosshair.png", {frameWidth: 5, frameHeight: 5});
+                this.load.spritesheet("crosshair", "assets/crosshair.png", {frameWidth: 7, frameHeight: 7});
                 this.load.image("moredistanceicon", "assets/moredistanceicon.png");
                 this.load.image("lessdistanceicon", "assets/lessdistanceicon.png");
                 this.load.image("knifeaggressionicon", "assets/knifeaggressionicon.png");
@@ -408,6 +411,17 @@
             }
         }
         
+        function resetCrosshairIfDifferent()
+        {
+            if(game.scene.getScene("Crosshair"))
+            {
+                if(game.scene.getScene("Crosshair").rotatedLeft)
+                {
+                    game.scene.getScene("Crosshair").rotateCrosshairRight();
+                }
+            }
+        }
+        
         function restartToMainMenu(scene)
         {
             scene.gameManager.reset();
@@ -415,18 +429,18 @@
             activeScenes.forEach(s => 
             {
                 const key = s.scene.key;
-                if (key !== "GameManager" && key !== "Settings") 
+                if (key !== "GameManager" && key !== "Settings" && key !== "Crosshair") 
                 {
                     scene.scene.stop(key);
                 }
             });
 
             scene.scene.launch("MainMenu");
-            scene.scene.launch("Crosshair");
 
             scene.scene.sendToBack("MainMenu");
             scene.scene.bringToTop("Settings");
             scene.scene.bringToTop("Crosshair");
+            resetCrosshairIfDifferent();
         }
         
          function restartToLevel1(scene)
@@ -436,7 +450,7 @@
             activeScenes.forEach(s => 
             {
                 const key = s.scene.key;
-                if (key !== "GameManager" && key !== "Settings") 
+                if (key !== "GameManager" && key !== "Settings" && key !== "Crosshair") 
                 {
                     scene.scene.stop(key);
                 }
@@ -444,11 +458,11 @@
 
             scene.scene.launch("Level1Game");
             scene.scene.launch("HUD");
-            scene.scene.launch("Crosshair");
 
             scene.scene.sendToBack("Level1Game");
             scene.scene.bringToTop("Settings");
             scene.scene.bringToTop("Crosshair");
+            resetCrosshairIfDifferent();
         }
         
         class Wheat
@@ -862,6 +876,7 @@
                             event.stopPropagation();
                             this.scene.start("Level1Game");
                             this.scene.launch("HUD");
+                            resetCrosshairIfDifferent();
                         }
                     });
                 }
@@ -884,6 +899,7 @@
                         event.stopPropagation();
                         this.scene.start("Level1Game");
                         this.scene.launch("HUD");
+                        resetCrosshairIfDifferent();
                     }
                 });
 
@@ -3414,6 +3430,8 @@
                 this.toggleCrosshairMotion.setInteractive({cursor: "pointer"});
                 this.toggleCrosshairMotion.on("pointerdown", () =>
                 {
+                    resetCrosshairIfDifferent();
+                    
                     this.gameManager.crosshairMotion = !this.gameManager.crosshairMotion;                   
                     
                     if(this.gameManager.crosshairMotion)
