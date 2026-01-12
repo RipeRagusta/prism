@@ -1106,6 +1106,7 @@
                         this.didFirstTransition = true;
                         
                         this.logo.destroy();
+                        this.time.delayedCall(200, () => this.player.canShoot = true);
 
                         if(this.quickStart)
                         {
