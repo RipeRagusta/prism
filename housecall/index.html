@@ -236,17 +236,35 @@
             {
                 if(this.rotatedLeft)
                 {
-                    this.crosshair.play("crosshairrotateRightFirst", true);
-                    this.rotatedLeft = false;
+                    if(this.gameManager.crosshairMotion === "Animated")
+                    {
+                        this.crosshair.play("crosshairrotateRightFirst", true);
+                        this.rotatedLeft = false;
+                    }
+                    else if(this.gameManager.crosshairMotion === "Instant" || this.gameManager.crosshairMotion === "Hybrid")
+                    {
+                        this.crosshair.stop();
+                        this.crosshair.setFrame(0);
+                        this.rotatedLeft = false;
+                    }
                 }
             }
             
             rotateCrosshairLeft()
             {
-                if(this.gameManager.crosshairMotion && !this.settings.displayedSettings)
+                if(!this.settings.displayedSettings)
                 {
-                    this.crosshair.play("crosshairrotateLeftFirst", true);
-                    this.rotatedLeft = true;
+                    if(this.gameManager.crosshairMotion === "Animated" || this.gameManager.crosshairMotion === "Hybrid")
+                    {
+                        this.crosshair.play("crosshairrotateLeftFirst", true);
+                        this.rotatedLeft = true;
+                    }
+                    else if(this.gameManager.crosshairMotion === "Instant")
+                    {
+                        this.crosshair.stop();
+                        this.crosshair.setFrame(4);
+                        this.rotatedLeft = true;
+                    } 
                 }
             }
             
@@ -782,6 +800,7 @@
                 this.physics.add.collider(this.pipe, this.player, (pipe, player) =>
                 {
                     player.destroy();
+                    resetCrosshairIfDifferent();
                     this.stab.setActive(true);
                     this.stab.setVisible(true);
                     this.sound.play("powerup");
@@ -2461,7 +2480,7 @@
                     }
                 }
                 
-                this.crosshairMotion = true;
+                this.crosshairMotion = "Animated";
                 
                 if(checkStorage() === true)
                 {
@@ -2780,6 +2799,26 @@
                 if(checkStorage() === true)
                 {
                     localStorage.setItem("HCGameMode", this.gameMode);
+                }
+            }
+            
+            switchCrosshairSetting()
+            {
+                if(this.crosshairMotion === "Animated")
+                {
+                    this.crosshairMotion = "Instant";
+                }
+                else if(this.crosshairMotion === "Instant")
+                {
+                    this.crosshairMotion = "Hybrid";
+                }
+                else if(this.crosshairMotion === "Hybrid")
+                {
+                    this.crosshairMotion = "Off";
+                }
+                else if(this.crosshairMotion === "Off")
+                {
+                    this.crosshairMotion = "Animated";
                 }
             }
             
@@ -3417,33 +3456,15 @@
                     }
                 });
                 
-                if(this.gameManager.crosshairMotion)
-                {
-                    this.toggleCrosshairMotionWords = "On";
-                }
-                else
-                {
-                    this.toggleCrosshairMotionWords = "Off";
-                }
-                
-                this.toggleCrosshairMotion = createText(this, 5, 19 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height, "Dynamic Crosshair: " + this.toggleCrosshairMotionWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.toggleCrosshairMotion = createText(this, 5, 19 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height, "Dynamic Crosshair: " + this.gameManager.crosshairMotion, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
                 this.toggleCrosshairMotion.setInteractive({cursor: "pointer"});
                 this.toggleCrosshairMotion.on("pointerdown", () =>
                 {
                     resetCrosshairIfDifferent();
                     
-                    this.gameManager.crosshairMotion = !this.gameManager.crosshairMotion;                   
-                    
-                    if(this.gameManager.crosshairMotion)
-                    {
-                        this.toggleCrosshairMotionWords = "On";
-                    }
-                    else
-                    {
-                        this.toggleCrosshairMotionWords = "Off";
-                    }
-                    
-                    this.toggleCrosshairMotion.setText("Dynamic Crosshair: " + this.toggleCrosshairMotionWords);
+                    this.gameManager.switchCrosshairSetting();     
+
+                    this.toggleCrosshairMotion.setText("Dynamic Crosshair: " + this.gameManager.crosshairMotion);
                     
                     if(checkStorage() === true)
                     {
