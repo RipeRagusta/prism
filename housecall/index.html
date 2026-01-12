@@ -3426,7 +3426,7 @@
                     this.toggleCrosshairMotionWords = "Off";
                 }
                 
-                this.toggleCrosshairMotion = createText(this, 5, 19 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height, "Crosshair Rotation: " + this.toggleCrosshairMotionWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.toggleCrosshairMotion = createText(this, 5, 19 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height, "Dynamic Crosshair: " + this.toggleCrosshairMotionWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
                 this.toggleCrosshairMotion.setInteractive({cursor: "pointer"});
                 this.toggleCrosshairMotion.on("pointerdown", () =>
                 {
@@ -3443,7 +3443,7 @@
                         this.toggleCrosshairMotionWords = "Off";
                     }
                     
-                    this.toggleCrosshairMotion.setText("Crosshair Rotation: " + this.toggleCrosshairMotionWords);
+                    this.toggleCrosshairMotion.setText("Dynamic Crosshair: " + this.toggleCrosshairMotionWords);
                     
                     if(checkStorage() === true)
                     {
@@ -3461,7 +3461,7 @@
                 }
                 else if(this.gameManager.playerSkin === "playerzombiehunter")
                 {
-                     this.changeSkinWords = "Zombie Hunter";
+                     this.changeSkinWords = "Zombie-Hunter";
                 }
                 
                 this.changeSkin = createText(this, 5, 22 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height + this.toggleCrosshairMotion.height, "Skin: " + this.changeSkinWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
@@ -3480,7 +3480,7 @@
                     }
                     else if(this.gameManager.playerSkin === "playerzombiehunter")
                     {
-                         this.changeSkinWords = "Zombie Hunter";
+                         this.changeSkinWords = "Zombie-Hunter";
                     }
                     
                     this.changeSkin.setText("Skin: " + this.changeSkinWords);
