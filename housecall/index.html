@@ -834,66 +834,114 @@
                 });
                 
                 this.ground = new Ground(this, worldWidthX);
-
-                this.logo = createText(this, worldWidthX / 6, this.sys.game.config.height / 2, "HOUSE CALL", 20, "#fff").setOrigin(0.5, 0.5);
-                this.logo.setInteractive({cursor: "pointer"});
-
-                this.physics.add.existing(this.logo, true);
-                this.physics.add.collider(this.logo, this.playerBulletsHolder, (logo, bullet) =>
-                {
-                    if(this.didFirstTransition === false)
-                    {
-                        this.didFirstTransition = true;
-                        
-                        canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
-                        bullet.destroy();
-                        logo.destroy();
-
-                        if(this.quickStart)
-                        {
-                            this.quickStart.destroy();
-                        }
-                        
-                        this.player.canMove = false;
-                        this.player.setVelocityX(0);
-                        this.cameras.main.pan(worldWidthX / 2, this.sys.game.config.height / 2, 2000, "Sine.easeInOut");
-                        
-                        this.time.delayedCall(2000, () =>
-                        {
-                            this.player.x = worldWidthX / 3 - this.player.width / 2;
-                            
-                            this.tweens.add
-                            ({
-                                targets: this.player, 
-                                x: worldWidthX / 3 + this.player.width / 2,               
-                                y: this.sys.game.config.height - 24,               
-                                duration: 250,       
-                                ease: "linear",       
-                                onComplete: () => 
-                                {
-                                    this.physics.world.setBounds(this.sys.game.config.width, 0, this.sys.game.config.width, 176);
-                                    this.player.canMove = true;
-                                }
-                            });
-                        }, [], this);
-                    }
-                });
                 
-                this.displayControls();
-                
-                let seenControls = true;
+                this.seenControls = true;
                 
                 if(checkStorage() === true)
                 {
-                    seenControls = false;
+                    this.seenControls = false;
                     
                     if((localStorage.getItem("HCSeenControls")) !== null)
                     {
-                        seenControls = JSON.parse(localStorage.getItem("HCSeenControls"));
+                        this.seenControls = JSON.parse(localStorage.getItem("HCSeenControls"));
                     }
                 }
+
+                this.logo = createText(this, worldWidthX / 6, this.sys.game.config.height / 2, "HOUSE CALL", 20, "#fff").setOrigin(0.5, 0.5);
+                this.logo.setInteractive({cursor: "pointer"});
                 
-                if(seenControls === true)
+                
+                if(this.seenControls !== true)
+                {
+                    this.physics.add.existing(this.logo, true);
+                    this.physics.add.collider(this.logo, this.playerBulletsHolder, (logo, bullet) =>
+                    {
+                        if(this.didFirstTransition === false)
+                        {
+                            this.didFirstTransition = true;
+
+                            canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                            bullet.destroy();
+                            logo.destroy();
+
+                            if(this.quickStart)
+                            {
+                                this.quickStart.destroy();
+                            }
+
+                            this.player.canMove = false;
+                            this.player.setVelocityX(0);
+                            this.cameras.main.pan(worldWidthX / 2, this.sys.game.config.height / 2, 2000, "Sine.easeInOut");
+
+                            this.time.delayedCall(2000, () =>
+                            {
+                                this.player.x = worldWidthX / 3 - this.player.width / 2;
+
+                                this.tweens.add
+                                ({
+                                    targets: this.player, 
+                                    x: worldWidthX / 3 + this.player.width / 2,               
+                                    y: this.sys.game.config.height - 24,               
+                                    duration: 250,       
+                                    ease: "linear",       
+                                    onComplete: () => 
+                                    {
+                                        this.physics.world.setBounds(this.sys.game.config.width, 0, this.sys.game.config.width, 176);
+                                        this.player.canMove = true;
+                                    }
+                                });
+                            }, [], this);
+                        }
+                    });
+                }
+                else
+                {
+                    this.logo.on("pointerdown", () =>
+                    {
+                        if(this.didFirstTransition === false)
+                        {
+                            this.didFirstTransition = true;
+
+                            canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                            this.logo.destroy();
+                            this.time.delayedCall(200, () => this.player.canShoot = true);
+
+                            if(this.quickStart)
+                            {
+                                this.quickStart.destroy();
+                            }
+
+                            this.player.canMove = false;
+                            this.player.setVelocityX(0);
+                            this.cameras.main.pan(worldWidthX / 2, this.sys.game.config.height / 2, 2000, "Sine.easeInOut");
+
+                            this.time.delayedCall(2000, () =>
+                            {
+                                this.player.x = worldWidthX / 3 - this.player.width / 2;
+
+                                this.tweens.add
+                                ({
+                                    targets: this.player, 
+                                    x: worldWidthX / 3 + this.player.width / 2,               
+                                    y: this.sys.game.config.height - 24,               
+                                    duration: 250,       
+                                    ease: "linear",       
+                                    onComplete: () => 
+                                    {
+                                        this.physics.world.setBounds(this.sys.game.config.width, 0, this.sys.game.config.width, 176);
+                                        this.player.canMove = true;
+                                    }
+                                });
+                            }, [], this);
+                        }
+                    });
+                }
+                
+                this.displayControls();
+                
+                
+                
+                if(this.seenControls === true)
                 {
                     this.quickStart = createText(this, this.game.config.width - (this.game.config.width / 2), 5, "QUICK START", 10, "#ffffff").setOrigin(0.5, 0).setDepth(1232300);
                     this.quickStart.setInteractive({cursor: "pointer"});
@@ -936,7 +984,7 @@
                 });
 
                 this.buttons = [this.logo, this.quickStart, this.start];
-
+                
 
                 //END PROPS AFTER PLAYER MainMenu
 
@@ -951,6 +999,9 @@
 
 
                 //END CAMERA SETUP MainMenu
+                
+                this.canCheckForShootingDuringBeginning = false;
+                this.time.delayedCall(200, () => this.canCheckForShootingDuringBeginning = true);
             }
             
             updateMainMenuHighScore()
@@ -1088,20 +1139,48 @@
                 
                 this.input.activePointer.updateWorldPoint(this.cameras.main);
                 
-                this.buttons.forEach(button => 
+                if(this.buttons)
                 {
-                    if(button.active)
+                    this.buttons.forEach(button => 
                     {
-                        if(button.getBounds().contains(this.input.activePointer.worldX, this.input.activePointer.worldY) && !this.settings.displayedSettings) 
+                        if(button)
                         {
-                            button.setColor("#ff0000");
-                        }   
-                        else
+                            if(button.active)
+                            {
+                                if(button.getBounds().contains(this.input.activePointer.worldX, this.input.activePointer.worldY) && !this.settings.displayedSettings) 
+                                {
+                                    button.setColor("#ff0000");
+                                }   
+                                else
+                                {
+                                    button.setColor("#ffffff");
+                                }
+                            }
+                        }
+                    });
+                }
+                
+                
+                if(this.canCheckForShootingDuringBeginning === true)
+                {
+                    if(this.seenControls === true)
+                    {
+                        if(this.logo)
                         {
-                            button.setColor("#ffffff");
+                            if(this.logo.active)
+                            {
+                                if(this.logo.getBounds().contains(this.input.activePointer.worldX, this.input.activePointer.worldY)) 
+                                {
+                                    this.player.canShoot = false;
+                                }   
+                                else
+                                {
+                                    this.player.canShoot = true;
+                                }
+                            }
                         }
                     }
-                });
+                } 
             }
         }
   
