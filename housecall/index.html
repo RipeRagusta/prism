@@ -2152,40 +2152,28 @@
 
                 //START CARD SETUP
 
-
-                let card1;
-                let card2;
-
-                do
-                {
-                    card1 = this.getRandomCardId();
-                }
-                while(this.gameManager.ownedCards.has(card1))
+                
+                this.card1 = null;
+                this.card2 = null;
 
                 do
                 {
-                    card2 = this.getRandomCardId();
+                    this.card1 = this.getRandomCardId();
                 }
-                while(card2 === card1 || this.gameManager.ownedCards.has(card2) || (this.gameManager.ammoUpgrades.has(card1) && this.gameManager.ammoUpgrades.has(card2)))
+                while(this.gameManager.ownedCards.has(this.card1))
 
-                this.cardDisplay1 = this.displayCard(card1, "left");
-                this.cardDisplay1.on("pointerdown", () =>
+                do
                 {
-                    if(this.settings.displayedSettings === false)
-                    {
-                        this.acceptCard(card1);
-                    }
-                });
+                    this.card2 = this.getRandomCardId();
+                }
+                while(this.card2 === this.card1 || this.gameManager.ownedCards.has(this.card2) || (this.gameManager.ammoUpgrades.has(this.card1) && this.gameManager.ammoUpgrades.has(this.card2)))
 
-                this.cardDisplay2 = this.displayCard(card2, "right");
-                this.cardDisplay2.on("pointerdown", () =>
-                {
-                    if(this.settings.displayedSettings === false)
-                    {
-                        this.acceptCard(card2);
-                    }
-                }); 
+                this.cardDisplay1 = this.displayCard(this.card1, "left");
 
+                this.cardDisplay2 = this.displayCard(this.card2, "right");
+                
+                this.displayedCards = [this.cardDisplay1, this.cardDisplay2];
+                this.canAcceptCard = true;
 
                 //END CARD SETUP
             }
@@ -2208,11 +2196,48 @@
                         this.input.setDefaultCursor("pointer");
                     }
                 }
+                
+                if(this.displayedCards)
+                {
+                    this.displayedCards.forEach(card => 
+                    {
+                        if(card)
+                        {
+                            if(card.active)
+                            {
+                                if(card.getBounds().contains(this.input.activePointer.x, this.input.activePointer.y) && !this.settings.displayedSettings) 
+                                {
+                                    card.setAlpha(1);
+                                    card.icon.setAlpha(1);
+                                    
+                                    if(this.input.activePointer.isDown)
+                                    {
+                                        if(card === this.cardDisplay1 && this.canAcceptCard)
+                                        {
+                                            this.canAcceptCard = false;
+                                            this.acceptCard(this.card1);
+                                        }
+                                        else if(card === this.cardDisplay2 && this.canAcceptCard)
+                                        {
+                                            this.canAcceptCard = false;
+                                            this.acceptCard(this.card2);
+                                        }
+                                    }
+                                }   
+                                else
+                                {
+                                    card.setAlpha(0.25);
+                                    card.icon.setAlpha(0.25);
+                                }
+                            }
+                        }
+                    });
+                }
             }
 
             acceptCard(id)
             {
-                canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: 2 });
                 const card = Object.values(this.upgradeCardData).find(c => c.id === id);
                 card.effect(this.gameManager);
                 this.gameManager.ownedCards.add(id); 
@@ -2261,6 +2286,7 @@
                 }
 
                 cardContainer.add([titleText, descriptionText]);
+                cardContainer.icon = icon;
 
                 const hitAreaWidth = this.sys.game.config.width / 2;
                 const hitAreaHeight = this.sys.game.config.height;
