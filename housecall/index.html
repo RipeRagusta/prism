@@ -904,7 +904,7 @@
                             {
                                 this.didFirstTransition = true;
 
-                                canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                                this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
                                 this.logo.destroy();
                                 this.time.delayedCall(200, () => this.player.canShoot = true);
 
@@ -952,7 +952,7 @@
                     {
                         if(this.settings.displayedSettings === false)
                         {
-                            canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                            this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
                             this.scene.stop("MainMenu");
                             this.scene.stop("HUD");
                             event.stopPropagation();
