@@ -898,41 +898,44 @@
                 {
                     this.logo.on("pointerdown", () =>
                     {
-                        if(this.didFirstTransition === false)
+                        if(this.settings.displayedSettings === false)
                         {
-                            this.didFirstTransition = true;
-
-                            canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
-                            this.logo.destroy();
-                            this.time.delayedCall(200, () => this.player.canShoot = true);
-
-                            if(this.quickStart)
+                            if(this.didFirstTransition === false)
                             {
-                                this.quickStart.destroy();
+                                this.didFirstTransition = true;
+
+                                canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                                this.logo.destroy();
+                                this.time.delayedCall(200, () => this.player.canShoot = true);
+
+                                if(this.quickStart)
+                                {
+                                    this.quickStart.destroy();
+                                }
+
+                                this.player.canMove = false;
+                                this.player.setVelocityX(0);
+                                this.cameras.main.pan(worldWidthX / 2, this.sys.game.config.height / 2, 2000, "Sine.easeInOut");
+
+                                this.time.delayedCall(2000, () =>
+                                {
+                                    this.player.x = worldWidthX / 3 - this.player.width / 2;
+
+                                    this.tweens.add
+                                    ({
+                                        targets: this.player, 
+                                        x: worldWidthX / 3 + this.player.width / 2,               
+                                        y: this.sys.game.config.height - 24,               
+                                        duration: 250,       
+                                        ease: "linear",       
+                                        onComplete: () => 
+                                        {
+                                            this.physics.world.setBounds(this.sys.game.config.width, 0, this.sys.game.config.width, 176);
+                                            this.player.canMove = true;
+                                        }
+                                    });
+                                }, [], this);
                             }
-
-                            this.player.canMove = false;
-                            this.player.setVelocityX(0);
-                            this.cameras.main.pan(worldWidthX / 2, this.sys.game.config.height / 2, 2000, "Sine.easeInOut");
-
-                            this.time.delayedCall(2000, () =>
-                            {
-                                this.player.x = worldWidthX / 3 - this.player.width / 2;
-
-                                this.tweens.add
-                                ({
-                                    targets: this.player, 
-                                    x: worldWidthX / 3 + this.player.width / 2,               
-                                    y: this.sys.game.config.height - 24,               
-                                    duration: 250,       
-                                    ease: "linear",       
-                                    onComplete: () => 
-                                    {
-                                        this.physics.world.setBounds(this.sys.game.config.width, 0, this.sys.game.config.width, 176);
-                                        this.player.canMove = true;
-                                    }
-                                });
-                            }, [], this);
                         }
                     });
                 }
