@@ -2169,12 +2169,26 @@
                 while(this.card2 === this.card1 || this.gameManager.ownedCards.has(this.card2) || (this.gameManager.ammoUpgrades.has(this.card1) && this.gameManager.ammoUpgrades.has(this.card2)))
 
                 this.cardDisplay1 = this.displayCard(this.card1, "left");
+                this.cardDisplay1.on("pointerdown", () =>
+                {
+                    if(this.cardDisplay1.getBounds().contains(this.input.activePointer.x, this.input.activePointer.y) && !this.settings.displayedSettings) 
+                    {
+                        this.acceptCard(this.card1);
+                    }
+                });
 
                 this.cardDisplay2 = this.displayCard(this.card2, "right");
+                this.cardDisplay2.on("pointerdown", () =>
+                {
+                    if(this.cardDisplay2.getBounds().contains(this.input.activePointer.x, this.input.activePointer.y) && !this.settings.displayedSettings) 
+                    {
+                        this.acceptCard(this.card2);
+                    }
+                });
                 
                 this.displayedCards = [this.cardDisplay1, this.cardDisplay2];
-                this.canAcceptCard = true;
-
+                
+                
                 //END CARD SETUP
             }
 
@@ -2209,20 +2223,6 @@
                                 {
                                     card.setAlpha(1);
                                     card.icon.setAlpha(1);
-                                    
-                                    if(this.input.activePointer.isDown)
-                                    {
-                                        if(card === this.cardDisplay1 && this.canAcceptCard)
-                                        {
-                                            this.canAcceptCard = false;
-                                            this.acceptCard(this.card1);
-                                        }
-                                        else if(card === this.cardDisplay2 && this.canAcceptCard)
-                                        {
-                                            this.canAcceptCard = false;
-                                            this.acceptCard(this.card2);
-                                        }
-                                    }
                                 }   
                                 else
                                 {
