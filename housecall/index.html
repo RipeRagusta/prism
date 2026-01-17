@@ -290,6 +290,7 @@
                 this.load.spritesheet("playerzombiehunter", "assets/playerzombiehunter.png", {frameWidth: 16, frameHeight: 16});
                 this.load.spritesheet("playercontracted", "assets/playercontracted.png", {frameWidth: 16, frameHeight: 16});
                 this.load.spritesheet("playerclear", "assets/playerclear.png", {frameWidth: 16, frameHeight: 16});
+                this.load.spritesheet("playerneon", "assets/playerneon.png", {frameWidth: 16, frameHeight: 16});
                 this.load.image("ground", "assets/grass.png");
                 this.load.image("bullet", "assets/bullet.png");
                 this.load.image("barn", "assets/barn.png");
@@ -2636,13 +2637,13 @@
             {
                 if(this.playerSkin === "player")
                 {
-                    this.playerSkin = "playerchromeshotgun";
-                }
-                else if(this.playerSkin === "playerchromeshotgun")
-                {
                     this.playerSkin = "playerzombiehunter";
                 }
                 else if(this.playerSkin === "playerzombiehunter")
+                {
+                    this.playerSkin = "playerchromeshotgun";
+                }
+                else if(this.playerSkin === "playerchromeshotgun")
                 {
                     if(this.extra)
                     {
@@ -2658,6 +2659,10 @@
                      this.playerSkin = "playerclear";
                 }
                 else if(this.playerSkin === "playerclear")
+                {
+                     this.playerSkin = "playerneon";
+                }
+                else if(this.playerSkin === "playerneon")
                 {
                      this.playerSkin = "player";
                 }
@@ -3749,6 +3754,10 @@
                 {
                      this.changeSkinWords = "Apple";
                 }
+                else if(this.gameManager.playerSkin === "playerneon")
+                {
+                     this.changeSkinWords = "Candy";
+                }
                 
                 this.changeSkin = createText(this, 5, 22 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height + this.toggleCrosshairMotion.height, "Skin: " + this.changeSkinWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
                 this.changeSkin.setInteractive({cursor: "pointer"});
@@ -3775,6 +3784,10 @@
                     else if(this.gameManager.playerSkin === "playerclear")
                     {
                          this.changeSkinWords = "Apple";
+                    }
+                    else if(this.gameManager.playerSkin === "playerneon")
+                    {
+                         this.changeSkinWords = "Candy";
                     }
                     
                     this.changeSkin.setText("Skin: " + this.changeSkinWords);
