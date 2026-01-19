@@ -1068,6 +1068,24 @@
                 if(currentAction.type === "KEY") 
                 {
                     let name = this.keyNameLookup[currentAction.code];
+                    
+                    if(name === "LEFT")
+                    {
+                        return "Left-Arrow";
+                    }
+                    else if(name === "RIGHT")
+                    {
+                        return "Right-Arrow";
+                    }
+                    else if(name === "UP")
+                    {
+                        return "Up-Arrow";
+                    }
+                    else if(name === "DOWN")
+                    {
+                        return "Down-Arrow";
+                    }
+                    
                     try
                     {
                         return name.split("_").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join("-");
@@ -3822,6 +3840,23 @@
                 if(currentAction.type === "KEY") 
                 {
                     let name = this.keyNameLookup[currentAction.code];
+                    
+                    if(name === "LEFT")
+                    {
+                        return "Left-Arrow";
+                    }
+                    else if(name === "RIGHT")
+                    {
+                        return "Right-Arrow";
+                    }
+                    else if(name === "UP")
+                    {
+                        return "Up-Arrow";
+                    }
+                    else if(name === "DOWN")
+                    {
+                        return "Down-Arrow";
+                    }
                     
                     try
                     {
