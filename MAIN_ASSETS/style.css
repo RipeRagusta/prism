@@ -1,0 +1,166 @@
+@font-face{
+  font-family: "IBM Plex Sans";
+  src: url("./IBMPlexSans-VariableFont_wdth,wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+.ibm-plex-sans{
+  font-family: "IBM Plex Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+:root{
+	--sizer: 15px;
+	--backgroundcolor: #000d1a;
+	--color: #00ffff;
+	--consolecolor: #ff0000;
+	--usercolor: #00ff00;
+}
+
+.button{
+	color: var(--color);
+}
+
+.button:hover{
+	color: var(--usercolor);
+}
+
+.button:active{
+	color: var(--consolecolor);
+}
+
+html{
+	height: 100vh;
+	height: 100dvh;
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
+body{
+	font-size: 1rem;
+	background-color: var(--backgroundcolor);
+	font-family: monospace, arial, sans-serif, serif;
+	min-height: 100%;
+	margin: 0px auto;
+	padding: 0px;
+	width: 100%;
+	color: var(--color);
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+}
+
+main{
+	flex: 1;
+	margin: 0px auto;
+	height: 100%;
+	width: 100%;
+	position: relative;
+	box-sizing: border-box;
+	padding: var(--sizer) var(--sizer) 0px var(--sizer);
+	display: grid;
+	max-width: 1200px;
+}
+
+nav{
+	margin: 0px;
+	padding: 0px;
+	scrollbar-width: thin;
+	scrollbar-color: var(--color) transparent;
+}
+
+footer{
+	border-top: 1px solid var(--color);
+	display: block;
+	width: 100%;
+	padding: 0px;
+	box-sizing: border-box;
+}
+
+.imagegallery{
+	color: var(--color);
+	margin: 0px;
+	padding: 0px;
+}
+
+.imagelink a{
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--sizer) / 2);
+}
+
+#footercontent{
+	width: 100%;
+	max-width: 1200px;
+	margin: 0px auto;
+	padding: calc(var(--sizer) / 2) var(--sizer) calc(var(--sizer) / 2) var(--sizer);
+	box-sizing: border-box;
+	display: flex;
+	justify-content: space-between;
+}
+
+#switchlayout{
+	cursor: pointer;
+	user-select: none;
+}
+
+#terminalbutton{
+	padding-top: var(--sizer);
+	padding-bottom: var(--sizer);
+	position: sticky;
+	top: 0px;
+}
+
+a{
+	text-decoration: none;
+	display: inline-block;
+	color: var(--color);
+	width: fit-content;
+}
+
+a:visited, a:hover, a:active{
+	color: var(--color);
+}
+
+ul{
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+}
+
+h1, h2, p, small{
+	display: block;
+	margin: 0px;
+	padding: 0px;
+}
+
+.basictextlink{
+	display: flex;
+	gap: 0.5rem;
+}
+
+.basictextlink p{
+	text-decoration: underline;
+}
+
+
+.linkicon{
+    width: 1rem;
+    height: auto;
+}
+
+.linkicon path{
+    fill: currentColor;
+}
+
+img{
+	width: 100%;
+	height: auto;
+	display: block;
+	margin-bottom: calc(var(--sizer) / 2);
+}
