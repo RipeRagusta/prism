@@ -102,11 +102,22 @@ footer{
 	box-sizing: border-box;
 	display: flex;
 	justify-content: space-between;
+        align-items: center;
 }
 
 #switchlayout{
 	cursor: pointer;
 	user-select: none;
+        padding: calc(var(--sizer) / 2);
+        border: 1px solid var(--color);
+}
+
+#switchlayout:hover{
+    border: 1px solid var(--usercolor);
+}
+
+#switchlayout:active{
+    border: 1px solid var(--consolecolor);
 }
 
 #terminalbutton{
