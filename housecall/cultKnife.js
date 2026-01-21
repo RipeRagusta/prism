@@ -17,7 +17,7 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
             bullet.destroy();
             cult.hitFrom = bullet.fromWhat;
             cult.health -= bullet.damage;
-            cult.bloodEmitter.setQuantity(Math.min(1, Math.round(bullet.damage)) * 2);
+            cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage)) * 2);
             cult.bloodEmitter.emitParticleAt(cult.x, bullet.y);
         }
         else
@@ -28,7 +28,7 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
                 bullet.penetrationsLeft -= 1;
                 cult.hitFrom = bullet.fromWhat;
                 cult.health -= bullet.damage;
-                cult.bloodEmitter.setQuantity(Math.min(1, Math.round(bullet.damage)) * 2);
+                cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage)) * 2);
                 cult.bloodEmitter.emitParticleAt(cult.x, bullet.y);
                 bullet.damage = bullet.damage * bullet.penetrationReduction;
             }
