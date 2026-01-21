@@ -109,7 +109,7 @@ function cultCreator(scene, cultPositions, gameManager)
                 {
                   cult.play("cultOrbHurt", false);
                 }
-                cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage)) * 2);
+                cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
                 cult.bloodEmitter.emitParticleAt(cult.x, bullet.y);
             }
             else
@@ -124,7 +124,7 @@ function cultCreator(scene, cultPositions, gameManager)
                     {
                       cult.play("cultOrbHurt", false);
                     }
-                    cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage)) * 2);
+                    cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
                     cult.bloodEmitter.emitParticleAt(cult.x, bullet.y);
                     bullet.damage = bullet.damage * bullet.penetrationReduction;
                 }
@@ -498,7 +498,7 @@ function cultSeparation(cults, player)
     
     kill()
     {
-        this.bloodEmitter.setQuantity(25);
+        this.bloodEmitter.setQuantity(35);
         this.bloodEmitter.emitParticleAt(this.x, this.y);
         this.boneEmitter.emitParticleAt(this.x, this.y);
         this.organEmitter.emitParticleAt(this.x, this.y);
