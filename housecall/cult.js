@@ -109,8 +109,8 @@ function cultCreator(scene, cultPositions, gameManager)
                 {
                   cult.play("cultOrbHurt", false);
                 }
-                cult.bloodEmitter.setQuantity(4);
-                cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
+                cult.bloodEmitter.setQuantity(Math.min(1, Math.round(bullet.damage)) * 2);
+                cult.bloodEmitter.emitParticleAt(cult.x, bullet.y);
             }
             else
             {
@@ -124,8 +124,8 @@ function cultCreator(scene, cultPositions, gameManager)
                     {
                       cult.play("cultOrbHurt", false);
                     }
-                    cult.bloodEmitter.setQuantity(4);
-                    cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
+                    cult.bloodEmitter.setQuantity(Math.min(1, Math.round(bullet.damage)) * 2);
+                    cult.bloodEmitter.emitParticleAt(cult.x, bullet.y);
                     bullet.damage = bullet.damage * bullet.penetrationReduction;
                 }
             }
@@ -291,13 +291,13 @@ function cultSeparation(cults, player)
             0, 0, 
             "blood",
             {
-                angle: { min: 180, max: 360 }, 
+                angle: { min: 240, max: 360 }, 
                 speed: { min: 50, max: 150 },
-                gravityY: 500,
-                lifespan: { min: 1000, max: 1000 },
+                gravityY: 650,
+                lifespan: { min: 500, max: 1000 },
                 quantity: 10,
                 scale: { start: 1, end: 1 },
-                alpha: { start: 0.65, end: 0.5 },
+                alpha: { start: 1, end: 0 },
                 rotate: { min: -180, max: 180 },
                 blendMode: "NORMAL",
                 frequency: -1
@@ -498,7 +498,7 @@ function cultSeparation(cults, player)
     
     kill()
     {
-        this.bloodEmitter.setQuantity(15);
+        this.bloodEmitter.setQuantity(25);
         this.bloodEmitter.emitParticleAt(this.x, this.y);
         this.boneEmitter.emitParticleAt(this.x, this.y);
         this.organEmitter.emitParticleAt(this.x, this.y);
