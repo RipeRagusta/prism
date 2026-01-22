@@ -18,7 +18,7 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
             cult.hitFrom = bullet.fromWhat;
             cult.health -= bullet.damage;
             cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
-            cult.bloodEmitter.emitParticleAt(cult.x, bullet.y);
+            cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
         }
         else
         {
@@ -29,7 +29,7 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
                 cult.hitFrom = bullet.fromWhat;
                 cult.health -= bullet.damage;
                 cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
-                cult.bloodEmitter.emitParticleAt(cult.x, bullet.y);
+                cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
                 bullet.damage = bullet.damage * bullet.penetrationReduction;
             }
         }
@@ -68,13 +68,13 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
             0, 0, 
             "blood",
             {
-                angle: { min: 240, max: 360 }, 
-                speed: { min: 50, max: 150 },
-                gravityY: 650,
+                angle: { min: 180, max: 360 }, 
+                speed: { min: 50, max: 125 },
+                gravityY: 500,
                 lifespan: { min: 500, max: 1000 },
                 quantity: 10,
                 scale: { start: 1, end: 1 },
-                alpha: { start: 1, end: 0 },
+                alpha: { start: 0.75, end: 0 },
                 rotate: { min: -180, max: 180 },
                 blendMode: "NORMAL",
                 frequency: -1
