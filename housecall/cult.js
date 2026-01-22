@@ -297,7 +297,7 @@ function cultSeparation(cults, player)
                 lifespan: { min: 500, max: 1000 },
                 quantity: 10,
                 scale: { start: 1, end: 1 },
-                alpha: { start: 0.75, end: 0 },
+                alpha: { start: 0.75, end: 0.5 },
                 rotate: { min: -180, max: 180 },
                 blendMode: "NORMAL",
                 frequency: -1
@@ -346,7 +346,7 @@ function cultSeparation(cults, player)
             "headgib",
             {
                 angle: { min: 270, max: 315 }, 
-                speed: { min: 125, max: 150 },
+                speed: { min: 137, max: 150 },
                 gravityY: 500,
                 lifespan: { min: 1000, max: 1000 },
                 quantity: 1,
