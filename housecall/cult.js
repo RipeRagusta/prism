@@ -565,7 +565,7 @@ function cultSeparation(cults, player)
         }
         else
         {
-            this.bloodEmitter.setQuantity(35);
+            this.bloodEmitter.setQuantity(30);
         }
         this.bloodEmitter.emitParticleAt(this.x, this.y);
         this.boneEmitter.emitParticleAt(this.x, this.y);
