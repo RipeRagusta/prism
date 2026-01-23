@@ -109,7 +109,14 @@ function cultCreator(scene, cultPositions, gameManager)
                 {
                   cult.play("cultOrbHurt", false);
                 }
-                cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
+                if(cult.gameManager.bloodType === "Type-A")
+                {
+                    cult.bloodEmitter.setQuantity(4);
+                }
+                else
+                {
+                    cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
+                }
                 cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
             }
             else
@@ -124,7 +131,14 @@ function cultCreator(scene, cultPositions, gameManager)
                     {
                       cult.play("cultOrbHurt", false);
                     }
-                    cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
+                    if(cult.gameManager.bloodType === "Type-A")
+                    {
+                        cult.bloodEmitter.setQuantity(4);
+                    }
+                    else
+                    {
+                        cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
+                    }
                     cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
                     bullet.damage = bullet.damage * bullet.penetrationReduction;
                 }
@@ -286,23 +300,7 @@ function cultSeparation(cults, player)
             });
         }
         
-        this.bloodEmitter = this.scene.add.particles
-        (
-            0, 0, 
-            "blood",
-            {
-                angle: { min: 180, max: 360 }, 
-                speed: { min: 50, max: 125 },
-                gravityY: 500,
-                lifespan: { min: 500, max: 1000 },
-                quantity: 10,
-                scale: { start: 1, end: 1 },
-                alpha: { start: 0.75, end: 0.5 },
-                rotate: { min: -180, max: 180 },
-                blendMode: "NORMAL",
-                frequency: -1
-            }
-        );
+        this.createBlood();
 
         this.boneEmitter = this.scene.add.particles
         (
@@ -335,24 +333,6 @@ function cultSeparation(cults, player)
                 scale: { start: 1, end: 1 },
                 alpha: { start: 1, end: 0.5 },
                 rotate: { min: -180, max: 180 },
-                blendMode: "NORMAL",
-                frequency: -1
-            }
-        );
-
-        this.headEmitter = this.scene.add.particles
-        (
-            0, 0, 
-            "headgib",
-            {
-                angle: { min: 270, max: 315 }, 
-                speed: { min: 137, max: 150 },
-                gravityY: 500,
-                lifespan: { min: 1000, max: 1000 },
-                quantity: 1,
-                scale: { start: 1, end: 1 },
-                alpha: { start: 1, end: 1 },
-                rotate: { min: 0, max: 90 },
                 blendMode: "NORMAL",
                 frequency: -1
             }
@@ -408,6 +388,7 @@ function cultSeparation(cults, player)
             this.off(Phaser.Animations.Events.ANIMATION_UPDATE, this.orbFrameUpdate, this);
         }, this);
     }
+    
 
     preUpdate(time, delta)
     {
@@ -476,6 +457,86 @@ function cultSeparation(cults, player)
             }
         }
     }
+    
+    createBlood()
+    {
+        if(this.gameManager.bloodType === "Type-A")
+        {
+            this.bloodEmitter = this.scene.add.particles
+            (
+                0, 0, 
+                "blood",
+                {
+                    angle: { min: 180, max: 360 }, 
+                    speed: { min: 50, max: 150 },
+                    gravityY: 500,
+                    lifespan: { min: 1000, max: 1000 },
+                    quantity: 10,
+                    scale: { start: 1, end: 1 },
+                    alpha: { start: 0.65, end: 0.5 },
+                    rotate: { min: -180, max: 180 },
+                    blendMode: "NORMAL",
+                    frequency: -1
+                }
+            );
+    
+            this.headEmitter = this.scene.add.particles
+            (
+                0, 0, 
+                "headgib",
+                {
+                    angle: { min: 270, max: 315 }, 
+                    speed: { min: 125, max: 150 },
+                    gravityY: 500,
+                    lifespan: { min: 1000, max: 1000 },
+                    quantity: 1,
+                    scale: { start: 1, end: 1 },
+                    alpha: { start: 1, end: 1 },
+                    rotate: { min: 0, max: 90 },
+                    blendMode: "NORMAL",
+                    frequency: -1
+                }
+            );
+        }
+        else
+        {
+            this.bloodEmitter = this.scene.add.particles
+            (
+                0, 0, 
+                "blood",
+                {
+                    angle: { min: 180, max: 360 }, 
+                    speed: { min: 50, max: 125 },
+                    gravityY: 500,
+                    lifespan: { min: 500, max: 1000 },
+                    quantity: 10,
+                    scale: { start: 1, end: 1 },
+                    alpha: { start: 0.75, end: 0.5 },
+                    rotate: { min: -180, max: 180 },
+                    blendMode: "NORMAL",
+                    frequency: -1
+                }
+            );
+    
+            this.headEmitter = this.scene.add.particles
+            (
+                0, 0, 
+                "headgib",
+                {
+                    angle: { min: 270, max: 315 }, 
+                    speed: { min: 137, max: 150 },
+                    gravityY: 500,
+                    lifespan: { min: 1000, max: 1000 },
+                    quantity: 1,
+                    scale: { start: 1, end: 1 },
+                    alpha: { start: 1, end: 1 },
+                    rotate: { min: 0, max: 90 },
+                    blendMode: "NORMAL",
+                    frequency: -1
+                }
+            );
+        }
+    }
 
     checkInRange()
     {
@@ -498,7 +559,14 @@ function cultSeparation(cults, player)
     
     kill()
     {
-        this.bloodEmitter.setQuantity(35);
+        if(this.gameManager.bloodType === "Type-A")
+        {
+            this.bloodEmitter.setQuantity(15);
+        }
+        else
+        {
+            this.bloodEmitter.setQuantity(35);
+        }
         this.bloodEmitter.emitParticleAt(this.x, this.y);
         this.boneEmitter.emitParticleAt(this.x, this.y);
         this.organEmitter.emitParticleAt(this.x, this.y);

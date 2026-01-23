@@ -2648,6 +2648,16 @@
                     }
                 }
                 
+                this.bloodType = "Type-B";
+                
+                if(checkStorage() === true)
+                {
+                    if((localStorage.getItem("HCBloodType")) !== null)
+                    {
+                        this.bloodType = localStorage.getItem("HCBloodType");
+                    }
+                }
+                
                 this.updateGameMode();
             }
             
@@ -3812,6 +3822,73 @@
                     canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
+                this.changeBloodWords = this.gameManager.bloodType;
+                
+                this.changeBlood = createText(this, 5, 25 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height + this.toggleCrosshairMotion.height + this.changeSkin.height, "Gib style: " + this.changeBloodWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.changeBlood.setInteractive({cursor: "pointer"});
+                this.changeBlood.on("pointerdown", () =>
+                {
+                    if(this.gameManager.bloodType === "Type-A")
+                    {
+                        this.gameManager.bloodType = "Type-B";
+                    }
+                    else
+                    {
+                        this.gameManager.bloodType = "Type-A";
+                    }
+                    
+                    if(checkStorage() === true)
+                    {
+                        localStorage.setItem("HCBloodType", this.gameManager.bloodType);
+                    }
+                    
+                    let sceneCultIsIn = null;
+                    
+                    if(game.scene.isActive("MainMenu"))
+                    {
+                        sceneCultIsIn = "MainMenu";
+                    }
+                    else if(game.scene.isActive("Level1Game"))
+                    {
+                        sceneCultIsIn = "Level1Game";
+                    }
+                    else if(game.scene.isActive("Level2Game"))
+                    {
+                        sceneCultIsIn = "Level2Game";
+                    }
+                    else if(game.scene.isActive("Level3Game"))
+                    {
+                        sceneCultIsIn = "Level3Game";
+                    }
+                    else if(game.scene.isActive("Level4Game"))
+                    {
+                        sceneCultIsIn = "Level4Game";
+                    }
+
+                    if(sceneCultIsIn !== null)
+                    {
+                        if(game.scene.getScene(sceneCultIsIn).cults && game.scene.getScene(sceneCultIsIn).cults.active)
+                        {
+                           game.scene.getScene(sceneCultIsIn).cults.children.entries.forEach((cult) =>
+                           {
+                               cult.createBlood();
+                           });
+                        }
+                        
+                        if(game.scene.getScene(sceneCultIsIn).cultKnifes && game.scene.getScene(sceneCultIsIn).cultKnifes.active)
+                        {
+                           game.scene.getScene(sceneCultIsIn).cultKnifes.children.entries.forEach((cultKnife) =>
+                           {
+                               cultKnife.createBlood();
+                           });
+                        }
+                    }
+                    
+                    this.changeBloodWords = this.gameManager.bloodType;
+                    this.changeBlood.setText("Gib style: " + this.changeBloodWords);
+                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                });
+                
                 this.restartGame = createText(this, 5, 176 - 5, "MAIN MENU", 8, "#ff0000").setOrigin(0, 1).setDepth(1232300);
                 this.restartGame.setInteractive({cursor: "pointer"});
                 this.restartGame.on("pointerdown", () =>
@@ -3830,7 +3907,7 @@
                 
                 this.background = this.add.rectangle(200, 0, 400, 176, "#000000").setOrigin(0.5, 0).setAlpha(0.8); 
                 this.remapButtons = [this.walkLeft, this.walkRight, this.jump, this.block, this.useShotgun, this.usePistol];
-                this.buttons = [this.resetDefault, this.gameMode, this.toggleHUD, this.toggleScreenShake, this.toggleCrosshairMotion, this.changeSkin, this.restartGame];
+                this.buttons = [this.resetDefault, this.gameMode, this.toggleHUD, this.toggleScreenShake, this.toggleCrosshairMotion, this.changeSkin, this.restartGame, this.changeBlood];
             }
             
             getActionAssignment(actionName)
@@ -3907,6 +3984,7 @@
                 this.toggleCrosshairMotion.destroy();
                 this.restartGame.destroy();
                 this.changeSkin.destroy();
+                this.changeBlood.destroy();
             }
         }
         
