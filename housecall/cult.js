@@ -302,24 +302,6 @@ function cultSeparation(cults, player)
         
         this.createBlood();
 
-        this.boneEmitter = this.scene.add.particles
-        (
-            0, 0, 
-            "bonegib",
-            {
-                angle: { min: 180, max: 360 }, 
-                speed: { min: 75, max: 100 },
-                gravityY: 500,
-                lifespan: { min: 1000, max: 1000 },
-                quantity: 2,
-                scale: { start: 1, end: 1 },
-                alpha: { start: 1, end: 0.5 },
-                rotate: { min: -180, max: 180 },
-                blendMode: "NORMAL",
-                frequency: -1
-            }
-        );
-
         this.organEmitter = this.scene.add.particles
         (
             0, 0, 
@@ -333,24 +315,6 @@ function cultSeparation(cults, player)
                 scale: { start: 1, end: 1 },
                 alpha: { start: 1, end: 0.5 },
                 rotate: { min: -180, max: 180 },
-                blendMode: "NORMAL",
-                frequency: -1
-            }
-        );
-        
-        this.ribEmitter = this.scene.add.particles
-        (
-            0, 0, 
-            "ribcagegib",
-            {
-                angle: { min: 270, max: 315 }, 
-                speed: { min: 75, max: 100 },
-                gravityY: 500,
-                lifespan: { min: 1000, max: 1000 },
-                quantity: 1,
-                scale: { start: 1, end: 1 },
-                alpha: { start: 1, end: 0.5 },
-                rotate: { min: 0, max: 90 },
                 blendMode: "NORMAL",
                 frequency: -1
             }
@@ -497,6 +461,42 @@ function cultSeparation(cults, player)
                     frequency: -1
                 }
             );
+    
+            this.ribEmitter = this.scene.add.particles
+            (
+                0, 0, 
+                "ribcagegib",
+                {
+                    angle: { min: 270, max: 315 }, 
+                    speed: { min: 75, max: 100 },
+                    gravityY: 500,
+                    lifespan: { min: 1000, max: 1000 },
+                    quantity: 1,
+                    scale: { start: 1, end: 1 },
+                    alpha: { start: 1, end: 0.5 },
+                    rotate: { min: 0, max: 90 },
+                    blendMode: "NORMAL",
+                    frequency: -1
+                }
+            );
+    
+            this.boneEmitter = this.scene.add.particles
+            (
+                0, 0, 
+                "bonegib",
+                {
+                    angle: { min: 180, max: 360 }, 
+                    speed: { min: 75, max: 100 },
+                    gravityY: 500,
+                    lifespan: { min: 1000, max: 1000 },
+                    quantity: 2,
+                    scale: { start: 1, end: 1 },
+                    alpha: { start: 1, end: 0.5 },
+                    rotate: { min: -180, max: 180 },
+                    blendMode: "NORMAL",
+                    frequency: -1
+                }
+            );
         }
         else
         {
@@ -523,14 +523,69 @@ function cultSeparation(cults, player)
                 0, 0, 
                 "headgib",
                 {
-                    angle: { min: 270, max: 315 }, 
+                    angle: { min: 285, max: 315 }, 
                     speed: { min: 137, max: 150 },
                     gravityY: 500,
                     lifespan: { min: 1000, max: 1000 },
                     quantity: 1,
                     scale: { start: 1, end: 1 },
                     alpha: { start: 1, end: 1 },
-                    rotate: { min: 0, max: 90 },
+                    rotate: { min: 15, max: 75 },
+                    blendMode: "NORMAL",
+                    frequency: -1
+                }
+            );
+    
+            this.ribEmitter = this.scene.add.particles
+            (
+                0, 0, 
+                "ribcagegib",
+                {
+                    angle: { min: 300, max: 330 }, 
+                    speed: { min: 87, max: 87 },
+                    gravityY: 500,
+                    lifespan: { min: 1000, max: 1000 },
+                    quantity: 1,
+                    scale: { start: 1, end: 1 },
+                    alpha: { start: 1, end: 0.5 },
+                    rotate: { min: 30, max: 60 },
+                    blendMode: "NORMAL",
+                    frequency: -1
+                }
+            );
+    
+            this.boneEmitter = this.scene.add.particles
+            (
+                0, 0, 
+                "bonegib",
+                {
+                    angle: 
+                    {
+                        onEmit: () => 
+                        {
+                            let angleInt;
+                            
+                            if(!this.boneEmitterEmittedLeft)
+                            {
+                                this.boneEmitterEmittedLeft = true;
+                                angleInt = getRandMinMax(255, 260);
+                            }
+                            else
+                            {
+                                this.boneEmitterEmittedLeft = false;
+                                angleInt = 360;
+                            }
+                            
+                            return angleInt;
+                        }
+                    }, 
+                    speed: { min: 75, max: 100 },
+                    gravityY: 500,
+                    lifespan: { min: 1000, max: 1000 },
+                    quantity: 2,
+                    scale: { start: 1, end: 1 },
+                    alpha: { start: 1, end: 0.5 },
+                    rotate: { min: -75, max: -30 },
                     blendMode: "NORMAL",
                     frequency: -1
                 }
@@ -565,7 +620,7 @@ function cultSeparation(cults, player)
         }
         else
         {
-            this.bloodEmitter.setQuantity(32);
+            this.bloodEmitter.setQuantity(30);
         }
         this.bloodEmitter.emitParticleAt(this.x, this.y);
         this.boneEmitter.emitParticleAt(this.x, this.y);
