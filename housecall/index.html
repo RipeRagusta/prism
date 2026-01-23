@@ -3824,7 +3824,7 @@
                 
                 this.changeBloodWords = this.gameManager.bloodType;
                 
-                this.changeBlood = createText(this, 5, 25 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height + this.toggleCrosshairMotion.height + this.changeSkin.height, "Gib style: " + this.changeBloodWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.changeBlood = createText(this, 5, 25 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height + this.toggleCrosshairMotion.height + this.changeSkin.height, "Particle Style: " + this.changeBloodWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
                 this.changeBlood.setInteractive({cursor: "pointer"});
                 this.changeBlood.on("pointerdown", () =>
                 {
@@ -3871,7 +3871,10 @@
                         {
                            game.scene.getScene(sceneCultIsIn).cults.children.entries.forEach((cult) =>
                            {
-                               cult.createBlood();
+                               if(cult.active)
+                               {
+                                   cult.createBlood();
+                               }
                            });
                         }
                         
@@ -3879,13 +3882,16 @@
                         {
                            game.scene.getScene(sceneCultIsIn).cultKnifes.children.entries.forEach((cultKnife) =>
                            {
-                               cultKnife.createBlood();
+                               if(cultKnife.active)
+                               {
+                                   cultKnife.createBlood();
+                               }
                            });
                         }
                     }
                     
                     this.changeBloodWords = this.gameManager.bloodType;
-                    this.changeBlood.setText("Gib style: " + this.changeBloodWords);
+                    this.changeBlood.setText("Particle Style: " + this.changeBloodWords);
                     canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
