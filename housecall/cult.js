@@ -109,14 +109,14 @@ function cultCreator(scene, cultPositions, gameManager)
                 {
                   cult.play("cultOrbHurt", false);
                 }
-                if(cult.gameManager.bloodType === "Type-A")
-                {
+                /*if(cult.gameManager.bloodType === "Type-A")
+                {*/
                     cult.bloodEmitter.setQuantity(4);
-                }
+                /*}
                 else
                 {
                     cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
-                }
+                }*/
                 cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
             }
             else
@@ -131,14 +131,14 @@ function cultCreator(scene, cultPositions, gameManager)
                     {
                       cult.play("cultOrbHurt", false);
                     }
-                    if(cult.gameManager.bloodType === "Type-A")
-                    {
+                    /*if(cult.gameManager.bloodType === "Type-A")
+                    {*/
                         cult.bloodEmitter.setQuantity(4);
-                    }
+                    /*}
                     else
                     {
                         cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
-                    }
+                    }*/
                     cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
                     bullet.damage = bullet.damage * bullet.penetrationReduction;
                 }
@@ -424,8 +424,8 @@ function cultSeparation(cults, player)
     
     createBlood()
     {
-        if(this.gameManager.bloodType === "Type-A")
-        {
+        /*if(this.gameManager.bloodType === "Type-A")
+        {*/
             this.bloodEmitter = this.scene.add.particles
             (
                 0, 0, 
@@ -497,7 +497,7 @@ function cultSeparation(cults, player)
                     frequency: -1
                 }
             );
-        }
+        /*}
         else
         {
             this.bloodEmitter = this.scene.add.particles
@@ -511,7 +511,7 @@ function cultSeparation(cults, player)
                     lifespan: { min: 500, max: 1000 },
                     quantity: 10,
                     scale: { start: 1, end: 1 },
-                    alpha: { start: 0.75, end: 0.5 },
+                    alpha: { start: 0.75, end: 0 },
                     rotate: { min: -180, max: 180 },
                     blendMode: "NORMAL",
                     frequency: -1
@@ -590,7 +590,7 @@ function cultSeparation(cults, player)
                     frequency: -1
                 }
             );
-        }
+        }*/
     }
 
     checkInRange()
@@ -614,14 +614,14 @@ function cultSeparation(cults, player)
     
     kill()
     {
-        if(this.gameManager.bloodType === "Type-A")
-        {
+        /*if(this.gameManager.bloodType === "Type-A")
+        {*/
             this.bloodEmitter.setQuantity(15);
-        }
+        /*}
         else
         {
             this.bloodEmitter.setQuantity(30);
-        }
+        }*/
         this.bloodEmitter.emitParticleAt(this.x, this.y);
         this.boneEmitter.emitParticleAt(this.x, this.y);
         this.organEmitter.emitParticleAt(this.x, this.y);

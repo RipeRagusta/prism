@@ -17,14 +17,14 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
             bullet.destroy();
             cult.hitFrom = bullet.fromWhat;
             cult.health -= bullet.damage;
-            if(cult.gameManager.bloodType === "Type-A")
-            {
+            /*if(cult.gameManager.bloodType === "Type-A")
+            {*/
                 cult.bloodEmitter.setQuantity(4);
-            }
+            /*}
             else
             {
                 cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
-            }
+            }*/
             cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
         }
         else
@@ -35,14 +35,14 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
                 bullet.penetrationsLeft -= 1;
                 cult.hitFrom = bullet.fromWhat;
                 cult.health -= bullet.damage;
-                if(cult.gameManager.bloodType === "Type-A")
-                {
+                /*if(cult.gameManager.bloodType === "Type-A")
+                {*/
                     cult.bloodEmitter.setQuantity(4);
-                }
+                /*}
                 else
                 {
                     cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
-                }
+                }*/
                 cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
                 bullet.damage = bullet.damage * bullet.penetrationReduction;
             }
@@ -188,8 +188,8 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
     
     createBlood()
     {
-        if(this.gameManager.bloodType === "Type-A")
-        {
+        /*if(this.gameManager.bloodType === "Type-A")
+        {*/
             this.bloodEmitter = this.scene.add.particles
             (
                 0, 0, 
@@ -261,7 +261,7 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
                     frequency: -1
                 }
             );
-        }
+       /* }
         else
         {
             this.bloodEmitter = this.scene.add.particles
@@ -275,7 +275,7 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
                     lifespan: { min: 500, max: 1000 },
                     quantity: 10,
                     scale: { start: 1, end: 1 },
-                    alpha: { start: 0.75, end: 0.5 },
+                    alpha: { start: 0.75, end: 0 },
                     rotate: { min: -180, max: 180 },
                     blendMode: "NORMAL",
                     frequency: -1
@@ -354,19 +354,19 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
                     frequency: -1
                 }
             );
-        }
+        }*/
     }
     
     kill()
     {
-        if(this.gameManager.bloodType === "Type-A")
-        {
+        /*if(this.gameManager.bloodType === "Type-A")
+        {*/
             this.bloodEmitter.setQuantity(15);
-        }
+        /*}
         else
         {
             this.bloodEmitter.setQuantity(30);
-        }
+        }*/
         this.bloodEmitter.emitParticleAt(this.x, this.y);
         this.boneEmitter.emitParticleAt(this.x, this.y);
         this.organEmitter.emitParticleAt(this.x, this.y);

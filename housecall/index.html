@@ -2648,15 +2648,15 @@
                     }
                 }
                 
-                this.bloodType = "Type-B";
+                //this.bloodType = "Type-A";
                 
-                if(checkStorage() === true)
+                /*if(checkStorage() === true)
                 {
                     if((localStorage.getItem("HCBloodType")) !== null)
                     {
                         this.bloodType = localStorage.getItem("HCBloodType");
                     }
-                }
+                }*/
                 
                 this.updateGameMode();
             }
@@ -3822,7 +3822,7 @@
                     canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
-                this.changeBloodWords = this.gameManager.bloodType;
+                /*this.changeBloodWords = this.gameManager.bloodType;
                 
                 this.changeBlood = createText(this, 5, 25 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height + this.toggleCrosshairMotion.height + this.changeSkin.height, "Particle Style: " + this.changeBloodWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
                 this.changeBlood.setInteractive({cursor: "pointer"});
@@ -3893,7 +3893,7 @@
                     this.changeBloodWords = this.gameManager.bloodType;
                     this.changeBlood.setText("Particle Style: " + this.changeBloodWords);
                     canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
-                });
+                });*/
                 
                 this.restartGame = createText(this, 5, 176 - 5, "MAIN MENU", 8, "#ff0000").setOrigin(0, 1).setDepth(1232300);
                 this.restartGame.setInteractive({cursor: "pointer"});
@@ -3990,7 +3990,7 @@
                 this.toggleCrosshairMotion.destroy();
                 this.restartGame.destroy();
                 this.changeSkin.destroy();
-                this.changeBlood.destroy();
+                //this.changeBlood.destroy();
             }
         }
         
