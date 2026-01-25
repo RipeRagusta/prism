@@ -18,13 +18,13 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
             cult.hitFrom = bullet.fromWhat;
             cult.health -= bullet.damage;
             /*if(cult.gameManager.bloodType === "Type-A")
-            {*/
-                cult.bloodEmitter.setQuantity(4);
-            /*}
-            else
             {
+                cult.bloodEmitter.setQuantity(4);
+            }
+            else
+            {*/
                 cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
-            }*/
+            //}
             cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
         }
         else
@@ -36,13 +36,13 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
                 cult.hitFrom = bullet.fromWhat;
                 cult.health -= bullet.damage;
                 /*if(cult.gameManager.bloodType === "Type-A")
-                {*/
-                    cult.bloodEmitter.setQuantity(4);
-                /*}
-                else
                 {
+                    cult.bloodEmitter.setQuantity(4);
+                }
+                else
+                {*/
                     cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
-                }*/
+                //}
                 cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
                 bullet.damage = bullet.damage * bullet.penetrationReduction;
             }

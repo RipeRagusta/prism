@@ -110,13 +110,13 @@ function cultCreator(scene, cultPositions, gameManager)
                   cult.play("cultOrbHurt", false);
                 }
                 /*if(cult.gameManager.bloodType === "Type-A")
-                {*/
-                    cult.bloodEmitter.setQuantity(4);
-                /*}
-                else
                 {
+                    cult.bloodEmitter.setQuantity(4);
+                }
+                else
+                {*/
                     cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
-                }*/
+                //}
                 cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
             }
             else
@@ -132,13 +132,13 @@ function cultCreator(scene, cultPositions, gameManager)
                       cult.play("cultOrbHurt", false);
                     }
                     /*if(cult.gameManager.bloodType === "Type-A")
-                    {*/
-                        cult.bloodEmitter.setQuantity(4);
-                    /*}
-                    else
                     {
+                        cult.bloodEmitter.setQuantity(4);
+                    }
+                    else
+                    {*/
                         cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
-                    }*/
+                    //}
                     cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
                     bullet.damage = bullet.damage * bullet.penetrationReduction;
                 }
