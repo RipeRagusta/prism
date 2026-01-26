@@ -17,7 +17,16 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
             bullet.destroy();
             cult.hitFrom = bullet.fromWhat;
             cult.health -= bullet.damage;
-            cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
+            
+            if(cult.gameManager.bloodType === "Classic")
+            {
+                cult.bloodEmitter.setQuantity(4);
+            }
+            else
+            {
+                cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
+            }
+            
             if(cult.gameManager.bloodType !== "Off")
             {
                 cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
@@ -31,11 +40,21 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
                 bullet.penetrationsLeft -= 1;
                 cult.hitFrom = bullet.fromWhat;
                 cult.health -= bullet.damage;
-                cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
+                
+                if(cult.gameManager.bloodType === "Classic")
+                {
+                    cult.bloodEmitter.setQuantity(4);
+                }
+                else
+                {
+                    cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 2)));
+                }
+                
                 if(cult.gameManager.bloodType !== "Off")
                 {
                     cult.bloodEmitter.emitParticleAt(cult.x, cult.y);
                 }
+                
                 bullet.damage = bullet.damage * bullet.penetrationReduction;
             }
         }
@@ -232,7 +251,7 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
     
     createBlood()
     {
-        if(this.gameManager.bloodType === "Standard")
+        if(this.gameManager.bloodType === "Standard" || this.gameManager.bloodType === "Classic")
         {
             this.bloodEmitter = this.scene.add.particles
             (
