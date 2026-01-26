@@ -111,9 +111,13 @@ function cultCreator(scene, cultPositions, gameManager)
                   cult.play("cultOrbHurt", false);
                 }
                 
-                if(cult.gameManager.bloodType === "Classic")
+                if(cult.gameManager.bloodType === "Classic" || cult.gameManager.bloodType === "Classic-Subtle")
                 {
                     cult.bloodEmitter.setQuantity(4);
+                }
+                else if(cult.gameManager.bloodType === "Classic-V2" || cult.gameManager.bloodType === "Classic-V2-Subtle")
+                {
+                     cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 4)));
                 }
                 else
                 {
@@ -139,9 +143,13 @@ function cultCreator(scene, cultPositions, gameManager)
                       cult.play("cultOrbHurt", false);
                     }
                     
-                    if(cult.gameManager.bloodType === "Classic")
+                    if(cult.gameManager.bloodType === "Classic" || cult.gameManager.bloodType === "Classic-Subtle")
                     {
                         cult.bloodEmitter.setQuantity(4);
+                    }
+                    else if(cult.gameManager.bloodType === "Classic-V2" || cult.gameManager.bloodType === "Classic-V2-Subtle")
+                    {
+                         cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 4)));
                     }
                     else
                     {

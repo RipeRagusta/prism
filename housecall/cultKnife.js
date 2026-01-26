@@ -18,9 +18,13 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
             cult.hitFrom = bullet.fromWhat;
             cult.health -= bullet.damage;
             
-            if(cult.gameManager.bloodType === "Classic")
+            if(cult.gameManager.bloodType === "Classic" || cult.gameManager.bloodType === "Classic-Subtle")
             {
                 cult.bloodEmitter.setQuantity(4);
+            }
+            else if(cult.gameManager.bloodType === "Classic-V2" || cult.gameManager.bloodType === "Classic-V2-Subtle")
+            {
+                 cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 4)));
             }
             else
             {
@@ -41,9 +45,13 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
                 cult.hitFrom = bullet.fromWhat;
                 cult.health -= bullet.damage;
                 
-                if(cult.gameManager.bloodType === "Classic")
+                if(cult.gameManager.bloodType === "Classic" || cult.gameManager.bloodType === "Classic-Subtle")
                 {
                     cult.bloodEmitter.setQuantity(4);
+                }
+                else if(cult.gameManager.bloodType === "Classic-V2" || cult.gameManager.bloodType === "Classic-V2-Subtle")
+                {
+                     cult.bloodEmitter.setQuantity(Math.max(1, Math.round(bullet.damage * 4)));
                 }
                 else
                 {
@@ -251,7 +259,7 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
     
     createBlood()
     {
-        if(this.gameManager.bloodType === "Standard" || this.gameManager.bloodType === "Classic")
+        if(this.gameManager.bloodType === "Standard" || this.gameManager.bloodType === "Classic" || this.gameManager.bloodType === "Classic-V2")
         {
             this.bloodEmitter = this.scene.add.particles
             (
@@ -271,7 +279,7 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
                 }
             );
         }
-        else if(this.gameManager.bloodType === "Standard-Subtle")
+        else if(this.gameManager.bloodType === "Standard-Subtle" || this.gameManager.bloodType === "Classic-Subtle" || this.gameManager.bloodType === "Classic-V2-Subtle")
         {
             this.bloodEmitter = this.scene.add.particles
             (
