@@ -499,7 +499,7 @@ function cultSeparation(cults, player)
     
     createBlood()
     {
-        if(this.gameManager.bloodType === "Standard" || this.gameManager.bloodType === "Classic")
+        if(this.gameManager.bloodType === "Standard" || this.gameManager.bloodType === "Classic" || this.gameManager.bloodType === "Classic-V2")
         {
             this.bloodEmitter = this.scene.add.particles
             (
@@ -519,7 +519,7 @@ function cultSeparation(cults, player)
                 }
             );
         }
-        else if(this.gameManager.bloodType === "Standard-Subtle")
+        else if(this.gameManager.bloodType === "Standard-Subtle" || this.gameManager.bloodType === "Classic-Subtle" || this.gameManager.bloodType === "Classic-V2-Subtle")
         {
             this.bloodEmitter = this.scene.add.particles
             (
