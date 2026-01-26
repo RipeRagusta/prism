@@ -289,7 +289,6 @@
                 this.load.spritesheet("playerchromeshotgun", "assets/playerchromeshotgun.png", {frameWidth: 16, frameHeight: 16});
                 this.load.spritesheet("playerzombiehunter", "assets/playerzombiehunter.png", {frameWidth: 16, frameHeight: 16});
                 this.load.spritesheet("playercontracted", "assets/playercontracted.png", {frameWidth: 16, frameHeight: 16});
-                this.load.spritesheet("playerclear", "assets/playerclear.png", {frameWidth: 16, frameHeight: 16});
                 this.load.spritesheet("playerneon", "assets/playerneon.png", {frameWidth: 16, frameHeight: 16});
                 this.load.image("ground", "assets/grass.png");
                 this.load.image("bullet", "assets/bullet.png");
@@ -2525,7 +2524,7 @@
                     }
                 };
                 
-                this.extra = false;
+                this.extra = true;
 
                 this.ammoUpgrades = new Set([1, 2, 7, 11, 12]);
 
@@ -2648,15 +2647,25 @@
                     }
                 }
                 
-                //this.bloodType = "Type-A";
+                this.bloodType = "Standard";
                 
-                /*if(checkStorage() === true)
+                if(checkStorage() === true)
                 {
                     if((localStorage.getItem("HCBloodType")) !== null)
                     {
                         this.bloodType = localStorage.getItem("HCBloodType");
                     }
-                }*/
+                }
+                
+                this.extraGibs = true;
+                
+                if(checkStorage() === true)
+                {
+                    if((localStorage.getItem("HCExtraGibs")) !== null)
+                    {
+                        this.extraGibs = JSON.parse(localStorage.getItem("HCExtraGibs"));
+                    }
+                }
                 
                 this.updateGameMode();
             }
@@ -2683,10 +2692,6 @@
                     }   
                 }
                 else if(this.playerSkin === "playercontracted")
-                {
-                     this.playerSkin = "playerclear";
-                }
-                else if(this.playerSkin === "playerclear")
                 {
                      this.playerSkin = "playerneon";
                 }
@@ -3762,79 +3767,31 @@
                     canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
-                if(this.gameManager.playerSkin === "player")
-                {
-                    this.changeSkinWords = "Default";
-                }
-                else if(this.gameManager.playerSkin === "playerchromeshotgun")
-                {
-                    this.changeSkinWords = "Tactical";
-                }
-                else if(this.gameManager.playerSkin === "playerzombiehunter")
-                {
-                     this.changeSkinWords = "Zombie-Hunter";
-                }
-                else if(this.gameManager.playerSkin === "playercontracted")
-                {
-                     this.changeSkinWords = "Contracted";
-                }
-                else if(this.gameManager.playerSkin === "playerclear")
-                {
-                     this.changeSkinWords = "Apple";
-                }
-                else if(this.gameManager.playerSkin === "playerneon")
-                {
-                     this.changeSkinWords = "Candy";
-                }
+                this.changeBloodWords = this.gameManager.bloodType;
                 
-                this.changeSkin = createText(this, 5, 22 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height + this.toggleCrosshairMotion.height, "Skin: " + this.changeSkinWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
-                this.changeSkin.setInteractive({cursor: "pointer"});
-                this.changeSkin.on("pointerdown", () =>
-                {
-                    this.gameManager.changePlayerSkin();
-                    
-                    if(this.gameManager.playerSkin === "player")
-                    {
-                        this.changeSkinWords = "Default";
-                    }
-                    else if(this.gameManager.playerSkin === "playerchromeshotgun")
-                    {
-                        this.changeSkinWords = "Tactical";
-                    }
-                    else if(this.gameManager.playerSkin === "playerzombiehunter")
-                    {
-                         this.changeSkinWords = "Zombie-Hunter";
-                    }
-                    else if(this.gameManager.playerSkin === "playercontracted")
-                    {
-                         this.changeSkinWords = "Contracted";
-                    }
-                    else if(this.gameManager.playerSkin === "playerclear")
-                    {
-                         this.changeSkinWords = "Apple";
-                    }
-                    else if(this.gameManager.playerSkin === "playerneon")
-                    {
-                         this.changeSkinWords = "Candy";
-                    }
-                    
-                    this.changeSkin.setText("Skin: " + this.changeSkinWords);
-                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
-                });
-                
-                /*this.changeBloodWords = this.gameManager.bloodType;
-                
-                this.changeBlood = createText(this, 5, 25 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height + this.toggleCrosshairMotion.height + this.changeSkin.height, "Particle Style: " + this.changeBloodWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.changeBlood = createText(this, 5, 22 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height + this.toggleCrosshairMotion.height, "Blood Style: " + this.changeBloodWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
                 this.changeBlood.setInteractive({cursor: "pointer"});
                 this.changeBlood.on("pointerdown", () =>
                 {
-                    if(this.gameManager.bloodType === "Type-A")
+                    if(this.gameManager.bloodType === "Standard")
                     {
-                        this.gameManager.bloodType = "Type-B";
+                        this.gameManager.bloodType = "Standard-Subtle";
                     }
-                    else
+                    else if(this.gameManager.bloodType === "Standard-Subtle")
                     {
-                        this.gameManager.bloodType = "Type-A";
+                        this.gameManager.bloodType = "Small";
+                    }
+                    else if(this.gameManager.bloodType === "Small")
+                    {
+                        this.gameManager.bloodType = "Small-Subtle";
+                    }
+                    else if(this.gameManager.bloodType === "Small-Subtle")
+                    {
+                        this.gameManager.bloodType = "Off";
+                    }
+                    else if(this.gameManager.bloodType === "Off")
+                    {
+                        this.gameManager.bloodType = "Standard";
                     }
                     
                     if(checkStorage() === true)
@@ -3891,9 +3848,103 @@
                     }
                     
                     this.changeBloodWords = this.gameManager.bloodType;
-                    this.changeBlood.setText("Particle Style: " + this.changeBloodWords);
+                    this.changeBlood.setText("Blood Style: " + this.changeBloodWords);
                     canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
-                });*/
+                });
+                
+                if(this.gameManager.extraGibs)
+                {
+                    this.extraGibsWords = "On";
+                }
+                else
+                {
+                    this.extraGibsWords = "Off";
+                }
+                
+                this.extraGibs = createText(this, 5, 25 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height + this.toggleCrosshairMotion.height + this.changeBlood.height, "Extra Gibs: " + this.extraGibsWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.extraGibs.setInteractive({cursor: "pointer"});
+                this.extraGibs.on("pointerdown", () =>
+                {
+                    this.gameManager.extraGibs = !this.gameManager.extraGibs;
+                    
+                    if(this.gameManager.extraGibs)
+                    {
+                        this.extraGibsWords = "On";
+                    }
+                    else
+                    {
+                        this.extraGibsWords = "Off";
+                    }
+                    
+                    this.extraGibs.setText("Extra Gibs: " + this.extraGibsWords);
+                    
+                    if(checkStorage() === true)
+                    {
+                        localStorage.setItem("HCExtraGibs", JSON.stringify(this.gameManager.extraGibs));
+                    }
+                
+                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                });
+                
+                if(this.gameManager.playerSkin === "player")
+                {
+                    this.changeSkinWords = "Default";
+                }
+                else if(this.gameManager.playerSkin === "playerchromeshotgun")
+                {
+                    this.changeSkinWords = "Tactical";
+                }
+                else if(this.gameManager.playerSkin === "playerzombiehunter")
+                {
+                     this.changeSkinWords = "Zombie-Hunter";
+                }
+                else if(this.gameManager.playerSkin === "playercontracted")
+                {
+                     this.changeSkinWords = "Contracted";
+                }
+                else if(this.gameManager.playerSkin === "playerclear")
+                {
+                     this.changeSkinWords = "Apple";
+                }
+                else if(this.gameManager.playerSkin === "playerneon")
+                {
+                     this.changeSkinWords = "Candy";
+                }
+                
+                this.changeSkin = createText(this, 5, 28 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height + this.toggleCrosshairMotion.height + this.changeBlood.height + this.extraGibs.height, "Skin: " + this.changeSkinWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.changeSkin.setInteractive({cursor: "pointer"});
+                this.changeSkin.on("pointerdown", () =>
+                {
+                    this.gameManager.changePlayerSkin();
+                    
+                    if(this.gameManager.playerSkin === "player")
+                    {
+                        this.changeSkinWords = "Default";
+                    }
+                    else if(this.gameManager.playerSkin === "playerchromeshotgun")
+                    {
+                        this.changeSkinWords = "Tactical";
+                    }
+                    else if(this.gameManager.playerSkin === "playerzombiehunter")
+                    {
+                         this.changeSkinWords = "Zombie-Hunter";
+                    }
+                    else if(this.gameManager.playerSkin === "playercontracted")
+                    {
+                         this.changeSkinWords = "Contracted";
+                    }
+                    else if(this.gameManager.playerSkin === "playerclear")
+                    {
+                         this.changeSkinWords = "Apple";
+                    }
+                    else if(this.gameManager.playerSkin === "playerneon")
+                    {
+                         this.changeSkinWords = "Candy";
+                    }
+                    
+                    this.changeSkin.setText("Skin: " + this.changeSkinWords);
+                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                });
                 
                 this.restartGame = createText(this, 5, 176 - 5, "MAIN MENU", 8, "#ff0000").setOrigin(0, 1).setDepth(1232300);
                 this.restartGame.setInteractive({cursor: "pointer"});
@@ -3913,7 +3964,7 @@
                 
                 this.background = this.add.rectangle(200, 0, 400, 176, "#000000").setOrigin(0.5, 0).setAlpha(0.8); 
                 this.remapButtons = [this.walkLeft, this.walkRight, this.jump, this.block, this.useShotgun, this.usePistol];
-                this.buttons = [this.resetDefault, this.gameMode, this.toggleHUD, this.toggleScreenShake, this.toggleCrosshairMotion, this.changeSkin, this.restartGame, this.changeBlood];
+                this.buttons = [this.resetDefault, this.gameMode, this.toggleHUD, this.toggleScreenShake, this.toggleCrosshairMotion, this.changeSkin, this.restartGame, this.changeBlood, this.extraGibs];
             }
             
             getActionAssignment(actionName)
@@ -3990,7 +4041,8 @@
                 this.toggleCrosshairMotion.destroy();
                 this.restartGame.destroy();
                 this.changeSkin.destroy();
-                //this.changeBlood.destroy();
+                this.changeBlood.destroy();
+                this.extraGibs.destroy();
             }
         }
         

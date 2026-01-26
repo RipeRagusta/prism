@@ -190,25 +190,6 @@ class eye extends Phaser.Physics.Arcade.Sprite
         this.distanceOffset = 1;
         this.orbs = eyeOrbHolder;
         this.id = Phaser.Utils.String.UUID();
-        //this.gameManager = game.scene.getScene("GameManager");
-        
-        /*this.bloodEmitter = this.scene.add.particles
-        (
-            0, 0, 
-            "blood",
-            {
-                angle: { min: 0, max: 360 }, 
-                speed: { min: 50, max: 200 },
-                gravityY: 500,
-                lifespan: { min: 500, max: 1000 },
-                quantity: 15,
-                scale: { start: 1, end: 1 },
-                alpha: { start: 0.75, end: 0 },
-                rotate: { min: -180, max: 180 },
-                blendMode: "NORMAL",
-                frequency: -1
-            }
-        );*/
     
         this.explode = this.scene.add.particles
         (
@@ -306,10 +287,6 @@ class eye extends Phaser.Physics.Arcade.Sprite
     
     kill()
     {
-        /*if(this.gameManager.bloodType === "Type-B")
-        {
-            this.bloodEmitter.emitParticleAt(this.x, this.y);
-        }*/
         this.explode.emitParticleAt(this.x, this.y);
         const gameManager = this.scene.gameManager;
         if(gameManager.doubleFireUpgrade && this.scene.player.active)
