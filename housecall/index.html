@@ -2657,13 +2657,13 @@
                     }
                 }
                 
-                this.extraGibs = true;
+                this.extraGibs = "All";
                 
                 if(checkStorage() === true)
                 {
                     if((localStorage.getItem("HCExtraGibs")) !== null)
                     {
-                        this.extraGibs = JSON.parse(localStorage.getItem("HCExtraGibs"));
+                        this.extraGibs = localStorage.getItem("HCExtraGibs");
                     }
                 }
                 
@@ -3868,35 +3868,36 @@
                     canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
-                if(this.gameManager.extraGibs)
-                {
-                    this.extraGibsWords = "On";
-                }
-                else
-                {
-                    this.extraGibsWords = "Off";
-                }
+                this.extraGibsWords = this.gameManager.extraGibs;
                 
-                this.extraGibs = createText(this, 5, 25 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height + this.toggleCrosshairMotion.height + this.changeBlood.height, "Extra Gibs: " + this.extraGibsWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
+                this.extraGibs = createText(this, 5, 25 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height + this.toggleCrosshairMotion.height + this.changeBlood.height, "Gibs: " + this.extraGibsWords, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
                 this.extraGibs.setInteractive({cursor: "pointer"});
                 this.extraGibs.on("pointerdown", () =>
                 {
-                    this.gameManager.extraGibs = !this.gameManager.extraGibs;
-                    
-                    if(this.gameManager.extraGibs)
+                    if(this.gameManager.extraGibs === "All")
                     {
-                        this.extraGibsWords = "On";
+                        this.gameManager.extraGibs = "Cultists-Only";
                     }
-                    else
+                    else if(this.gameManager.extraGibs === "Cultists-Only")
                     {
-                        this.extraGibsWords = "Off";
+                        this.gameManager.extraGibs = "Eyes-Only";
+                    }
+                    else if(this.gameManager.extraGibs === "Eyes-Only")
+                    {
+                        this.gameManager.extraGibs = "Off";
+                    }
+                    else if(this.gameManager.extraGibs === "Off")
+                    {
+                        this.gameManager.extraGibs = "All";
                     }
                     
-                    this.extraGibs.setText("Extra Gibs: " + this.extraGibsWords);
+                    this.extraGibsWords = this.gameManager.extraGibs;
+                    
+                    this.extraGibs.setText("Gibs: " + this.extraGibsWords);
                     
                     if(checkStorage() === true)
                     {
-                        localStorage.setItem("HCExtraGibs", JSON.stringify(this.gameManager.extraGibs));
+                        localStorage.setItem("HCExtraGibs", this.gameManager.extraGibs);
                     }
                 
                     canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });

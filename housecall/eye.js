@@ -190,6 +190,7 @@ class eye extends Phaser.Physics.Arcade.Sprite
         this.distanceOffset = 1;
         this.orbs = eyeOrbHolder;
         this.id = Phaser.Utils.String.UUID();
+        this.gameManager = game.scene.getScene("GameManager");
     
         this.explode = this.scene.add.particles
         (
@@ -287,7 +288,11 @@ class eye extends Phaser.Physics.Arcade.Sprite
     
     kill()
     {
-        this.explode.emitParticleAt(this.x, this.y);
+        if(this.gameManager.extraGibs === "All" || this.gameManager.extraGibs === "Eyes-Only")
+        {
+            this.explode.emitParticleAt(this.x, this.y);
+        }
+        
         const gameManager = this.scene.gameManager;
         if(gameManager.doubleFireUpgrade && this.scene.player.active)
         {

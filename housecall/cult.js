@@ -608,7 +608,7 @@ function cultSeparation(cults, player)
             this.bloodEmitter.emitParticleAt(this.x, this.y);
         }
         
-        if(this.gameManager.extraGibs)
+        if(this.gameManager.extraGibs === "All" || this.gameManager.extraGibs === "Cultists-Only")
         {
             this.boneEmitter.emitParticleAt(this.x, this.y);
             this.organEmitter.emitParticleAt(this.x, this.y);
