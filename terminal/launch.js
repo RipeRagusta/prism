@@ -9,8 +9,7 @@ function createLaunchCommands()
 		{ name: "jumpgame", url: "../jumpgame/index.html", display: false},
 		{ name: "vp1", url: "https://ragusta.com/index.html", display: false},
 		{ name: "genericinvitation", url: "../genericinvitation/invitation.html", display: false},
-		{ name: "genericad", url: "../genericad/digitalSignStart.html", display: false},
-		{ name: "landing", url: "../index.html", display: true}
+		{ name: "genericad", url: "../genericad/digitalSignStart.html", display: false}
 	];
 
 	launchTargets = JSON.parse(JSON.stringify(defaultLaunchTargets));

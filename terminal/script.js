@@ -248,6 +248,16 @@ function initialize()
 				}
 	        }
 		},
+		{
+			name: "home",
+			alias: "h",
+			display: true,
+			argumentsNeeded: 0,
+			function: (commandEntered, splitCommand) => 
+	        {
+				window.location.href = "../index.html";
+	        }
+		},
 	];
 
 	commands.sort(sortAlphabetically);
