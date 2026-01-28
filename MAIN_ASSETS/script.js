@@ -36,6 +36,8 @@ window.addEventListener("pageshow", (event) =>
 
 function initialize()
 {
+    document.body.style.visibility = "hidden";
+    
 	threeColumnOn = false;
 
 	if(checkStorage() === true)
