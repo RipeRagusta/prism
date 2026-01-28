@@ -789,7 +789,8 @@
 
                 //START PROPS AFTER PLAYER MainMenu
 
-
+                this.displayControls();
+                
                 this.pipe = this.physics.add.sprite(worldWidthX / 2 + this.sys.game.config.width / 4 - 6, this.sys.game.config.height - 16, "pipe");
                 this.pipe.setOrigin(0, 1);
                 this.pipe.body.allowGravity = false;
@@ -848,10 +849,28 @@
                         this.seenControls = JSON.parse(localStorage.getItem("HCSeenControls"));
                     }
                 }
+                
+                if(this.seenControls === true)
+                {
+                    this.quickStart = createText(this, this.game.config.width - (this.game.config.width / 2), 5, "QUICK START", 10, "#ffffff").setOrigin(0.5, 0).setDepth(1232300);
+                    this.quickStart.setInteractive({cursor: "pointer"});
+                    this.quickStart.on("pointerdown", () =>
+                    {
+                        if(this.settings.displayedSettings === false)
+                        {
+                            this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                            this.scene.stop("MainMenu");
+                            this.scene.stop("HUD");
+                            event.stopPropagation();
+                            this.scene.start("Level1Game");
+                            this.scene.launch("HUD");
+                            resetCrosshairIfDifferent();
+                        }
+                    });
+                }
 
                 this.logo = createText(this, worldWidthX / 6, this.sys.game.config.height / 2, "HOUSE CALL", 20, "#fff").setOrigin(0.5, 0.5);
                 this.logo.setInteractive({cursor: "pointer"});
-                
                 
                 if(this.seenControls !== true)
                 {
@@ -938,29 +957,6 @@
                                     });
                                 }, [], this);
                             }
-                        }
-                    });
-                }
-                
-                this.displayControls();
-                
-                
-                
-                if(this.seenControls === true)
-                {
-                    this.quickStart = createText(this, this.game.config.width - (this.game.config.width / 2), 5, "QUICK START", 10, "#ffffff").setOrigin(0.5, 0).setDepth(1232300);
-                    this.quickStart.setInteractive({cursor: "pointer"});
-                    this.quickStart.on("pointerdown", () =>
-                    {
-                        if(this.settings.displayedSettings === false)
-                        {
-                            this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
-                            this.scene.stop("MainMenu");
-                            this.scene.stop("HUD");
-                            event.stopPropagation();
-                            this.scene.start("Level1Game");
-                            this.scene.launch("HUD");
-                            resetCrosshairIfDifferent();
                         }
                     });
                 }
