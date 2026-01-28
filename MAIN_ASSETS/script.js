@@ -20,7 +20,7 @@ var sortAlphabetically = (a, b) =>
     return 0;
 };
 
-window.addEventListener('pageshow', (event) => 
+window.addEventListener("pageshow", (event) => 
 {
     if(event.persisted) 
     {
@@ -79,17 +79,20 @@ function toggleLayout()
 
 function displayLayout() 
 {
+    document.body.style.visibility = "hidden";
+
 	if(!threeColumnOn)
 	{
+        singleFileLayout.disabled = false;
 		threeColumnLayout.disabled = true;
-		singleFileLayout.disabled = false;
 	}
 	else
 	{
+        threeColumnLayout.disabled = false;
 		singleFileLayout.disabled = true;
-		threeColumnLayout.disabled = false;
-		
 	}
+
+    document.body.style.visibility = "visible";
 }
 
 function checkStorage()
@@ -98,12 +101,12 @@ function checkStorage()
 
     try 
     {
-            localStorage.setItem(test, test);
-            localStorage.removeItem(test);
-    return true;
+        localStorage.setItem(test, test);
+        localStorage.removeItem(test);
+        return true;
     } 
-        catch(e)
+    catch(e)
     {
-            return false;
+        return false;
     }
 }
