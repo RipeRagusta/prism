@@ -862,7 +862,7 @@
                         {
                             this.didFirstTransition = true;
 
-                            canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                            this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
                             bullet.destroy();
                             logo.destroy();
 
