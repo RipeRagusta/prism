@@ -862,7 +862,7 @@
                         {
                             this.didFirstTransition = true;
 
-                            this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                            this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                             bullet.destroy();
                             logo.destroy();
 
@@ -906,7 +906,7 @@
                             {
                                 this.didFirstTransition = true;
 
-                                this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                                this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                                 this.logo.destroy();
                                 this.time.delayedCall(200, () => this.player.canShoot = true);
 
@@ -954,7 +954,7 @@
                     {
                         if(this.settings.displayedSettings === false)
                         {
-                            this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                            this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                             this.scene.stop("MainMenu");
                             this.scene.stop("HUD");
                             event.stopPropagation();
@@ -974,7 +974,7 @@
                 {
                     if(this.settings.displayedSettings === false)
                     {
-                        canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                        canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                         if(checkStorage() === true)
                         {
                             localStorage.setItem("HCSeenControls", JSON.stringify(true));
@@ -2257,7 +2257,7 @@
 
             acceptCard(id)
             {
-                canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: 2 });
+                canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: 2 });
                 const card = Object.values(this.upgradeCardData).find(c => c.id === id);
                 card.effect(this.gameManager);
                 this.gameManager.ownedCards.add(id); 
@@ -2859,7 +2859,7 @@
                             game.scene.getScene("MainMenu").refreshControls();
                         }
 
-                        canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: 2 });
+                        canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: 2 });
                     }
                 });
 
@@ -2880,7 +2880,7 @@
                             game.scene.getScene("MainMenu").refreshControls();
                         }
 
-                        canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: 2 });
+                        canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: 2 });
                     }
                 }); 
             }
@@ -3489,7 +3489,7 @@
             
             manualToggleMenu()
             {
-                canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
 
                 if(this.displayedSettings)
                 {
@@ -3600,7 +3600,7 @@
                     !this.remapping && this.walkLeft.setColor("#00ff00");
                     this.buttonBeingRemapped = "walkLeft";
                     this.gameManager.remapAction("walkLeft");
-                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                    canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
                 this.walkRight = createText(this, 400 - 5, 13 + this.settings.height + this.walkLeft.height, this.getActionAssignment("walkRight") + ": Walk Right", 12, "#ff0000").setOrigin(1, 0).setDepth(1232300);
@@ -3610,7 +3610,7 @@
                     !this.remapping && this.walkRight.setColor("#00ff00");
                     this.buttonBeingRemapped = "walkRight";
                     this.gameManager.remapAction("walkRight");
-                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                    canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
                 this.jump = createText(this, 400 - 5, 16 + this.settings.height + this.walkLeft.height + this.walkRight.height, this.getActionAssignment("jump") + ": Jump", 12, "#ff0000").setOrigin(1, 0).setDepth(1232300);
@@ -3620,7 +3620,7 @@
                     !this.remapping && this.jump.setColor("#00ff00");
                     this.buttonBeingRemapped = "jump";
                     this.gameManager.remapAction("jump");
-                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                    canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
                 this.block =  createText(this, 400 - 5, 19 + this.settings.height + this.walkLeft.height + this.walkRight.height + this.jump.height, this.getActionAssignment("block") + ": Block", 12, "#ff0000").setOrigin(1, 0).setDepth(1232300);
@@ -3630,7 +3630,7 @@
                     !this.remapping && this.block.setColor("#00ff00");
                     this.buttonBeingRemapped = "block";
                     this.gameManager.remapAction("block");
-                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                    canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
                 this.useShotgun = createText(this, 400 - 5, 22 + this.settings.height + this.walkLeft.height + this.walkRight.height + this.jump.height + this.block.height, this.getActionAssignment("useShotgun") + ": Use Shotgun", 12, "#ff0000").setOrigin(1, 0).setDepth(1232300);
@@ -3640,7 +3640,7 @@
                     !this.remapping && this.useShotgun.setColor("#00ff00");
                     this.buttonBeingRemapped = "useShotgun";
                     this.gameManager.remapAction("useShotgun");
-                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                    canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
                 this.usePistol = createText(this, 400 - 5, 25 + this.settings.height + this.walkLeft.height + this.walkRight.height + this.jump.height + this.block.height + this.useShotgun.height, this.getActionAssignment("usePistol") + ": Use Pistol", 12, "#ff0000").setOrigin(1, 0).setDepth(1232300);
@@ -3650,7 +3650,7 @@
                     !this.remapping && this.usePistol.setColor("#00ff00");
                     this.buttonBeingRemapped = "usePistol";
                     this.gameManager.remapAction("usePistol");
-                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                    canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
                 this.resetDefault = createText(this, 400 - 5, 176 - 5, "RESET DEFAULT", 10, "#ff0000").setOrigin(1, 1).setDepth(1232300);
@@ -3658,7 +3658,7 @@
                 this.resetDefault.on("pointerdown", () =>
                 {
                     this.gameManager.resetActions();
-                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                    canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
                 this.gameSettings = createText(this, 5, 5, "Settings:", 15, "#ff0000").setOrigin(0, 0).setDepth(1232300);
@@ -3687,7 +3687,7 @@
                         this.gameManager.switchGameMode(this.gameModeWords);
                     }
                     
-                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                    canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
                 this.toggleHUDWords = this.gameManager.HUDSetting;
@@ -3712,7 +3712,7 @@
                         localStorage.setItem("HCHUDSetting", this.gameManager.HUDSetting);
                     }
                     
-                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                    canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
                 if(this.gameManager.screenShake)
@@ -3746,7 +3746,7 @@
                         localStorage.setItem("HCScreenShakeSetting", JSON.stringify(this.gameManager.screenShake));
                     }
                     
-                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                    canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
                 this.toggleCrosshairMotion = createText(this, 5, 19 + this.gameSettings.height + this.gameMode.height + this.toggleHUD.height + this.toggleScreenShake.height, "Dynamic Crosshair: " + this.gameManager.crosshairMotion, 10, "#ff0000").setOrigin(0, 0).setDepth(1232300);
@@ -3764,7 +3764,7 @@
                         localStorage.setItem("HCCrosshairMotionSetting", JSON.stringify(this.gameManager.crosshairMotion));
                     }
                     
-                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                    canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
                 this.changeBloodWords = this.gameManager.bloodType;
@@ -3865,7 +3865,7 @@
                     
                     this.changeBloodWords = this.gameManager.bloodType;
                     this.changeBlood.setText("Blood Style: " + this.changeBloodWords);
-                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                    canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
                 this.extraGibsWords = this.gameManager.extraGibs;
@@ -3900,7 +3900,7 @@
                         localStorage.setItem("HCExtraGibs", this.gameManager.extraGibs);
                     }
                 
-                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                    canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
                 if(this.gameManager.playerSkin === "player")
@@ -3960,7 +3960,7 @@
                     }
                     
                     this.changeSkin.setText("Skin: " + this.changeSkinWords);
-                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                    canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
                 this.restartGame = createText(this, 5, 176 - 5, "MAIN MENU", 8, "#ff0000").setOrigin(0, 1).setDepth(1232300);
@@ -3976,7 +3976,7 @@
                     this.gameManager.resetMappingInProgress();
                     this.gameManager.score = 0; 
                     this.gameManager.switchGameMode(this.gameModeWords);
-                    canPlayAudio(this) && this.sound.play('mainmenuclick', { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                    canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
                 this.background = this.add.rectangle(200, 0, 400, 176, "#000000").setOrigin(0.5, 0).setAlpha(0.8); 
