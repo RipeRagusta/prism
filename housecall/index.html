@@ -789,6 +789,7 @@
 
                 //START PROPS AFTER PLAYER MainMenu
 
+
                 this.displayControls();
                 
                 this.pipe = this.physics.add.sprite(worldWidthX / 2 + this.sys.game.config.width / 4 - 6, this.sys.game.config.height - 16, "pipe");
@@ -1001,6 +1002,7 @@
 
                 //END CAMERA SETUP MainMenu
                 
+                
                 this.canCheckForShootingDuringBeginning = false;
                 this.time.delayedCall(200, () => this.canCheckForShootingDuringBeginning = true);
             }
@@ -1179,7 +1181,6 @@
                         }
                     });
                 }
-                
                 
                 if(this.canCheckForShootingDuringBeginning === true)
                 {
@@ -1529,6 +1530,7 @@
                 {
                     this.gameManager.cheats = false;
                 }
+
 
                 //END BASIC SETUP Level1Game
 
@@ -2164,6 +2166,7 @@
             {
                 this.settings = this.scene.get("Settings");
                 this.input.setDefaultCursor("pointer");
+                this.canAcceptCard = true;
                 
 
                 //START CARD SETUP
@@ -2189,7 +2192,12 @@
                 {
                     if(this.cardDisplay1.getBounds().contains(this.input.activePointer.x, this.input.activePointer.y) && !this.settings.displayedSettings) 
                     {
-                        this.acceptCard(this.card1);
+                        if(this.canAcceptCard)
+                        {
+                            this.canAcceptCard = false;
+                            this.acceptCard(this.card1);
+                        }
+                        
                     }
                 });
 
@@ -2198,7 +2206,11 @@
                 {
                     if(this.cardDisplay2.getBounds().contains(this.input.activePointer.x, this.input.activePointer.y) && !this.settings.displayedSettings) 
                     {
-                        this.acceptCard(this.card2);
+                        if(this.canAcceptCard)
+                        {
+                            this.canAcceptCard = false;
+                            this.acceptCard(this.card2);
+                        }
                     }
                 });
                 
@@ -2419,8 +2431,8 @@
                         icon: "triplepistolicon",
                         effect: (gameManager) => 
                         {
-                            gameManager.triplePistolUpgrade = true;
                             gameManager.quintuplePistolUpgrade = false;
+                            gameManager.triplePistolUpgrade = true;
                         }
                     },
                     "quintuplepistol": 
@@ -4077,13 +4089,13 @@
     
             try 
             {
-                    localStorage.setItem(test, test);
-                    localStorage.removeItem(test);
-            return true;
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                return true;
             } 
-                catch(e)
+            catch(e)
             {
-                    return false;
+                return false;
             }
         }
         
