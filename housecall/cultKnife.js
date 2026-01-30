@@ -70,7 +70,7 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
 
     scene.physics.add.overlap(scene.player, scene.cultKnifes, (player, cult) =>
     {
-        if(player.lastPlayerShot > scene.time.now - 50 || player.isShootingPistol/*&& ((player.flip === false && cult.flip === false) || (player.flip === true && cult.flip === true))*/) 
+        if(player.lastPlayerShot > scene.time.now - 50) 
         {
             scene.sound.play("hurt");
             if(scene.gameManager.screenShake)
@@ -78,6 +78,17 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
                 scene.cameras.main.shake(50, 0.004);
             }
             cult.hitFrom = player.doubleFire ? "doubleFire" : "shotgun";
+            cult.kill();
+            return; 
+        }
+        else if(player.isShootingPistol)
+        {
+            scene.sound.play("hurt");
+            if(scene.gameManager.screenShake)
+            {
+                scene.cameras.main.shake(50, 0.004);
+            }
+            cult.hitFrom = "pistol";
             cult.kill();
             return; 
         }
