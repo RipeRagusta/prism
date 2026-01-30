@@ -602,6 +602,7 @@ function cultSeparation(cults, player)
     
     kill()
     {
+        this.player.lastPlayerBlock = 0;
         this.bloodEmitter.setQuantity(15);
         if(this.gameManager.bloodType !== "Off")
         {

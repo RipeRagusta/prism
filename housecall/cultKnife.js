@@ -68,9 +68,21 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
         }
     });
 
-    scene.physics.add.collider(scene.player, scene.cultKnifes, (player, cult) =>
+    scene.physics.add.overlap(scene.player, scene.cultKnifes, (player, cult) =>
     {
-        player.health -= 10;
+        if(player.lastPlayerShot > scene.time.now - 50 /*&& ((player.flip === false && cult.flip === false) || (player.flip === true && cult.flip === true))*/) 
+        {
+            scene.sound.play("hurt");
+            if(scene.gameManager.screenShake)
+            {
+                scene.cameras.main.shake(50, 0.004);
+            }
+            cult.hitFrom = player.doubleFire ? "doubleFire" : "shotgun";
+            cult.kill();
+            return; 
+        }
+        
+        player.health -= 100;
         scene.sound.play("playerhurt");
     });
 
@@ -343,6 +355,7 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
     
     kill()
     {
+        this.player.lastPlayerBlock = 0;
         this.bloodEmitter.setQuantity(15);
         if(this.gameManager.bloodType !== "Off")
         {

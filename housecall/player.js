@@ -584,8 +584,6 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.killed = true;
         resetCrosshairIfDifferent();
         this.setActive(false);
-        this.setVisible(false);
-        this.destroy();
     }
     
     checkPistolMove(time)
@@ -776,6 +774,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             if(this.succesfulBlock)
             {
                 this.lastPlayerBlock = 0;
+                this.lastPlayerShot = 0;
                 this.succesfulBlock = false;
             }
             else

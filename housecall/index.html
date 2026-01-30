@@ -53,7 +53,7 @@
                 scene.stab.setActive(false);
                 scene.stab.setVisible(false);
 
-                scene.physics.add.collider(this.pipe, scene.player, (pipe, player) =>
+                scene.physics.add.overlap(this.pipe, scene.player, (pipe, player) =>
                 {
                     player.destroy();
                     resetCrosshairIfDifferent();

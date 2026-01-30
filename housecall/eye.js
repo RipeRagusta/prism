@@ -288,6 +288,7 @@ class eye extends Phaser.Physics.Arcade.Sprite
     
     kill()
     {
+        this.player.lastPlayerBlock = 0;
         if(this.gameManager.extraGibs === "All" || this.gameManager.extraGibs === "Eyes-Only")
         {
             this.explode.emitParticleAt(this.x, this.y);
