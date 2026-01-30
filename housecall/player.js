@@ -676,7 +676,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         if(this.resetShootTime)
         {
             this.resetShootTime = false;
-            this.lastPlayerShot = 0;    
+            //this.lastPlayerShot = 0;    
         }
         
         if(this.gameActionActive("useShotgun") && time > this.lastPlayerShot + this.fireRate && this.settings.displayedSettings === false)
