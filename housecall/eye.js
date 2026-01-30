@@ -21,6 +21,8 @@ function eyeCreator(scene, eyePositions, gameManager)
                 player.play("block", false);
                 player.succesfulBlock = true;
                 player.lastPlayerBlock = 0;
+                player.resetShootTime = true;
+                player.resetPistolTime = true;
                 if(scene.gameManager.screenShake)
                 {
                     scene.cameras.main.shake(100, 0.005);
@@ -40,6 +42,8 @@ function eyeCreator(scene, eyePositions, gameManager)
             player.play("block", false);
             player.succesfulBlock = true;
             player.lastPlayerBlock = 0;
+            player.resetShootTime = true;
+            player.resetPistolTime = true;
             if(scene.gameManager.screenShake)
             {
                 scene.cameras.main.shake(100, 0.005);

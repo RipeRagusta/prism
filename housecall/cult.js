@@ -62,6 +62,8 @@ function cultCreator(scene, cultPositions, gameManager)
                     player.play("block", false);
                     player.succesfulBlock = true;
                     player.lastPlayerBlock = 0;
+                    player.resetShootTime = true;
+                    player.resetPistolTime = true;
                     if(scene.gameManager.screenShake)
                     {
                         scene.cameras.main.shake(100, 0.005);
@@ -81,6 +83,8 @@ function cultCreator(scene, cultPositions, gameManager)
                 player.play("block", false);
                 player.succesfulBlock = true;
                 player.lastPlayerBlock = 0;
+                player.resetShootTime = true;
+                player.resetPistolTime = true;
                 if(scene.gameManager.screenShake)
                 {
                     scene.cameras.main.shake(100, 0.005);

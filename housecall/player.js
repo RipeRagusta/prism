@@ -376,6 +376,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             if(this.anims.isPlaying && this.anims.currentAnim.key === animation && shootingFrames.includes(frame.index) && !this.playedPistolShootingSound) 
             {
                 this.playedPistolShootingSound = true;
+                this.isShootingPistol = true;
                 this.scene.sound.play("pistolsound");
 
                 const bullet = this.bullets.get(this.x, this.y, "slug");
@@ -419,6 +420,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             else if(this.anims.isPlaying && anim.key === animation && !shootingFrames.includes(frame.index) && this.playedPistolShootingSound) 
             {
                 this.playedPistolShootingSound = false;
+                this.isShootingPistol = false;
             }
         };
         
@@ -588,6 +590,11 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     
     checkPistolMove(time)
     {
+        if(this.resetPistolTime)
+        {
+            this.resetPistolTime = false;
+            this.lastPistolMove = 0;
+        }
         
         if(this.gameManager.triplePistolUpgrade)
         {
@@ -604,6 +611,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             
         if(this.gameActionActive("usePistol") && time > this.lastPistolMove + this.pistolMoveFireRate && this.settings.displayedSettings === false)
         {
+            this.lastPistolMove = time;
+            
             if(this.gameManager.triplePistolUpgrade)
             {
                 this.shootPistol(time, "triplepistol");
@@ -622,7 +631,6 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     shootPistol(time, animation)
     {
         this.play(animation, true);
-        this.lastPistolMove = time;
         this.playedPistolShootingSound = false;
     }
     
@@ -665,6 +673,12 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     
     checkShooting(time)
     {
+        if(this.resetShootTime)
+        {
+            this.resetShootTime = false;
+            this.lastPlayerShot = 0;    
+        }
+        
         if(this.gameActionActive("useShotgun") && time > this.lastPlayerShot + this.fireRate && this.settings.displayedSettings === false)
         {
             this.mouseRef.mouse.disableContextMenu();
@@ -773,9 +787,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
 
             if(this.succesfulBlock)
             {
-                this.lastPlayerBlock = 0;
-                this.lastPlayerShot = 0;
                 this.succesfulBlock = false;
+                this.lastPlayerBlock = 0;
             }
             else
             {

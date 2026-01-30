@@ -70,7 +70,7 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
 
     scene.physics.add.overlap(scene.player, scene.cultKnifes, (player, cult) =>
     {
-        if(player.lastPlayerShot > scene.time.now - 50 /*&& ((player.flip === false && cult.flip === false) || (player.flip === true && cult.flip === true))*/) 
+        if(player.lastPlayerShot > scene.time.now - 50 || player.isShootingPistol/*&& ((player.flip === false && cult.flip === false) || (player.flip === true && cult.flip === true))*/) 
         {
             scene.sound.play("hurt");
             if(scene.gameManager.screenShake)
