@@ -6,15 +6,13 @@
     <title>Total Prism</title>
     <meta name="description" content="total prism is a website">
     <link rel="stylesheet" href="./MAIN_ASSETS/style.css">
-    <link rel="preload" href="./MAIN_ASSETS/single.css" as="style" />
-    <link rel="preload" href="./MAIN_ASSETS/threecolumn.css" as="style" />
-    <link rel="stylesheet" href="./MAIN_ASSETS/single.css" id="singlefile" disabled>
+    <link rel="stylesheet" href="./MAIN_ASSETS/single.css" id="singlefile">
     <link rel="stylesheet" href="./MAIN_ASSETS/threecolumn.css" id="threecolumn">
     <link rel="shortcut icon" type="image" href="./MAIN_ASSETS/mainicon.png">
     <script src="./MAIN_ASSETS/script.js"></script>
     <script src="./terminal/theme.js"></script>
 </head>
-<body class="ibm-plex-sans" onload="initialize()">
+<body class="ibm-plex-sans singlefile" onload="initialize()">
     <main>
         <div>
             <h1 id="title">Total Prism</h1>
@@ -41,7 +39,7 @@
     </main>
     <footer>
             <div id="footercontent">
-                <small id="footerblurb" role="presentation">Total Prism is a website.</small>
+                <small id="date" role="presentation">Total Prism is a website.</small>
                 <small class="button" id="switchlayout" onclick="toggleLayout()">Change Layout</small>
             </div>
     </footer>
