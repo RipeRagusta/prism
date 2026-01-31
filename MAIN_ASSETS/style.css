@@ -108,8 +108,8 @@ footer{
 #switchlayout{
 	cursor: pointer;
 	user-select: none;
-        padding: calc(var(--sizer) / 2);
-        border: 1px solid var(--color);
+    padding: calc(var(--sizer) / 2);
+    border: 1px solid var(--color);
 }
 
 #switchlayout:hover{

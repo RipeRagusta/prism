@@ -1,13 +1,13 @@
-main{
+body.singlefile main{
 	grid-template-columns: auto 383px;
 }
 
-nav{
+body.singlefile nav{
 	margin-top: calc(var(--sizer) * 3);
 	margin-bottom: calc(var(--sizer) * 4);
 }
 
-.imagegallery{
+body.singlefile .imagegallery{
 	display: flex;
 	flex-direction: column;
 	gap: calc(var(--sizer) * 4);
@@ -15,14 +15,14 @@ nav{
 
 @media only screen and (max-width: 811px)
 {
-	nav{
+	body.singlefile nav{
 		margin: 0px;
 		overflow-x: auto;
 		overflow-y: hidden;
 		height: fit-content;
 	}
 
-	main{
+	body.singlefile main{
 		grid-template-columns: 1fr;
 		grid-template-rows: auto 1fr;
 		min-height: 100%;
@@ -30,14 +30,14 @@ nav{
 		padding: var(--sizer);
 	}
 
-	.imagegallery{
+	body.singlefile .imagegallery{
 		display: flex;
 		flex-direction: row;
 		grid-gap: 0px;
 		gap: var(--sizer);
 	}
 
-	.imagelink{
+	body.singlefile .imagelink{
 		width: 383px;
 		flex-shrink: 0;
 		margin-bottom: var(--sizer);
@@ -46,7 +46,7 @@ nav{
 
 @media only screen and (max-width: 507px)
 {
-	.imagelink{
+	body.singlefile .imagelink{
 		width: 80%;
 		flex-shrink: 0;
 		margin-bottom: var(--sizer);

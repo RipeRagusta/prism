@@ -3,6 +3,8 @@ var threeColumnOn;
 var	threeColumnLayout;
 var	singleFileLayout;
 
+var timeUpdate;
+
 var sortAlphabetically = (a, b) => 
 {
     const nameA = a.name.toLowerCase();
@@ -37,6 +39,8 @@ window.addEventListener("pageshow", (event) =>
 function initialize()
 {
     document.body.style.visibility = "hidden";
+
+    baseBodyClass = "ibm-plex-sans";
     
 	threeColumnOn = false;
 
@@ -66,6 +70,21 @@ function initialize()
 	}
 
 	changeThemeFromName(currentTheme);
+
+    updateTime()
+
+    if(timeUpdate)
+    {
+        clearInterval(timeUpdate);
+    }
+
+    timeUpdate = setInterval(updateTime, 60000);
+}
+
+function updateTime()
+{
+    const currentDate = new Date();
+    document.getElementById("date").innerHTML = (currentDate.getMonth() + 1) + "/" + currentDate.getDate() + "/" + currentDate.getFullYear();
 }
 
 function toggleLayout()
@@ -85,13 +104,11 @@ function displayLayout()
 
 	if(!threeColumnOn)
 	{
-        singleFileLayout.disabled = false;
-		threeColumnLayout.disabled = true;
+        document.body.classList.replace("singlefile", "threecolumn");
 	}
 	else
 	{
-        threeColumnLayout.disabled = false;
-		singleFileLayout.disabled = true;
+        document.body.classList.replace("threecolumn", "singlefile");
 	}
 
     document.body.style.visibility = "visible";

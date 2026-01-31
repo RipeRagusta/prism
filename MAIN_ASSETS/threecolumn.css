@@ -1,25 +1,25 @@
-main{
+body.threecolumn main{
 	grid-template-columns: 1fr;
 	grid-template-rows: auto 1fr;
 }
 
-nav{
+body.threecolumn nav{
 	margin-bottom: var(--sizer);
 }
 
-.imagegallery{
+body.threecolumn .imagegallery{
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: var(--sizer);
 }
 
-.imagelink a{
+body.threecolumn .imagelink a{
 	margin-bottom: var(--sizer);
 }
 
 @media only screen and (max-width: 700px)
 {
-	.imagegallery{
+	body.threecolumn .imagegallery{
 		grid-template-columns: .5fr .5fr;
 	}
 }
