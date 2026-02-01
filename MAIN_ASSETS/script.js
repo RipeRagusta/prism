@@ -104,11 +104,11 @@ function displayLayout()
 
 	if(!threeColumnOn)
 	{
-        document.body.classList.replace("singlefile", "threecolumn");
+        document.body.classList.replace("threecolumn", "singlefile");
 	}
 	else
 	{
-        document.body.classList.replace("threecolumn", "singlefile");
+        document.body.classList.replace("singlefile", "threecolumn");
 	}
 
     document.body.style.visibility = "visible";
