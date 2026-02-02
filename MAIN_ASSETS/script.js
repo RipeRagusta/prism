@@ -51,6 +51,10 @@ function initialize()
             threeColumnOn = JSON.parse(localStorage.getItem("threeColumnLayout"));
         }
     }
+    else
+    {
+        threeColumnOn = true;
+    }
 
 	threeColumnLayout = document.getElementById("threecolumn");
 	singleFileLayout = document.getElementById("singlefile");
