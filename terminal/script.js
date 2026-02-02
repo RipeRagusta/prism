@@ -280,6 +280,8 @@ function initialize()
 	{
 	    if(event.persisted) 
 	    {
+	    	moveToRight();
+			synchro();
 	        document.getElementById("consolewindow").focus();
 	    }
 	});
@@ -357,8 +359,7 @@ function initialize()
 		}
 	});
 
-	let selected = document.getElementById("pagefull");
-	selected.scrollTo(selected.scrollWidth, 0);
+	moveToRight();
 	synchro();
 
 	document.getElementById("pagefull").addEventListener("scroll", function(event) 
@@ -718,6 +719,12 @@ function synchro()
 	let manipulate = document.getElementById("toplogo");
 	percent = selected.scrollLeft / (selected.scrollWidth - selected.clientWidth);
 	manipulate.scrollLeft = percent * (manipulate.scrollWidth - manipulate.clientWidth);
+}
+
+function moveToRight()
+{
+	let selected = document.getElementById("pagefull");
+	selected.scrollTo(selected.scrollWidth, 0);
 }
 
 function checkStorage()
