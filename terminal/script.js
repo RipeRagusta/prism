@@ -276,6 +276,14 @@ function initialize()
 			
 	document.getElementById("consolewindow").focus();
 
+	window.addEventListener("pageshow", (event) => 
+	{
+	    if(event.persisted) 
+	    {
+	        document.getElementById("consolewindow").focus();
+	    }
+	});
+
 	document.getElementById("consolewindow").addEventListener("keydown", function(event) 
 	{
     	if(event.key === "Enter") 
