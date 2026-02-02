@@ -148,6 +148,7 @@ p{
 	padding: calc(var(--sizer) / 3);
 	text-align: center;
 	box-sizing: border-box;
+	color: var(--color);
 }
 
 .button:hover{
