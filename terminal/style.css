@@ -135,19 +135,27 @@ p{
 	word-wrap: break-all;
 }
 
-#buttonforother{
+#buttonholder{
 	margin-top: auto;
 	box-sizing: border-box;
-	border: 1px solid var(--color);
-	padding: calc(var(--sizer) / 3);
+	display: flex;
+	gap: var(--sizer);
 }
 
-#buttonforother:hover{
+.button{
+	flex: 1;
+	border: 1px solid var(--color);
+	padding: calc(var(--sizer) / 3);
+	text-align: center;
+	box-sizing: border-box;
+}
+
+.button:hover{
 	color: var(--usercolor);
 	border: 1px solid var(--usercolor);
 }
 
-#buttonforother:active{
+.button:active{
 	color: var(--consolecolor);
 	border: 1px solid var(--consolecolor);
 }

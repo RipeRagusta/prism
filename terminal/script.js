@@ -349,6 +349,10 @@ function initialize()
 		}
 	});
 
+	let selected = document.getElementById("pagefull");
+	selected.scrollTo(selected.scrollWidth, 0);
+	synchro();
+
 	document.getElementById("pagefull").addEventListener("scroll", function(event) 
 	{
 		synchro();
