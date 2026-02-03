@@ -64,6 +64,15 @@ span{
 
 #tplogo{
 	padding-bottom: 2ex;
+	user-select: none;
+}
+
+#date{
+	user-select: none;
+}
+
+#time{
+	user-select: none;
 }
 
 header{
@@ -145,6 +154,7 @@ p{
 	box-sizing: border-box;
 	display: flex;
 	gap: var(--sizer);
+	user-select: none;
 }
 
 .button{
