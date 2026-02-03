@@ -89,6 +89,7 @@ function updateTime()
 {
     const currentDate = new Date();
     let currentHours = currentDate.getHours();
+    let currentMinutes = currentDate.getMinutes();
     let meridiem;
 
     if(currentHours >= 12)
@@ -109,15 +110,8 @@ function updateTime()
         currentHours = 12;
     }
 
-    let currentMinutes = currentDate.getMinutes();
-
-    if(currentMinutes < 10)
-    {
-        currentMinutes = "0" + currentMinutes;
-    }
-
-    document.getElementById("date").innerHTML = (currentDate.getMonth() + 1) + "/" + currentDate.getDate() + "/" + currentDate.getFullYear();
-    document.getElementById("time").innerHTML = currentHours + ":" + currentMinutes + " " + meridiem;
+    document.getElementById("date").innerHTML = (currentDate.getMonth() + 1).toString() + "/" + currentDate.getDate().toString() + "/" + (currentDate.getFullYear() % 100).toString().padStart(2, "0");
+    document.getElementById("time").innerHTML = currentHours.toString() + ":" + currentMinutes.toString().padStart(2, "0") + " " + meridiem;
 }
 
 function toggleLayout()
