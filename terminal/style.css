@@ -68,7 +68,7 @@ span{
 }
 
 #tplogo{
-	padding-bottom: 2ex;
+	padding-bottom: min(var(--sizer), 2ex);
 	user-select: none;
 }
 
