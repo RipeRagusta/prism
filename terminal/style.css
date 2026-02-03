@@ -81,8 +81,8 @@ span{
 	content: "";
 	position: absolute;
 	top: calc((var(--sizer) + 1px) * -1);
-	right: calc(var(--sizer) * -1);
-	bottom: calc(var(--sizer) * -1);
+	right: calc((var(--sizer) + 1px) * -1);
+	bottom: calc((var(--sizer) + 1px) * -1);
 	left: calc((var(--sizer) + 1px) * -1);
 	background: var(--color);
   	clip-path: polygon(
@@ -113,8 +113,8 @@ span{
 	position: absolute;
 	top: calc((var(--sizer) + 1px) * -1);
 	right: calc((var(--sizer) + 1px) * -1);
-	bottom: calc(var(--sizer) * -1);
-	left: calc(var(--sizer) * -1);
+	bottom:  calc((var(--sizer) + 1px) * -1);
+	left:  calc((var(--sizer) + 1px) * -1);
 	background: var(--color);
 	clip-path: polygon(
 	    0% 0%,
