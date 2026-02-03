@@ -110,7 +110,7 @@ ul{
 #left{
 	display: flex;
 	flex-direction: column;
-	gap: calc(var(--sizer) / 3);
+	gap: var(--sizer);
 	box-sizing: border-box;
 	width: 100%;
 	height: 100%;
@@ -125,6 +125,11 @@ ul{
 	cursor: text;
 	display: flex;
 	flex-direction: column;
+}
+
+#timebox{
+	display: flex;
+	justify-content: space-between;
 }
 
 p{
