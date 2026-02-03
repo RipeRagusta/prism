@@ -42,6 +42,14 @@ button{
 	color: var(--consolecolor);
 }
 
+#date{
+	user-select: none;
+}
+
+#time{
+	user-select: none;
+}
+
 html{
 	height: 100vh;
 	height: 100dvh;
