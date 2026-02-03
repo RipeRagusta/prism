@@ -46,7 +46,7 @@ html{
 body{
 	font-size: 1rem;
 	background-color: var(--backgroundcolor);
-	font-family: arial, sans-serif, serif;
+	font-family: system-ui, sans-serif, serif;
 	min-height: 100%;
 	margin: 0px auto;
 	padding: 0px;
