@@ -82,13 +82,42 @@ function initialize()
         clearInterval(timeUpdate);
     }
 
-    timeUpdate = setInterval(updateTime, 60000);
+    timeUpdate = setInterval(updateTime, 1000);
 }
 
 function updateTime()
 {
     const currentDate = new Date();
+    let currentHours = currentDate.getHours();
+    let meridiem;
+
+    if(currentHours >= 12)
+    {
+        meridiem = "PM";
+    }
+    else
+    {
+        meridiem = "AM";
+    }
+
+    if(currentHours > 12) 
+    {
+        currentHours -= 12;
+    } 
+    else if (currentHours === 0) 
+    {
+        currentHours = 12;
+    }
+
+    let currentMinutes = currentDate.getMinutes();
+
+    if(currentMinutes < 10)
+    {
+        currentMinutes = "0" + currentMinutes;
+    }
+
     document.getElementById("date").innerHTML = (currentDate.getMonth() + 1) + "/" + currentDate.getDate() + "/" + currentDate.getFullYear();
+    document.getElementById("time").innerHTML = currentHours + ":" + currentMinutes + " " + meridiem;
 }
 
 function toggleLayout()
