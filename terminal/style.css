@@ -86,20 +86,14 @@ span{
 	left: calc((var(--sizer) + 1px) * -1);
 	background: var(--color);
   	clip-path: polygon(
-	    0% 0%,
-	    100% 0%,
-	    100% calc(100% - var(--sizer)), calc(100% - var(--sizer)) 100%,
-	    0% 100%,
-	    0% 0%,
-
-	    1px 1px, 
-	    0% 0%, 
-	    1px 1px, 
-	    1px calc(100% - 1px), 
-	    calc(100% - (var(--sizer) + 0.5px)) calc(100% - 1px),
-	    calc(100% - 1px) calc(100% - (var(--sizer) + 0.5px)),
-	    calc(100% - 1px) 1px,
-	    1px 1px
+    	100% 0%, 
+		100% calc(100% - var(--sizer)), 
+		calc(100% - var(--sizer)) 100%, 
+		0% 100%, 
+		0% calc(100% - 1px), 
+		calc(100% - (var(--sizer) + 0.5px)) calc(100% - 1px), 
+		calc(100% - 1px) calc(100% - (var(--sizer) + 0.5px)), 
+		calc(100% - 1px) 0%
   	);
 }
 
@@ -117,20 +111,14 @@ span{
 	left:  calc((var(--sizer) + 1px) * -1);
 	background: var(--color);
 	clip-path: polygon(
-	    0% 0%,
-	    100% 0%,
-	    100% 100%,
-	    var(--sizer) 100%, 0% calc(100% - var(--sizer)),
-	    0% 0%,
-
-	    1px 1px, 
 	    0% 0%, 
-	    1px 1px, 
-	    1px calc(100% - (var(--sizer) + 0.5px)), 
-	    calc(var(--sizer) + 0.5px) calc(100% - 1px),
-	    calc(100% - 1px) calc(100% - 1px),
-	    calc(100% - 1px) 1px,
-	    1px 1px
+		0% calc(100% - var(--sizer)), 
+		var(--sizer) 100%, 
+		100% 100%, 
+		100% calc(100% - 1px), 
+		calc(var(--sizer) + 0.5px) calc(100% - 1px), 
+		1px calc(100% - (var(--sizer) + 0.5px)), 
+		1px 0%
   	);
 }
 
