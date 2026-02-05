@@ -25,6 +25,7 @@ var currentTheme;
 var sortAlphabetically;
 var openInNewWindow;
 var timeUpdate;
+var lastDisplaySize;
 
 function initialize()
 {
@@ -285,6 +286,24 @@ function initialize()
 			synchro();
 	        document.getElementById("consolewindow").focus();
 	    }
+	});
+
+	lastDisplaySize = window.innerWidth;
+
+	window.addEventListener("resize", () => 
+	{
+	    if(window.innerWidth <= 820 && lastDisplaySize > 820)
+	    {
+	    	moveToRight();
+			synchro();
+	    }
+	    else if (window.innerWidth > 820 && lastDisplaySize <= 820)
+	    {
+	    	moveToRight();
+			synchro();
+	    }
+
+	    lastDisplaySize = window.innerWidth;
 	});
 
 	document.getElementById("consolewindow").addEventListener("keydown", function(event) 
