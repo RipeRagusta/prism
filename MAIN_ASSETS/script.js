@@ -75,14 +75,14 @@ function initialize()
 
 	changeThemeFromName(currentTheme);
 
-    updateTime()
+    //updateTime()
 
     if(timeUpdate)
     {
         clearInterval(timeUpdate);
     }
 
-    timeUpdate = setInterval(updateTime, 1000);
+    //timeUpdate = setInterval(updateTime, 1000);
 }
 
 function updateTime()
