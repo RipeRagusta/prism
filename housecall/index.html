@@ -38,7 +38,8 @@
                 this.pipe.setOrigin(0, 1);
                 this.pipe.body.allowGravity = false;
                 this.pipe.body.setImmovable(true);
-
+                this.pipe.setDepth(999999998);
+                
                 if(!scene.anims.get("stabAnim"))
                 {
                     scene.anims.create
@@ -52,6 +53,7 @@
                 scene.stab = scene.add.sprite(this.pipe.x + 1, this.pipe.y, "stab").setOrigin(0, 1);
                 scene.stab.setActive(false);
                 scene.stab.setVisible(false);
+                scene.stab.setDepth(999999998);
 
                 scene.physics.add.overlap(this.pipe, scene.player, (pipe, player) =>
                 {
@@ -796,6 +798,7 @@
                 this.pipe.setOrigin(0, 1);
                 this.pipe.body.allowGravity = false;
                 this.pipe.body.setImmovable(true);
+                this.pipe.setDepth(999999998);
 
                 if(!this.anims.get("stabAnim"))
                 {
@@ -810,6 +813,7 @@
                 this.stab = this.add.sprite(this.pipe.x + 1, this.pipe.y, "stab").setOrigin(0, 1);
                 this.stab.setActive(false);
                 this.stab.setVisible(false);
+                this.stab.setDepth(999999998);
 
                 this.physics.add.collider(this.pipe, this.player, (pipe, player) =>
                 {
