@@ -28,6 +28,8 @@
     <script type="text/javascript" src="./cultKnife.js"></script>
     <script type="text/javascript" src="./eye.js"></script>
     <script type="text/javascript">
+        var disableUncleanMouseActions = false;
+        
         class pipeNext extends Phaser.Physics.Arcade.Sprite
         {
             constructor(scene, x, y, key, fromLevel, gameManager) 
@@ -698,7 +700,8 @@
             {
                 //START BASIC SETUP MainMenu
 
-
+                
+                disableUncleanMouseActions = false;
                 this.input.setDefaultCursor("");
                 const worldWidthX = this.sys.game.config.width * 3;
                 this.physics.world.setBounds(0, 0, (worldWidthX / 3), 176);
@@ -932,7 +935,7 @@
 
                                 this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                                 this.logo.destroy();
-                                this.time.delayedCall(200, () => this.player.canShoot = true);
+                                this.time.delayedCall(200, () => disableUncleanMouseActions = false);
 
                                 if(this.quickStart)
                                 {
@@ -1131,7 +1134,7 @@
                         this.didFirstTransition = true;
                         
                         this.logo.destroy();
-                        this.time.delayedCall(200, () => this.player.canShoot = true);
+                        this.time.delayedCall(200, () => disableUncleanMouseActions = false);
 
                         if(this.quickStart)
                         {
@@ -1196,11 +1199,11 @@
                             {
                                 if(this.logo.getBounds().contains(this.input.activePointer.worldX, this.input.activePointer.worldY)) 
                                 {
-                                    this.player.canShoot = false;
+                                    disableUncleanMouseActions = true;
                                 }   
                                 else
                                 {
-                                    this.player.canShoot = true;
+                                    disableUncleanMouseActions = false;
                                 }
                             }
                         }
@@ -1520,7 +1523,8 @@
             {
                 //START BASIC SETUP Level1Game
 
-
+                
+                disableUncleanMouseActions = false;
                 this.input.setDefaultCursor("");
                 const worldWidthX = 1800;
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
@@ -1681,7 +1685,8 @@
             {
                 //START BASIC SETUP Level2Game
 
-
+                
+                disableUncleanMouseActions = false;
                 this.input.setDefaultCursor("");
                 const worldWidthX = 2250;
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
@@ -1837,7 +1842,8 @@
             {
                 //START BASIC SETUP Level3Game
 
-
+                
+                disableUncleanMouseActions = false;
                 this.input.setDefaultCursor("");
                 const worldWidthX = 1325;
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
@@ -2003,7 +2009,8 @@
             {
                 //START BASIC SETUP Level4Game
 
-
+                
+                disableUncleanMouseActions = false;
                 this.input.setDefaultCursor("");
                 const worldWidthX = 2400;
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
@@ -2169,6 +2176,7 @@
 
             create()
             {
+                disableUncleanMouseActions = false;
                 this.settings = this.scene.get("Settings");
                 this.input.setDefaultCursor("pointer");
                 this.canAcceptCard = true;
@@ -2925,6 +2933,14 @@
 
                 if(binding.type === "MOUSE") 
                 {
+                    if(disableUncleanMouseActions)
+                    {
+                        if(actionName === "jump" || actionName === "block" || actionName === "useShotgun" || actionName === "usePistol")
+                        {
+                            return false;
+                        }
+                    }
+                    
                     const pointer = this.input.activePointer;
                     if(binding.button === 0) return pointer.leftButtonDown();
                     if(binding.button === 1) return pointer.middleButtonDown();

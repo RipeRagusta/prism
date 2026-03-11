@@ -81,8 +81,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
 
         scene.player = new player(scene, x, scene.sys.game.config.height - 24, scene.playerBulletsHolder);
         
-        scene.player.canShoot = false;
-        scene.time.delayedCall(200, () => scene.player.canShoot = true);
+        disableUncleanMouseActions = true;
+        scene.time.delayedCall(200, () => disableUncleanMouseActions = false);
         
         scene.player.fireMode = scene.gameManager.fireModeUpgrade;
         
@@ -128,7 +128,6 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.blockRate = 750;
         this.block = false;
         this.playerBulletsHolder = playerBulletsHolder;
-        this.canShoot = true;
         this.damagePerShot = 1;
         this.baseDamage = 1;
         this.initialDamage = this.baseDamage;
@@ -683,7 +682,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         {
             this.mouseRef.mouse.disableContextMenu();
 
-            if(this.canShoot && this.settings.displayedSettings === false)
+            if(this.settings.displayedSettings === false)
             {
                 this.shoot(time);
                 this.lastPlayerShot = time;
