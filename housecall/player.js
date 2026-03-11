@@ -688,6 +688,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 this.shoot(time);
                 this.lastPlayerShot = time;
                 this.play("pump", false);
+                this.isShootingPistol = false;
             }
         }
     }
@@ -784,6 +785,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         {
             this.play("block", false);
             this.blockInputHeld = true;
+            this.isShootingPistol = false;
 
             if(this.succesfulBlock)
             {
