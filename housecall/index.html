@@ -701,7 +701,6 @@
                 //START BASIC SETUP MainMenu
 
                 
-                disableUncleanMouseActions = false;
                 this.input.setDefaultCursor("");
                 const worldWidthX = this.sys.game.config.width * 3;
                 this.physics.world.setBounds(0, 0, (worldWidthX / 3), 176);
@@ -873,11 +872,20 @@
                             this.scene.start("Level1Game");
                             this.scene.launch("HUD");
                             resetCrosshairIfDifferent();
+                            disableUncleanMouseActions = true;
                         }
                     });
                 }
-
-                this.logo = createText(this, worldWidthX / 6, this.sys.game.config.height / 2, "HOUSE CALL", 20, "#fff").setOrigin(0.5, 0.5);
+                
+                if(getRandMinMax(1, 1000) === 1 && this.seenControls === true)
+                {
+                    this.logo = createText(this, worldWidthX / 6, this.sys.game.config.height / 2, "HOUSE CALLLLLLLLLLLLLLLLLLLLLLLLLLLL", 20, "#fff").setOrigin(0.5, 0.5);
+                }
+                else
+                {
+                    this.logo = createText(this, worldWidthX / 6, this.sys.game.config.height / 2, "HOUSE CALL", 20, "#fff").setOrigin(0.5, 0.5);
+                }
+                
                 this.logo.setInteractive({cursor: "pointer"});
                 
                 if(this.seenControls !== true)
@@ -989,6 +997,7 @@
                         this.scene.start("Level1Game");
                         this.scene.launch("HUD");
                         resetCrosshairIfDifferent();
+                        disableUncleanMouseActions = true;
                     }
                 });
 
@@ -1524,7 +1533,6 @@
                 //START BASIC SETUP Level1Game
 
                 
-                disableUncleanMouseActions = false;
                 this.input.setDefaultCursor("");
                 const worldWidthX = 1800;
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
@@ -1686,7 +1694,6 @@
                 //START BASIC SETUP Level2Game
 
                 
-                disableUncleanMouseActions = false;
                 this.input.setDefaultCursor("");
                 const worldWidthX = 2250;
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
@@ -1843,7 +1850,6 @@
                 //START BASIC SETUP Level3Game
 
                 
-                disableUncleanMouseActions = false;
                 this.input.setDefaultCursor("");
                 const worldWidthX = 1325;
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
@@ -2010,7 +2016,6 @@
                 //START BASIC SETUP Level4Game
 
                 
-                disableUncleanMouseActions = false;
                 this.input.setDefaultCursor("");
                 const worldWidthX = 2400;
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
@@ -2176,7 +2181,6 @@
 
             create()
             {
-                disableUncleanMouseActions = false;
                 this.settings = this.scene.get("Settings");
                 this.input.setDefaultCursor("pointer");
                 this.canAcceptCard = true;
@@ -2209,6 +2213,7 @@
                         {
                             this.canAcceptCard = false;
                             this.acceptCard(this.card1);
+                            disableUncleanMouseActions = true;
                         }
                         
                     }
@@ -2223,6 +2228,7 @@
                         {
                             this.canAcceptCard = false;
                             this.acceptCard(this.card2);
+                            disableUncleanMouseActions = true;
                         }
                     }
                 });
@@ -4006,6 +4012,7 @@
                     this.gameManager.score = 0; 
                     this.gameManager.switchGameMode(this.gameModeWords);
                     canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                    disableUncleanMouseActions = true;
                 });
                 
                 this.background = this.add.rectangle(200, 0, 400, 176, "#000000").setOrigin(0.5, 0).setAlpha(0.8); 

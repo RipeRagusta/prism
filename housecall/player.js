@@ -79,9 +79,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
           runChildUpdate: true
         });
 
-        scene.player = new player(scene, x, scene.sys.game.config.height - 24, scene.playerBulletsHolder);
+        scene.player = new player(scene, x, scene.sys.game.config.height - 24, scene.playerBulletsHolder, scene.time.now);
         
-        disableUncleanMouseActions = true;
         scene.time.delayedCall(200, () => disableUncleanMouseActions = false);
         
         scene.player.fireMode = scene.gameManager.fireModeUpgrade;
@@ -104,7 +103,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
   
   class player extends Phaser.Physics.Arcade.Sprite
   {
-    constructor(scene, x, y, playerBulletsHolder)
+    constructor(scene, x, y, playerBulletsHolder, time)
     {
         super(scene, x, y, "player");
         
@@ -119,7 +118,13 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.baseFireRate = this.fireRate;
         this.doubleFire = false;
         this.doubleFireDuration = 1500;
-        this.lastPlayerShot = 0;
+        
+        if(!scene.registry.has("lastPlayerShot")) 
+        {
+            scene.registry.set("lastPlayerShot", 0);
+        }
+        
+        this.lastPlayerShot = scene.registry.get("lastPlayerShot");
         this.health = 10;
         this.setBounce(0);
         this.setCollideWorldBounds(true);
@@ -678,6 +683,9 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             //this.lastPlayerShot = 0;    
         }
         
+        
+        
+        
         if(this.gameActionActive("useShotgun") && time > this.lastPlayerShot + this.fireRate && this.settings.displayedSettings === false)
         {
             this.mouseRef.mouse.disableContextMenu();
@@ -688,6 +696,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 this.lastPlayerShot = time;
                 this.play("pump", false);
                 this.isShootingPistol = false;
+                this.scene.registry.set("lastPlayerShot", time);
             }
         }
     }
