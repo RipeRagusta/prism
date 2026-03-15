@@ -52,6 +52,7 @@
                         repeat: 0
                     });
                 }
+                
                 scene.stab = scene.add.sprite(this.pipe.x + 1, this.pipe.y, "stab").setOrigin(0, 1);
                 scene.stab.setActive(false);
                 scene.stab.setVisible(false);
@@ -117,6 +118,7 @@
                             }
                         }
                     });
+                    
                     scene.stab.play("stabAnim", true);
                 });
 
@@ -469,6 +471,7 @@
             activeScenes.forEach(s => 
             {
                 const key = s.scene.key;
+                
                 if (key !== "GameManager" && key !== "Settings" && key !== "Crosshair") 
                 {
                     scene.scene.stop(key);
@@ -490,6 +493,7 @@
             activeScenes.forEach(s => 
             {
                 const key = s.scene.key;
+                
                 if (key !== "GameManager" && key !== "Settings" && key !== "Crosshair") 
                 {
                     scene.scene.stop(key);
@@ -602,10 +606,12 @@
                 {
                     this.scene.physics.add.collider(this.scene.player, this.scene.groundBotom);
                 }
+                
                 if(this.scene.cults)
                 {
                     this.scene.physics.add.collider(this.scene.cults, this.scene.groundBotom);
                 }
+                
                 if(this.scene.cultKnifes)
                 {
                     this.scene.physics.add.collider(this.scene.cultKnifes, this.scene.groundBotom);
@@ -2573,6 +2579,7 @@
                 this.visitedUpgradeRoom3 = false;
                 this.score = 0;
                 this.highScore = 0;
+                
                 if(checkStorage() === true)
                 {
                     if((localStorage.getItem("HCHighScore")) !== null)
@@ -2582,6 +2589,7 @@
                 }
                 
                 this.experimentalHighScore = 0;
+                
                 if(checkStorage() === true)
                 {
                     if((localStorage.getItem("HCExperimentalHighScore")) !== null)
@@ -2591,6 +2599,7 @@
                 }
                 
                 this.easyHighScore = 0;
+                
                 if(checkStorage() === true)
                 {
                     if((localStorage.getItem("HCEasyHighScore")) !== null)
@@ -4017,6 +4026,7 @@
                         this.displayedSettings = false;
                         this.destroySettings();
                     }
+                    
                     this.gameManager.resetMappingInProgress();
                     this.gameManager.score = 0; 
                     this.gameManager.switchGameMode(this.gameModeWords);
