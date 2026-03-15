@@ -428,6 +428,8 @@
                 ]);
                 
                 this.load.font("hcfont", "./assets/Metamorphous-Regular.ttf");
+                
+                this.loaded = false;
             }
 
             create()
@@ -437,11 +439,15 @@
 
             update()
             {
-                this.scene.stop("Loading");
-                this.scene.start("GameManager");
-                this.scene.start("MainMenu");
-                this.scene.start("Settings");
-                this.scene.start("Crosshair");
+                if(this.loaded === false)
+                {
+                    this.loaded = true;
+                    this.scene.stop("Loading");
+                    this.scene.start("GameManager");
+                    this.scene.start("MainMenu");
+                    this.scene.start("Settings");
+                    this.scene.start("Crosshair");
+                }
             }
         }
         
@@ -865,6 +871,7 @@
                     {
                         if(this.settings.displayedSettings === false)
                         {
+                            disableUncleanMouseActions = true;
                             this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                             this.scene.stop("MainMenu");
                             this.scene.stop("HUD");
@@ -872,7 +879,6 @@
                             this.scene.start("Level1Game");
                             this.scene.launch("HUD");
                             resetCrosshairIfDifferent();
-                            disableUncleanMouseActions = true;
                         }
                     });
                 }
@@ -986,6 +992,7 @@
                 {
                     if(this.settings.displayedSettings === false)
                     {
+                        disableUncleanMouseActions = true;
                         canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                         if(checkStorage() === true)
                         {
@@ -997,7 +1004,6 @@
                         this.scene.start("Level1Game");
                         this.scene.launch("HUD");
                         resetCrosshairIfDifferent();
-                        disableUncleanMouseActions = true;
                     }
                 });
 
@@ -1667,6 +1673,7 @@
             {
                 if(this.player.killed)
                 {
+                    this.player.killed = false;
                     this.scene.stop("Level1Game");
                     this.scene.stop("HUD");
                     this.scene.start("Level1Game");
@@ -1828,6 +1835,7 @@
             {
                 if(this.player.killed)
                 {
+                    this.player.killed = false;
                     this.scene.stop("Level2Game");
                     this.scene.stop("HUD");
                     this.scene.start("Level1Game");
@@ -1993,6 +2001,7 @@
             {
                 if(this.player.killed)
                 {
+                    this.player.killed = false;
                     this.scene.stop("Level3Game");
                     this.scene.stop("HUD");
                     this.scene.start("Level2Game");
@@ -2156,6 +2165,7 @@
             {
                 if(this.player.killed)
                 {
+                    this.player.killed = false;
                     this.scene.stop("Level4Game");
                     this.scene.stop("HUD");
                     this.scene.start("Level3Game");
@@ -2212,8 +2222,8 @@
                         if(this.canAcceptCard)
                         {
                             this.canAcceptCard = false;
-                            this.acceptCard(this.card1);
                             disableUncleanMouseActions = true;
+                            this.acceptCard(this.card1);
                         }
                         
                     }
@@ -2227,8 +2237,8 @@
                         if(this.canAcceptCard)
                         {
                             this.canAcceptCard = false;
-                            this.acceptCard(this.card2);
                             disableUncleanMouseActions = true;
+                            this.acceptCard(this.card2);
                         }
                     }
                 });
@@ -4002,7 +4012,6 @@
                 this.restartGame.setInteractive({cursor: "pointer"});
                 this.restartGame.on("pointerdown", () =>
                 {
-                    restartToMainMenu(this);
                     if(this.displayedSettings)
                     {
                         this.displayedSettings = false;
@@ -4013,6 +4022,7 @@
                     this.gameManager.switchGameMode(this.gameModeWords);
                     canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                     disableUncleanMouseActions = true;
+                    restartToMainMenu(this);
                 });
                 
                 this.background = this.add.rectangle(200, 0, 400, 176, "#000000").setOrigin(0.5, 0).setAlpha(0.8); 

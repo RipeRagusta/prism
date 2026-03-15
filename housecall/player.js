@@ -79,7 +79,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
           runChildUpdate: true
         });
 
-        scene.player = new player(scene, x, scene.sys.game.config.height - 24, scene.playerBulletsHolder, scene.time.now);
+        scene.player = new player(scene, x, scene.sys.game.config.height - 24, scene.playerBulletsHolder);
         
         scene.time.delayedCall(200, () => disableUncleanMouseActions = false);
         
@@ -103,7 +103,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
   
   class player extends Phaser.Physics.Arcade.Sprite
   {
-    constructor(scene, x, y, playerBulletsHolder, time)
+    constructor(scene, x, y, playerBulletsHolder)
     {
         super(scene, x, y, "player");
         
