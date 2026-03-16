@@ -696,7 +696,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 this.lastPlayerShot = time;
                 this.play("pump", false);
                 this.isShootingPistol = false;
-                this.scene.registry.set("lastPlayerShot", time);
+                //this.scene.registry.set("lastPlayerShot", time);
             }
         }
     }

@@ -909,9 +909,10 @@
                         {
                             this.didFirstTransition = true;
 
-                            this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                             bullet.destroy();
                             logo.destroy();
+                            
+                            this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
 
                             if(this.quickStart)
                             {
@@ -952,9 +953,11 @@
                             if(this.didFirstTransition === false)
                             {
                                 this.didFirstTransition = true;
-
-                                this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                                 this.logo.destroy();
+                                disableUncleanMouseActions = true;
+                                
+                                this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                                
                                 this.time.delayedCall(200, () => disableUncleanMouseActions = false);
 
                                 if(this.quickStart)
@@ -1155,7 +1158,7 @@
                         this.didFirstTransition = true;
                         
                         this.logo.destroy();
-                        this.time.delayedCall(200, () => disableUncleanMouseActions = false);
+                        disableUncleanMouseActions = false;
 
                         if(this.quickStart)
                         {
@@ -1209,27 +1212,6 @@
                         }
                     });
                 }
-                
-                if(this.canCheckForShootingDuringBeginning === true)
-                {
-                    if(this.seenControls === true)
-                    {
-                        if(this.logo)
-                        {
-                            if(this.logo.active)
-                            {
-                                if(this.logo.getBounds().contains(this.input.activePointer.worldX, this.input.activePointer.worldY)) 
-                                {
-                                    disableUncleanMouseActions = true;
-                                }   
-                                else
-                                {
-                                    disableUncleanMouseActions = false;
-                                }
-                            }
-                        }
-                    }
-                } 
             }
         }
   
