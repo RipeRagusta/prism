@@ -61,7 +61,6 @@ function cultCreator(scene, cultPositions, gameManager)
                     player.activateDoubleFire();
                     player.play("block", false);
                     player.succesfulBlock = true;
-                    player.lastPlayerBlock = 0;
                     player.resetShootTime = true;
                     player.resetPistolTime = true;
                     if(scene.gameManager.screenShake)
@@ -82,7 +81,6 @@ function cultCreator(scene, cultPositions, gameManager)
                 player.activateDoubleFire();
                 player.play("block", false);
                 player.succesfulBlock = true;
-                player.lastPlayerBlock = 0;
                 player.resetShootTime = true;
                 player.resetPistolTime = true;
                 if(scene.gameManager.screenShake)

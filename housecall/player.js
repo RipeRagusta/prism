@@ -682,10 +682,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             this.resetShootTime = false;
             //this.lastPlayerShot = 0;    
         }
-        
-        
-        
-        
+
         if(this.gameActionActive("useShotgun") && time > this.lastPlayerShot + this.fireRate && this.settings.displayedSettings === false)
         {
             this.mouseRef.mouse.disableContextMenu();
@@ -788,32 +785,19 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     {
         const inputActive = this.gameActionActive("block");
         const passedCooldown = time > this.lastPlayerBlock + this.blockRate;
-
-        if(inputActive && !this.blockInputHeld && (passedCooldown || this.succesfulBlock) && this.settings.displayedSettings === false)
+        const isFreshPress = inputActive && !this.blockInputHeld;
+        
+        if(inputActive && (passedCooldown || (this.succesfulBlock && isFreshPress)) && this.settings.displayedSettings === false)
         {
+        
             this.play("block", false);
-            this.blockInputHeld = true;
             this.isShootingPistol = false;
-
-            if(this.succesfulBlock)
-            {
-                this.succesfulBlock = false;
-                this.lastPlayerBlock = 0;
-            }
-            else
-            {
-                this.lastPlayerBlock = time;
-            }
-        }
-        else if(!inputActive && this.blockInputHeld)
-        {
-            this.blockInputHeld = false;
-
-            if(this.succesfulBlock)
-            {
-                this.succesfulBlock = false;
-            }
-        }
+            this.lastPlayerBlock = time;
+            this.blockInputHeld = true;
+            this.succesfulBlock = false;
+        } 
+        
+        this.blockInputHeld = inputActive;
         
         let xOffset;
         
