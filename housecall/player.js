@@ -786,10 +786,10 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     
     checkBlock(time)
     {
-        const inputActive = this.gameActionActive("block") && this.settings.displayedSettings === false;
+        const inputActive = this.gameActionActive("block");
         const passedCooldown = time > this.lastPlayerBlock + this.blockRate;
 
-        if(inputActive && !this.blockInputHeld && (passedCooldown || this.succesfulBlock))
+        if(inputActive && !this.blockInputHeld && (passedCooldown || this.succesfulBlock) && this.settings.displayedSettings === false)
         {
             this.play("block", false);
             this.blockInputHeld = true;
