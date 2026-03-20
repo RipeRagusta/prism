@@ -96,8 +96,8 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
         player.health -= 100;
         if(player.health < 1 && !player.killed)
         {
-            canPlayAudio(scene) && scene.sound.play("playerhurt");
             player.kill();
+            canPlayAudio(scene) && scene.sound.play("playerhurt");
             goBackALevel(scene, player.gameManager);
         }
     });
