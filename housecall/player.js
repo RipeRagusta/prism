@@ -577,12 +577,13 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     
     kill()
     {
+        this.killed = true;
         this.gameManager.score = 0;
         const HUD = this.scene.HUD;
-        HUD.updateScore();
-        this.killed = true;
+        HUD.updateScore(); 
         resetCrosshairIfDifferent();
         this.setActive(false);
+        this.disableBody(true, false);
     }
     
     checkPistolMove(time)
