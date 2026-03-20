@@ -2880,6 +2880,15 @@
                     if(event.keyCode !== Phaser.Input.Keyboard.KeyCodes.ESC)
                     {
                         this.updateBinding(actionName, "KEY", event.keyCode);
+                        
+                        const newKey = this.keys[actionName];
+        
+                        if(newKey)
+                        {
+                            newKey.isDown = true;
+                            newKey.timeDown = this.time.now;
+                        }
+                        
                         game.scene.getScene("Settings").refresh();
 
                         if(this.scene.isActive("MainMenu"))

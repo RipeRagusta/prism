@@ -687,14 +687,11 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         {
             this.mouseRef.mouse.disableContextMenu();
 
-            if(this.settings.displayedSettings === false)
-            {
-                this.shoot(time);
-                this.lastPlayerShot = time;
-                this.play("pump", false);
-                this.isShootingPistol = false;
-                //this.scene.registry.set("lastPlayerShot", time);
-            }
+            this.shoot(time);
+            this.lastPlayerShot = time;
+            this.play("pump", false);
+            this.isShootingPistol = false;
+            //this.scene.registry.set("lastPlayerShot", time);
         }
     }
     
