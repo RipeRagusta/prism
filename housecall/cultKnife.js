@@ -72,7 +72,7 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
     {
         if(player.lastPlayerShot > scene.time.now - 50) 
         {
-            scene.sound.play("hurt");
+            canPlayAudio(scene) && scene.sound.play("hurt");
             if(scene.gameManager.screenShake)
             {
                 scene.cameras.main.shake(50, 0.004);
@@ -83,7 +83,7 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
         }
         else if(player.isShootingPistol)
         {
-            scene.sound.play("hurt");
+            canPlayAudio(scene) && scene.sound.play("hurt");
             if(scene.gameManager.screenShake)
             {
                 scene.cameras.main.shake(50, 0.004);
@@ -94,7 +94,7 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
         }
         
         player.health -= 100;
-        scene.sound.play("playerhurt");
+        canPlayAudio(scene) && scene.sound.play("playerhurt");
     });
 
     scene.physics.add.collider(scene.cultKnifes, scene.cultKnifes);
@@ -216,7 +216,7 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
 
         if(this.health < 1)
         {
-            this.scene.sound.play("hurt");
+            canPlayAudio(this.scene) && this.scene.sound.play("hurt");
             if(this.scene.gameManager.screenShake)
             {
                 this.scene.cameras.main.shake(50, 0.004);

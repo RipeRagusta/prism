@@ -15,7 +15,7 @@ function eyeCreator(scene, eyePositions, gameManager)
         {
             if(scene.gameManager.alwaysBlock)
             {
-                scene.sound.play("block");
+                canPlayAudio(scene) && scene.sound.play("block");
                 player.defenceParticles();
                 player.activateDoubleFire();
                 player.play("block", false);
@@ -30,12 +30,12 @@ function eyeCreator(scene, eyePositions, gameManager)
             else
             {
                 player.health -= 10;
-                scene.sound.play("playerhurt");
+                canPlayAudio(scene) && scene.sound.play("playerhurt");
             }
         }
         else
         {
-            scene.sound.play("block");
+            canPlayAudio(scene) && scene.sound.play("block");
             player.defenceParticles();
             player.activateDoubleFire();
             player.play("block", false);
@@ -164,7 +164,7 @@ function eyeSynchro(scene, eyes)
 
     if(anEyeAcvite)
     {
-        scene.sound.play("eyeorb");
+        canPlayAudio(scene) && scene.sound.play("eyeorb");
     }
 }
   
@@ -221,7 +221,7 @@ class eye extends Phaser.Physics.Arcade.Sprite
     {
         if(this.health < 1)
         {
-            this.scene.sound.play("hurt");
+            canPlayAudio(this.scene) && this.scene.sound.play("hurt");
             if(this.scene.gameManager.screenShake)
             {
                 this.scene.cameras.main.shake(50, 0.004);

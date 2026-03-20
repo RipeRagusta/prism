@@ -733,7 +733,16 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             }
         }
         
-        this.scene.sound.play(fireConfig.sound);
+        if(!this.firedFirstShot)
+        {
+            this.scene.sound.play(fireConfig.sound);
+            this.firedFirstShot = true;
+        }
+        else
+        {
+            canPlayAudio(this.scene) && this.scene.sound.play(fireConfig.sound);
+        }
+        
         this.shotgunEmitters[fireConfig.shellEmitter].emitParticleAt(this.x, this.y);
     }
     
@@ -786,8 +795,9 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         
         if(inputActive && (passedCooldown || (this.succesfulBlock && isFreshPress)) && this.settings.displayedSettings === false)
         {
-        
+            this.setFrame(2);
             this.play("block", false);
+            this.block = true;
             this.isShootingPistol = false;
             this.lastPlayerBlock = time;
             this.blockInputHeld = true;
@@ -798,7 +808,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         
         let xOffset;
         
-        if(this.anims.isPlaying && this.anims.currentAnim.key === "block" && this.anims.currentFrame.index === 1)
+        if(this.frame.name === "2" || this.frame.name === 2)
         {
             this.block = true;
             this.setSize(8, 16);

@@ -64,14 +64,14 @@
                     resetCrosshairIfDifferent();
                     scene.stab.setActive(true);
                     scene.stab.setVisible(true);
-                    scene.sound.play("powerup");
+                    canPlayAudio(scene) && scene.sound.play("powerup");
 
                     scene.stab.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
                     {
                         if(frame.index === 2) 
                         {
                             let aCultActive = false;
-                            scene.sound.play("stab");
+                            canPlayAudio(scene) && scene.sound.play("stab");
 
                             if(scene.cults && scene.cults.children.entries)
                             {
@@ -114,7 +114,7 @@
 
                             if(aCultActive)
                             {
-                                scene.sound.play("hurt");
+                                canPlayAudio(scene) && scene.sound.play("hurt");
                             }
                         }
                     });
@@ -829,19 +829,19 @@
                 this.stab.setVisible(false);
                 this.stab.setDepth(999999998);
 
-                this.physics.add.collider(this.pipe, this.player, (pipe, player) =>
+                this.physics.add.overlap(this.pipe, this.player, (pipe, player) =>
                 {
                     player.destroy();
                     resetCrosshairIfDifferent();
                     this.stab.setActive(true);
                     this.stab.setVisible(true);
-                    this.sound.play("powerup");
+                    canPlayAudio(this) && this.sound.play("powerup");
 
                     this.stab.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
                     {
                         if(frame.index === 2) 
                         {
-                            this.sound.play("stab");
+                            canPlayAudio(this) && this.sound.play("stab");
                             this.destroyedControlsForGood = true;
                             this.destroyControls();
                         }

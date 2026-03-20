@@ -56,7 +56,7 @@ function cultCreator(scene, cultPositions, gameManager)
             {
                 if(scene.gameManager.alwaysBlock)
                 {
-                    scene.sound.play("block");
+                    canPlayAudio(scene) && scene.sound.play("block");
                     player.defenceParticles();
                     player.activateDoubleFire();
                     player.play("block", false);
@@ -71,12 +71,12 @@ function cultCreator(scene, cultPositions, gameManager)
                 else
                 {
                     player.health -= 10;
-                    scene.sound.play("playerhurt");
+                    canPlayAudio(scene) && scene.sound.play("playerhurt");
                 }
             }
             else
             {
-                scene.sound.play("block");
+                canPlayAudio(scene) && scene.sound.play("block");
                 player.defenceParticles();
                 player.activateDoubleFire();
                 player.play("block", false);
@@ -243,7 +243,7 @@ function cultSeparation(cults, player)
                     if(cult.anims.isPlaying && cult.anims.currentAnim.key === "orbThrow" && frame.index === 2 && !cultSoundPlayed)
                     {
                         cultSoundPlayed = true;
-                        scene.sound.play("orbthrow");
+                        canPlayAudio(scene) && scene.sound.play("orbthrow");
                     }
 
                     if(cultSoundPlayed)
@@ -437,7 +437,7 @@ function cultSeparation(cults, player)
 
         if(this.health < 1)
         {
-            this.scene.sound.play("hurt");
+            canPlayAudio(this.scene) && this.scene.sound.play("hurt");
             if(this.scene.gameManager.screenShake)
             {
                 this.scene.cameras.main.shake(50, 0.004);
