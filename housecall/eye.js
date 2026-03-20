@@ -30,10 +30,10 @@ function eyeCreator(scene, eyePositions, gameManager)
             else
             {
                 player.health -= 10;
+                canPlayAudio(scene) && scene.sound.play("playerhurt");
                 if(player.health < 1 && !player.killed)
                 {
                     player.kill();
-                    canPlayAudio(scene) && scene.sound.play("playerhurt");
                     goBackALevel(scene, player.gameManager);
                 }
             }
