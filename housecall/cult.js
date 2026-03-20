@@ -281,6 +281,7 @@ function cultSeparation(cults, player)
         this.orbs = cultOrbHolder;
         this.gameManager = game.scene.getScene("GameManager");
         this.distancePref = 100;
+        this.killed = false;
         
         if(this.gameManager.moreDistanceUpgrade)
         {
@@ -440,8 +441,9 @@ function cultSeparation(cults, player)
     {
       super.preUpdate(time, delta);
 
-        if(this.health < 1)
+        if(this.health < 1 && this.killed === false)
         {
+            this.killed = true;
             canPlayAudio(this.scene) && this.scene.sound.play("hurt");
             if(this.scene.gameManager.screenShake)
             {

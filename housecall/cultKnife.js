@@ -123,6 +123,7 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
         this.scene = scene;
         this.id = Phaser.Utils.String.UUID();
         this.gameManager = game.scene.getScene("GameManager");
+        this.killed = false;
       
         this.createBlood();
 
@@ -219,8 +220,9 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
     {
         super.preUpdate(time, delta);
 
-        if(this.health < 1)
+        if(this.health < 1 && this.killed === false)
         {
+            this.killed = true;
             canPlayAudio(this.scene) && this.scene.sound.play("hurt");
             if(this.scene.gameManager.screenShake)
             {
