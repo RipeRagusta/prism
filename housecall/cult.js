@@ -72,6 +72,11 @@ function cultCreator(scene, cultPositions, gameManager)
                 {
                     player.health -= 10;
                     canPlayAudio(scene) && scene.sound.play("playerhurt");
+                    if(player.health < 1)
+                    {
+                        player.kill();
+                        goBackALevel(scene, player.gameManager);
+                    }
                 }
             }
             else

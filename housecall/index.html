@@ -182,6 +182,38 @@
             }
         }
         
+        function goBackALevel(scene, gameManager)
+        {
+            if(gameManager.currentLevel === 1)
+            {
+                scene.scene.stop("Level1Game");
+                scene.scene.stop("HUD");
+                scene.scene.start("Level1Game");
+                scene.scene.launch("HUD");
+            }
+            else if(gameManager.currentLevel === 2)
+            {
+                scene.scene.stop("Level2Game");
+                scene.scene.stop("HUD");
+                scene.scene.start("Level1Game");
+                scene.scene.launch("HUD");
+            }
+            else if(gameManager.currentLevel === 3)
+            {
+                scene.scene.stop("Level3Game");
+                scene.scene.stop("HUD");
+                scene.scene.start("Level2Game");
+                scene.scene.launch("HUD");
+            }
+            else if(gameManager.currentLevel === 4)
+            {
+                scene.scene.stop("Level4Game");
+                scene.scene.stop("HUD");
+                scene.scene.start("Level3Game");
+                scene.scene.launch("HUD");
+            }
+        }
+        
         class Crosshair extends Phaser.Scene
         {
             constructor()
@@ -1659,15 +1691,6 @@
 
             update(time, delta)
             {
-                if(this.player.killed)
-                {
-                    this.player.killed = false;
-                    this.scene.stop("Level1Game");
-                    this.scene.stop("HUD");
-                    this.scene.start("Level1Game");
-                    this.scene.launch("HUD");
-                }
-
                 cultSeparation(this.cults, this.player);
             }
         }
@@ -1821,15 +1844,6 @@
 
             update(time, delta)
             {
-                if(this.player.killed)
-                {
-                    this.player.killed = false;
-                    this.scene.stop("Level2Game");
-                    this.scene.stop("HUD");
-                    this.scene.start("Level1Game");
-                    this.scene.launch("HUD");
-                }
-
                 cultSeparation(this.cults, this.player);
             }
         }
@@ -1987,15 +2001,6 @@
 
             update(time, delta)
             {
-                if(this.player.killed)
-                {
-                    this.player.killed = false;
-                    this.scene.stop("Level3Game");
-                    this.scene.stop("HUD");
-                    this.scene.start("Level2Game");
-                    this.scene.launch("HUD");
-                }
-
                 cultSeparation(this.cults, this.player);
                 eyeSeparation(this.eyes, this.player);
             }
@@ -2151,15 +2156,6 @@
 
             update(time, delta)
             {
-                if(this.player.killed)
-                {
-                    this.player.killed = false;
-                    this.scene.stop("Level4Game");
-                    this.scene.stop("HUD");
-                    this.scene.start("Level3Game");
-                    this.scene.launch("HUD");
-                }
-
                 cultSeparation(this.cults, this.player);
                 eyeSeparation(this.eyes, this.player);
             }

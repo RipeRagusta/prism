@@ -565,21 +565,14 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     {
         super.preUpdate(time, delta);
 
-        if(this.health < 1)
-        {
-            this.kill();
-        }
-        else
-        {
-            this.scene.input.activePointer.updateWorldPoint(this.scene.cameras.main);
-            this.checkFlip(this.scene.input.activePointer);
-            this.updateAimAngle(this.scene.input.activePointer);
-            this.checkBlock(time);
-            this.checkMovement(); 
-            this.checkFireMode(time);
-            this.checkShooting(time);
-            this.checkPistolMove(time);
-        } 
+        this.scene.input.activePointer.updateWorldPoint(this.scene.cameras.main);
+        this.checkFlip(this.scene.input.activePointer);
+        this.updateAimAngle(this.scene.input.activePointer);
+        this.checkBlock(time);
+        this.checkMovement(); 
+        this.checkFireMode(time);
+        this.checkShooting(time);
+        this.checkPistolMove(time);
     }
     
     kill()
