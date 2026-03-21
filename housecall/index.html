@@ -909,14 +909,18 @@
                     {
                         if(this.settings.displayedSettings === false)
                         {
-                            disableUncleanMouseActions = true;
-                            this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
-                            this.scene.stop("MainMenu");
-                            this.scene.stop("HUD");
-                            event.stopPropagation();
-                            this.scene.start("Level1Game");
-                            this.scene.launch("HUD");
-                            resetCrosshairIfDifferent();
+                            if(this.didFirstTransition === false)
+                            {
+                                this.didFirstTransition = true;
+                                disableUncleanMouseActions = true;
+                                this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                                this.scene.stop("MainMenu");
+                                this.scene.stop("HUD");
+                                event.stopPropagation();
+                                this.scene.start("Level1Game");
+                                this.scene.launch("HUD");
+                                resetCrosshairIfDifferent();
+                            }
                         }
                     });
                 }
@@ -943,14 +947,14 @@
 
                             bullet.destroy();
                             logo.destroy();
-                            
-                            this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
 
                             if(this.quickStart)
                             {
                                 this.quickStart.destroy();
                             }
-
+                            
+                            this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                            
                             this.player.canMove = false;
                             this.player.setVelocityX(0);
                             this.cameras.main.pan(worldWidthX / 2, this.sys.game.config.height / 2, 2000, "Sine.easeInOut");
