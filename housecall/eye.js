@@ -87,6 +87,11 @@ function eyeCreator(scene, eyePositions, gameManager)
             }
         }
         
+        if(eye.health < 1 && !eye.grantedKillReward)
+        {
+            eye.grantedKillReward = true;
+            eye.player.lastPlayerBlock = 0;
+        }
     });
 
     scene.time.addEvent
@@ -199,6 +204,7 @@ class eye extends Phaser.Physics.Arcade.Sprite
         this.id = Phaser.Utils.String.UUID();
         this.gameManager = game.scene.getScene("GameManager");
         this.killed = false;
+        this.grantedKillReward = false;
         
         this.explode = this.scene.add.particles
         (
@@ -297,7 +303,6 @@ class eye extends Phaser.Physics.Arcade.Sprite
     
     kill()
     {
-        this.player.lastPlayerBlock = 0;
         if(this.gameManager.extraGibs === "All" || this.gameManager.extraGibs === "Eyes-Only")
         {
             this.explode.emitParticleAt(this.x, this.y);

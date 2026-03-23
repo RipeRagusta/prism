@@ -171,7 +171,12 @@ function cultCreator(scene, cultPositions, gameManager)
                     bullet.damage = bullet.damage * bullet.penetrationReduction;
                 }
             }
-          
+            
+            if(cult.health < 1 && !cult.grantedKillReward)
+            {
+                cult.grantedKillReward = true;
+                cult.player.lastPlayerBlock = 0;
+            }
         });
         
         scene.time.addEvent
@@ -282,6 +287,7 @@ function cultSeparation(cults, player)
         this.gameManager = game.scene.getScene("GameManager");
         this.distancePref = 100;
         this.killed = false;
+        this.grantedKillReward = false;
         
         if(this.gameManager.moreDistanceUpgrade)
         {
@@ -611,7 +617,6 @@ function cultSeparation(cults, player)
     
     kill()
     {
-        this.player.lastPlayerBlock = 0;
         this.bloodEmitter.setQuantity(15);
         if(this.gameManager.bloodType !== "Off")
         {

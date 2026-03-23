@@ -66,6 +66,12 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
                 bullet.damage = bullet.damage * bullet.penetrationReduction;
             }
         }
+        
+        if(cult.health < 1 && !cult.grantedKillReward)
+        {
+            cult.grantedKillReward = true;
+            cult.player.lastPlayerBlock = 0;
+        }
     });
 
     scene.physics.add.overlap(scene.player, scene.cultKnifes, (player, cult) =>
@@ -78,6 +84,7 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
                 scene.cameras.main.shake(50, 0.004);
             }
             cult.hitFrom = player.doubleFire ? "doubleFire" : "shotgun";
+            player.lastPlayerBlock = 0;
             cult.kill();
             return; 
         }
@@ -89,6 +96,7 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
                 scene.cameras.main.shake(50, 0.004);
             }
             cult.hitFrom = "pistol";
+            player.lastPlayerBlock = 0;
             cult.kill();
             return; 
         }
@@ -124,6 +132,7 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
         this.id = Phaser.Utils.String.UUID();
         this.gameManager = game.scene.getScene("GameManager");
         this.killed = false;
+        this.grantedKillReward = false;
       
         this.createBlood();
 
@@ -373,7 +382,6 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
     
     kill()
     {
-        this.player.lastPlayerBlock = 0;
         this.bloodEmitter.setQuantity(15);
         if(this.gameManager.bloodType !== "Off")
         {
