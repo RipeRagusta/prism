@@ -147,6 +147,13 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.playedPistolShootingSound = false;
         this.killed = false;
         
+        if(!scene.registry.has("succesfulBlock")) 
+        {
+            scene.registry.set("succesfulBlock", false);
+        }
+        
+        this.succesfulBlock = scene.registry.get("succesfulBlock");
+        
         this.mouseRef = scene.input;
         this.bullets = playerBulletsHolder;
         this.settings = game.scene.getScene("Settings");
@@ -795,10 +802,15 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             this.isShootingPistol = false;
             this.lastPlayerBlock = time;
             this.blockInputHeld = true;
-            this.succesfulBlock = false;
+            if(!passedCooldown)
+            {
+                this.succesfulBlock = false;
+            }
         } 
         
         this.blockInputHeld = inputActive;
+        
+        this.scene.registry.set("succesfulBlock", this.succesfulBlock);
         
         let xOffset;
         
