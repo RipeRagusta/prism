@@ -19,7 +19,11 @@ function eyeCreator(scene, eyePositions, gameManager)
                 player.defenceParticles();
                 player.activateDoubleFire();
                 player.play("block", false);
-                player.succesfulBlock = true;
+                if(!player.successfulBlock)
+                {
+                    player.successfulBlock = true;
+                    player.successfulBlockTime = scene.time.now;
+                }
                 player.resetShootTime = true;
                 player.resetPistolTime = true;
                 if(scene.gameManager.screenShake)
@@ -44,7 +48,11 @@ function eyeCreator(scene, eyePositions, gameManager)
             player.defenceParticles();
             player.activateDoubleFire();
             player.play("block", false);
-            player.succesfulBlock = true;
+            if(!player.successfulBlock)
+            {
+                player.successfulBlock = true;
+                player.successfulBlockTime = scene.time.now;
+            }
             player.resetShootTime = true;
             player.resetPistolTime = true;
             if(scene.gameManager.screenShake)
@@ -90,7 +98,11 @@ function eyeCreator(scene, eyePositions, gameManager)
         if(eye.health < 1 && !eye.grantedKillReward)
         {
             eye.grantedKillReward = true;
-            eye.player.lastPlayerBlock = 0;
+            if(!eye.player.successfulKill)
+            {
+                eye.player.successfulKill = true;
+                eye.player.successfulKillTime = scene.time.now;
+            }
         }
     });
 
