@@ -152,14 +152,14 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             scene.registry.set("successfulBlock", false);
         }
         
-        this.successfulBlock = false; //scene.registry.get("successfulBlock");
+        this.successfulBlock = scene.registry.get("successfulBlock");
         
         if(!scene.registry.has("successfulKill")) 
         {
             scene.registry.set("successfulKill", false);
         }
         
-        this.successfulKill = false; //scene.registry.get("successfulKill");
+        this.successfulKill = scene.registry.get("successfulKill");
         
         this.mouseRef = scene.input;
         this.bullets = playerBulletsHolder;
@@ -592,6 +592,10 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     kill()
     {
         this.killed = true;
+        this.successfulKill = false;
+        this.successfulBlock = false;
+        this.scene.registry.set("successfulBlock", this.successfulBlock);
+        this.scene.registry.set("successfulKill", this.successfulKill);
         this.gameManager.score = 0;
         const HUD = this.scene.HUD;
         HUD.updateScore(); 
@@ -836,7 +840,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.blockInputHeld = inputActive;
         
         this.scene.registry.set("successfulBlock", this.successfulBlock);
-        this.scene.registry.set("successfulKill", this.successfulBlock);
+        this.scene.registry.set("successfulKill", this.successfulKill);
         
         let xOffset;
         
