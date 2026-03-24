@@ -70,8 +70,10 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
         if(cult.health < 1 && !cult.grantedKillReward)
         {
             cult.grantedKillReward = true;
-            cult.player.successfulKill = true;
-            cult.player.successfulKillTime = scene.time.now;
+            if(cult.player.extraBlocks < 2)
+            {
+                cult.player.extraBlocks += 1;
+            }
         }
     });
 
@@ -85,8 +87,10 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
                 scene.cameras.main.shake(50, 0.004);
             }
             cult.hitFrom = player.doubleFire ? "doubleFire" : "shotgun";
-            player.successfulKill = true;
-            player.successfulKillTime = scene.time.now;
+            if(player.extraBlocks < 2)
+            {
+                player.extraBlocks += 1;
+            }
             cult.kill();
             return; 
         }
@@ -98,8 +102,10 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
                 scene.cameras.main.shake(50, 0.004);
             }
             cult.hitFrom = "pistol";
-            player.successfulKill = true;
-            player.successfulKillTime = scene.time.now;
+            if(player.extraBlocks < 2)
+            {
+                player.extraBlocks += 1;
+            }
             cult.kill();
             return; 
         }

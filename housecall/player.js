@@ -147,19 +147,12 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         this.playedPistolShootingSound = false;
         this.killed = false;
         
-        if(!scene.registry.has("successfulBlock")) 
+        if(!scene.registry.has("extraBlocks")) 
         {
-            scene.registry.set("successfulBlock", false);
+            scene.registry.set("extraBlocks", 0);
         }
         
-        this.successfulBlock = scene.registry.get("successfulBlock");
-        
-        if(!scene.registry.has("successfulKill")) 
-        {
-            scene.registry.set("successfulKill", false);
-        }
-        
-        this.successfulKill = scene.registry.get("successfulKill");
+        this.extraBlocks = scene.registry.get("extraBlocks");
         
         this.mouseRef = scene.input;
         this.bullets = playerBulletsHolder;
@@ -592,10 +585,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     kill()
     {
         this.killed = true;
-        this.successfulKill = false;
-        this.successfulBlock = false;
-        this.scene.registry.set("successfulBlock", this.successfulBlock);
-        this.scene.registry.set("successfulKill", this.successfulKill);
+        this.scene.registry.set("extraBlocks", 0);
         this.gameManager.score = 0;
         const HUD = this.scene.HUD;
         HUD.updateScore(); 
@@ -805,42 +795,27 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         const passedCooldown = time > this.lastPlayerBlock + this.blockRate;
         const isFreshPress = inputActive && !this.blockInputHeld;
         
-        if(inputActive && (passedCooldown || (this.successfulBlock && isFreshPress) || (this.successfulKill && isFreshPress)) && this.settings.displayedSettings === false)
+        if(inputActive && (passedCooldown || (this.extraBlocks > 0 && isFreshPress)) && this.settings.displayedSettings === false)
         {
+            if(!passedCooldown)
+            {
+                this.extraBlocks -= 1;
+            }
+            else
+            {
+                this.lastPlayerBlock = time;
+            }
+            
             this.setFrame(2);
             this.play("block", false);
             this.block = true;
             this.isShootingPistol = false;
-            this.lastPlayerBlock = time;
             this.blockInputHeld = true;
-            if(!passedCooldown)
-            {
-                if(this.successfulBlock && this.successfulKill)
-                {
-                    if(this.successfulBlockTime > this.successfulKillTime)
-                    {
-                        this.successfulKill = false;
-                    }
-                    else
-                    {
-                        this.successfulBlock = false;
-                    }
-                }
-                else if(this.successfulKill && !this.successfulBlock)
-                {
-                    this.successfulKill = false;
-                }
-                else if(this.successfulBlock && !this.successfulKill)
-                {
-                    this.successfulBlock = false;
-                }
-            }
-        } 
+        }
         
         this.blockInputHeld = inputActive;
         
-        this.scene.registry.set("successfulBlock", this.successfulBlock);
-        this.scene.registry.set("successfulKill", this.successfulKill);
+        this.scene.registry.set("extraBlocks", this.extraBlocks);
         
         let xOffset;
         
