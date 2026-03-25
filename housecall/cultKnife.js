@@ -97,6 +97,7 @@ function cultKnifeCreator(scene, cultKnifePositions, gameManager)
             }
             cult.hitFrom = "pistol";
             player.successfulKill = true;
+            cult.kill();
             return; 
         }
         

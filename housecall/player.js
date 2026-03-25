@@ -875,8 +875,6 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             
             this.body.setOffset(xOffset, 0);
         }
-        
-        console.log("kill charge: " + this.successfulKill + ", block charge: " + this.successfulBlock);
     }
 
     checkFlip(pointer)
