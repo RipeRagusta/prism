@@ -795,27 +795,33 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         const passedCooldown = time > this.lastPlayerBlock + this.blockRate;
         const isFreshPress = inputActive && !this.blockInputHeld;
         
-        if(inputActive && (passedCooldown || (this.extraBlocks > 0 && isFreshPress)) && this.settings.displayedSettings === false)
+        if(inputActive && (passedCooldown || (this.successfulBlock && isFreshPress) || (this.successfulKill)) && this.settings.displayedSettings === false)
         {
+            this.lastPlayerBlock = time;
             if(!passedCooldown)
             {
-                this.extraBlocks -= 1;
+                if(this.successfulBlock && this.successfulKill)
+                {
+                    this.successfulKill = false;
+                }
+                else
+                {
+                    this.successfulKill = false;
+                    this.successfulBlock = false;
+                }
             }
             else
             {
-                this.lastPlayerBlock = time;
+                this.successfulKill = false;
+                this.successfulBlock = false;
             }
-            
             this.setFrame(2);
             this.play("block", false);
             this.block = true;
             this.isShootingPistol = false;
-            this.blockInputHeld = true;
         }
         
         this.blockInputHeld = inputActive;
-        
-        this.scene.registry.set("extraBlocks", this.extraBlocks);
         
         let xOffset;
         
@@ -869,6 +875,8 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
             
             this.body.setOffset(xOffset, 0);
         }
+        
+        console.log("kill charge: " + this.successfulKill + ", block charge: " + this.successfulBlock);
     }
 
     checkFlip(pointer)

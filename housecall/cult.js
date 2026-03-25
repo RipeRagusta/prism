@@ -60,10 +60,7 @@ function cultCreator(scene, cultPositions, gameManager)
                     player.defenceParticles();
                     player.activateDoubleFire();
                     player.play("block", false);
-                    if(player.extraBlocks < 2)
-                    {
-                        player.extraBlocks += 1;
-                    }
+                    player.successfulBlock = true;
                     player.resetShootTime = true;
                     player.resetPistolTime = true;
                     if(scene.gameManager.screenShake)
@@ -88,10 +85,7 @@ function cultCreator(scene, cultPositions, gameManager)
                 player.defenceParticles();
                 player.activateDoubleFire();
                 player.play("block", false);
-                if(player.extraBlocks < 2)
-                {
-                    player.extraBlocks += 1;
-                }
+                player.successfulBlock = true;
                 player.resetShootTime = true;
                 player.resetPistolTime = true;
                 if(scene.gameManager.screenShake)
@@ -181,10 +175,7 @@ function cultCreator(scene, cultPositions, gameManager)
             if(cult.health < 1 && !cult.grantedKillReward)
             {
                 cult.grantedKillReward = true;
-                if(cult.player.extraBlocks < 2)
-                {
-                    cult.player.extraBlocks += 1;
-                }
+                cult.player.successfulKill = true;
             }
         });
         
