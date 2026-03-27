@@ -112,6 +112,11 @@ function increaseScore()
 	if(score > bestScore)
 	{
 		bestScore = score;
+		
+		if(checkStorage() == true)
+		{
+			localStorage.setItem("savedBestScore", bestScore);
+		}
 	}
 
 	document.getElementById("bestscore").innerHTML = bestScore;
