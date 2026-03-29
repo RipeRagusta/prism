@@ -6,7 +6,7 @@ function createLaunchCommands()
 		{ name: "flesh", url: "https://flesh.enterprises/index.html", display: false},
 		{ name: "fp2rbpr", url: "../fp/index.html", display: false},
 		{ name: "housecall", url: "../housecall/index.html", display: true},
-		{ name: "jumpgame", url: "../jumpgame/index.html", display: false},
+		{ name: "jumpgame", url: "../jumpgame/index.html", display: true},
 		{ name: "vp1", url: "https://ragusta.com/index.html", display: false},
 		{ name: "genericinvitation", url: "../genericinvitation/invitation.html", display: false},
 		{ name: "genericad", url: "../genericad/digitalSignStart.html", display: false}
