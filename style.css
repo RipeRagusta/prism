@@ -11,7 +11,7 @@ footer{
 :root{
 	--sizer: 15px;
 	--backgroundcolor: #e6e6e6;
-	--color: #1a1a1a;
+	--color: #000000;
 	--consolecolor: #ff0000;
 	--usercolor: #808080;
 }
