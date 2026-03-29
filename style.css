@@ -87,7 +87,7 @@ main{
 	width: 100%;
 	position: relative;
 	box-sizing: border-box;
-	padding: var(--sizer) var(--sizer) 0px var(--sizer);
+	padding: var(--sizer);
 	display: grid;
 	max-width: 1200px;
 	grid-template-columns: 1fr;
@@ -189,9 +189,8 @@ img{
 	width: 200px;
 	margin: 0px auto;
 	border-radius: 0px;
-	margin-bottom: var(--sizer);
+	margin-bottom: 0px;
 	user-select: none;
-
 }
 
 @media only screen and (max-width: 700px)
@@ -207,5 +206,9 @@ img{
 
 	.imagegallery{
 		grid-template-columns: .5fr .5fr;
+	}
+
+	#title{
+		margin-top: var(--sizer);
 	}
 }
