@@ -28,6 +28,7 @@
     <script type="text/javascript" src="./cultKnife.js"></script>
     <script type="text/javascript" src="./eye.js"></script>
     <script type="text/javascript">
+        var levelIsTransitioning = false;
         var disableUncleanMouseActions = false;
         
         class pipeNext extends Phaser.Physics.Arcade.Sprite
@@ -131,86 +132,96 @@
   
         function transitionLevels(scene, gameManager)
         {
-            if(gameManager.currentLevel === 1)
+            if(levelIsTransitioning === false)
             {
-                if(gameManager.visitedUpgradeRoom1 === true)
+                levelIsTransitioning = true;
+                
+                if(gameManager.currentLevel === 1)
                 {
-                    scene.scene.start("Level2Game");
+                    if(gameManager.visitedUpgradeRoom1 === true)
+                    {
+                        scene.scene.start("Level2Game");
+                        scene.scene.launch("HUD");
+                    }
+                    else
+                    {
+                        gameManager.visitedUpgradeRoom1 = true;
+                        scene.scene.start("UpgradeRoom");
+                        scene.scene.stop("HUD");
+                    }
+                }
+                else if(gameManager.currentLevel === 2)
+                {
+                    if(gameManager.visitedUpgradeRoom2 === true)
+                    {
+                        scene.scene.start("Level3Game");
+                        scene.scene.launch("HUD");
+                    }
+                    else
+                    {
+                        gameManager.visitedUpgradeRoom2 = true;
+                        scene.scene.start("UpgradeRoom");
+                        scene.scene.stop("HUD");
+                    }
+                }
+                else if(gameManager.currentLevel === 3)
+                {
+                    if(gameManager.visitedUpgradeRoom3 === true)
+                    {
+                        scene.scene.start("Level4Game");
+                        scene.scene.launch("HUD");
+                    }
+                    else
+                    {
+                        gameManager.visitedUpgradeRoom3 = true;
+                        scene.scene.start("UpgradeRoom");
+                        scene.scene.stop("HUD");
+                    }
+                }
+                else if(gameManager.currentLevel === 4)
+                {
+                    scene.scene.stop("HUD");
+                    scene.gameManager.reset();
+                    scene.scene.start("Level1Game");
                     scene.scene.launch("HUD");
                 }
-                else
-                {
-                    gameManager.visitedUpgradeRoom1 = true;
-                    scene.scene.start("UpgradeRoom");
-                    scene.scene.stop("HUD");
-                }
-            }
-            else if(gameManager.currentLevel === 2)
-            {
-                if(gameManager.visitedUpgradeRoom2 === true)
-                {
-                    scene.scene.start("Level3Game");
-                    scene.scene.launch("HUD");
-                }
-                else
-                {
-                    gameManager.visitedUpgradeRoom2 = true;
-                    scene.scene.start("UpgradeRoom");
-                    scene.scene.stop("HUD");
-                }
-            }
-            else if(gameManager.currentLevel === 3)
-            {
-                if(gameManager.visitedUpgradeRoom3 === true)
-                {
-                    scene.scene.start("Level4Game");
-                    scene.scene.launch("HUD");
-                }
-                else
-                {
-                    gameManager.visitedUpgradeRoom3 = true;
-                    scene.scene.start("UpgradeRoom");
-                    scene.scene.stop("HUD");
-                }
-            }
-            else if(gameManager.currentLevel === 4)
-            {
-                scene.scene.stop("HUD");
-                scene.gameManager.reset();
-                scene.scene.start("Level1Game");
-                scene.scene.launch("HUD");
             }
         }
         
         function goBackALevel(scene, gameManager)
         {
-            if(gameManager.currentLevel === 1)
+            if(levelIsTransitioning === false)
             {
-                scene.scene.stop("Level1Game");
-                scene.scene.stop("HUD");
-                scene.scene.start("Level1Game");
-                scene.scene.launch("HUD");
-            }
-            else if(gameManager.currentLevel === 2)
-            {
-                scene.scene.stop("Level2Game");
-                scene.scene.stop("HUD");
-                scene.scene.start("Level1Game");
-                scene.scene.launch("HUD");
-            }
-            else if(gameManager.currentLevel === 3)
-            {
-                scene.scene.stop("Level3Game");
-                scene.scene.stop("HUD");
-                scene.scene.start("Level2Game");
-                scene.scene.launch("HUD");
-            }
-            else if(gameManager.currentLevel === 4)
-            {
-                scene.scene.stop("Level4Game");
-                scene.scene.stop("HUD");
-                scene.scene.start("Level3Game");
-                scene.scene.launch("HUD");
+                levelIsTransitioning = true;
+                
+                if(gameManager.currentLevel === 1)
+                {
+                    scene.scene.stop("Level1Game");
+                    scene.scene.stop("HUD");
+                    scene.scene.start("Level1Game");
+                    scene.scene.launch("HUD");
+                }
+                else if(gameManager.currentLevel === 2)
+                {
+                    scene.scene.stop("Level2Game");
+                    scene.scene.stop("HUD");
+                    scene.scene.start("Level1Game");
+                    scene.scene.launch("HUD");
+                }
+                else if(gameManager.currentLevel === 3)
+                {
+                    scene.scene.stop("Level3Game");
+                    scene.scene.stop("HUD");
+                    scene.scene.start("Level2Game");
+                    scene.scene.launch("HUD");
+                }
+                else if(gameManager.currentLevel === 4)
+                {
+                    scene.scene.stop("Level4Game");
+                    scene.scene.stop("HUD");
+                    scene.scene.start("Level3Game");
+                    scene.scene.launch("HUD");
+                }
             }
         }
         
@@ -498,47 +509,55 @@
         
         function restartToMainMenu(scene)
         {
-            scene.gameManager.reset();
-            const activeScenes = scene.scene.manager.getScenes(true);
-            activeScenes.forEach(s => 
+            if(levelIsTransitioning === false)
             {
-                const key = s.scene.key;
-                
-                if (key !== "GameManager" && key !== "Settings" && key !== "Crosshair") 
+                levelIsTransitioning = true;
+                scene.gameManager.reset();
+                const activeScenes = scene.scene.manager.getScenes(true);
+                activeScenes.forEach(s => 
                 {
-                    scene.scene.stop(key);
-                }
-            });
+                    const key = s.scene.key;
 
-            scene.scene.launch("MainMenu");
+                    if (key !== "GameManager" && key !== "Settings" && key !== "Crosshair") 
+                    {
+                        scene.scene.stop(key);
+                    }
+                });
 
-            scene.scene.sendToBack("MainMenu");
-            scene.scene.bringToTop("Settings");
-            scene.scene.bringToTop("Crosshair");
-            resetCrosshairIfDifferent();
+                scene.scene.launch("MainMenu");
+
+                scene.scene.sendToBack("MainMenu");
+                scene.scene.bringToTop("Settings");
+                scene.scene.bringToTop("Crosshair");
+                resetCrosshairIfDifferent();
+            }
         }
         
          function restartToLevel1(scene)
         {
-            scene.gameManager.reset();
-            const activeScenes = scene.scene.manager.getScenes(true);
-            activeScenes.forEach(s => 
+            if(levelIsTransitioning === false)
             {
-                const key = s.scene.key;
-                
-                if (key !== "GameManager" && key !== "Settings" && key !== "Crosshair") 
+                levelIsTransitioning = true;
+                scene.gameManager.reset();
+                const activeScenes = scene.scene.manager.getScenes(true);
+                activeScenes.forEach(s => 
                 {
-                    scene.scene.stop(key);
-                }
-            });
+                    const key = s.scene.key;
 
-            scene.scene.launch("Level1Game");
-            scene.scene.launch("HUD");
+                    if (key !== "GameManager" && key !== "Settings" && key !== "Crosshair") 
+                    {
+                        scene.scene.stop(key);
+                    }
+                });
 
-            scene.scene.sendToBack("Level1Game");
-            scene.scene.bringToTop("Settings");
-            scene.scene.bringToTop("Crosshair");
-            resetCrosshairIfDifferent();
+                scene.scene.launch("Level1Game");
+                scene.scene.launch("HUD");
+
+                scene.scene.sendToBack("Level1Game");
+                scene.scene.bringToTop("Settings");
+                scene.scene.bringToTop("Crosshair");
+                resetCrosshairIfDifferent();
+            }
         }
         
         class Wheat
@@ -744,7 +763,8 @@
             {
                 //START BASIC SETUP MainMenu
 
-                
+
+                levelIsTransitioning = false;
                 this.input.setDefaultCursor("");
                 const worldWidthX = this.sys.game.config.width * 3;
                 this.physics.world.setBounds(0, 0, (worldWidthX / 3), 176);
@@ -1562,7 +1582,8 @@
             {
                 //START BASIC SETUP Level1Game
 
-                
+
+                levelIsTransitioning = false;
                 this.input.setDefaultCursor("");
                 const worldWidthX = 1800;
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
@@ -1716,6 +1737,7 @@
                 //START BASIC SETUP Level2Game
 
                 
+                levelIsTransitioning = false;
                 this.input.setDefaultCursor("");
                 const worldWidthX = 2250;
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
@@ -1864,6 +1886,7 @@
                 //START BASIC SETUP Level3Game
 
                 
+                levelIsTransitioning = false;
                 this.input.setDefaultCursor("");
                 const worldWidthX = 1325;
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
@@ -2022,6 +2045,7 @@
                 //START BASIC SETUP Level4Game
 
                 
+                levelIsTransitioning = false;
                 this.input.setDefaultCursor("");
                 const worldWidthX = 2400;
                 this.physics.world.setBounds(0, 0, worldWidthX, 176);
@@ -2179,6 +2203,7 @@
 
             create()
             {
+                levelIsTransitioning = false;
                 this.settings = this.scene.get("Settings");
                 this.input.setDefaultCursor("pointer");
                 this.canAcceptCard = true;
