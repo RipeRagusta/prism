@@ -12,8 +12,6 @@ footer{
 	--sizer: 15px;
 	--backgroundcolor: #e6e6e6;
 	--color: #000000;
-	--consolecolor: #ff0000;
-	--usercolor: #808080;
 }
 
 button{
@@ -25,20 +23,25 @@ button{
 	line-height: inherit;
 }
 
-.imagelink a img:hover{
-	opacity: 90%;
-}
-
 .button{
 	color: var(--color);
+	transition: transform 0.15s ease;
 }
 
 .button:hover{
-	color: var(--usercolor);
+	color: var(--color);
+	transform: scale(1.04);
+  	z-index: 10;
 }
 
 .button:active{
-	color: var(--consolecolor);
+	color: var(--color);
+	transform: scale(1);
+	transition: transform 0.05s ease;
+}
+
+.button:visited{
+	color: var(--color);
 }
 
 #date{
@@ -186,18 +189,30 @@ img{
 }
 
 #logo{
+	--rotation: 0deg;
 	max-width: 100%;
 	width: 200px;
 	margin: 0px auto;
 	border-radius: 0px;
 	margin-bottom: 0px;
 	user-select: none;
+	transition: transform 0.3s ease;
+	transform: rotateY(var(--rotation));
+}
+
+#copyright{
+	color: var(--backgroundcolor);
+}
+
+
+header button{
+	cursor: pointer;
 }
 
 @media only screen and (max-width: 700px)
 {
-	header a{
-		max-width: 35%;
+	header button{
+		max-width: 33.334%;
 	}
 
 	header{

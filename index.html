@@ -7,13 +7,23 @@
     <meta name="description" content="total prism is a website">
     <link rel="stylesheet" href="./style.css">
     <link rel="shortcut icon" type="image" href="./favicon.png">
+    <script src="./script.js"></script>
+
+    <noscript>
+        <style>
+            header button{
+                cursor: default; !important;
+            }
+        </style>
+    </noscript>
+    
 </head>
-<body>
+<body onload="initalize()">
     <main>
         <header>
-            <a href="./index.html">
+            <button onclick="flipLogo()">
                 <img src="./logo.svg" id="logo" width="200" height="173" alt="Logo">
-            </a>
+            </button>
             <h1 id="title">Total Prism</h1>
         </header>
         <nav>
@@ -44,7 +54,7 @@
     </main>
     <footer>
             <div id="footercontent">
-                <small role="presentation">&copy; Total Prism, All rights reserved.</small>
+                <small id="copyright">&copy; Total Prism, All rights reserved.</small>
             </div>
     </footer>
 </body>
