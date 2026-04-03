@@ -25,7 +25,7 @@ button{
 
 .button{
 	color: var(--color);
-	transition: transform 0.15s ease;
+	transition: transform 0.075s ease;
 }
 
 .button:hover{
@@ -37,7 +37,7 @@ button{
 .button:active{
 	color: var(--color);
 	transform: scale(1);
-	transition: transform 0.05s ease;
+	transition: transform 0.025s ease;
 }
 
 .button:visited{
