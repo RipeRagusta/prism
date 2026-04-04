@@ -58,70 +58,77 @@
                 scene.stab.setActive(false);
                 scene.stab.setVisible(false);
                 scene.stab.setDepth(999999998);
+                scene.hasPlayedStabAnimtation = false;
 
                 scene.physics.add.overlap(this.pipe, scene.player, (pipe, player) =>
                 {
-                    player.destroy();
-                    resetCrosshairIfDifferent();
-                    scene.stab.setActive(true);
-                    scene.stab.setVisible(true);
-                    canPlayAudio(scene) && scene.sound.play("powerup");
-
-                    scene.stab.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
+                    if(scene.hasPlayedStabAnimtation === false)
                     {
-                        if(frame.index === 2) 
+                        scene.hasPlayedStabAnimtation = true;
+                        player.destroy();
+                        resetCrosshairIfDifferent();
+                        scene.stab.setActive(true);
+                        scene.stab.setVisible(true);
+                        canPlayAudio(scene) && scene.sound.play("powerup");
+
+                        scene.stab.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
                         {
-                            let aCultActive = false;
-                            canPlayAudio(scene) && scene.sound.play("stab");
-
-                            if(scene.cults && scene.cults.children.entries)
+                            if(frame.index === 2) 
                             {
-                                const cultsArray = scene.cults.children.entries; 
+                                let aCultActive = false;
+                                canPlayAudio(scene) && scene.sound.play("stab");
 
-                                for(let i = cultsArray.length - 1; i >= 0; i--) 
+                                if(scene.cults && scene.cults.children.entries)
                                 {
-                                    const cult = cultsArray[i];
-                                    aCultActive = true;
-                                    cult.hitFrom = "pipe";
-                                    cult.kill();  
+                                    const cultsArray = scene.cults.children.entries; 
+
+                                    for(let i = cultsArray.length - 1; i >= 0; i--) 
+                                    {
+                                        const cult = cultsArray[i];
+                                        aCultActive = true;
+                                        cult.hitFrom = "pipe";
+                                        cult.kill();  
+                                    }
+                                }
+
+                                if(scene.cultKnifes && scene.cultKnifes.children.entries)
+                                {
+                                    const cultKnifesArray = scene.cultKnifes.children.entries; 
+
+                                    for(let i = cultKnifesArray.length - 1; i >= 0; i--) 
+                                    {
+                                        const cultKnife = cultKnifesArray[i];
+                                        aCultActive = true;
+                                        cult.hitFrom = "pipe";
+                                        cultKnife.kill();  
+                                    }
+                                }
+
+                                if(scene.eyes && scene.eyes.children.entries)
+                                {
+                                    const eyesArray = scene.eyes.children.entries; 
+
+                                    for(let i = eyesArray.length - 1; i >= 0; i--) 
+                                    {
+                                        const eye = eyesArray[i];
+                                        aCultActive = true;
+                                        cult.hitFrom = "pipe";
+                                        eye.kill();  
+                                    }
+                                }
+
+                                if(aCultActive)
+                                {
+                                    canPlayAudio(scene) && scene.sound.play("hurt");
                                 }
                             }
+                        });
 
-                            if(scene.cultKnifes && scene.cultKnifes.children.entries)
-                            {
-                                const cultKnifesArray = scene.cultKnifes.children.entries; 
-
-                                for(let i = cultKnifesArray.length - 1; i >= 0; i--) 
-                                {
-                                    const cultKnife = cultKnifesArray[i];
-                                    aCultActive = true;
-                                    cult.hitFrom = "pipe";
-                                    cultKnife.kill();  
-                                }
-                            }
-
-                            if(scene.eyes && scene.eyes.children.entries)
-                            {
-                                const eyesArray = scene.eyes.children.entries; 
-
-                                for(let i = eyesArray.length - 1; i >= 0; i--) 
-                                {
-                                    const eye = eyesArray[i];
-                                    aCultActive = true;
-                                    cult.hitFrom = "pipe";
-                                    eye.kill();  
-                                }
-                            }
-
-                            if(aCultActive)
-                            {
-                                canPlayAudio(scene) && scene.sound.play("hurt");
-                            }
-                        }
-                    });
-                    
-                    scene.stab.play("stabAnim", true);
+                        scene.stab.play("stabAnim", true);
+                    }
                 });
+                
+                scene.stab.off(Phaser.Animations.Events.ANIMATION_COMPLETE);
 
                 scene.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => 
                 {
@@ -140,6 +147,7 @@
                 {
                     if(gameManager.visitedUpgradeRoom1 === true)
                     {
+                        gameManager.currentLevel = 2;
                         scene.scene.start("Level2Game");
                         scene.scene.launch("HUD");
                     }
@@ -154,6 +162,7 @@
                 {
                     if(gameManager.visitedUpgradeRoom2 === true)
                     {
+                        gameManager.currentLevel = 3;
                         scene.scene.start("Level3Game");
                         scene.scene.launch("HUD");
                     }
@@ -168,6 +177,7 @@
                 {
                     if(gameManager.visitedUpgradeRoom3 === true)
                     {
+                        gameManager.currentLevel = 4;
                         scene.scene.start("Level4Game");
                         scene.scene.launch("HUD");
                     }
@@ -180,6 +190,7 @@
                 }
                 else if(gameManager.currentLevel === 4)
                 {
+                    gameManager.currentLevel = 1;
                     scene.scene.stop("HUD");
                     scene.gameManager.reset();
                     scene.scene.start("Level1Game");
@@ -196,6 +207,7 @@
                 
                 if(gameManager.currentLevel === 1)
                 {
+                    gameManager.currentLevel = 1;
                     scene.scene.stop("Level1Game");
                     scene.scene.stop("HUD");
                     scene.scene.start("Level1Game");
@@ -203,6 +215,7 @@
                 }
                 else if(gameManager.currentLevel === 2)
                 {
+                    gameManager.currentLevel = 1;
                     scene.scene.stop("Level2Game");
                     scene.scene.stop("HUD");
                     scene.scene.start("Level1Game");
@@ -210,6 +223,7 @@
                 }
                 else if(gameManager.currentLevel === 3)
                 {
+                    gameManager.currentLevel = 2;
                     scene.scene.stop("Level3Game");
                     scene.scene.stop("HUD");
                     scene.scene.start("Level2Game");
@@ -217,6 +231,7 @@
                 }
                 else if(gameManager.currentLevel === 4)
                 {
+                    gameManager.currentLevel = 3;
                     scene.scene.stop("Level4Game");
                     scene.scene.stop("HUD");
                     scene.scene.start("Level3Game");
@@ -513,6 +528,7 @@
             {
                 levelIsTransitioning = true;
                 scene.gameManager.reset();
+                scene.gameManager.currentLevel = 0;
                 const activeScenes = scene.scene.manager.getScenes(true);
                 activeScenes.forEach(s => 
                 {
@@ -539,6 +555,7 @@
             {
                 levelIsTransitioning = true;
                 scene.gameManager.reset();
+                scene.gameManager.currentLevel = 1;
                 const activeScenes = scene.scene.manager.getScenes(true);
                 activeScenes.forEach(s => 
                 {
@@ -880,27 +897,34 @@
                 this.stab.setActive(false);
                 this.stab.setVisible(false);
                 this.stab.setDepth(999999998);
-
+                this.hasPlayedStabAnimtation = false;
+                
                 this.physics.add.overlap(this.pipe, this.player, (pipe, player) =>
                 {
-                    player.destroy();
-                    resetCrosshairIfDifferent();
-                    this.stab.setActive(true);
-                    this.stab.setVisible(true);
-                    canPlayAudio(this) && this.sound.play("powerup");
-
-                    this.stab.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
+                    if(this.hasPlayedStabAnimtation === false)
                     {
-                        if(frame.index === 2) 
-                        {
-                            canPlayAudio(this) && this.sound.play("stab");
-                            this.destroyedControlsForGood = true;
-                            this.destroyControls();
-                        }
-                    });
+                        this.hasPlayedStabAnimtation = true;
+                        player.destroy();
+                        resetCrosshairIfDifferent();
+                        this.stab.setActive(true);
+                        this.stab.setVisible(true);
+                        canPlayAudio(this) && this.sound.play("powerup");
 
-                    this.stab.play("stabAnim", true);
+                        this.stab.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame) => 
+                        {
+                            if(frame.index === 2) 
+                            {
+                                canPlayAudio(this) && this.sound.play("stab");
+                                this.destroyedControlsForGood = true;
+                                this.destroyControls();
+                            }
+                        });
+
+                        this.stab.play("stabAnim", true);
+                    }
                 });
+                
+                this.stab.off(Phaser.Animations.Events.ANIMATION_COMPLETE);
 
                 this.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => 
                 {
@@ -933,6 +957,7 @@
                             {
                                 this.didFirstTransition = true;
                                 disableUncleanMouseActions = true;
+                                this.gameManager.currentLevel = 1;
                                 this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                                 this.scene.stop("MainMenu");
                                 this.scene.stop("HUD");
@@ -1051,24 +1076,32 @@
                 this.highScore = createText(this, this.game.config.width * 3 - (this.game.config.width / 2), 5, "High Score: " + this.gameManager.experimentalHighScore, 10, "#ffffff").setOrigin(0.5, 0).setDepth(1232300);
                 this.updateMainMenuHighScore();
                 
+                
+                this.didSecondTransition = false;
+                
                 this.start = createText(this, worldWidthX - this.sys.game.config.width / 2, this.sys.game.config.height / 2, "START", 20, "#fff").setOrigin(0.5, 0.5);
                 this.start.setInteractive({cursor: "pointer"});
                 this.start.on("pointerdown", () =>
                 {
                     if(this.settings.displayedSettings === false)
                     {
-                        disableUncleanMouseActions = true;
-                        canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
-                        if(checkStorage() === true)
+                        if(this.didSecondTransition === false)
                         {
-                            localStorage.setItem("HCSeenControls", JSON.stringify(true));
+                            this.didSecondTransition = true;
+                            disableUncleanMouseActions = true;
+                            this.gameManager.currentLevel = 1;
+                            canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                            if(checkStorage() === true)
+                            {
+                                localStorage.setItem("HCSeenControls", JSON.stringify(true));
+                            }
+                            this.scene.stop("MainMenu");
+                            this.scene.stop("HUD");
+                            event.stopPropagation();
+                            this.scene.start("Level1Game");
+                            this.scene.launch("HUD");
+                            resetCrosshairIfDifferent();
                         }
-                        this.scene.stop("MainMenu");
-                        this.scene.stop("HUD");
-                        event.stopPropagation();
-                        this.scene.start("Level1Game");
-                        this.scene.launch("HUD");
-                        resetCrosshairIfDifferent();
                     }
                 });
 
@@ -1591,7 +1624,6 @@
                 this.gameManager = this.scene.get("GameManager");
                 this.HUD = this.scene.get("HUD");
                 this.gameManager.updateHighestLevel(1);
-                this.gameManager.updateCurrentLevel(1);
                 this.sound.pauseOnBlur = false;
                 
                 if(this.gameManager.cheats === true && this.gameManager.alwaysBlock === false)
@@ -1745,7 +1777,6 @@
                 this.gameManager = this.scene.get("GameManager");
                 this.HUD = this.scene.get("HUD");
                 this.gameManager.updateHighestLevel(2);
-                this.gameManager.updateCurrentLevel(2);
                 this.sound.pauseOnBlur = false;
 
 
@@ -1894,7 +1925,6 @@
                 this.gameManager = this.scene.get("GameManager");
                 this.HUD = this.scene.get("HUD");
                 this.gameManager.updateHighestLevel(3);
-                this.gameManager.updateCurrentLevel(3);
                 this.sound.pauseOnBlur = false;
 
 
@@ -2053,7 +2083,6 @@
                 this.gameManager = this.scene.get("GameManager");
                 this.HUD = this.scene.get("HUD");
                 this.gameManager.updateHighestLevel(4);
-                this.gameManager.updateCurrentLevel(4);
                 this.sound.pauseOnBlur = false;
 
 
@@ -2580,7 +2609,6 @@
 
                 this.highestLevel = 0;
                 this.initialHighestLevel = this.highestLevel;
-                this.currentLevel = 0;
                 this.visitedUpgradeRoom1 = false;
                 this.visitedUpgradeRoom2 = false;
                 this.visitedUpgradeRoom3 = false;
@@ -3021,16 +3049,10 @@
                 }
             }
 
-            updateCurrentLevel(newCurrent)
-            {
-                this.currentLevel = newCurrent;
-            }
-
             reset()
             {
                 this.highestLevel = 0;
                 this.initialHighestLevel = this.highestLevel;
-                this.currentLevel = 0;
                 this.visitedUpgradeRoom1 = false;
                 this.visitedUpgradeRoom2 = false;
                 this.visitedUpgradeRoom3 = false;
@@ -3577,10 +3599,16 @@
                             this.HUD.updateGameMode();
                         }
                         
-                        if(!this.scene.isActive("MainMenu"))
+                        if(this.canRestartToLevel1)
                         {
-                            restartToLevel1(this);
+                            this.canRestartToLevel1 = false;
+                            
+                            if(!this.scene.isActive("MainMenu"))
+                            {
+                                restartToLevel1(this);
+                            }
                         }
+                       
                     }
 
                     this.destroySettings();
@@ -3588,6 +3616,7 @@
                 else
                 {
                     this.displayedSettings = true;
+                    this.canRestartToLevel1 = true;
                     this.displaySettings();
                 }
             }
@@ -4033,22 +4062,28 @@
                     canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
                 });
                 
+                this.hasRestartedGame = false;
+                
                 this.restartGame = createText(this, 5, 176 - 5, "MAIN MENU", 8, "#ff0000").setOrigin(0, 1).setDepth(1232300);
                 this.restartGame.setInteractive({cursor: "pointer"});
                 this.restartGame.on("pointerdown", () =>
                 {
-                    if(this.displayedSettings)
+                    if(this.hasRestartedGame === false)
                     {
-                        this.displayedSettings = false;
-                        this.destroySettings();
+                        this.hasRestartedGame = true;
+                        if(this.displayedSettings)
+                        {
+                            this.displayedSettings = false;
+                            this.destroySettings();
+                        }
+
+                        this.gameManager.resetMappingInProgress();
+                        this.gameManager.score = 0; 
+                        this.gameManager.switchGameMode(this.gameModeWords);
+                        canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
+                        disableUncleanMouseActions = true;
+                        restartToMainMenu(this);
                     }
-                    
-                    this.gameManager.resetMappingInProgress();
-                    this.gameManager.score = 0; 
-                    this.gameManager.switchGameMode(this.gameModeWords);
-                    canPlayAudio(this) && this.sound.play("mainmenuclick", { rate: Phaser.Math.FloatBetween(0.75, 1) });
-                    disableUncleanMouseActions = true;
-                    restartToMainMenu(this);
                 });
                 
                 this.background = this.add.rectangle(200, 0, 400, 176, "#000000").setOrigin(0.5, 0).setAlpha(0.8); 
