@@ -134,6 +134,12 @@
                 {
                     transitionLevels(scene, gameManager);
                 });
+                
+                this.pipe.on("destroy", () => 
+                {
+                    scene.stab.off(Phaser.Animations.Events.ANIMATION_UPDATE);
+                    scene.stab.off(Phaser.Animations.Events.ANIMATION_COMPLETE);
+                });
             }
         }
   
@@ -929,6 +935,12 @@
                 this.stab.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => 
                 {
                     this.cameras.main.pan(worldWidthX, this.sys.game.config.height / 2, 2000, "Sine.easeInOut");
+                });
+                
+                this.pipe.on("destroy", () => 
+                {
+                    this.stab.off(Phaser.Animations.Events.ANIMATION_UPDATE);
+                    this.stab.off(Phaser.Animations.Events.ANIMATION_COMPLETE);
                 });
                 
                 this.ground = new Ground(this, worldWidthX);
