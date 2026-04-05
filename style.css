@@ -151,11 +151,15 @@ ul{
 	margin: 0px;
 }
 
-h1, h2, p, small, pre{
+h1, h2, p, small, pre, span{
 	display: block;
 	margin: 0px;
 	padding: 0px;
 	word-break: break-word;
+}
+
+span{
+	display: inline;
 }
 
 .basictextlink{
@@ -189,7 +193,6 @@ img{
 }
 
 #logo{
-	--rotation: 0deg;
 	max-width: 100%;
 	width: 200px;
 	margin: 0px auto;
@@ -197,7 +200,6 @@ img{
 	margin-bottom: 0px;
 	user-select: none;
 	transition: transform 0.3s ease;
-	transform: rotateY(var(--rotation));
 }
 
 #copyright{
