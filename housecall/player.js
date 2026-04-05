@@ -757,7 +757,18 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
     {
         if(this.canMove)
         {
-            if(this.gameActionActive("walkLeft") && this.settings.displayedSettings === false)
+            if(this.gameActionActive("walkLeft") && this.gameActionActive("walkRight") && this.settings.displayedSettings === false)
+            {
+                if(this.gameManager.timeActionWasActive("walkLeft") > this.gameManager.timeActionWasActive("walkRight"))
+                {
+                    this.setVelocityX(-120);
+                }
+                else
+                {
+                    this.setVelocityX(120);
+                }
+            }
+            else if(this.gameActionActive("walkLeft") && this.settings.displayedSettings === false)
             {
                 this.setVelocityX(-120);
             }

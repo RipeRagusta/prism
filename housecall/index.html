@@ -2889,6 +2889,10 @@
                 }
                 
                 this.refreshControls(); 
+                
+                this.leftMouseTimeStamp = 0;
+                this.middleMouseTimeStamp = 0;
+                this.rightMouseTimeStamp = 0;
             }
             
             refreshControls() 
@@ -3014,6 +3018,26 @@
 
                 if(binding.type === "MOUSE") 
                 {
+                    const pointer = this.input.activePointer;
+                    
+                    let isDown = false;
+                    if(binding.button === 0) isDown = pointer.leftButtonDown();
+                    else if(binding.button === 1) isDown = pointer.middleButtonDown();
+                    else if(binding.button === 2) isDown = pointer.rightButtonDown();
+
+                    if(isDown) 
+                    {
+                        if(binding.button === 0 && this.leftMouseTimeStamp === 0) this.leftMouseTimeStamp = this.time.now;
+                        else if(binding.button === 1 && this.middleMouseTimeStamp === 0) this.middleMouseTimeStamp = this.time.now;
+                        else if(binding.button === 2 && this.rightMouseTimeStamp === 0) this.rightMouseTimeStamp = this.time.now;                        
+                    } 
+                    else 
+                    {
+                        if(binding.button === 0) this.leftMouseTimeStamp = 0;
+                        else if(binding.button === 1) this.middleMouseTimeStamp = 0;
+                        else if(binding.button === 2) this.rightMouseTimeStamp = 0;           
+                    }
+                    
                     if(disableUncleanMouseActions)
                     {
                         if(actionName === "jump" || actionName === "block" || actionName === "useShotgun" || actionName === "usePistol")
@@ -3022,13 +3046,30 @@
                         }
                     }
                     
-                    const pointer = this.input.activePointer;
-                    if(binding.button === 0) return pointer.leftButtonDown();
-                    if(binding.button === 1) return pointer.middleButtonDown();
-                    if(binding.button === 2) return pointer.rightButtonDown();
+                    return isDown;
                 }
 
                 return false;
+            }
+            
+            timeActionWasActive(actionName)
+            {
+                const binding = this.actions[actionName];
+                
+                if(binding.type === "KEY") 
+                {
+                    return this.keys[actionName].timeDown;
+                }
+                
+                if(binding.type === "MOUSE") 
+                {
+                    const pointer = this.input.activePointer;
+                    if(binding.button === 0) return this.leftMouseTimeStamp;
+                    if(binding.button === 1) return this.middleMouseTimeStamp;
+                    if(binding.button === 2) return this.rightMouseTimeStamp;
+                }
+                
+                return 0;
             }
 
             update(time, delta)
