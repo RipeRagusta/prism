@@ -225,9 +225,9 @@ class cultKnife extends Phaser.Physics.Arcade.Sprite
         }
     }
 
-    update(time, delta)
+    preUpdate(time, delta)
     {
-        super.update(time, delta);
+        super.preUpdate(time, delta);
 
         if(this.health < 1 && this.killed === false)
         {

@@ -1252,6 +1252,11 @@
                     this.player.update(time, delta);
                 }
                 
+                this.playerBulletsHolder.getChildren().forEach(bullet =>
+                {
+                    bullet.update();
+                });
+                
                 /*if(this.player.health < 1000)
                 {
                     this.player.buddha();
@@ -1761,6 +1766,12 @@
 
 
                 //END CAMERA SETUP Level1Game
+                
+                
+                this.events.on("preupdate", (time, delta) => 
+                {
+                    cultSeparation(this.cults, this.player);
+                }, this, 10);
             }
 
             update(time, delta)
@@ -1773,23 +1784,6 @@
                 this.playerBulletsHolder.getChildren().forEach(bullet =>
                 {
                     bullet.update();
-                });
-                
-                this.cultKnifes.getChildren().forEach(cultKnife => 
-                {
-                    cultKnife.update(time, delta);
-                });
-                
-                cultSeparation(this.cults, this.player);
-                
-                this.cults.getChildren().forEach(cult => 
-                {
-                    cult.update(time, delta);
-                });
-                
-                this.cultOrbHolder.getChildren().forEach(orb =>
-                {
-                    orb.update();
                 });
             }
         }
@@ -1939,10 +1933,17 @@
 
 
                 //END CAMERA SETUP Level2Game
+                
+                
+                this.events.on("preupdate", (time, delta) => 
+                {
+                    cultSeparation(this.cults, this.player);
+                }, this, 10);
             }
 
             update(time, delta)
             {
+                
                 if(this.player && this.player.active)
                 {
                     this.player.update(time, delta);
@@ -1951,23 +1952,6 @@
                 this.playerBulletsHolder.getChildren().forEach(bullet =>
                 {
                     bullet.update();
-                });
-                
-                this.cultKnifes.getChildren().forEach(cultKnife => 
-                {
-                    cultKnife.update(time, delta);
-                });
-                
-                cultSeparation(this.cults, this.player);
-                
-                this.cults.getChildren().forEach(cult => 
-                {
-                    cult.update(time, delta);
-                });
-                
-                this.cultOrbHolder.getChildren().forEach(orb =>
-                {
-                    orb.update();
                 });
             }
         }
@@ -2121,6 +2105,13 @@
 
 
                 //END CAMERA SETUP Level3Game
+                
+                
+                this.events.on("preupdate", (time, delta) => 
+                {
+                    cultSeparation(this.cults, this.player);
+                    eyeSeparation(this.eyes, this.player);
+                }, this, 10);
             }
 
             update(time, delta)
@@ -2133,35 +2124,6 @@
                 this.playerBulletsHolder.getChildren().forEach(bullet =>
                 {
                     bullet.update();
-                });
-                
-                this.cultKnifes.getChildren().forEach(cultKnife => 
-                {
-                    cultKnife.update(time, delta);
-                });
-                
-                cultSeparation(this.cults, this.player);
-                
-                this.cults.getChildren().forEach(cult => 
-                {
-                    cult.update(time, delta);
-                });
-                
-                this.cultOrbHolder.getChildren().forEach(orb =>
-                {
-                    orb.update();
-                });
-                
-                eyeSeparation(this.eyes, this.player);
-                
-                this.eyes.getChildren().forEach(eye => 
-                {
-                    eye.update(time, delta);
-                });
-                
-                this.eyeOrbHolder.getChildren().forEach(orb =>
-                {
-                    orb.update();
                 });
             }
         }
@@ -2312,6 +2274,13 @@
 
 
                 //END CAMERA SETUP Level4Game
+                
+                
+                this.events.on("preupdate", (time, delta) => 
+                {
+                    cultSeparation(this.cults, this.player);
+                    eyeSeparation(this.eyes, this.player);
+                }, this, 10);
             }
 
             update(time, delta)
@@ -2324,35 +2293,6 @@
                 this.playerBulletsHolder.getChildren().forEach(bullet =>
                 {
                     bullet.update();
-                });
-                
-                this.cultKnifes.getChildren().forEach(cultKnife => 
-                {
-                    cultKnife.update(time, delta);
-                });
-                
-                cultSeparation(this.cults, this.player);
-                
-                this.cults.getChildren().forEach(cult => 
-                {
-                    cult.update(time, delta);
-                });
-                
-                this.cultOrbHolder.getChildren().forEach(orb =>
-                {
-                    orb.update();
-                });
-                
-                eyeSeparation(this.eyes, this.player);
-                
-                this.eyes.getChildren().forEach(eye => 
-                {
-                    eye.update(time, delta);
-                });
-                
-                this.eyeOrbHolder.getChildren().forEach(orb =>
-                {
-                    orb.update();
                 });
             }
         }
