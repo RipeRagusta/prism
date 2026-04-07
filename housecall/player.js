@@ -35,9 +35,9 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         return this.scene.player.x + (this.scene.player.width / 2) + (this.scene.player.width / 16) - this.startX;
     }
 
-    preUpdate(time, delta)
+    update(time, delta)
     {
-        super.preUpdate(time, delta);
+        super.update(time, delta);
       
         if(this.isFollowingX())
         {
@@ -76,7 +76,7 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         ({
           classType: playerBullet,
           maxSize: 360,
-          runChildUpdate: true
+          runChildUpdate: false
         });
 
         scene.player = new player(scene, x, scene.sys.game.config.height - 24, scene.playerBulletsHolder);
@@ -568,9 +568,9 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
         }
     }
 
-    preUpdate(time, delta)
+    update(time, delta)
     {
-        super.preUpdate(time, delta);
+        super.update(time, delta);
         
         this.scene.input.activePointer.updateWorldPoint(this.scene.cameras.main);
         this.checkFlip(this.scene.input.activePointer);

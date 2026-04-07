@@ -4,7 +4,7 @@ function eyeCreator(scene, eyePositions, gameManager)
     ({
         classType: cultOrb,
         maxSize: 30,
-        runChildUpdate: true
+        runChildUpdate: false
     });
     
     scene.physics.add.overlap(scene.player, scene.eyeOrbHolder, (player, orb) =>
@@ -229,8 +229,10 @@ class eye extends Phaser.Physics.Arcade.Sprite
         }
     }
     
-    preUpdate(time, delta)
+    update(time, delta)
     {
+        super.update(time, delta);
+        
         if(this.health < 1 && this.killed === false)
         {
             this.killed = true;
