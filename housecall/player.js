@@ -406,22 +406,22 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                     {
                         if(this.flip === false)
                         {
-                          bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle, pistolDamage, 400, 0, 0.5, "pistol");
+                          bullet.fire(this.x + 5, this.y - 2, this.aimAngle, pistolDamage, 400, 0, 0.5, "pistol");
                         }
                         else
                         {
-                          bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle, pistolDamage, 400, 0, 0.5, "pistol");
+                          bullet.fire(this.x - 5, this.y - 1, this.aimAngle, pistolDamage, 400, 0, 0.5, "pistol");
                         }
                     }
                     else
                     {
                         if(this.flip === false)
                         {
-                          bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(0), pistolDamage, 400, 0, 0.5, "pistol");
+                          bullet.fire(this.x + 5, this.y - 2, Phaser.Math.DegToRad(0), pistolDamage, 400, 0, 0.5, "pistol");
                         }
                         else
                         {
-                          bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), Phaser.Math.DegToRad(180), pistolDamage, 400, 0, 0.5, "pistol");
+                          bullet.fire(this.x - 5, this.y - 1, Phaser.Math.DegToRad(180), pistolDamage, 400, 0, 0.5, "pistol");
                         }
                     }
                     
@@ -724,11 +724,11 @@ class playerBullet extends Phaser.Physics.Arcade.Sprite
                 
                 if(this.flip === false)
                 {
-                  bullet.fire(this.x + (this.width / 2) + (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot, fireConfig.pelletVelocity, currentPenetrations, currentPenetrationReduction, this.doubleFire ? "doubleFire" : "shotgun");
+                  bullet.fire(this.x + 8, this.y - 2, this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot, fireConfig.pelletVelocity, currentPenetrations, currentPenetrationReduction, this.doubleFire ? "doubleFire" : "shotgun");
                 }
                 else
                 {
-                  bullet.fire(this.x - (this.width / 2) - (this.width / 16), this.y - (this.height / 32) - (this.height / 16), this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot, fireConfig.pelletVelocity, currentPenetrations, currentPenetrationReduction, this.doubleFire ? "doubleFire" : "shotgun");
+                  bullet.fire(this.x - 8, this.y - 1, this.aimAngle + Phaser.Math.DegToRad(offset), this.damagePerShot, fireConfig.pelletVelocity, currentPenetrations, currentPenetrationReduction, this.doubleFire ? "doubleFire" : "shotgun");
                 }
 
                 offset += fireConfig.spreadIncrement;

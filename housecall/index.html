@@ -1137,6 +1137,19 @@
                 
                 this.canCheckForShootingDuringBeginning = false;
                 this.time.delayedCall(200, () => this.canCheckForShootingDuringBeginning = true);
+                
+                this.events.on("preupdate", (time, delta) => 
+                {
+                    if(this.player && this.player.active)
+                    {
+                        this.player.update(time, delta);
+                    }
+
+                    this.playerBulletsHolder.getChildren().forEach(bullet =>
+                    {
+                        bullet.update();
+                    });
+                });
             }
             
             updateMainMenuHighScore()
@@ -1247,16 +1260,6 @@
             
             update(time, delta)
             {
-                if(this.player && this.player.active)
-                {
-                    this.player.update(time, delta);
-                }
-                
-                this.playerBulletsHolder.getChildren().forEach(bullet =>
-                {
-                    bullet.update();
-                });
-                
                 /*if(this.player.health < 1000)
                 {
                     this.player.buddha();
@@ -1770,6 +1773,16 @@
                 
                 this.events.on("preupdate", (time, delta) => 
                 {
+                    if(this.player && this.player.active)
+                    {
+                        this.player.update(time, delta);
+                    }
+
+                    this.playerBulletsHolder.getChildren().forEach(bullet =>
+                    {
+                        bullet.update();
+                    });
+                
                     this.cultKnifes.getChildren().forEach(cultKnife =>
                     {
                         cultKnife.update();
@@ -1791,15 +1804,7 @@
 
             update(time, delta)
             {
-                if(this.player && this.player.active)
-                {
-                    this.player.update(time, delta);
-                }
                 
-                this.playerBulletsHolder.getChildren().forEach(bullet =>
-                {
-                    bullet.update();
-                });
             }
         }
 
@@ -1952,6 +1957,16 @@
                 
                 this.events.on("preupdate", (time, delta) => 
                 {
+                    if(this.player && this.player.active)
+                    {
+                        this.player.update(time, delta);
+                    }
+
+                    this.playerBulletsHolder.getChildren().forEach(bullet =>
+                    {
+                        bullet.update();
+                    });
+                
                     this.cultKnifes.getChildren().forEach(cultKnife =>
                     {
                         cultKnife.update();
@@ -1973,16 +1988,7 @@
 
             update(time, delta)
             {
-                
-                if(this.player && this.player.active)
-                {
-                    this.player.update(time, delta);
-                }
-                
-                this.playerBulletsHolder.getChildren().forEach(bullet =>
-                {
-                    bullet.update();
-                });
+
             }
         }
 
@@ -2139,6 +2145,16 @@
                 
                 this.events.on("preupdate", (time, delta) => 
                 {
+                    if(this.player && this.player.active)
+                    {
+                        this.player.update(time, delta);
+                    }
+
+                    this.playerBulletsHolder.getChildren().forEach(bullet =>
+                    {
+                        bullet.update();
+                    });
+                
                     this.cultKnifes.getChildren().forEach(cultKnife =>
                     {
                         cultKnife.update();
@@ -2172,15 +2188,7 @@
 
             update(time, delta)
             {
-                if(this.player && this.player.active)
-                {
-                    this.player.update(time, delta);
-                }
                 
-                this.playerBulletsHolder.getChildren().forEach(bullet =>
-                {
-                    bullet.update();
-                });
             }
         }
   
@@ -2334,6 +2342,16 @@
                 
                 this.events.on("preupdate", (time, delta) => 
                 {
+                    if(this.player && this.player.active)
+                    {
+                        this.player.update(time, delta);
+                    }
+
+                    this.playerBulletsHolder.getChildren().forEach(bullet =>
+                    {
+                        bullet.update();
+                    });
+                
                     this.cultKnifes.getChildren().forEach(cultKnife =>
                     {
                         cultKnife.update();
@@ -2367,15 +2385,7 @@
 
             update(time, delta)
             {
-                if(this.player && this.player.active)
-                {
-                    this.player.update(time, delta);
-                }
                 
-                this.playerBulletsHolder.getChildren().forEach(bullet =>
-                {
-                    bullet.update();
-                });
             }
         }
   
