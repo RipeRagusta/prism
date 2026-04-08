@@ -229,9 +229,9 @@ class eye extends Phaser.Physics.Arcade.Sprite
         }
     }
     
-    preUpdate(time, delta)
+    update(time, delta)
     {
-        super.preUpdate(time, delta);
+        super.update(time, delta);
         
         if(this.health < 1 && this.killed === false)
         {

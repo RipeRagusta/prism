@@ -19,9 +19,9 @@ class cultOrb extends Phaser.Physics.Arcade.Sprite
       this.startX = x;
     }
 
-    preUpdate(time, delta)
+    update(time, delta)
     {
-      super.preUpdate(time, delta);
+      super.update(time, delta);
 
       if(this.y < 0 || this.y > this.scene.sys.game.config.height || this.x > this.startX + 1000 || this.x < this.startX - 1000)
       {
@@ -443,9 +443,9 @@ function cultSeparation(cults, player)
     }
     
 
-    preUpdate(time, delta)
+    update(time, delta)
     {
-        super.preUpdate(time, delta);
+        super.update(time, delta);
 
         if(this.health < 1 && this.killed === false)
         {

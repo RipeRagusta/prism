@@ -1770,8 +1770,23 @@
                 
                 this.events.on("preupdate", (time, delta) => 
                 {
+                    this.cultKnifes.getChildren().forEach(cultKnife =>
+                    {
+                        cultKnife.update();
+                    });
+                    
                     cultSeparation(this.cults, this.player);
-                }, this, 10);
+                    
+                    this.cults.getChildren().forEach(cult =>
+                    {
+                        cult.update();
+                    });
+                    
+                    this.cultOrbHolder.getChildren().forEach(orb =>
+                    {
+                        orb.update();
+                    });
+                });
             }
 
             update(time, delta)
@@ -1937,8 +1952,23 @@
                 
                 this.events.on("preupdate", (time, delta) => 
                 {
+                    this.cultKnifes.getChildren().forEach(cultKnife =>
+                    {
+                        cultKnife.update();
+                    });
+                    
                     cultSeparation(this.cults, this.player);
-                }, this, 10);
+                    
+                    this.cults.getChildren().forEach(cult =>
+                    {
+                        cult.update();
+                    });
+                    
+                    this.cultOrbHolder.getChildren().forEach(orb =>
+                    {
+                        orb.update();
+                    });
+                });
             }
 
             update(time, delta)
@@ -2109,9 +2139,35 @@
                 
                 this.events.on("preupdate", (time, delta) => 
                 {
+                    this.cultKnifes.getChildren().forEach(cultKnife =>
+                    {
+                        cultKnife.update();
+                    });
+                    
                     cultSeparation(this.cults, this.player);
+                    
+                    this.cults.getChildren().forEach(cult =>
+                    {
+                        cult.update();
+                    });
+                    
+                    this.cultOrbHolder.getChildren().forEach(orb =>
+                    {
+                        orb.update();
+                    });
+                    
                     eyeSeparation(this.eyes, this.player);
-                }, this, 10);
+                    
+                    this.eyes.getChildren().forEach(eye =>
+                    {
+                        eye.update();
+                    });
+                    
+                    this.eyeOrbHolder.getChildren().forEach(orb =>
+                    {
+                        orb.update();
+                    });
+                });
             }
 
             update(time, delta)
@@ -2278,9 +2334,35 @@
                 
                 this.events.on("preupdate", (time, delta) => 
                 {
+                    this.cultKnifes.getChildren().forEach(cultKnife =>
+                    {
+                        cultKnife.update();
+                    });
+                    
                     cultSeparation(this.cults, this.player);
+                    
+                    this.cults.getChildren().forEach(cult =>
+                    {
+                        cult.update();
+                    });
+                    
+                    this.cultOrbHolder.getChildren().forEach(orb =>
+                    {
+                        orb.update();
+                    });
+                    
                     eyeSeparation(this.eyes, this.player);
-                }, this, 10);
+                    
+                    this.eyes.getChildren().forEach(eye =>
+                    {
+                        eye.update();
+                    });
+                    
+                    this.eyeOrbHolder.getChildren().forEach(orb =>
+                    {
+                        orb.update();
+                    });
+                });
             }
 
             update(time, delta)
