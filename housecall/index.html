@@ -300,6 +300,12 @@
                         repeat: 0
                     });
                 }
+                
+                this.events.on("preupdate", (time, delta) => 
+                {
+                    this.crosshair.x = this.input.activePointer.x;
+                    this.crosshair.y = this.input.activePointer.y;
+                });
             }
             
             rotateCrosshairRight()
@@ -340,8 +346,7 @@
             
             update()
             {
-                this.crosshair.x = this.input.activePointer.x;
-                this.crosshair.y = this.input.activePointer.y;
+                
             }
         }
 
