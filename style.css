@@ -93,7 +93,7 @@ main{
 	box-sizing: border-box;
 	padding: var(--sizer);
 	display: grid;
-	max-width: 1200px;
+	max-width: 1000px;
 	grid-template-columns: 1fr;
 	grid-template-rows: auto 1fr;
 }
@@ -124,7 +124,7 @@ nav{
 
 #footercontent{
 	width: 100%;
-	max-width: 1200px;
+	max-width: 1000px;
 	margin: 0px auto;
 	padding: var(--sizer);
 	box-sizing: border-box;
@@ -194,7 +194,7 @@ img{
 
 #logo{
 	max-width: 100%;
-	width: 200px;
+	width: 175px;
 	margin: 0px auto;
 	border-radius: 0px;
 	margin-bottom: 0px;
