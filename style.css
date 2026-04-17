@@ -91,11 +91,8 @@ main{
 	width: 100%;
 	position: relative;
 	box-sizing: border-box;
-	padding: var(--sizer);
-	display: grid;
+	padding: var(--sizer) var(--sizer) var(--sizer) var(--sizer);
 	max-width: 1000px;
-	grid-template-columns: 1fr;
-	grid-template-rows: auto 1fr;
 }
 
 nav{
@@ -103,7 +100,7 @@ nav{
 	padding: 0px;
 	scrollbar-width: thin;
 	scrollbar-color: var(--color) transparent;
-	margin-bottom: var(--sizer);
+
 }
 
 .imagegallery{
@@ -113,6 +110,8 @@ nav{
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: var(--sizer);
+	margin-top: var(--sizer);
+	margin-bottom: calc(var(--sizer));
 }
 
 .imagelink a{
@@ -151,7 +150,7 @@ ul{
 	margin: 0px;
 }
 
-h1, h2, p, small, pre, span{
+h1, h2, p, small, pre, span, h3{
 	display: block;
 	margin: 0px;
 	padding: 0px;
@@ -206,6 +205,9 @@ img{
 	color: var(--backgroundcolor);
 }
 
+.navtitle{
+
+}
 
 header button{
 	cursor: pointer;
