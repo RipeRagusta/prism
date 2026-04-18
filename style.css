@@ -76,7 +76,7 @@ body{
 }
 
 header{
-	margin: calc(var(--sizer) * 2) 0px calc(var(--sizer) * 3) 0px;
+	margin: calc(var(--sizer) * 3) 0px calc(var(--sizer) * 4) 0px;
 	padding: 0px;
 	text-align: center;
 	display: flex;
@@ -111,7 +111,7 @@ nav{
 	grid-template-columns: repeat(3, 1fr);
 	gap: var(--sizer);
 	margin-top: var(--sizer);
-	margin-bottom: calc(var(--sizer));
+	margin-bottom: calc(var(--sizer) * 2);
 }
 
 .imagelink a{
