@@ -194,6 +194,7 @@ img{
 #logo{
 	max-width: 100%;
 	width: 174.073888889px;
+	width: 100%;
 	margin: 0px auto;
 	border-radius: 0px;
 	margin-bottom: 0px;
@@ -212,6 +213,7 @@ img{
 header button{
 	cursor: pointer;
 	max-width: calc(((100% - (var(--sizer) * 2)) / 3) * (5 / 9));
+	width: calc(((100% - (var(--sizer) * 2)) / 3) * (5 / 9));
 }
 
 #footerlinks{
@@ -236,7 +238,8 @@ header button{
 {
 	header button{
 		max-width: 33.334%;
-		max-width: calc(((100% - (var(--sizer) * 3)) / 3) * (8 / 9));
+		max-width: calc(((100% - (var(--sizer) * 1)) / 2) * (5 / 9));
+		width: calc(((100% - (var(--sizer) * 1)) / 2) * (5 / 9));
 	}
 
 	header{
