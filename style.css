@@ -211,6 +211,7 @@ img{
 
 header button{
 	cursor: pointer;
+	max-width: calc(((100% - (var(--sizer) * 2)) / 3) * (5 / 9));
 }
 
 #footerlinks{
@@ -235,6 +236,7 @@ header button{
 {
 	header button{
 		max-width: 33.334%;
+		max-width: calc(((100% - (var(--sizer) * 3)) / 3) * (8 / 9));
 	}
 
 	header{
