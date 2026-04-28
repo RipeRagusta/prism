@@ -114,6 +114,10 @@ nav{
 	margin-bottom: calc(var(--sizer) * 2);
 }
 
+.prototypes{
+	grid-template-columns: repeat(4, 1fr);
+}
+
 .imagelink a{
 	display: flex;
 	flex-direction: column;
@@ -249,6 +253,10 @@ header button{
 
 	.imagegallery{
 		grid-template-columns: .5fr .5fr;
+	}
+
+	.prototypes{
+		grid-template-columns: repeat(3, 1fr);
 	}
 
 	#title{
