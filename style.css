@@ -25,7 +25,8 @@ button{
 
 .button{
 	color: var(--color);
-	transition: transform 0.075s ease;
+	transform: scale(1);
+	transition: transform 0.025s ease;
 }
 
 @media (hover: hover)
