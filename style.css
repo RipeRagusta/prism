@@ -28,15 +28,18 @@ button{
 	transition: transform 0.075s ease;
 }
 
-.button:hover{
-	color: var(--color);
-	transform: scale(1.04);
-  	z-index: 10;
+@media (hover: hover)
+{
+	.button:hover{
+		color: var(--color);
+		transform: scale(1.04);
+	  	z-index: 10;
+	}
 }
 
 .button:active{
 	color: var(--color);
-	transform: scale(1);
+	transform: scale(0.96);
 	transition: transform 0.025s ease;
 }
 
