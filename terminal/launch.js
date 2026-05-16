@@ -2,14 +2,16 @@ function createLaunchCommands()
 {
 	defaultLaunchTargets = 
 	[
-		{ name: "cyberclicker", url: "../cyberclicker/index.html", display: true},
+		{ name: "cyberclicker2101", url: "../cyberclicker2101/index.html", display: true},
 		{ name: "flesh", url: "https://flesh.enterprises/index.html", display: false},
-		{ name: "fp2rbpr", url: "../fp/index.html", display: false},
+		{ name: "fp", url: "../fp/index.html", display: false},
 		{ name: "housecall", url: "../housecall/index.html", display: true},
 		{ name: "jumpgame", url: "../jumpgame/index.html", display: true},
-		{ name: "vp1", url: "https://ragusta.com/index.html", display: false},
+		{ name: "ragusta", url: "https://ragusta.com/index.html", display: false},
 		{ name: "genericinvitation", url: "../genericinvitation/invitation.html", display: false},
-		{ name: "genericad", url: "../genericad/digitalSignStart.html", display: false}
+		{ name: "genericad", url: "../genericad/digitalSignStart.html", display: false},
+		{ name: "seraphims", url: "https://seraphims.org/index.html", display: false},
+		{ name: "old", url: "../old/index.html", display: false},
 	];
 
 	launchTargets = JSON.parse(JSON.stringify(defaultLaunchTargets));
