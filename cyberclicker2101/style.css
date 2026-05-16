@@ -165,6 +165,23 @@ main{
 
 @media (hover: none) 
 {
+	.clonecookiebutton:hover{
+		color: yellow;
+		cursor: pointer;
+	}
+
+	#intelligencebutton:hover #intelligenceinfo{
+		display: block;
+	}
+
+	#reflexesbutton:hover #reflexesinfo{
+		display: block;
+	}
+
+	#powerbutton:hover #powerinfo{
+		display: block;
+	}
+	
     .contract:active{
 		background-color: black;
 		color: white;
