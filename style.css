@@ -29,6 +29,10 @@ button{
 	transition: transform 0.025s ease;
 }
 
+.button:visited{
+	color: var(--color);
+}
+
 @media (hover: hover)
 {
 	.button:hover{
@@ -52,10 +56,6 @@ button{
 		transform: scale(1.04);
 		transition: transform 0.025s ease;
 	}
-}
-
-.button:visited{
-	color: var(--color);
 }
 
 #date{
