@@ -109,6 +109,11 @@ main{
 	max-width: 1000px;
 }
 
+main h2{
+	margin-bottom: var(--sizer);
+}
+
+
 nav{
 	margin: 0px;
 	padding: 0px;
@@ -124,7 +129,6 @@ nav{
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: var(--sizer);
-	margin-top: var(--sizer);
 	margin-bottom: calc(var(--sizer) * 2);
 }
 
